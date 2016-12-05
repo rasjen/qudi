@@ -36,6 +36,7 @@ class CounterLogic(GenericLogic):
     @signal sigCountContinuousNext: used to simulate a loop in which the data
                                     acquisition runs.
     @sigmal sigCountGatedNext: ???
+    @return error: 0 is OK, -1 is error
     """
     sigCounterUpdated = QtCore.Signal()
     sigCountContinuousNext = QtCore.Signal()
@@ -71,10 +72,10 @@ class CounterLogic(GenericLogic):
         for key in config.keys():
             self.log.info('{0}: {1}'.format(key,config[key]))
 
-        self._count_length = 300
-        self._count_frequency = 50
-        self._counting_samples = 1
-        self._smooth_window_length = 10
+        self._count_length = 300 # in seconds
+        self._count_frequency = 50 # in hertz
+        self._counting_samples = 1  # oversampling in bins
+        self._smooth_window_length = 10 # in bins
         self._binned_counting = True
 
         self._counting_mode = 'continuous'
@@ -91,30 +92,42 @@ class CounterLogic(GenericLogic):
                          of the state which should be reached after the event
                          has happen.
         """
-        self.countdata = np.zeros((self._count_length,))
-        self.countdata_smoothed = np.zeros((self._count_length,))
-        self.countdata2 = np.zeros((self._count_length,))
-        self.countdata_smoothed2 = np.zeros((self._count_length,))
-        self.rawdata = np.zeros([2, self._counting_samples])
 
-        self.running = False
-        self.stopRequested = False
-        self._saving = False
-        self._data_to_save=[]
-        self._saving_start_time=time.time()
-
+        # Connect to hardware and save logic
         self._counting_device = self.get_in_connector('counter1')
-#        print("Counting device is", self._counting_device)
-
         self._save_logic = self.get_in_connector('savelogic')
 
-        #QSignals
-        self.sigCountContinuousNext.connect(self.countLoopBody_continuous, QtCore.Qt.QueuedConnection)
-        self.sigCountGatedNext.connect(self.countLoopBody_gated, QtCore.Qt.QueuedConnection)
+        #Initialize data arrays
+        self.countdata = np.zeros((self._count_length,))
+        self.countdata_smoothed = np.zeros((self._count_length,))
+        # FIXME: Extend to a third, forth.... detector
+        # FIXME: Photon source is missleading
+        # FIXME: What happens if the rawdata, countdata do not have the same length
+        if hasattr(self._counting_device, '_photon_source2'):
+            self.countdata2 = np.zeros((self._count_length,))
+            self.countdata_smoothed2 = np.zeros((self._count_length,))
+        if hasattr(self._counting_device, '_photon_source2'):
+            self.rawdata = np.zeros([2, self._counting_samples])
+        else:
+            self.rawdata = np.zeros([1, self._counting_samples])
+        # FIXME: Shouldn't it have the same dimension as the number of detectors
+        self._data_to_save=[] # data to save
 
+        # Initialize variables
+        self.running = False # state of counter
+        self.stopRequested = False # state of stoprequest
+        self._saving = False # state of saving
+        self._saving_start_time=time.time() # start time of saving
+
+
+
+        #QSignals
+        # for continuous counting:
+        self.sigCountContinuousNext.connect(self.countLoopBody_continuous, QtCore.Qt.QueuedConnection)
+        # for gated counting:
+        self.sigCountGatedNext.connect(self.countLoopBody_gated, QtCore.Qt.QueuedConnection)
         # for finite gated counting:
-        self.sigCountFiniteGatedNext.connect(self.countLoopBody_finite_gated,
-                                             QtCore.Qt.QueuedConnection)
+        self.sigCountFiniteGatedNext.connect(self.countLoopBody_finite_gated,QtCore.Qt.QueuedConnection)
         return 0
 
     def on_deactivate(self, e):
@@ -122,18 +135,24 @@ class CounterLogic(GenericLogic):
 
         @param object e: Event class object from Fysom. A more detailed
                          explanation can be found in method activation.
+        @return error: 0 is OK, -1 is error
         """
         self.stopCount()
         #FIXME: Why 20?
-        for i in range(20):
+        return_value = 0
+        for ii in range(20):
             if self.getState() == 'idle':
                 break
             QtCore.QCoreApplication.processEvents()
             time.sleep(0.1)
-        return
+            if ii == 20:
+                self.log.error('Stopped deactivate counter after trying for 2 seconds!')
+                return_value = -1
+        return return_value
+
 
     def set_counting_samples(self, samples = 1):
-        """ Sets the number of samples to be displayed.
+        """ Sets the oversampling.
 
         @param int samples: the length of the array to be set.
 
@@ -141,15 +160,7 @@ class CounterLogic(GenericLogic):
 
         This makes sure, the counter is stopped first and restarted afterwards.
         """
-        # do I need to restart the counter?
-        restart = False
-
-        # if the counter is running, stop it
-        if self.getState() == 'locked':
-            restart = True
-            self.stopCount()
-            while self.getState() == 'locked':
-                time.sleep(0.01)
+        restart = self.stop_counter()
 
         self._counting_samples = int(samples)
 
@@ -160,23 +171,15 @@ class CounterLogic(GenericLogic):
         return self._counting_samples
 
     def set_count_length(self, length = 300):
-        """ Sets the length of the counted bins.
+        """ Sets the length of time trace in units of bins.
 
-        @param int length: the length of the array to be set.
+        @param int length: length of time trace in units of bins.
 
-        @return int: the length of the array to be set
+        @return int: length of time trace in units of bins
 
         This makes sure, the counter is stopped first and restarted afterwards.
         """
-        # do I need to restart the counter?
-        restart = False
-
-        # if the counter is running, stop it
-        if self.getState() == 'locked':
-            restart = True
-            self.stopCount()
-            while self.getState() == 'locked':
-                time.sleep(0.01)
+        restart = self.stop_counter()
 
         self._count_length = int(length)
 
@@ -195,15 +198,7 @@ class CounterLogic(GenericLogic):
 
         This makes sure, the counter is stopped first and restarted afterwards.
         """
-        # do I need to restart the counter?
-        restart = False
-
-        # if the counter is running, stop it
-        if self.getState() == 'locked':
-            restart = True
-            self.stopCount()
-            while self.getState() == 'locked':
-                time.sleep(0.01)
+        restart = self.stop_counter()
 
         self._count_frequency = frequency
 
@@ -220,6 +215,7 @@ class CounterLogic(GenericLogic):
         """
         return self._count_length
 
+    # FIXME: Count frequency can be get by hardware I think
     def get_count_frequency(self):
         """ Returns the currently set frequency of counting (resolution).
 
@@ -244,7 +240,7 @@ class CounterLogic(GenericLogic):
     def start_saving(self, resume=False):
         """ Starts saving the data in a list.
 
-        @return int: error code (0:OK, -1:error)
+        @return bool: saving state
         """
 
         if not resume:
@@ -256,8 +252,9 @@ class CounterLogic(GenericLogic):
         if self.isstate('idle'):
             self.startCount()
 
-        return 0
+        return self._saving
 
+    # FIXME: What happens if not saved to file
     def save_data(self, to_file=True, postfix=''):
         """ Save the counter trace data and writes it to a file.
 
@@ -397,15 +394,19 @@ class CounterLogic(GenericLogic):
         # set a lock, to signify the measurment is running
         self.lock()
 
+        #FIXME: Instead of clock status I would suggest to get back the clock_frequency
         clock_status = self._counting_device.set_up_clock(clock_frequency = self._count_frequency)
         if clock_status < 0:
             self.unlock()
             self.sigCounterUpdated.emit()
             return -1
 
+         #FIXME: Instead of clock status I would suggest to get back the clock_frequency
         counter_status = self._counting_device.set_up_counter()
         if counter_status < 0:
-            self._counting_device.close_clock()
+            clock_closed = self._counting_device.close_clock()
+            if clock_closed:
+                self.log.info('Clock counter closed')
             self.unlock()
             self.sigCounterUpdated.emit()
             return -1
@@ -444,12 +445,13 @@ class CounterLogic(GenericLogic):
         # set a lock, to signify the measurment is running
         self.lock()
 
+         #FIXME: Instead of clock status I would suggest to get back the clock_frequency
         returnvalue = self._counting_device.set_up_clock(clock_frequency = self._count_frequency)
         if returnvalue < 0:
             self.unlock()
             self.sigCounterUpdated.emit()
             return -1
-
+         #FIXME: Instead of clock status I would suggest to get back the clock_frequency
         returnvalue = self._counting_device.set_up_counter(counter_buffer=self._count_length)
         if returnvalue < 0:
             self.unlock()
@@ -481,11 +483,27 @@ class CounterLogic(GenericLogic):
             self.stopRequested = True
         return self.stopRequested
 
+    def stop_counter(self):
+        """ Stops the counter if it is running and returns whether it was running.
+
+        @return bool: True if counter was running
+        """
+        if self.getState() == 'locked':
+            restart = True
+            self.stopCount()
+            while self.getState() == 'locked':
+                time.sleep(0.01)
+        else:
+            restart = False
+        return restart
+
     def countLoopBody_continuous(self):
         """ This method gets the count data from the hardware for the continuous counting mode (default).
 
         It runs repeatedly in the logic module event loop by being connected
         to sigCountContinuousNext and emitting sigCountContinuousNext through a queued connection.
+
+        @return error: 0 is OK, -1 is error
         """
 
         # check for aborts of the thread in break if necessary
@@ -493,19 +511,26 @@ class CounterLogic(GenericLogic):
             with self.threadlock:
                 try:
                     # close off the actual counter
-                    self._counting_device.close_counter()
-                    self._counting_device.close_clock()
+                    close_counter = self._counting_device.close_counter()
+                    if close_counter:
+                        self.log.info('Counter closed')
+                    clock_closed = self._counting_device.close_clock()
+                    if clock_closed:
+                        self.log.info('Clock counter closed')
+
                 except Exception as e:
                     self.log.exception('Could not even close the hardware,'
                             ' giving up.')
                     raise e
+                    return -1
+
                 finally:
                     # switch the state variable off again
                     self.unlock()
                     self.stopRequested = False
                     self.sigCounterUpdated.emit()
-                    return
 
+            self.log.info('Counter stopped')
         try:
             # read the current counter value
             self.rawdata = self._counting_device.get_counter(samples=self._counting_samples)
@@ -515,6 +540,7 @@ class CounterLogic(GenericLogic):
             self.stopCount()
             self.sigCountContinuousNext.emit()
             raise e
+            return -1
 
         # remember the new count data in circular array
         self.countdata[0] = np.average(self.rawdata[0])
@@ -569,6 +595,7 @@ class CounterLogic(GenericLogic):
         # call this again from event loop
         self.sigCounterUpdated.emit()
         self.sigCountContinuousNext.emit()
+        return 0
 
 
     def countLoopBody_gated(self):
@@ -578,63 +605,14 @@ class CounterLogic(GenericLogic):
         It runs repeatedly in the logic module event loop by being connected
         to sigCountGatedNext and emitting sigCountGatedNext through a queued
         connection.
+
+        @return error: 0 is OK, -1 is error
         """
 
-        # check for aborts of the thread in break if necessary
-        if self.stopRequested:
-            with self.threadlock:
-                try:
-                    # close off the actual counter
-                    self._counting_device.close_counter()#gated
-                    self._counting_device.close_clock()#gated
-                except Exception as e:
-                    self.log.error('Could not even close the hardware, '
-                            'giving up.')
-                    raise e
-                finally:
-                    # switch the state variable off again
-                    self.unlock()
-                    self.stopRequested = False
-                    self.sigCounterUpdated.emit()
-                    return
-
-        try:
-            # read the current counter value
-            self.rawdata = self._counting_device.get_counter(samples=self._counting_samples)#gated
-
-        except Exception as e:
-            self.log.error('The counting went wrong, killing the counter.')
-            self.stopCount()
-            self.sigCountContinuousNext.emit()
-            raise e
-
-        # remember the new count data in circular array
-        self.countdata[0] = np.average(self.rawdata[0])
-        # move the array to the left to make space for the new data
-        self.countdata=np.roll(self.countdata, -1)
-        # also move the smoothing array
-        self.countdata_smoothed = np.roll(self.countdata_smoothed, -1)
-        # calculate the median and save it
-        self.countdata_smoothed[-int(self._smooth_window_length/2)-1:]=np.median(self.countdata[-self._smooth_window_length:])
-
-        # save the data if necessary
-        if self._saving:
-             # if oversampling is necessary
-            if self._counting_samples > 1:
-                self._sampling_data=np.empty((self._counting_samples,2))
-                self._sampling_data[:, 0] = time.time()-self._saving_start_time
-                self._sampling_data[:, 1] = self.rawdata[0]
-                self._data_to_save.extend(list(self._sampling_data))
-            # if we don't want to use oversampling
-            else:
-                # append tuple to data stream (timestamp, average counts)
-                self._data_to_save.append(np.array((time.time()-self._saving_start_time, self.countdata[-1])))
-        # call this again from event loop
-        self.sigCounterUpdated.emit()
-        self.sigCountGatedNext.emit()
+    pass
 
 
-
+    # FIXME: I think this all the countloopbody could be combined
     def countLoopBody_finite_gated(self):
         """ This method gets the count data from the hardware for the finite
         gated counting mode.
@@ -642,6 +620,8 @@ class CounterLogic(GenericLogic):
         It runs repeatedly in the logic module event loop by being connected
         to sigCountFiniteGatedNext and emitting sigCountFiniteGatedNext through
         a queued connection.
+
+        @return error: 0 is OK, -1 is error
         """
 
         # check for aborts of the thread in break if necessary
@@ -649,8 +629,12 @@ class CounterLogic(GenericLogic):
             with self.threadlock:
                 try:
                     # close off the actual counter
-                    self._counting_device.close_counter()
-                    self._counting_device.close_clock()
+                    close_counter = self._counting_device.close_counter()
+                    if close_counter:
+                        self.log.info('Counter closed')
+                    clock_closed = self._counting_device.close_clock()
+                    if clock_closed:
+                        self.log.info('Clock counter closed')
                 except Exception as e:
                     self.log.exception('Could not even close the '
                             'hardware, giving up.')
