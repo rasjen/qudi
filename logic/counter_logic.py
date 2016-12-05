@@ -115,6 +115,7 @@ class CounterLogic(GenericLogic):
         # for finite gated counting:
         self.sigCountFiniteGatedNext.connect(self.countLoopBody_finite_gated,
                                              QtCore.Qt.QueuedConnection)
+        return 0
 
     def on_deactivate(self, e):
         """ Deinitialisation performed during deactivation of the module.
@@ -123,6 +124,7 @@ class CounterLogic(GenericLogic):
                          explanation can be found in method activation.
         """
         self.stopCount()
+        #FIXME: Why 20?
         for i in range(20):
             if self.getState() == 'idle':
                 break
@@ -131,11 +133,11 @@ class CounterLogic(GenericLogic):
         return
 
     def set_counting_samples(self, samples = 1):
-        """ Sets the length of the counted bins.
+        """ Sets the number of samples to be displayed.
 
-        @param int length: the length of the array to be set.
+        @param int samples: the length of the array to be set.
 
-        @return int: error code (0:OK, -1:error)
+        @return int: the length of the array to be set
 
         This makes sure, the counter is stopped first and restarted afterwards.
         """
@@ -155,14 +157,14 @@ class CounterLogic(GenericLogic):
         if restart:
             self.startCount()
 
-        return 0
+        return self._counting_samples
 
     def set_count_length(self, length = 300):
         """ Sets the length of the counted bins.
 
         @param int length: the length of the array to be set.
 
-        @return int: error code (0:OK, -1:error)
+        @return int: the length of the array to be set
 
         This makes sure, the counter is stopped first and restarted afterwards.
         """
@@ -182,18 +184,17 @@ class CounterLogic(GenericLogic):
         if restart:
             self.startCount()
 
-        return 0
+        return self._count_length
 
-    def set_count_frequency(self, frequency = 50):
+    def set_count_frequency(self, frequency = 50.0):
         """ Sets the frequency with which the data is acquired.
 
-        @param int frequency: the frequency of counting in Hz.
+        @param float frequency: the frequency of counting in Hz.
 
-        @return int: error code (0:OK, -1:error)
+        @return float: the frequency of counting in Hz
 
         This makes sure, the counter is stopped first and restarted afterwards.
         """
-
         # do I need to restart the counter?
         restart = False
 
@@ -204,13 +205,13 @@ class CounterLogic(GenericLogic):
             while self.getState() == 'locked':
                 time.sleep(0.01)
 
-        self._count_frequency = int(frequency)
+        self._count_frequency = frequency
 
         # if the counter was running, restart it
         if restart:
             self.startCount()
 
-        return 0
+        return self._count_frequency
 
     def get_count_length(self):
         """ Returns the currently set length of the counting array.
@@ -222,7 +223,7 @@ class CounterLogic(GenericLogic):
     def get_count_frequency(self):
         """ Returns the currently set frequency of counting (resolution).
 
-        @return int: count_frequency
+        @return float: count_frequency
         """
         return self._count_frequency
 
@@ -347,8 +348,12 @@ class CounterLogic(GenericLogic):
             'continuous'    = counts continuously
             'gated'         = bins the counts according to a gate signal
             'finite-gated'  = finite measurement with predefined number of samples
+
+        @return str: counting mode
         """
         self._counting_mode = mode
+
+        return self._counting_mode
 
     def get_counting_mode(self):
         """ Retrieve the current counting mode.
@@ -363,20 +368,32 @@ class CounterLogic(GenericLogic):
     def startCount(self):
         """ This is called externally, and is basically a wrapper that
             redirects to the chosen counting mode start function.
+
+            @return error: 0 is OK, -1 is error
         """
 
         if self._counting_mode == 'continuous':
             self._startCount_continuous()
+            self.log.info('Started continuous counting.')
+            return 0
         elif self._counting_mode == 'gated':
             self._startCount_gated()
+            self.log.info('Started gated counting.')
+            return 0
         elif self._counting_mode == 'finite-gated':
             self._startCount_finite_gated()
+            self.log.info('Started finite-gated counting.')
+            return 0
         else:
             self.log.error('Unknown counting mode, cannot start the counter.')
+            return -1
 
     def _startCount_continuous(self):
-        """Prepare to start counting change state and start counting 'loop'."""
+        """Prepare to start counting change state and start counting 'loop'.
         # setting up the counter
+
+        @return error: 0 is OK, -1 is error """
+
         # set a lock, to signify the measurment is running
         self.lock()
 
@@ -415,14 +432,11 @@ class CounterLogic(GenericLogic):
         #self.sigCountGatedNext.emit()
         pass
 
-    def stopCount(self):
-        """ Set a flag to request stopping counting.
-        """
-        with self.threadlock:
-            self.stopRequested = True
 
     def _startCount_finite_gated(self):
         """Prepare to start finite gated counting.
+
+        @return error: 0 is OK, -1 is error
 
         Change state and start counting 'loop'."""
 
@@ -434,13 +448,13 @@ class CounterLogic(GenericLogic):
         if returnvalue < 0:
             self.unlock()
             self.sigCounterUpdated.emit()
-            return
+            return -1
 
         returnvalue = self._counting_device.set_up_counter(counter_buffer=self._count_length)
         if returnvalue < 0:
             self.unlock()
             self.sigCounterUpdated.emit()
-            return
+            return -1
 
         # initialising the data arrays
 
@@ -457,8 +471,15 @@ class CounterLogic(GenericLogic):
         self._already_counted_samples = 0
 
         self.sigCountFiniteGatedNext.emit()
+        return 0
 
-
+    def stopCount(self):
+        """ Set a flag to request stopping counting.
+         @return bool: stop requested?
+        """
+        with self.threadlock:
+            self.stopRequested = True
+        return self.stopRequested
 
     def countLoopBody_continuous(self):
         """ This method gets the count data from the hardware for the continuous counting mode (default).
