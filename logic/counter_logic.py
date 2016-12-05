@@ -72,7 +72,7 @@ class CounterLogic(GenericLogic):
         for key in config.keys():
             self.log.info('{0}: {1}'.format(key,config[key]))
 
-        self._count_length = 300 # in seconds
+        self._count_length = 300 # in bins
         self._count_frequency = 50 # in hertz
         self._counting_samples = 1  # oversampling in bins
         self._smooth_window_length = 10 # in bins
@@ -114,14 +114,15 @@ class CounterLogic(GenericLogic):
         self._data_to_save=[] # data to save
 
         # Initialize variables
-        self.running = False # state of counter
-        self.stopRequested = False # state of stoprequest
-        self._saving = False # state of saving
-        self._saving_start_time=time.time() # start time of saving
+        self.running = False  # state of counter
+        self.stopRequested = False  # state of stoprequest
+        self._saving = False  # state of saving
+        self._saving_start_time=time.time()  # start time of saving
 
 
 
         #QSignals
+        # FIXME: Is it really necessary to have three different Signals?
         # for continuous counting:
         self.sigCountContinuousNext.connect(self.countLoopBody_continuous, QtCore.Qt.QueuedConnection)
         # for gated counting:
@@ -138,8 +139,8 @@ class CounterLogic(GenericLogic):
         @return error: 0 is OK, -1 is error
         """
         self.stopCount()
-        #FIXME: Why 20?
         return_value = 0
+        #FIXME: Why 20?
         for ii in range(20):
             if self.getState() == 'idle':
                 break
@@ -150,18 +151,18 @@ class CounterLogic(GenericLogic):
                 return_value = -1
         return return_value
 
+    # FIXME: Are all these set and get function independent of hardware?
 
     def set_counting_samples(self, samples = 1):
-        """ Sets the oversampling.
+        """ Sets the oversampling in units of bins.
 
-        @param int samples: the length of the array to be set.
+        @param int samples: oversampling in units of bins.
 
-        @return int: the length of the array to be set
+        @return int: oversampling in units of bins.
 
         This makes sure, the counter is stopped first and restarted afterwards.
         """
         restart = self.stop_counter()
-
         self._counting_samples = int(samples)
 
         # if the counter was running, restart it
@@ -180,7 +181,6 @@ class CounterLogic(GenericLogic):
         This makes sure, the counter is stopped first and restarted afterwards.
         """
         restart = self.stop_counter()
-
         self._count_length = int(length)
 
         # if the counter was running, restart it
@@ -199,7 +199,6 @@ class CounterLogic(GenericLogic):
         This makes sure, the counter is stopped first and restarted afterwards.
         """
         restart = self.stop_counter()
-
         self._count_frequency = frequency
 
         # if the counter was running, restart it
@@ -208,6 +207,7 @@ class CounterLogic(GenericLogic):
 
         return self._count_frequency
 
+
     def get_count_length(self):
         """ Returns the currently set length of the counting array.
 
@@ -215,7 +215,6 @@ class CounterLogic(GenericLogic):
         """
         return self._count_length
 
-    # FIXME: Count frequency can be get by hardware I think
     def get_count_frequency(self):
         """ Returns the currently set frequency of counting (resolution).
 
@@ -254,7 +253,6 @@ class CounterLogic(GenericLogic):
 
         return self._saving
 
-    # FIXME: What happens if not saved to file
     def save_data(self, to_file=True, postfix=''):
         """ Save the counter trace data and writes it to a file.
 
@@ -339,6 +337,8 @@ class CounterLogic(GenericLogic):
 
         return fig
 
+    # FIXME: Check if the following two functions are independent of hardware
+
     def set_counting_mode(self, mode='continuous'):
         """Set the counting mode, to change between continuous and gated counting.
         Possible options are:
@@ -362,6 +362,7 @@ class CounterLogic(GenericLogic):
         """
         return self._counting_mode
 
+    # FIXME: Is it really necessary to have 3 different methods here?
     def startCount(self):
         """ This is called externally, and is basically a wrapper that
             redirects to the chosen counting mode start function.
@@ -395,13 +396,14 @@ class CounterLogic(GenericLogic):
         self.lock()
 
         #FIXME: Instead of clock status I would suggest to get back the clock_frequency
+        #FIXME: What about the clock_channel anyway?
         clock_status = self._counting_device.set_up_clock(clock_frequency = self._count_frequency)
         if clock_status < 0:
             self.unlock()
             self.sigCounterUpdated.emit()
             return -1
 
-         #FIXME: Instead of clock status I would suggest to get back the clock_frequency
+         #FIXME: Instead of clock status I would suggest to get back the counter_channels and photon sources
         counter_status = self._counting_device.set_up_counter()
         if counter_status < 0:
             clock_closed = self._counting_device.close_clock()
@@ -425,7 +427,9 @@ class CounterLogic(GenericLogic):
                 self._sampling_data2 = np.empty((self._counting_samples, 2))
 
         self.sigCountContinuousNext.emit()
+        return 0
 
+    #FIXME: To Do!
     def _startCount_gated(self):
         """Prepare to start gated counting, and start the loop.
         """
@@ -445,13 +449,14 @@ class CounterLogic(GenericLogic):
         # set a lock, to signify the measurment is running
         self.lock()
 
-         #FIXME: Instead of clock status I would suggest to get back the clock_frequency
+        #FIXME: Instead of clock status I would suggest to get back the clock_frequency
+        #FIXME: What about the clock_channel anyway?
         returnvalue = self._counting_device.set_up_clock(clock_frequency = self._count_frequency)
         if returnvalue < 0:
             self.unlock()
             self.sigCounterUpdated.emit()
             return -1
-         #FIXME: Instead of clock status I would suggest to get back the clock_frequency
+         #FIXME: Instead of clock status I would suggest to get back the counter_channels and photon sources
         returnvalue = self._counting_device.set_up_counter(counter_buffer=self._count_length)
         if returnvalue < 0:
             self.unlock()
@@ -477,7 +482,7 @@ class CounterLogic(GenericLogic):
 
     def stopCount(self):
         """ Set a flag to request stopping counting.
-         @return bool: stop requested?
+         @return bool: status of stopRequested
         """
         with self.threadlock:
             self.stopRequested = True
@@ -597,7 +602,7 @@ class CounterLogic(GenericLogic):
         self.sigCountContinuousNext.emit()
         return 0
 
-
+    #FIXME: To Do!
     def countLoopBody_gated(self):
         """ This method gets the count data from the hardware for the gated
         counting mode.
@@ -639,6 +644,7 @@ class CounterLogic(GenericLogic):
                     self.log.exception('Could not even close the '
                             'hardware, giving up.')
                     raise e
+                    return -1
                 finally:
                     # switch the state variable off again
                     self.unlock()
@@ -656,6 +662,7 @@ class CounterLogic(GenericLogic):
             self.stopCount()
             self.sigCountFiniteGatedNext.emit()
             raise e
+            return -1
 
 
         if self._already_counted_samples+len(self.rawdata[0]) >= len(self.countdata):
@@ -705,6 +712,7 @@ class CounterLogic(GenericLogic):
 
         self.sigCounterUpdated.emit()
         self.sigCountFiniteGatedNext.emit()
+        return 0
 
     def save_current_count_trace(self, name_tag=''):
         """ The current displayed counttrace will be saved.
@@ -715,6 +723,10 @@ class CounterLogic(GenericLogic):
         This method saves the already displayed counts to file and does not
         accumulate them. The counttrace variable will be saved to file with the
         provided name!
+        @return: dict data: Data which was saved
+                 str filepath: Filepath
+                 dict parameters: Experiment parameters
+                 str filelabel: Filelabel
         """
 
         # If there is a postfix then add separating underscore
@@ -751,6 +763,8 @@ class CounterLogic(GenericLogic):
         #, as_xml=False, precision=None, delimiter=None)
         self.log.debug('Current Counter Trace saved to:\n'
                     '{0}'.format(filepath))
+
+        return data, filepath, parameters, filelabel
 
 
 
