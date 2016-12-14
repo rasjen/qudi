@@ -97,20 +97,15 @@ class CounterLogic(GenericLogic):
         self._counting_device = self.get_in_connector('counter1')
         self._save_logic = self.get_in_connector('savelogic')
 
+        constraints = self.get_hardware_constraints()
+        number_of_detectors = constraints['#detectors']
+
         #Initialize data arrays
-        self.countdata = np.zeros((self._count_length,))
-        self.countdata_smoothed = np.zeros((self._count_length,))
-        # FIXME: Extend to a third, forth.... detector
-        # FIXME: Photon source is missleading
-        # FIXME: What happens if the rawdata, countdata do not have the same length
-        if hasattr(self._counting_device, '_photon_source2'):
-            self.countdata2 = np.zeros((self._count_length,))
-            self.countdata_smoothed2 = np.zeros((self._count_length,))
-        if hasattr(self._counting_device, '_photon_source2'):
-            self.rawdata = np.zeros([2, self._counting_samples])
-        else:
-            self.rawdata = np.zeros([1, self._counting_samples])
-        # FIXME: Shouldn't it have the same dimension as the number of detectors
+        self.countdata = np.zeros((number_of_detectors,self._count_length))
+        self.countdata_smoothed = np.zeros((number_of_detectors,self._count_length))
+        self.countdata_smoothed2 = np.zeros((number_of_detectors,self._count_length))
+        self.rawdata = np.zeros((number_of_detectors, self._counting_samples))
+
         self._data_to_save=[] # data to save
 
         # Initialize variables
@@ -122,7 +117,7 @@ class CounterLogic(GenericLogic):
 
 
         #QSignals
-        # FIXME: Is it really necessary to have three different Signals?
+        # FIXME: Is it really necessary to have three different Signals? They are doing almost the same
         # for continuous counting:
         self.sigCountContinuousNext.connect(self.countLoopBody_continuous, QtCore.Qt.QueuedConnection)
         # for gated counting:
@@ -140,52 +135,72 @@ class CounterLogic(GenericLogic):
         """
         self.stopCount()
         return_value = 0
-        #FIXME: Why 20?
-        for ii in range(20):
-            if self.getState() == 'idle':
+        #Since deactivation is failing from time to time, up to 20 tries are performed
+        for attempt in range(20):
+            try:
+                if self.getState() == 'idle':
+                    break
+                QtCore.QCoreApplication.processEvents()
+                time.sleep(0.1)
+            except:
+                continue
+            else:
                 break
-            QtCore.QCoreApplication.processEvents()
-            time.sleep(0.1)
-            if ii == 20:
-                self.log.error('Stopped deactivate counter after trying for 2 seconds!')
-                return_value = -1
+        else:
+            self.log.error('Stopped deactivate counter after trying for 2 seconds!')
+            return_value = -1
         return return_value
 
-    # FIXME: Are all these set and get function independent of hardware?
+
+    def get_hardware_constraints(self):
+        """ Retrieve the hardware constrains from the counter device.
+
+        @return dict: dict with constraints for the counter
+        """
+
+        return self._counting_device.get_constraints()
+
 
     def set_counting_samples(self, samples = 1):
         """ Sets the oversampling in units of bins.
 
-        @param int samples: oversampling in units of bins.
+        @param int samples: oversampling in units of bins (positive int ).
 
         @return int: oversampling in units of bins.
 
         This makes sure, the counter is stopped first and restarted afterwards.
         """
-        restart = self.stop_counter()
-        self._counting_samples = int(samples)
 
-        # if the counter was running, restart it
-        if restart:
-            self.startCount()
+        if samples > 0:
+            restart = self.stop_counter()
+            self._counting_samples = int(samples)
+
+            # if the counter was running, restart it
+            if restart:
+                self.startCount()
+        else:
+            self.log.warning('counting_samples has to be larger than 0! Command ignored!')
 
         return self._counting_samples
 
     def set_count_length(self, length = 300):
         """ Sets the length of time trace in units of bins.
 
-        @param int length: length of time trace in units of bins.
+        @param int length: length of time trace in units of bins (positive int).
 
         @return int: length of time trace in units of bins
 
         This makes sure, the counter is stopped first and restarted afterwards.
         """
-        restart = self.stop_counter()
-        self._count_length = int(length)
+        if length > 0:
+            restart = self.stop_counter()
+            self._count_length = int(length)
 
-        # if the counter was running, restart it
-        if restart:
-            self.startCount()
+            # if the counter was running, restart it
+            if restart:
+                self.startCount()
+        else:
+            self.log.warning('count_length has to be larger than 0! Command ignored!')
 
         return self._count_length
 
@@ -198,12 +213,17 @@ class CounterLogic(GenericLogic):
 
         This makes sure, the counter is stopped first and restarted afterwards.
         """
-        restart = self.stop_counter()
-        self._count_frequency = frequency
 
-        # if the counter was running, restart it
-        if restart:
-            self.startCount()
+        constraints = self.get_hardware_constraints()
+        if constraints['min_count_frequency'] <= frequency <= constraints['max_count_frequency']:
+            restart = self.stop_counter()
+            self._count_frequency = frequency
+
+            # if the counter was running, restart it
+            if restart:
+                self.startCount()
+        else:
+            self.log.warning('count_frequency not in range! Command ignored!')
 
         return self._count_frequency
 
@@ -215,6 +235,7 @@ class CounterLogic(GenericLogic):
         """
         return self._count_length
 
+    #FIXME: get from hardware
     def get_count_frequency(self):
         """ Returns the currently set frequency of counting (resolution).
 
@@ -237,7 +258,8 @@ class CounterLogic(GenericLogic):
         return self._saving
 
     def start_saving(self, resume=False):
-        """ Starts saving the data in a list.
+        """ Sets up start-time and initializes data array, if not resuming, and changes saving state
+        If the counter is not running it will be started in order to have data to save
 
         @return bool: saving state
         """
@@ -260,10 +282,12 @@ class CounterLogic(GenericLogic):
         @param str postfix: an additional tag, which will be added to the filename upon save
 
         @return np.array([2 or 3][X]), OrderedDict: array with the
+        @return dict parameters: Dictionary which contains the saving parameters
         """
+
+        # stop saving thus saving state has to be set to False
         self._saving = False
         self._saving_stop_time = time.time()
-
         # write the parameters:
         parameters = OrderedDict()
         parameters['Start counting time (s)'] = time.strftime('%d.%m.%Y %Hh:%Mmin:%Ss', time.localtime(self._saving_start_time))
@@ -281,9 +305,12 @@ class CounterLogic(GenericLogic):
 
             # prepare the data in a dict or in an OrderedDict:
             data = OrderedDict()
-            data = {'Time (s),Signal (counts/s)': self._data_to_save}
-            if self._counting_device._photon_source2 is not None:
-                data = {'Time (s),Signal 1 (counts/s),Signal 2 (counts/s)': self._data_to_save}
+            header = 'Time (s)'
+            constraints = self.get_hardware_constraints()
+            number_of_detectors = constraints['#detectors']
+            for detectors in range(number_of_detectors):
+                header = header + ',Signal (counts/s)'
+            data = {header: self._data_to_save}
 
             filepath = self._save_logic.get_path_for_module(module_name='Counter')
 
@@ -298,21 +325,21 @@ class CounterLogic(GenericLogic):
                                        )
             #, as_xml=False, precision=None, delimiter=None)
             plt.close(fig)
-            self.log.debug('Counter Trace saved to:\n{0}'.format(filepath))
+            self.log.info('Counter Trace saved to:\n{0}'.format(filepath))
 
         return self._data_to_save, parameters
 
     def draw_figure(self, data):
         """ Draw figure to save with data file.
 
-        @param: nparray data: a numpy array containing counts vs time
+        @param: nparray data: a numpy array containing counts vs time for all detectors
 
         @return: fig fig: a matplotlib figure object to be saved to file.
         """
-        # TODO: Draw plot for second APD if it is connected
+        # TODO: One plot for all apds or for every APD one plot?
 
-        count_data = data[:,1]
         time_data = data[:,0]
+        count_data = np.delete(data,0,1)
 
         # Scale count values using SI prefix
         prefix = ['', 'k', 'M', 'G']
@@ -337,7 +364,6 @@ class CounterLogic(GenericLogic):
 
         return fig
 
-    # FIXME: Check if the following two functions are independent of hardware
 
     def set_counting_mode(self, mode='continuous'):
         """Set the counting mode, to change between continuous and gated counting.
@@ -348,8 +374,13 @@ class CounterLogic(GenericLogic):
 
         @return str: counting mode
         """
-        self._counting_mode = mode
+        constraints = self.get_hardware_constraints()
 
+        if mode in constraints['counting_mode']:
+            self._counting_mode = mode
+            self.log.debug(self._counting_mode)
+        else:
+            self.log.warning('Counting mode not supported from hardware. Command ignored!')
         return self._counting_mode
 
     def get_counting_mode(self):
@@ -395,15 +426,14 @@ class CounterLogic(GenericLogic):
         # set a lock, to signify the measurment is running
         self.lock()
 
-        #FIXME: Instead of clock status I would suggest to get back the clock_frequency
-        #FIXME: What about the clock_channel anyway?
+        #FIXME: What about the clock_channel?
         clock_status = self._counting_device.set_up_clock(clock_frequency = self._count_frequency)
         if clock_status < 0:
             self.unlock()
             self.sigCounterUpdated.emit()
             return -1
 
-         #FIXME: Instead of clock status I would suggest to get back the counter_channels and photon sources
+        #FIXME: What about the variables of set_up_counter?
         counter_status = self._counting_device.set_up_counter()
         if counter_status < 0:
             clock_closed = self._counting_device.close_clock()
@@ -523,10 +553,10 @@ class CounterLogic(GenericLogic):
                     if clock_closed:
                         self.log.info('Clock counter closed')
 
-                except Exception as e:
+                except:
                     self.log.exception('Could not even close the hardware,'
                             ' giving up.')
-                    raise e
+
                     return -1
 
                 finally:
@@ -540,11 +570,10 @@ class CounterLogic(GenericLogic):
             # read the current counter value
             self.rawdata = self._counting_device.get_counter(samples=self._counting_samples)
 
-        except Exception as e:
+        except:
             self.log.error('The counting went wrong, killing the counter.')
             self.stopCount()
             self.sigCountContinuousNext.emit()
-            raise e
             return -1
 
         # remember the new count data in circular array

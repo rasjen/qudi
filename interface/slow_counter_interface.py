@@ -31,6 +31,17 @@ class SlowCounterInterface(metaclass=InterfaceMetaclass):
     _modclass = 'interface'
 
     @abc.abstractmethod
+
+    def get_constraints(self):
+        """ Retrieve the hardware constrains from the counter device.
+
+        @return dict: dict with constraints for the counter
+        """
+        pass
+
+
+
+
     def set_up_clock(self, clock_frequency=None, clock_channel=None):
         """ Configures the hardware clock of the NiDAQ card to give the timing.
 
