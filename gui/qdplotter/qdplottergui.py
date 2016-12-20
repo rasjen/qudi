@@ -82,14 +82,14 @@ class QdplotterGui(GUIBase):
 
         #####################
         # Configuring the dock widgets
-        # Use the inherited class 'CounterMainWindow' to create the GUI window
+        # Use the inherited class 'QdplotMainWindow' to create the GUI window
         self._mw = QdplotMainWindow()
 
         # Setup dock widgets
         self._mw.centralwidget.hide()
         self._mw.setDockNestingEnabled(True)
 
-        # Plot labels.
+        # Plot labels
         self._pw = self._mw.qdplot_PlotWidget
 
         self._pw.setLabel('left', 'Dependent variable', units='?')
