@@ -1,4 +1,5 @@
 <map id="motor.aptmotor.APTOneAxisStage" name="motor.aptmotor.APTOneAxisStage">
-<area shape="rect" id="node2" href="$classmotor_1_1aptmotor_1_1APTStage.html" title="Control class for an arbitrary collection of axis." alt="" coords="64,160,237,189"/>
-<area shape="rect" id="node4" href="$classcore_1_1base_1_1Base.html" title="Base class for all loadable modules." alt="" coords="28,83,140,112"/>
+<area shape="rect" id="node2" href="$classmotor_1_1aptmotor_1_1APTStage.html" title="Control class for an arbitrary collection of axis. " alt="" coords="93,160,267,189"/>
+<area shape="rect" id="node4" href="$classcore_1_1base_1_1Base.html" title="Base class for all loadable modules. " alt="" coords="57,83,169,112"/>
+<area shape="rect" id="node8" href="$classcore_1_1FysomAdapter_1_1Fysom.html" title="core.FysomAdapter.Fysom" alt="" coords="99,5,277,35"/>
 </map>

@@ -1,4 +1,5 @@
 <map id="countergui.CounterGui" name="countergui.CounterGui">
-<area shape="rect" id="node2" href="$classgui_1_1guibase_1_1GUIBase.html" title="This is the GUI base class." alt="" coords="11,160,157,189"/>
-<area shape="rect" id="node4" href="$classcore_1_1base_1_1Base.html" title="Base class for all loadable modules." alt="" coords="28,83,140,112"/>
+<area shape="rect" id="node2" href="$classgui_1_1guibase_1_1GUIBase.html" title="This is the GUI base class. " alt="" coords="40,160,187,189"/>
+<area shape="rect" id="node4" href="$classcore_1_1base_1_1Base.html" title="Base class for all loadable modules. " alt="" coords="57,83,169,112"/>
+<area shape="rect" id="node8" href="$classcore_1_1FysomAdapter_1_1Fysom.html" title="core.FysomAdapter.Fysom" alt="" coords="99,5,277,35"/>
 </map>

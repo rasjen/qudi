@@ -1,4 +1,5 @@
 <map id="ni_card.SlowGatedNICard" name="ni_card.SlowGatedNICard">
-<area shape="rect" id="node2" href="$classni__card_1_1NICard.html" title="stable Kay Jahnke, Alexander Stark" alt="" coords="275,160,384,189"/>
-<area shape="rect" id="node4" href="$classcore_1_1base_1_1Base.html" title="Base class for all loadable modules." alt="" coords="28,83,140,112"/>
+<area shape="rect" id="node2" href="$classni__card_1_1NICard.html" title="stable Kay Jahnke, Alexander Stark " alt="" coords="304,160,413,189"/>
+<area shape="rect" id="node4" href="$classcore_1_1base_1_1Base.html" title="Base class for all loadable modules. " alt="" coords="57,83,169,112"/>
+<area shape="rect" id="node8" href="$classcore_1_1FysomAdapter_1_1Fysom.html" title="core.FysomAdapter.Fysom" alt="" coords="99,5,277,35"/>
 </map>

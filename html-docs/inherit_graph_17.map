@@ -1,7 +1,7 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node3" href="$classcore_1_1threadmanager_1_1ThreadManager.html" title="This class keeps track of all the QThreads that are needed somewhere." alt="" coords="203,5,384,51"/>
+<area shape="rect" id="node3" href="$classcore_1_1threadmanager_1_1ThreadManager.html" title="This class keeps track of all the QThreads that are needed somewhere. " alt="" coords="203,5,384,51"/>
 <area shape="rect" id="node5" href="$classcore_1_1util_1_1models_1_1DictTableModel.html" title="core.util.models.DictTable\lModel" alt="" coords="207,74,380,121"/>
 <area shape="rect" id="node7" href="$classcore_1_1util_1_1models_1_1ListTableModel.html" title="core.util.models.ListTable\lModel" alt="" coords="208,143,379,190"/>
-<area shape="rect" id="node11" href="$classgui_1_1manager_1_1logwidget_1_1LogModel.html" title="This is a Qt model that represents the log for dislpay in a QTableView." alt="" coords="205,213,381,259"/>
-<area shape="rect" id="node9" href="$classtaskrunner_1_1TaskListTableModel.html" title="An extension of the ListTableModel for keeping a task list in a TaskRunner." alt="" coords="433,143,601,190"/>
+<area shape="rect" id="node11" href="$classgui_1_1manager_1_1logwidget_1_1LogModel.html" title="This is a Qt model that represents the log for dislpay in a QTableView. " alt="" coords="205,213,381,259"/>
+<area shape="rect" id="node9" href="$classtaskrunner_1_1TaskListTableModel.html" title="An extension of the ListTableModel for keeping a task list in a TaskRunner. " alt="" coords="433,143,601,190"/>
 </map>

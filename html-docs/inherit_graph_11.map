@@ -2,5 +2,5 @@
 <area shape="rect" id="node3" href="$classcore_1_1garbage__collector_1_1GarbageCollector.html" title="core.garbage_collector.Garbage\lCollector" alt="" coords="127,5,332,51"/>
 <area shape="rect" id="node5" href="$classcore_1_1gui_1_1Gui.html" title="core.gui.Gui" alt="" coords="184,75,275,104"/>
 <area shape="rect" id="node7" href="$classcore_1_1remote_1_1RemoteObjectManager.html" title="This shares modules with other computers and is resonsible for obtaining modules shared by other comp..." alt="" coords="140,127,319,174"/>
-<area shape="rect" id="node9" href="$classcore_1_1remote_1_1RPyCServer.html" title="Contains a RPyC server that serves modules to remote computers." alt="" coords="145,197,313,227"/>
+<area shape="rect" id="node9" href="$classcore_1_1remote_1_1RPyCServer.html" title="Contains a RPyC server that serves modules to remote computers. " alt="" coords="145,197,313,227"/>
 </map>

@@ -1,7 +1,7 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
 <area shape="rect" id="node3" href="$classcheckbox__delegate_1_1CheckBoxDelegate.html" title="checkbox_delegate.CheckBox\lDelegate" alt="" coords="205,5,403,51"/>
 <area shape="rect" id="node5" href="$classcombobox__delegate_1_1ComboBoxDelegate.html" title="combobox_delegate.ComboBox\lDelegate" alt="" coords="201,74,407,121"/>
-<area shape="rect" id="node7" href="$classdoublespinbox__delegate_1_1DoubleSpinBoxDelegate.html" title="Make a QDoubleSpinBox delegate for the QTableWidget." alt="" coords="201,143,407,190"/>
+<area shape="rect" id="node7" href="$classdoublespinbox__delegate_1_1DoubleSpinBoxDelegate.html" title="Make a QDoubleSpinBox delegate for the QTableWidget. " alt="" coords="201,143,407,190"/>
 <area shape="rect" id="node9" href="$classgui_1_1manager_1_1logwidget_1_1AutoToolTipDelegate.html" title="A subclass of QStyledItemDelegate to display a tooltip if the text doesn&#39;t fit into the cell..." alt="" coords="213,213,395,259"/>
-<area shape="rect" id="node11" href="$classspinbox__delegate_1_1SpinBoxDelegate.html" title="Create delegated Spinboxes." alt="" coords="216,282,392,329"/>
+<area shape="rect" id="node11" href="$classspinbox__delegate_1_1SpinBoxDelegate.html" title="Create delegated Spinboxes. " alt="" coords="216,282,392,329"/>
 </map>

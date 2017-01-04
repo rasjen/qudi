@@ -1,4 +1,5 @@
 <map id="gated_counter_gui.GatedCounterGui" name="gated_counter_gui.GatedCounterGui">
-<area shape="rect" id="node2" href="$classgui_1_1guibase_1_1GUIBase.html" title="This is the GUI base class." alt="" coords="48,160,195,189"/>
-<area shape="rect" id="node4" href="$classcore_1_1base_1_1Base.html" title="Base class for all loadable modules." alt="" coords="65,83,177,112"/>
+<area shape="rect" id="node2" href="$classgui_1_1guibase_1_1GUIBase.html" title="This is the GUI base class. " alt="" coords="48,160,195,189"/>
+<area shape="rect" id="node4" href="$classcore_1_1base_1_1Base.html" title="Base class for all loadable modules. " alt="" coords="65,83,177,112"/>
+<area shape="rect" id="node8" href="$classcore_1_1FysomAdapter_1_1Fysom.html" title="core.FysomAdapter.Fysom" alt="" coords="107,5,285,35"/>
 </map>

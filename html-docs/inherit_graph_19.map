@@ -1,4 +1,4 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node3" href="$classcore_1_1util_1_1mutex_1_1Mutex.html" title="Extends QMutex (which serves as access serialization between threads)." alt="" coords="124,13,271,43"/>
+<area shape="rect" id="node3" href="$classcore_1_1util_1_1mutex_1_1Mutex.html" title="Extends QMutex (which serves as access serialization between threads). " alt="" coords="124,13,271,43"/>
 <area shape="rect" id="node5" href="$classcore_1_1util_1_1mutex_1_1RecursiveMutex.html" title="core.util.mutex.Recursive\lMutex" alt="" coords="320,5,491,51"/>
 </map>

@@ -1,9 +1,9 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node3" href="$classgui_1_1confocal_1_1confocalgui_1_1ConfocalSettingDialog.html" title="Create the SettingsDialog window, based on the corresponding *.ui file." alt="" coords="148,5,313,51"/>
+<area shape="rect" id="node3" href="$classgui_1_1confocal_1_1confocalgui_1_1ConfocalSettingDialog.html" title="Create the SettingsDialog window, based on the corresponding *.ui file. " alt="" coords="148,5,313,51"/>
 <area shape="rect" id="node5" href="$classgui_1_1confocal_1_1confocalgui_1_1OptimizerSettingDialog.html" title="gui.confocal.confocalgui.\lOptimizerSettingDialog" alt="" coords="148,74,313,121"/>
 <area shape="rect" id="node7" href="$classgui_1_1manager_1_1errordialog_1_1ErrorDialog.html" title="This class provides a popup window for notification with the option to show the next error popup in t..." alt="" coords="151,143,311,190"/>
-<area shape="rect" id="node9" href="$classgui_1_1manager_1_1managergui_1_1AboutDialog.html" title="This class represents the Qudi About dialog." alt="" coords="129,213,332,259"/>
-<area shape="rect" id="node11" href="$classgui_1_1manager_1_1managergui_1_1ConsoleSettingsDialog.html" title="Create the SettingsDialog window, based on the corresponding *.ui file." alt="" coords="123,282,339,329"/>
+<area shape="rect" id="node9" href="$classgui_1_1manager_1_1managergui_1_1AboutDialog.html" title="This class represents the Qudi About dialog. " alt="" coords="129,213,332,259"/>
+<area shape="rect" id="node11" href="$classgui_1_1manager_1_1managergui_1_1ConsoleSettingsDialog.html" title="Create the SettingsDialog window, based on the corresponding *.ui file. " alt="" coords="123,282,339,329"/>
 <area shape="rect" id="node13" href="$classgui_1_1poimanager_1_1poimangui_1_1ReorientRoiDialog.html" title="gui.poimanager.poimangui.\lReorientRoiDialog" alt="" coords="143,351,319,398"/>
 <area shape="rect" id="node15" href="$classmagnet__gui_1_1MagnetSettingsWindow.html" title="magnet_gui.MagnetSettings\lWindow" alt="" coords="139,421,323,467"/>
 <area shape="rect" id="node17" href="$classodmrgui_1_1ODMRSettingDialog.html" title="odmrgui.ODMRSettingDialog" alt="" coords="136,491,325,520"/>

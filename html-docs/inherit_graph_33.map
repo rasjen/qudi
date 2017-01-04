@@ -1,7 +1,7 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
 <area shape="rect" id="node3" href="$classgui_1_1fitsettings_1_1FitSettingsWidget.html" title="gui.fitsettings.FitSettings\lWidget" alt="" coords="172,5,337,51"/>
-<area shape="rect" id="node5" href="$classgui_1_1manager_1_1logwidget_1_1LogWidget.html" title="A widget to show log entries and filter them." alt="" coords="167,74,343,121"/>
-<area shape="rect" id="node7" href="$classgui_1_1switcher_1_1switchgui_1_1SwitchWidget.html" title="A widget that shows all data associated to a switch." alt="" coords="157,143,352,190"/>
+<area shape="rect" id="node5" href="$classgui_1_1manager_1_1logwidget_1_1LogWidget.html" title="A widget to show log entries and filter them. " alt="" coords="167,74,343,121"/>
+<area shape="rect" id="node7" href="$classgui_1_1switcher_1_1switchgui_1_1SwitchWidget.html" title="A widget that shows all data associated to a switch. " alt="" coords="157,143,352,190"/>
 <area shape="rect" id="node9" href="$classpulsed__maingui_1_1PredefinedMethodsTab.html" title="pulsed_maingui.Predefined\lMethodsTab" alt="" coords="165,213,344,259"/>
 <area shape="rect" id="node11" href="$classpulsed__maingui_1_1PulseAnalysisTab.html" title="pulsed_maingui.PulseAnalysisTab" alt="" coords="144,283,365,312"/>
 <area shape="rect" id="node13" href="$classpulsed__maingui_1_1PulseExtractionTab.html" title="pulsed_maingui.PulseExtractionTab" alt="" coords="140,336,369,365"/>

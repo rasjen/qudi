@@ -1,6 +1,7 @@
 <map id="motor.aptmotor.APTStage" name="motor.aptmotor.APTStage">
-<area shape="rect" id="node11" href="$classmotor_1_1aptmotor_1_1APTFourAxisStage.html" title="The module controls three StepperStage56=NRT150 Enc Stage 150mm together with CR1&#45;Z7 rotation stage..." alt="" coords="516,5,708,51"/>
-<area shape="rect" id="node13" href="$classmotor_1_1aptmotor_1_1APTOneAxisStage.html" title="motor.aptmotor.APTOneAxis\lStage" alt="" coords="517,74,707,121"/>
-<area shape="rect" id="node15" href="$classmotor_1_1aptmotor_1_1APTThreeAxisStage.html" title="The module controlles three StepperStage56=NRT150 Enc Stage 150mm." alt="" coords="513,143,711,190"/>
-<area shape="rect" id="node2" href="$classcore_1_1base_1_1Base.html" title="Base class for all loadable modules." alt="" coords="127,56,239,85"/>
+<area shape="rect" id="node11" href="$classmotor_1_1aptmotor_1_1APTFourAxisStage.html" title="The module controls three StepperStage56=NRT150 Enc Stage 150mm together with CR1&#45;Z7 rotation stage..." alt="" coords="625,5,817,51"/>
+<area shape="rect" id="node13" href="$classmotor_1_1aptmotor_1_1APTOneAxisStage.html" title="motor.aptmotor.APTOneAxis\lStage" alt="" coords="627,74,816,121"/>
+<area shape="rect" id="node15" href="$classmotor_1_1aptmotor_1_1APTThreeAxisStage.html" title="The module controlles three StepperStage56=NRT150 Enc Stage 150mm. " alt="" coords="623,143,820,190"/>
+<area shape="rect" id="node2" href="$classcore_1_1base_1_1Base.html" title="Base class for all loadable modules. " alt="" coords="236,56,348,85"/>
+<area shape="rect" id="node6" href="$classcore_1_1FysomAdapter_1_1Fysom.html" title="core.FysomAdapter.Fysom" alt="" coords="7,83,185,112"/>
 </map>
