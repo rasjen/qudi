@@ -1,4 +1,4 @@
-<map id="G" name="G">
+<map id="pulsed_maingui.PulsedMeasurementGui" name="pulsed_maingui.PulsedMeasurementGui">
 <area shape="rect" id="node2" href="$classgui_1_1guibase_1_1GUIBase.html" title="This is the GUI base class." alt="" coords="59,160,205,189"/>
 <area shape="rect" id="node4" href="$classcore_1_1base_1_1Base.html" title="Base class for all loadable modules." alt="" coords="76,83,188,112"/>
 </map>

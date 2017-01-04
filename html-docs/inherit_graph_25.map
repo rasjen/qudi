@@ -1,3 +1,8 @@
-<map id="G" name="G">
-<area shape="rect" id="node1" href="$classcore_1_1mapper_1_1Mapper.html" title="core.mapper.Mapper" alt="" coords="5,5,147,35"/>
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="node3" href="$classfastcomtec_1_1fastcomtecmcs6_1_1ACQDATA.html" title="Create a structured Data type with ctypes where the dll can write into." alt="" coords="129,5,321,51"/>
+<area shape="rect" id="node5" href="$classfastcomtec_1_1fastcomtecmcs6_1_1AcqSettings.html" title="fastcomtec.fastcomtecmcs6.\lAcqSettings" alt="" coords="129,74,321,121"/>
+<area shape="rect" id="node7" href="$classfastcomtec_1_1fastcomtecmcs6_1_1AcqStatus.html" title="Create a structured Data type with ctypes where the dll can write into." alt="" coords="129,143,321,190"/>
+<area shape="rect" id="node9" href="$classfastcomtec_1_1fastcomtecp7887_1_1ACQDATA.html" title="Create a structured Data type with ctypes where the dll can write into." alt="" coords="128,213,323,259"/>
+<area shape="rect" id="node11" href="$classfastcomtec_1_1fastcomtecp7887_1_1AcqSettings.html" title="Create a structured Data type with ctypes where the dll can write into." alt="" coords="128,282,323,329"/>
+<area shape="rect" id="node13" href="$classfastcomtec_1_1fastcomtecp7887_1_1AcqStatus.html" title="Create a structured Data type with ctypes where the dll can write into." alt="" coords="128,351,323,398"/>
 </map>

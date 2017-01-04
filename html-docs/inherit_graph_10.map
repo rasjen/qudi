@@ -1,3 +1,6 @@
-<map id="G" name="G">
-<area shape="rect" id="node1" href="$classconfig__gui_1_1____main_____1_1ConfigMainWindow.html" title="This class represents the Manager Window." alt="" coords="5,5,264,35"/>
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="node3" href="$classconfocal__logic_1_1OldConfigFileError.html" title="confocal_logic.OldConfig\lFileError" alt="" coords="164,5,329,51"/>
+<area shape="rect" id="node5" href="$classcore_1_1util_1_1customexceptions_1_1InterfaceImplementationError.html" title="core.util.customexceptions.\lInterfaceImplementationError" alt="" coords="152,74,341,121"/>
+<area shape="rect" id="node7" href="$classfast__counter__dummy_1_1InterfaceImplementationError.html" title="fast_counter_dummy.Interface\lImplementationError" alt="" coords="148,143,345,190"/>
+<area shape="rect" id="node9" href="$classsave__logic_1_1FunctionImplementationError.html" title="save_logic.FunctionImplementation\lError" alt="" coords="133,213,360,259"/>
 </map>

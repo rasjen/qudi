@@ -1,4 +1,4 @@
-<map id="G" name="G">
-<area shape="rect" id="node13" href="$classni__card_1_1SlowGatedNICard.html" title="Enable the usage of the gated counter in the slow counter interface." alt="" coords="220,237,393,267"/>
-<area shape="rect" id="node2" href="$classcore_1_1base_1_1Base.html" title="Base class for all loadable modules." alt="" coords="5,83,117,112"/>
+<map id="ni_card.NICard" name="ni_card.NICard">
+<area shape="rect" id="node15" href="$classni__card_1_1SlowGatedNICard.html" title="Enable the usage of the gated counter in the slow counter interface." alt="" coords="243,237,416,267"/>
+<area shape="rect" id="node2" href="$classcore_1_1base_1_1Base.html" title="Base class for all loadable modules." alt="" coords="28,83,140,112"/>
 </map>

@@ -1,3 +1,6 @@
-<map id="G" name="G">
-<area shape="rect" id="node1" href="$classconfig__gui_1_1menu_1_1ModMenu.html" title="config_gui.menu.ModMenu" alt="" coords="5,5,184,35"/>
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="node3" href="$classcore_1_1garbage__collector_1_1GarbageCollector.html" title="core.garbage_collector.Garbage\lCollector" alt="" coords="127,5,332,51"/>
+<area shape="rect" id="node5" href="$classcore_1_1gui_1_1Gui.html" title="core.gui.Gui" alt="" coords="184,75,275,104"/>
+<area shape="rect" id="node7" href="$classcore_1_1remote_1_1RemoteObjectManager.html" title="This shares modules with other computers and is resonsible for obtaining modules shared by other comp..." alt="" coords="140,127,319,174"/>
+<area shape="rect" id="node9" href="$classcore_1_1remote_1_1RPyCServer.html" title="Contains a RPyC server that serves modules to remote computers." alt="" coords="145,197,313,227"/>
 </map>

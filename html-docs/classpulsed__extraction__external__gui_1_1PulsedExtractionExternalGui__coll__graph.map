@@ -1,4 +1,4 @@
-<map id="G" name="G">
-<area shape="rect" id="node2" href="$classgui_1_1guibase_1_1GUIBase.html" title="This is the GUI base class." alt="" coords="117,160,264,189"/>
-<area shape="rect" id="node4" href="$classcore_1_1base_1_1Base.html" title="Base class for all loadable modules." alt="" coords="135,83,247,112"/>
+<map id="pulsed_extraction_external_gui.PulsedExtractionExternalGui" name="pulsed_extraction_external_gui.PulsedExtractionExternalGui">
+<area shape="rect" id="node2" href="$classgui_1_1guibase_1_1GUIBase.html" title="This is the GUI base class." alt="" coords="40,160,187,189"/>
+<area shape="rect" id="node4" href="$classcore_1_1base_1_1Base.html" title="Base class for all loadable modules." alt="" coords="57,83,169,112"/>
 </map>

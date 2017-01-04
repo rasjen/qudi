@@ -1,4 +1,4 @@
-<map id="G" name="G">
-<area shape="rect" id="node2" href="$classni__card_1_1NICard.html" title="stable Kay Jahnke, Alexander Stark" alt="" coords="252,160,361,189"/>
-<area shape="rect" id="node4" href="$classcore_1_1base_1_1Base.html" title="Base class for all loadable modules." alt="" coords="5,83,117,112"/>
+<map id="ni_card.SlowGatedNICard" name="ni_card.SlowGatedNICard">
+<area shape="rect" id="node2" href="$classni__card_1_1NICard.html" title="stable Kay Jahnke, Alexander Stark" alt="" coords="275,160,384,189"/>
+<area shape="rect" id="node4" href="$classcore_1_1base_1_1Base.html" title="Base class for all loadable modules." alt="" coords="28,83,140,112"/>
 </map>

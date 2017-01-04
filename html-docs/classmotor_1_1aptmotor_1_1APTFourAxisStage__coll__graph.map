@@ -1,4 +1,4 @@
-<map id="G" name="G">
-<area shape="rect" id="node2" href="$classmotor_1_1aptmotor_1_1APTStage.html" title="Control class for an arbitrary collection of axis." alt="" coords="41,160,215,189"/>
-<area shape="rect" id="node4" href="$classcore_1_1base_1_1Base.html" title="Base class for all loadable modules." alt="" coords="5,83,117,112"/>
+<map id="motor.aptmotor.APTFourAxisStage" name="motor.aptmotor.APTFourAxisStage">
+<area shape="rect" id="node2" href="$classmotor_1_1aptmotor_1_1APTStage.html" title="Control class for an arbitrary collection of axis." alt="" coords="64,160,237,189"/>
+<area shape="rect" id="node4" href="$classcore_1_1base_1_1Base.html" title="Base class for all loadable modules." alt="" coords="28,83,140,112"/>
 </map>

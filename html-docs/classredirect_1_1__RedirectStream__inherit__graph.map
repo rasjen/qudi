@@ -1,4 +1,4 @@
-<map id="G" name="G">
+<map id="redirect._RedirectStream" name="redirect._RedirectStream">
 <area shape="rect" id="node3" href="$classredirect_1_1redirect__stderr.html" title="Context manager for temporarily redirecting stderr to another file." alt="" coords="5,83,157,112"/>
 <area shape="rect" id="node5" href="$classredirect_1_1redirect__stdout.html" title="Context manager for temporarily redirecting stdout to another file." alt="" coords="181,83,336,112"/>
 </map>

@@ -1,4 +1,4 @@
-<map id="G" name="G">
-<area shape="rect" id="node2" href="$classpi__pwm_1_1PiPWM.html" title="pi_pwm.PiPWM" alt="" coords="84,160,199,189"/>
-<area shape="rect" id="node4" href="$classcore_1_1base_1_1Base.html" title="Base class for all loadable modules." alt="" coords="5,83,117,112"/>
+<map id="pi_pwm.PiPWMHalf" name="pi_pwm.PiPWMHalf">
+<area shape="rect" id="node2" href="$classpi__pwm_1_1PiPWM.html" title="pi_pwm.PiPWM" alt="" coords="107,160,221,189"/>
+<area shape="rect" id="node4" href="$classcore_1_1base_1_1Base.html" title="Base class for all loadable modules." alt="" coords="28,83,140,112"/>
 </map>

@@ -1,4 +1,4 @@
-<map id="G" name="G">
-<area shape="rect" id="node2" href="$classgui_1_1guibase_1_1GUIBase.html" title="This is the GUI base class." alt="" coords="8,160,155,189"/>
-<area shape="rect" id="node4" href="$classcore_1_1base_1_1Base.html" title="Base class for all loadable modules." alt="" coords="25,83,137,112"/>
+<map id="countergui.CounterGui" name="countergui.CounterGui">
+<area shape="rect" id="node2" href="$classgui_1_1guibase_1_1GUIBase.html" title="This is the GUI base class." alt="" coords="11,160,157,189"/>
+<area shape="rect" id="node4" href="$classcore_1_1base_1_1Base.html" title="Base class for all loadable modules." alt="" coords="28,83,140,112"/>
 </map>

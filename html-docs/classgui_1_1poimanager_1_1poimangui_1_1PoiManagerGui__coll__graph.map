@@ -1,4 +1,4 @@
-<map id="G" name="G">
-<area shape="rect" id="node2" href="$classgui_1_1guibase_1_1GUIBase.html" title="This is the GUI base class." alt="" coords="65,160,212,189"/>
-<area shape="rect" id="node4" href="$classcore_1_1base_1_1Base.html" title="Base class for all loadable modules." alt="" coords="83,83,195,112"/>
+<map id="gui.poimanager.poimangui.PoiManagerGui" name="gui.poimanager.poimangui.PoiManagerGui">
+<area shape="rect" id="node2" href="$classgui_1_1guibase_1_1GUIBase.html" title="This is the GUI base class." alt="" coords="20,160,167,189"/>
+<area shape="rect" id="node4" href="$classcore_1_1base_1_1Base.html" title="Base class for all loadable modules." alt="" coords="37,83,149,112"/>
 </map>

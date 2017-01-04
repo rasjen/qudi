@@ -1,3 +1,4 @@
-<map id="G" name="G">
-<area shape="rect" id="node1" href="$classgui_1_1guiutils_1_1ColorBar.html" title="Create a ColorBar according to a previously defined color map." alt="" coords="5,5,144,35"/>
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="node3" href="$classqtwidgets_1_1scientific__spinbox_1_1ScienDSpinBox.html" title="Wrapper Class from PyQtGraph to display a QDoubleSpinBox in Scientific way." alt="" coords="125,5,296,51"/>
+<area shape="rect" id="node5" href="$classqtwidgets_1_1scientific__spinbox_1_1ScienSpinBox.html" title="Wrapper Class from PyQtGraph to display a QSpinBox in Scientific way." alt="" coords="131,74,291,121"/>
 </map>

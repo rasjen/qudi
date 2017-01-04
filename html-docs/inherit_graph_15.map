@@ -1,3 +1,4 @@
-<map id="G" name="G">
-<area shape="rect" id="node1" href="$classconfocal__logic_1_1OldConfigFileError.html" title="confocal_logic.OldConfigFileError" alt="" coords="5,5,221,35"/>
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="node3" href="$classcore_1_1parentpoller_1_1ParentPollerUnix.html" title="A Unix&#45;specific daemon thread that terminates the program immediately when the parent process no long..." alt="" coords="117,5,277,51"/>
+<area shape="rect" id="node5" href="$classcore_1_1parentpoller_1_1ParentPollerWindows.html" title="A Windows&#45;specific daemon thread that listens for a special event that signals an interrupt and..." alt="" coords="117,74,277,121"/>
 </map>

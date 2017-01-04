@@ -1,5 +1,6 @@
 var searchData=
 [
+  ['welcome_20to_20the_20qudi_20documentation',['Welcome to the Qudi Documentation',['../md_main.html',1,'']]],
   ['wake_5fup_5fmagnet',['wake_up_magnet',['../classsc__magnet_1_1magnet_1_1Magnet.html#a3754b374957fc798706f62182471c51e',1,'sc_magnet::magnet::Magnet']]],
   ['wavemeterdummy',['WavemeterDummy',['../classwavemeter__dummy_1_1WavemeterDummy.html',1,'wavemeter_dummy']]],
   ['wavemeterinterface',['WavemeterInterface',['../classwavemeter__interface_1_1WavemeterInterface.html',1,'wavemeter_interface']]],

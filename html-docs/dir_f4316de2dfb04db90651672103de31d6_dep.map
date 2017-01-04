@@ -1,0 +1,16 @@
+<map id="hardware" name="hardware">
+<area shape="rect" id="node3" href="dir_6c95e9a56e759aa548ce4c0445330d24.html" title="awg" alt="" coords="1315,27,1387,75"/>
+<area shape="rect" id="node4" href="dir_8cd967dbe28269cbcad5fd58442b39a5.html" title="fastcomtec" alt="" coords="1205,27,1291,75"/>
+<area shape="rect" id="node5" href="dir_27171c9fede12ff83d9ff3d144c0a663.html" title="fpga_fastcounter" alt="" coords="1064,27,1181,75"/>
+<area shape="rect" id="node6" href="dir_533c39e2a51c5eaab904310cc33c7203.html" title="fpga_pulser" alt="" coords="952,27,1040,75"/>
+<area shape="rect" id="node7" href="dir_c00c6831a232ee41c2cd7799164ca563.html" title="laser" alt="" coords="856,27,928,75"/>
+<area shape="rect" id="node8" href="dir_68f2802ba8cf04d128f9c1ce787982e6.html" title="magnet" alt="" coords="760,27,832,75"/>
+<area shape="rect" id="node9" href="dir_ea50fcd708e9a67ed152092e1344abf9.html" title="microwave" alt="" coords="651,27,736,75"/>
+<area shape="rect" id="node10" href="dir_7a4cbdc5b4e4955d3c3b1a71d193d3a2.html" title="motor" alt="" coords="555,27,627,75"/>
+<area shape="rect" id="node11" href="dir_0ccbf0691d6f82b17e74951b68a5a891.html" title="picoquant" alt="" coords="453,27,531,75"/>
+<area shape="rect" id="node12" href="dir_a1c2293d3c98c4a6beb5eb991a2f4f03.html" title="sc_magnet" alt="" coords="344,27,429,75"/>
+<area shape="rect" id="node13" href="dir_3d4631f00cff586683a2aa91774332d1.html" title="spectrometer" alt="" coords="221,27,320,75"/>
+<area shape="rect" id="node14" href="dir_a2c2853e4186834cb9e176ef8e00907f.html" title="spincore" alt="" coords="125,27,197,75"/>
+<area shape="rect" id="node15" href="dir_6dc58e1eefbc0e4e1bd0d38fadb69f37.html" title="switches" alt="" coords="27,27,101,75"/>
+<area shape="rect" id="graph2" href="dir_f4316de2dfb04db90651672103de31d6.html" alt="" coords="16,16,1496,85"/>
+</map>

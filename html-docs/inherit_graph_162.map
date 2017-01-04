@@ -1,5 +1,0 @@
-<map id="G" name="G">
-<area shape="rect" id="node1" href="$classredirect_1_1__RedirectStream.html" title="A base class for a context manager to redirect streams from the sys module." alt="" coords="7,32,172,61"/>
-<area shape="rect" id="node3" href="$classredirect_1_1redirect__stderr.html" title="Context manager for temporarily redirecting stderr to another file." alt="" coords="223,5,375,35"/>
-<area shape="rect" id="node5" href="$classredirect_1_1redirect__stdout.html" title="Context manager for temporarily redirecting stdout to another file." alt="" coords="221,59,376,88"/>
-</map>

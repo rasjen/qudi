@@ -1,4 +1,4 @@
-<map id="G" name="G">
+<map id="core.FysomAdapter.Fysom" name="core.FysomAdapter.Fysom">
 <area shape="rect" id="node3" href="$classgeneric__task_1_1InterruptableTask.html" title="This class represents a task in a module that can be safely executed by checking preconditions and pa..." alt="" coords="5,83,205,112"/>
 <area shape="rect" id="node5" href="$classgeneric__task_1_1PrePostTask.html" title="Represents a task that creates the necessary conditions for a different task and reverses its own act..." alt="" coords="229,83,405,112"/>
 </map>
