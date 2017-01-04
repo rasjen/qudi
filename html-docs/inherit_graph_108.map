@@ -1,0 +1,3 @@
+<map id="G" name="G">
+<area shape="rect" id="node1" href="$classmicrowave__interface_1_1MicrowaveMode.html" title="Modes for microwave generators: CW continuous wave LIST ouptut list of arbitrary frequencies, each step triggered by electrical input SWEEP frequency sweep from f1 to f2, each step triggered by electrical input ASWEEP frequency sweep from f1 to f2, triggered only on the start of the sweep." alt="" coords="7,5,247,35"/>
+</map>

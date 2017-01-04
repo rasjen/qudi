@@ -1,0 +1,20 @@
+<map id="G" name="G">
+<area shape="rect" id="node1" href="$classcore_1_1util_1_1interfaces_1_1InterfaceMetaclass.html" title="Metaclass for interfaces." alt="" coords="7,432,249,461"/>
+<area shape="rect" id="node3" href="$classconfocal__scanner__interface_1_1ConfocalScannerInterface.html" title="This is the Interface class to define the controls for the simple microwave hardware." alt="" coords="299,5,635,35"/>
+<area shape="rect" id="node5" href="$classdata__logger__interface_1_1DataLoggerInterface.html" title="data_logger_interface.DataLoggerInterface" alt="" coords="333,59,600,88"/>
+<area shape="rect" id="node7" href="$classfast__counter__interface_1_1FastCounterInterface.html" title="Interface class to define the controls for fast counting devices." alt="" coords="328,112,605,141"/>
+<area shape="rect" id="node9" href="$classmagnet__interface_1_1MagnetInterface.html" title="This is the Interface class to define the controls for the devices controlling the magnetic field..." alt="" coords="357,165,576,195"/>
+<area shape="rect" id="node11" href="$classmicrowave__interface_1_1MicrowaveInterface.html" title="This is the Interface class to define the controls for the simple microwave hardware." alt="" coords="337,219,596,248"/>
+<area shape="rect" id="node13" href="$classmotor__interface_1_1MotorInterface.html" title="This is the Interface class to define the controls for the simple step motor device." alt="" coords="367,272,567,301"/>
+<area shape="rect" id="node15" href="$classodmr__counter__interface_1_1ODMRCounterInterface.html" title="This is the Interface class supplies the controls for a simple ODMR." alt="" coords="317,325,616,355"/>
+<area shape="rect" id="node17" href="$classpid__controller__interface_1_1PIDControllerInterface.html" title="pid_controller_interface.PIDControllerInterface" alt="" coords="321,379,612,408"/>
+<area shape="rect" id="node19" href="$classprocess__control__interface_1_1ProcessControlInterface.html" title="A very simple interface to control a single value." alt="" coords="309,432,624,461"/>
+<area shape="rect" id="node21" href="$classprocess__interface_1_1ProcessInterface.html" title="A very simple interface to measure a single value." alt="" coords="353,485,580,515"/>
+<area shape="rect" id="node23" href="$classsimple__data__interface_1_1SimpleDataInterface.html" title="simple_data_interface.SimpleDataInterface" alt="" coords="331,539,603,568"/>
+<area shape="rect" id="node25" href="$classsimple__laser__interface_1_1SimpleLaserInterface.html" title="simple_laser_interface.SimpleLaserInterface" alt="" coords="328,592,605,621"/>
+<area shape="rect" id="node27" href="$classslow__counter__interface_1_1SlowCounterInterface.html" title="Define the controls for a slow counter." alt="" coords="324,645,609,675"/>
+<area shape="rect" id="node29" href="$classspectrometer__interface_1_1SpectrometerInterface.html" title="This is the Interface class to define the controls for the simple optical spectrometer." alt="" coords="323,699,611,728"/>
+<area shape="rect" id="node31" href="$classswitch__interface_1_1SwitchInterface.html" title="Methods to control slow (mechaincal) laser switching devices." alt="" coords="361,752,572,781"/>
+<area shape="rect" id="node33" href="$classvacuum__pump__interface_1_1VacuumPumpInterface.html" title="vacuum_pump_interface.VacuumPumpInterface" alt="" coords="316,805,617,835"/>
+<area shape="rect" id="node35" href="$classwavemeter__interface_1_1WavemeterInterface.html" title="Define the controls for a wavemeter hardware." alt="" coords="335,859,599,888"/>
+</map>
