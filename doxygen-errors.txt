@@ -158,6 +158,7 @@ IndexError: list index out of range
 /home/travis/build/Ulm-IQO/qudi/README.md:26: warning: Unexpected html tag <img> found within <a href=...> context
 /home/travis/build/Ulm-IQO/qudi/README.md:27: warning: Unexpected html tag <img> found within <a href=...> context
 /home/travis/build/Ulm-IQO/qudi/README.md:28: warning: Unexpected html tag <img> found within <a href=...> context
+/home/travis/build/Ulm-IQO/qudi/README.md:29: warning: Unexpected html tag <img> found within <a href=...> context
 /home/travis/build/Ulm-IQO/qudi/logic/automation.py:216: warning: Member loadAutomation(self, path) (function) of class automation::AutomationLogic is not documented.
 /home/travis/build/Ulm-IQO/qudi/logic/automation.py:204: warning: Member model (variable) of class automation::AutomationLogic is not documented.
 /home/travis/build/Ulm-IQO/qudi/logic/automation.py:183: warning: Member sigRepeat (variable) of class automation::AutomationLogic is not documented.
