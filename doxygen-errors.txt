@@ -2409,28 +2409,31 @@ IndexError: list index out of range
 /home/travis/build/Ulm-IQO/qudi/logic/jupyterkernel/kernellogic.py:112: warning: argument 'str' of command @param is not found in the argument list of kernellogic.QudiKernelLogic::stopKernel(self, kernelid)
 /home/travis/build/Ulm-IQO/qudi/logic/jupyterkernel/kernellogic.py:113: warning: The following parameters of kernellogic.QudiKernelLogic.stopKernel(self, kernelid) are not documented:
   parameter 'kernelid'
-/home/travis/build/Ulm-IQO/qudi/gui/laser/laser.py:72: warning: Member __init__(self, config, kwargs) (function) of class laser::LaserGUI is not documented.
+/home/travis/build/Ulm-IQO/qudi/gui/laser/laser.py:87: warning: Member __init__(self, config, kwargs) (function) of class laser::LaserGUI is not documented.
 /home/travis/build/Ulm-IQO/qudi/gui/guibase.py:38: warning: Member show(self) (function) of class gui::guibase::GUIBase is not documented.
 /home/travis/build/Ulm-IQO/qudi/gui/guibase.py:42: warning: Member saveWindowPos(self, window) (function) of class gui::guibase::GUIBase is not documented.
 /home/travis/build/Ulm-IQO/qudi/gui/guibase.py:46: warning: Member restoreWindowPos(self, window) (function) of class gui::guibase::GUIBase is not documented.
 /home/travis/build/Ulm-IQO/qudi/core/FysomAdapter.py:31: warning: Member __getattr__(self, name) (function) of class core::FysomAdapter::Fysom is not documented.
-/home/travis/build/Ulm-IQO/qudi/gui/laser/laser.py:102: warning: Member plots (variable) of class laser::LaserGUI is not documented.
-/home/travis/build/Ulm-IQO/qudi/gui/laser/laser.py:120: warning: Member sliderProxy (variable) of class laser::LaserGUI is not documented.
+/home/travis/build/Ulm-IQO/qudi/gui/laser/laser.py:126: warning: Member curves (variable) of class laser::LaserGUI is not documented.
+/home/travis/build/Ulm-IQO/qudi/gui/laser/laser.py:141: warning: Member plot1 (variable) of class laser::LaserGUI is not documented.
+/home/travis/build/Ulm-IQO/qudi/gui/laser/laser.py:142: warning: Member plot2 (variable) of class laser::LaserGUI is not documented.
+/home/travis/build/Ulm-IQO/qudi/gui/laser/laser.py:155: warning: Member sliderProxy (variable) of class laser::LaserGUI is not documented.
 /home/travis/build/Ulm-IQO/qudi/core/base.py:126: warning: Member connector (variable) of class core::base::Base is not documented.
-/home/travis/build/Ulm-IQO/qudi/gui/laser/laser.py:66: warning: Member sigLaser (variable) of class laser::LaserGUI is not documented.
-/home/travis/build/Ulm-IQO/qudi/gui/laser/laser.py:67: warning: Member sigShutter (variable) of class laser::LaserGUI is not documented.
-/home/travis/build/Ulm-IQO/qudi/gui/laser/laser.py:68: warning: Member sigPower (variable) of class laser::LaserGUI is not documented.
-/home/travis/build/Ulm-IQO/qudi/gui/laser/laser.py:69: warning: Member sigCurrent (variable) of class laser::LaserGUI is not documented.
-/home/travis/build/Ulm-IQO/qudi/gui/laser/laser.py:70: warning: Member sigCtrlMode (variable) of class laser::LaserGUI is not documented.
+/home/travis/build/Ulm-IQO/qudi/gui/laser/laser.py:81: warning: Member sigLaser (variable) of class laser::LaserGUI is not documented.
+/home/travis/build/Ulm-IQO/qudi/gui/laser/laser.py:82: warning: Member sigShutter (variable) of class laser::LaserGUI is not documented.
+/home/travis/build/Ulm-IQO/qudi/gui/laser/laser.py:83: warning: Member sigPower (variable) of class laser::LaserGUI is not documented.
+/home/travis/build/Ulm-IQO/qudi/gui/laser/laser.py:84: warning: Member sigCurrent (variable) of class laser::LaserGUI is not documented.
+/home/travis/build/Ulm-IQO/qudi/gui/laser/laser.py:85: warning: Member sigCtrlMode (variable) of class laser::LaserGUI is not documented.
 /home/travis/build/Ulm-IQO/qudi/core/base.py:49: warning: Member sigStateChanged (variable) of class core::base::Base is not documented.
 /home/travis/build/Ulm-IQO/qudi/core/base.py:168: warning: Member result (variable) of class core::base::Base is not documented.
-/home/travis/build/Ulm-IQO/qudi/gui/laser/laser.py:85: warning: argument 'object' of command @param is not found in the argument list of laser.LaserGUI::on_activate(self, e=None)
-/home/travis/build/Ulm-IQO/qudi/gui/laser/laser.py:85: warning: The following parameters of laser.LaserGUI.on_activate(self, e=None) are not documented:
+/home/travis/build/Ulm-IQO/qudi/gui/laser/laser.py:100: warning: argument 'object' of command @param is not found in the argument list of laser.LaserGUI::on_activate(self, e=None)
+/home/travis/build/Ulm-IQO/qudi/gui/laser/laser.py:100: warning: The following parameters of laser.LaserGUI.on_activate(self, e=None) are not documented:
   parameter 'e'
-/home/travis/build/Ulm-IQO/qudi/gui/laser/laser.py:129: warning: argument 'object' of command @param is not found in the argument list of laser.LaserGUI::on_deactivate(self, e)
-/home/travis/build/Ulm-IQO/qudi/gui/laser/laser.py:129: warning: The following parameters of laser.LaserGUI.on_deactivate(self, e) are not documented:
+/home/travis/build/Ulm-IQO/qudi/gui/laser/laser.py:164: warning: argument 'object' of command @param is not found in the argument list of laser.LaserGUI::on_deactivate(self, e)
+/home/travis/build/Ulm-IQO/qudi/gui/laser/laser.py:164: warning: The following parameters of laser.LaserGUI.on_deactivate(self, e) are not documented:
   parameter 'e'
-/home/travis/build/Ulm-IQO/qudi/gui/laser/laser.py:37: warning: Member __init__(self) (function) of class laser::LaserWindow is not documented.
+/home/travis/build/Ulm-IQO/qudi/gui/laser/laser.py:52: warning: Member __init__(self) (function) of class laser::LaserWindow is not documented.
+/home/travis/build/Ulm-IQO/qudi/gui/laser/laser.py:40: warning: Member __init__(self, args, kwargs) (function) of class laser::TimeAxisItem is not documented.
 /home/travis/build/Ulm-IQO/qudi/hardware/laser/laserquantum_laser.py:208: warning: Member get_current_unit(self) (function) of class laser::laserquantum_laser::LaserQuantumLaser is not documented.
 /home/travis/build/Ulm-IQO/qudi/hardware/laser/laserquantum_laser.py:211: warning: Member get_current_range(self) (function) of class laser::laserquantum_laser::LaserQuantumLaser is not documented.
 /home/travis/build/Ulm-IQO/qudi/hardware/laser/laserquantum_laser.py:288: warning: Member get_temperatures(self) (function) of class laser::laserquantum_laser::LaserQuantumLaser is not documented.
@@ -2491,10 +2494,6 @@ IndexError: list index out of range
 /home/travis/build/Ulm-IQO/qudi/core/base.py:126: warning: Member connector (variable) of class core::base::Base is not documented.
 /home/travis/build/Ulm-IQO/qudi/core/base.py:49: warning: Member sigStateChanged (variable) of class core::base::Base is not documented.
 /home/travis/build/Ulm-IQO/qudi/core/base.py:168: warning: Member result (variable) of class core::base::Base is not documented.
-/home/travis/build/Ulm-IQO/qudi/logic/laser_logic.py:169: warning: Member set_laser_state(self, state) (function) of class laser_logic::LaserLogic is not documented.
-/home/travis/build/Ulm-IQO/qudi/logic/laser_logic.py:176: warning: Member set_shutter_state(self, state) (function) of class laser_logic::LaserLogic is not documented.
-/home/travis/build/Ulm-IQO/qudi/logic/laser_logic.py:183: warning: Member set_power(self, power) (function) of class laser_logic::LaserLogic is not documented.
-/home/travis/build/Ulm-IQO/qudi/logic/laser_logic.py:187: warning: Member set_current(self, current) (function) of class laser_logic::LaserLogic is not documented.
 /home/travis/build/Ulm-IQO/qudi/logic/laser_logic.py:57: warning: Member stopRequest (variable) of class laser_logic::LaserLogic is not documented.
 /home/travis/build/Ulm-IQO/qudi/logic/laser_logic.py:58: warning: Member bufferLength (variable) of class laser_logic::LaserLogic is not documented.
 /home/travis/build/Ulm-IQO/qudi/logic/laser_logic.py:59: warning: Member data (variable) of class laser_logic::LaserLogic is not documented.
@@ -2512,9 +2511,9 @@ IndexError: list index out of range
 /home/travis/build/Ulm-IQO/qudi/logic/laser_logic.py:79: warning: Member laser_can_power (variable) of class laser_logic::LaserLogic is not documented.
 /home/travis/build/Ulm-IQO/qudi/logic/laser_logic.py:80: warning: Member laser_can_current (variable) of class laser_logic::LaserLogic is not documented.
 /home/travis/build/Ulm-IQO/qudi/logic/laser_logic.py:85: warning: Member has_shutter (variable) of class laser_logic::LaserLogic is not documented.
-/home/travis/build/Ulm-IQO/qudi/logic/laser_logic.py:107: warning: Member laser_power (variable) of class laser_logic::LaserLogic is not documented.
-/home/travis/build/Ulm-IQO/qudi/logic/laser_logic.py:108: warning: Member laser_current (variable) of class laser_logic::LaserLogic is not documented.
-/home/travis/build/Ulm-IQO/qudi/logic/laser_logic.py:109: warning: Member laser_temps (variable) of class laser_logic::LaserLogic is not documented.
+/home/travis/build/Ulm-IQO/qudi/logic/laser_logic.py:108: warning: Member laser_power (variable) of class laser_logic::LaserLogic is not documented.
+/home/travis/build/Ulm-IQO/qudi/logic/laser_logic.py:110: warning: Member laser_current (variable) of class laser_logic::LaserLogic is not documented.
+/home/travis/build/Ulm-IQO/qudi/logic/laser_logic.py:112: warning: Member laser_temps (variable) of class laser_logic::LaserLogic is not documented.
 /home/travis/build/Ulm-IQO/qudi/logic/laser_logic.py:49: warning: Member sigUpdate (variable) of class laser_logic::LaserLogic is not documented.
 /home/travis/build/Ulm-IQO/qudi/logic/laser_logic.py:55: warning: argument 'object' of command @param is not found in the argument list of laser_logic.LaserLogic::on_activate(self, e)
 /home/travis/build/Ulm-IQO/qudi/logic/laser_logic.py:55: warning: The following parameters of laser_logic.LaserLogic.on_activate(self, e) are not documented:
