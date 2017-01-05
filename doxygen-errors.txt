@@ -3808,11 +3808,11 @@ IndexError: list index out of range
 /home/travis/build/Ulm-IQO/qudi/logic/odmr_logic.py:157: warning: Member current_fit_function (variable) of class odmr_logic::ODMRLogic is not documented.
 /home/travis/build/Ulm-IQO/qudi/logic/odmr_logic.py:159: warning: Member saveRawData (variable) of class odmr_logic::ODMRLogic is not documented.
 /home/travis/build/Ulm-IQO/qudi/logic/odmr_logic.py:184: warning: Member ODMR_fit_x (variable) of class odmr_logic::ODMRLogic is not documented.
-/home/travis/build/Ulm-IQO/qudi/logic/odmr_logic.py:291: warning: Member ODMR_raw_data (variable) of class odmr_logic::ODMRLogic is not documented.
-/home/travis/build/Ulm-IQO/qudi/logic/odmr_logic.py:381: warning: Member ODMR_plot_x (variable) of class odmr_logic::ODMRLogic is not documented.
-/home/travis/build/Ulm-IQO/qudi/logic/odmr_logic.py:382: warning: Member ODMR_plot_y (variable) of class odmr_logic::ODMRLogic is not documented.
-/home/travis/build/Ulm-IQO/qudi/logic/odmr_logic.py:383: warning: Member ODMR_fit_y (variable) of class odmr_logic::ODMRLogic is not documented.
-/home/travis/build/Ulm-IQO/qudi/logic/odmr_logic.py:390: warning: Member ODMR_plot_xy (variable) of class odmr_logic::ODMRLogic is not documented.
+/home/travis/build/Ulm-IQO/qudi/logic/odmr_logic.py:288: warning: Member ODMR_raw_data (variable) of class odmr_logic::ODMRLogic is not documented.
+/home/travis/build/Ulm-IQO/qudi/logic/odmr_logic.py:378: warning: Member ODMR_plot_x (variable) of class odmr_logic::ODMRLogic is not documented.
+/home/travis/build/Ulm-IQO/qudi/logic/odmr_logic.py:379: warning: Member ODMR_plot_y (variable) of class odmr_logic::ODMRLogic is not documented.
+/home/travis/build/Ulm-IQO/qudi/logic/odmr_logic.py:380: warning: Member ODMR_fit_y (variable) of class odmr_logic::ODMRLogic is not documented.
+/home/travis/build/Ulm-IQO/qudi/logic/odmr_logic.py:387: warning: Member ODMR_plot_xy (variable) of class odmr_logic::ODMRLogic is not documented.
 /home/travis/build/Ulm-IQO/qudi/logic/odmr_logic.py:62: warning: Member sigNextLine (variable) of class odmr_logic::ODMRLogic is not documented.
 /home/travis/build/Ulm-IQO/qudi/logic/odmr_logic.py:63: warning: Member sigOdmrStarted (variable) of class odmr_logic::ODMRLogic is not documented.
 /home/travis/build/Ulm-IQO/qudi/logic/odmr_logic.py:64: warning: Member sigOdmrStopped (variable) of class odmr_logic::ODMRLogic is not documented.
@@ -3825,16 +3825,16 @@ IndexError: list index out of range
 /home/travis/build/Ulm-IQO/qudi/logic/odmr_logic.py:71: warning: Member sigMicrowaveCWModeChanged (variable) of class odmr_logic::ODMRLogic is not documented.
 /home/travis/build/Ulm-IQO/qudi/logic/odmr_logic.py:72: warning: Member sigMicrowaveListModeChanged (variable) of class odmr_logic::ODMRLogic is not documented.
 /home/travis/build/Ulm-IQO/qudi/logic/odmr_logic.py:73: warning: Member sigParameterChanged (variable) of class odmr_logic::ODMRLogic is not documented.
-/home/travis/build/Ulm-IQO/qudi/logic/odmr_logic.py:609: warning: argument 'str' of command @param is not found in the argument list of odmr_logic.ODMRLogic::do_fit(self, fit_function=None, x_data=None, y_data=None, fit_granularity_fact=10)
-/home/travis/build/Ulm-IQO/qudi/logic/odmr_logic.py:609: warning: argument 'array' of command @param is not found in the argument list of odmr_logic.ODMRLogic::do_fit(self, fit_function=None, x_data=None, y_data=None, fit_granularity_fact=10)
-/home/travis/build/Ulm-IQO/qudi/logic/odmr_logic.py:609: warning: argument 'array' of command @param is not found in the argument list of odmr_logic.ODMRLogic::do_fit(self, fit_function=None, x_data=None, y_data=None, fit_granularity_fact=10)
-/home/travis/build/Ulm-IQO/qudi/logic/odmr_logic.py:609: warning: argument 'float' of command @param is not found in the argument list of odmr_logic.ODMRLogic::do_fit(self, fit_function=None, x_data=None, y_data=None, fit_granularity_fact=10)
-/home/travis/build/Ulm-IQO/qudi/logic/odmr_logic.py:609: warning: The following parameters of odmr_logic.ODMRLogic.do_fit(self, fit_function=None, x_data=None, y_data=None, fit_granularity_fact=10) are not documented:
+/home/travis/build/Ulm-IQO/qudi/logic/odmr_logic.py:606: warning: argument 'str' of command @param is not found in the argument list of odmr_logic.ODMRLogic::do_fit(self, fit_function=None, x_data=None, y_data=None, fit_granularity_fact=10)
+/home/travis/build/Ulm-IQO/qudi/logic/odmr_logic.py:606: warning: argument 'array' of command @param is not found in the argument list of odmr_logic.ODMRLogic::do_fit(self, fit_function=None, x_data=None, y_data=None, fit_granularity_fact=10)
+/home/travis/build/Ulm-IQO/qudi/logic/odmr_logic.py:606: warning: argument 'array' of command @param is not found in the argument list of odmr_logic.ODMRLogic::do_fit(self, fit_function=None, x_data=None, y_data=None, fit_granularity_fact=10)
+/home/travis/build/Ulm-IQO/qudi/logic/odmr_logic.py:606: warning: argument 'float' of command @param is not found in the argument list of odmr_logic.ODMRLogic::do_fit(self, fit_function=None, x_data=None, y_data=None, fit_granularity_fact=10)
+/home/travis/build/Ulm-IQO/qudi/logic/odmr_logic.py:606: warning: The following parameters of odmr_logic.ODMRLogic.do_fit(self, fit_function=None, x_data=None, y_data=None, fit_granularity_fact=10) are not documented:
   parameter 'fit_function'
   parameter 'x_data'
   parameter 'y_data'
   parameter 'fit_granularity_fact'
-/home/travis/build/Ulm-IQO/qudi/logic/odmr_logic.py:1058: warning: expected whitespace after : command
+/home/travis/build/Ulm-IQO/qudi/logic/odmr_logic.py:1055: warning: expected whitespace after : command
 /home/travis/build/Ulm-IQO/qudi/logic/odmr_logic.py:102: warning: argument 'object' of command @param is not found in the argument list of odmr_logic.ODMRLogic::on_activate(self, e)
 /home/travis/build/Ulm-IQO/qudi/logic/odmr_logic.py:102: warning: The following parameters of odmr_logic.ODMRLogic.on_activate(self, e) are not documented:
   parameter 'e'
@@ -3844,11 +3844,11 @@ IndexError: list index out of range
 /home/travis/build/Ulm-IQO/qudi/logic/odmr_logic.py:214: warning: argument 'int' of command @param is not found in the argument list of odmr_logic.ODMRLogic::set_clock_frequency(self, clock_frequency)
 /home/travis/build/Ulm-IQO/qudi/logic/odmr_logic.py:216: warning: The following parameters of odmr_logic.ODMRLogic.set_clock_frequency(self, clock_frequency) are not documented:
   parameter 'clock_frequency'
-/home/travis/build/Ulm-IQO/qudi/logic/odmr_logic.py:519: warning: argument 'float' of command @param is not found in the argument list of odmr_logic.ODMRLogic::set_frequency(self, frequency=None)
-/home/travis/build/Ulm-IQO/qudi/logic/odmr_logic.py:519: warning: The following parameters of odmr_logic.ODMRLogic.set_frequency(self, frequency=None) are not documented:
+/home/travis/build/Ulm-IQO/qudi/logic/odmr_logic.py:516: warning: argument 'float' of command @param is not found in the argument list of odmr_logic.ODMRLogic::set_frequency(self, frequency=None)
+/home/travis/build/Ulm-IQO/qudi/logic/odmr_logic.py:516: warning: The following parameters of odmr_logic.ODMRLogic.set_frequency(self, frequency=None) are not documented:
   parameter 'frequency'
-/home/travis/build/Ulm-IQO/qudi/logic/odmr_logic.py:489: warning: argument 'float' of command @param is not found in the argument list of odmr_logic.ODMRLogic::set_power(self, power=None)
-/home/travis/build/Ulm-IQO/qudi/logic/odmr_logic.py:489: warning: The following parameters of odmr_logic.ODMRLogic.set_power(self, power=None) are not documented:
+/home/travis/build/Ulm-IQO/qudi/logic/odmr_logic.py:486: warning: argument 'float' of command @param is not found in the argument list of odmr_logic.ODMRLogic::set_power(self, power=None)
+/home/travis/build/Ulm-IQO/qudi/logic/odmr_logic.py:486: warning: The following parameters of odmr_logic.ODMRLogic.set_power(self, power=None) are not documented:
   parameter 'power'
 /home/travis/build/Ulm-IQO/qudi/gui/odmr/odmrgui.py:91: warning: Member __init__(self, config, kwargs) (function) of class odmrgui::ODMRGui is not documented.
 /home/travis/build/Ulm-IQO/qudi/gui/odmr/odmrgui.py:398: warning: Member resume_odmr(self, is_checked) (function) of class odmrgui::ODMRGui is not documented.
