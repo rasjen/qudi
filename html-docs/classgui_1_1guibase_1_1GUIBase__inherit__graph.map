@@ -10,19 +10,18 @@
 <area shape="rect" id="node25" href="$classgui_1_1taskrunner_1_1taskgui_1_1TaskGui.html" title="A grephical interface to mofe switches by hand and change their calibration. " alt="" coords="619,480,821,509"/>
 <area shape="rect" id="node27" href="$classgui_1_1testgui_1_1TestGui.html" title="A class to test gui module loading. " alt="" coords="655,533,785,563"/>
 <area shape="rect" id="node29" href="$classgui_1_1trayicon_1_1TrayIcon.html" title="This module contains a tray icon implementation for Qudi. " alt="" coords="648,587,792,616"/>
-<area shape="rect" id="node31" href="$classlaser_1_1LaserGUI.html" title="FIXME Please document. " alt="" coords="665,640,775,669"/>
-<area shape="rect" id="node33" href="$classlaserscangui_1_1LaserScanningGui.html" title="laserscangui.LaserScanningGui" alt="" coords="617,693,823,723"/>
-<area shape="rect" id="node35" href="$classlaserscannergui_1_1VoltScanGui.html" title="This is the GUI Class for ODMR. " alt="" coords="625,747,815,776"/>
-<area shape="rect" id="node37" href="$classmagnet__gui_1_1MagnetGui.html" title="Main GUI for the magnet. " alt="" coords="643,800,797,829"/>
-<area shape="rect" id="node39" href="$classnotebookgui_1_1NotebookWebView.html" title="notebookgui.NotebookWebView" alt="" coords="616,853,824,883"/>
-<area shape="rect" id="node41" href="$classodmrgui_1_1ODMRGui.html" title="This is the GUI Class for ODMR. " alt="" coords="653,907,787,936"/>
-<area shape="rect" id="node43" href="$classpidgui_1_1PIDGui.html" title="FIXME Please document. " alt="" coords="669,960,771,989"/>
-<area shape="rect" id="node45" href="$classpulsed__extraction__external__gui_1_1PulsedExtractionExternalGui.html" title="pulsed_extraction_external\l_gui.PulsedExtractionExternalGui" alt="" coords="612,1013,828,1059"/>
-<area shape="rect" id="node47" href="$classpulsed__maingui_1_1PulsedMeasurementGui.html" title="This is the main GUI Class for pulsed measurements. " alt="" coords="593,1083,847,1112"/>
-<area shape="rect" id="node49" href="$classqdplottergui_1_1QdplotterGui.html" title="FIXME Please document. " alt="" coords="637,1136,803,1165"/>
-<area shape="rect" id="node51" href="$classsimpledatagui_1_1SimpleDataGui.html" title="FIXME Please document. " alt="" coords="623,1189,817,1219"/>
-<area shape="rect" id="node53" href="$classspectrometergui_1_1SpectrometerGui.html" title="spectrometergui.SpectrometerGui" alt="" coords="612,1243,828,1272"/>
-<area shape="rect" id="node55" href="$classwavemeterloggui_1_1WavemeterLogGui.html" title="wavemeterloggui.Wavemeter\lLogGui" alt="" coords="625,1295,815,1342"/>
-<area shape="rect" id="node2" href="$classcore_1_1base_1_1Base.html" title="Base class for all loadable modules. " alt="" coords="236,667,348,696"/>
-<area shape="rect" id="node6" href="$classcore_1_1FysomAdapter_1_1Fysom.html" title="core.FysomAdapter.Fysom" alt="" coords="7,693,185,723"/>
+<area shape="rect" id="node31" href="$classlaserscangui_1_1LaserScanningGui.html" title="laserscangui.LaserScanningGui" alt="" coords="617,640,823,669"/>
+<area shape="rect" id="node33" href="$classlaserscannergui_1_1VoltScanGui.html" title="This is the GUI Class for ODMR. " alt="" coords="625,693,815,723"/>
+<area shape="rect" id="node35" href="$classmagnet__gui_1_1MagnetGui.html" title="Main GUI for the magnet. " alt="" coords="643,747,797,776"/>
+<area shape="rect" id="node37" href="$classnotebookgui_1_1NotebookWebView.html" title="notebookgui.NotebookWebView" alt="" coords="616,800,824,829"/>
+<area shape="rect" id="node39" href="$classodmrgui_1_1ODMRGui.html" title="This is the GUI Class for ODMR. " alt="" coords="653,853,787,883"/>
+<area shape="rect" id="node41" href="$classpidgui_1_1PIDGui.html" title="FIXME Please document. " alt="" coords="669,907,771,936"/>
+<area shape="rect" id="node43" href="$classpulsed__extraction__external__gui_1_1PulsedExtractionExternalGui.html" title="pulsed_extraction_external\l_gui.PulsedExtractionExternalGui" alt="" coords="612,959,828,1006"/>
+<area shape="rect" id="node45" href="$classpulsed__maingui_1_1PulsedMeasurementGui.html" title="This is the main GUI Class for pulsed measurements. " alt="" coords="593,1029,847,1059"/>
+<area shape="rect" id="node47" href="$classqdplottergui_1_1QdplotterGui.html" title="FIXME Please document. " alt="" coords="637,1083,803,1112"/>
+<area shape="rect" id="node49" href="$classsimpledatagui_1_1SimpleDataGui.html" title="FIXME Please document. " alt="" coords="623,1136,817,1165"/>
+<area shape="rect" id="node51" href="$classspectrometergui_1_1SpectrometerGui.html" title="spectrometergui.SpectrometerGui" alt="" coords="612,1189,828,1219"/>
+<area shape="rect" id="node53" href="$classwavemeterloggui_1_1WavemeterLogGui.html" title="wavemeterloggui.Wavemeter\lLogGui" alt="" coords="625,1242,815,1289"/>
+<area shape="rect" id="node2" href="$classcore_1_1base_1_1Base.html" title="Base class for all loadable modules. " alt="" coords="236,640,348,669"/>
+<area shape="rect" id="node6" href="$classcore_1_1FysomAdapter_1_1Fysom.html" title="core.FysomAdapter.Fysom" alt="" coords="7,667,185,696"/>
 </map>
