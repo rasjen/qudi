@@ -45,6 +45,7 @@ var searchData=
   ['update_5fslider_5fx',['update_slider_x',['../classgui_1_1confocal_1_1confocalgui_1_1ConfocalGui.html#a30d47c3e076e7e54abfdaa68d2fbda3c',1,'gui::confocal::confocalgui::ConfocalGui']]],
   ['update_5fslider_5fy',['update_slider_y',['../classgui_1_1confocal_1_1confocalgui_1_1ConfocalGui.html#a2fa1e81334f3a426f8b34b24817a9416',1,'gui::confocal::confocalgui::ConfocalGui']]],
   ['update_5fslider_5fz',['update_slider_z',['../classgui_1_1confocal_1_1confocalgui_1_1ConfocalGui.html#ae153bf3b1c818f44a89a92ab62f12da0',1,'gui::confocal::confocalgui::ConfocalGui']]],
+  ['update_5ftilt_5fcorrection',['update_tilt_correction',['../classgui_1_1confocal_1_1confocalgui_1_1ConfocalGui.html#a91d789ecb406b4bbf9b442f7d5ddcf29',1,'gui::confocal::confocalgui::ConfocalGui']]],
   ['update_5ftrace',['update_trace',['../classgated__counter__gui_1_1GatedCounterGui.html#a12e5c5e0679b910ba7f6ffc561340c50',1,'gated_counter_gui::GatedCounterGui']]],
   ['update_5fuploaded_5fassets',['update_uploaded_assets',['../classpulsed__maingui_1_1PulsedMeasurementGui.html#a51795bffa94bf3af27ff37140a20478d',1,'pulsed_maingui::PulsedMeasurementGui']]],
   ['update_5fxy_5fcb_5frange',['update_xy_cb_range',['../classgui_1_1confocal_1_1confocalgui_1_1ConfocalGui.html#a8b202c0e603351f89dcf4a4b32296788',1,'gui::confocal::confocalgui::ConfocalGui']]],
@@ -65,6 +66,5 @@ var searchData=
   ['upload_5fensemble_5fclicked',['upload_ensemble_clicked',['../classpulsed__maingui_1_1PulsedMeasurementGui.html#a72f068bbfc1b275f5537884b3ba1cf11',1,'pulsed_maingui::PulsedMeasurementGui']]],
   ['upload_5fsequence',['upload_sequence',['../classpulsed__measurement__logic_1_1PulsedMeasurementLogic.html#a42c7fdd6bba34d133dbfe0876639d2e3',1,'pulsed_measurement_logic::PulsedMeasurementLogic']]],
   ['uploaded_5fassets_5fupdated',['uploaded_assets_updated',['../classpulsed__master__logic_1_1PulsedMasterLogic.html#ab128bef53f09dc831994d138b0537086',1,'pulsed_master_logic::PulsedMasterLogic']]],
-  ['use_5ftiltcorrection_5fclicked',['use_tiltcorrection_clicked',['../classgui_1_1confocal_1_1confocalgui_1_1ConfocalGui.html#a40fac6fc02732c419509ccb6575400cc',1,'gui::confocal::confocalgui::ConfocalGui']]],
   ['utf8_5fto_5fbyte',['utf8_to_byte',['../classsc__magnet_1_1magnet_1_1Magnet.html#ad3564c0884193bc9c177d59b92398874',1,'sc_magnet::magnet::Magnet']]]
 ];
