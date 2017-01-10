@@ -26,25 +26,25 @@
 <area shape="rect" id="node47" href="$classlaser_1_1simple__laser__dummy_1_1SimpleLaserDummy.html" title="Lazors. " alt="" coords="519,1333,713,1379"/>
 <area shape="rect" id="node49" href="$classlightfield__spectrometer_1_1Lightfield.html" title="lightfield_spectrometer.\lLightfield" alt="" coords="537,1402,695,1449"/>
 <area shape="rect" id="node51" href="$classmagnet_1_1magnet__dummy_1_1MagnetDummy.html" title="This is the Interface class to define the controls for the simple magnet hardware. " alt="" coords="512,1471,720,1518"/>
-<area shape="rect" id="node53" href="$classmicrowave_1_1mw__source__anritsu70GHz_1_1MicrowaveAnritsu70GHz.html" title="This is the Interface class to define the controls for the simple microwave hardware. " alt="" coords="487,1541,745,1587"/>
-<area shape="rect" id="node55" href="$classmicrowave_1_1mw__source__anritsu_1_1MicrowaveAnritsu.html" title="Hardware controlfile for Anritsu Devices. " alt="" coords="528,1610,704,1657"/>
-<area shape="rect" id="node57" href="$classmicrowave_1_1mw__source__dummy_1_1MicrowaveDummy.html" title="This is the Interface class to define the controls for the simple microwave hardware. " alt="" coords="524,1679,708,1726"/>
-<area shape="rect" id="node59" href="$classmicrowave_1_1mw__source__gigatronics_1_1MicrowaveGigatronics.html" title="Hardware file for Gigatronics. " alt="" coords="504,1749,728,1795"/>
-<area shape="rect" id="node61" href="$classmicrowave_1_1mw__source__smiq_1_1MicrowaveSmiq.html" title="This is the Interface class to define the controls for the simple microwave hardware. " alt="" coords="539,1818,693,1865"/>
-<area shape="rect" id="node63" href="$classmicrowave_1_1mw__source__smr20_1_1MicrowaveSMR20.html" title="The hardware control for the device Rohde and Schwarz SMR 20. " alt="" coords="528,1887,704,1934"/>
-<area shape="rect" id="node65" href="$classmotor_1_1aptmotor_1_1APTStage.html" title="Control class for an arbitrary collection of axis. " alt="" coords="529,1957,703,1987"/>
-<area shape="rect" id="node67" href="$classmotor_1_1motor__dummy_1_1MotorDummy.html" title="This is the dummy class to simulate a motorized stage. " alt="" coords="504,2011,728,2040"/>
-<area shape="rect" id="node69" href="$classmotor_1_1motor__stage__micos_1_1MotorStageMicos.html" title="unstable Jochen Scheuer. " alt="" coords="528,2063,704,2110"/>
-<area shape="rect" id="node71" href="$classmotor_1_1motor__stage__pi_1_1MotorStagePI.html" title="unstable Christoph Müller, Simon Schmitt This is the Interface class to define the controls for the s..." alt="" coords="524,2133,708,2179"/>
-<area shape="rect" id="node73" href="$classmotor_1_1zaber__motor__rotation__stage_1_1MotorRotationZaber.html" title="unstable Christoph Müller, Simon Schmitt This is the Interface class to define the controls for the s..." alt="" coords="525,2202,707,2249"/>
-<area shape="rect" id="node75" href="$classmw__differential__scanner_1_1ConfocalScannerInterfaceDummy.html" title="This is the Interface class to define the controls for the simple microwave hardware. " alt="" coords="507,2271,725,2318"/>
-<area shape="rect" id="node77" href="$classni__card_1_1NICard.html" title="stable Kay Jahnke, Alexander Stark " alt="" coords="561,2341,671,2371"/>
-<area shape="rect" id="node79" href="$classodmr__counter__dummy_1_1ODMRCounterDummy.html" title="This is the Dummy hardware class that simulates the controls for a simple ODMR. " alt="" coords="495,2394,737,2441"/>
-<area shape="rect" id="node81" href="$classok__fpga__pulser_1_1OkFpgaPulser.html" title="Methods to control Pulse Generator running on OK FPGA. " alt="" coords="517,2464,715,2493"/>
-<area shape="rect" id="node83" href="$classok__fpga__switch_1_1OkFpgaTtlSwitch.html" title="Methods to control TTL switch running on OK FPGA. " alt="" coords="527,2517,705,2563"/>
-<area shape="rect" id="node85" href="$classok__s6__switch_1_1HardwareSwitchFpga.html" title="ok_s6_switch.HardwareSwitchFpga" alt="" coords="501,2587,731,2616"/>
-<area shape="rect" id="node87" href="$classpi__pwm_1_1PiPWM.html" title="pi_pwm.PiPWM" alt="" coords="559,2640,673,2669"/>
-<area shape="rect" id="node89" href="$classpolarisation__dependence__sim_1_1PolarizationDependenceSim.html" title="This class wraps the slow&#45;counter dummy and adds polarisation angle dependence in order to simulate d..." alt="" coords="507,2693,725,2739"/>
-<area shape="rect" id="node91" href="$classprocess__dummy_1_1ProcessDummy.html" title="Methods to control slow laser switching devices. " alt="" coords="508,2763,724,2792"/>
-<area shape="rect" id="node93" href="$classpulser__dummy_1_1PulserDummy.html" title="Dummy class for PulseInterface. " alt="" coords="519,2816,713,2845"/>
+<area shape="rect" id="node53" href="$classmicrowave_1_1mw__source__agilent_1_1MicrowaveAgilent.html" title="This is the Interface class to define the controls for the simple microwave hardware. " alt="" coords="529,1541,703,1587"/>
+<area shape="rect" id="node55" href="$classmicrowave_1_1mw__source__anritsu70GHz_1_1MicrowaveAnritsu70GHz.html" title="This is the Interface class to define the controls for the simple microwave hardware. " alt="" coords="487,1610,745,1657"/>
+<area shape="rect" id="node57" href="$classmicrowave_1_1mw__source__anritsu_1_1MicrowaveAnritsu.html" title="Hardware controlfile for Anritsu Devices. " alt="" coords="528,1679,704,1726"/>
+<area shape="rect" id="node59" href="$classmicrowave_1_1mw__source__dummy_1_1MicrowaveDummy.html" title="This is the Interface class to define the controls for the simple microwave hardware. " alt="" coords="524,1749,708,1795"/>
+<area shape="rect" id="node61" href="$classmicrowave_1_1mw__source__gigatronics_1_1MicrowaveGigatronics.html" title="Hardware file for Gigatronics. " alt="" coords="504,1818,728,1865"/>
+<area shape="rect" id="node63" href="$classmicrowave_1_1mw__source__smiq_1_1MicrowaveSmiq.html" title="This is the Interface class to define the controls for the simple microwave hardware. " alt="" coords="539,1887,693,1934"/>
+<area shape="rect" id="node65" href="$classmicrowave_1_1mw__source__smr20_1_1MicrowaveSMR20.html" title="The hardware control for the device Rohde and Schwarz SMR 20. " alt="" coords="528,1957,704,2003"/>
+<area shape="rect" id="node67" href="$classmotor_1_1aptmotor_1_1APTStage.html" title="Control class for an arbitrary collection of axis. " alt="" coords="529,2027,703,2056"/>
+<area shape="rect" id="node69" href="$classmotor_1_1motor__dummy_1_1MotorDummy.html" title="This is the dummy class to simulate a motorized stage. " alt="" coords="504,2080,728,2109"/>
+<area shape="rect" id="node71" href="$classmotor_1_1motor__stage__micos_1_1MotorStageMicos.html" title="unstable Jochen Scheuer. " alt="" coords="528,2133,704,2179"/>
+<area shape="rect" id="node73" href="$classmotor_1_1motor__stage__pi_1_1MotorStagePI.html" title="unstable Christoph Müller, Simon Schmitt This is the Interface class to define the controls for the s..." alt="" coords="524,2202,708,2249"/>
+<area shape="rect" id="node75" href="$classmotor_1_1zaber__motor__rotation__stage_1_1MotorRotationZaber.html" title="unstable Christoph Müller, Simon Schmitt This is the Interface class to define the controls for the s..." alt="" coords="525,2271,707,2318"/>
+<area shape="rect" id="node77" href="$classmw__differential__scanner_1_1ConfocalScannerInterfaceDummy.html" title="This is the Interface class to define the controls for the simple microwave hardware. " alt="" coords="507,2341,725,2387"/>
+<area shape="rect" id="node79" href="$classni__card_1_1NICard.html" title="stable Kay Jahnke, Alexander Stark " alt="" coords="561,2411,671,2440"/>
+<area shape="rect" id="node81" href="$classodmr__counter__dummy_1_1ODMRCounterDummy.html" title="This is the Dummy hardware class that simulates the controls for a simple ODMR. " alt="" coords="495,2463,737,2510"/>
+<area shape="rect" id="node83" href="$classok__fpga__pulser_1_1OkFpgaPulser.html" title="Methods to control Pulse Generator running on OK FPGA. " alt="" coords="517,2533,715,2563"/>
+<area shape="rect" id="node85" href="$classok__fpga__switch_1_1OkFpgaTtlSwitch.html" title="Methods to control TTL switch running on OK FPGA. " alt="" coords="527,2586,705,2633"/>
+<area shape="rect" id="node87" href="$classok__s6__switch_1_1HardwareSwitchFpga.html" title="ok_s6_switch.HardwareSwitchFpga" alt="" coords="501,2656,731,2685"/>
+<area shape="rect" id="node89" href="$classpi__pwm_1_1PiPWM.html" title="pi_pwm.PiPWM" alt="" coords="559,2709,673,2739"/>
+<area shape="rect" id="node91" href="$classpolarisation__dependence__sim_1_1PolarizationDependenceSim.html" title="This class wraps the slow&#45;counter dummy and adds polarisation angle dependence in order to simulate d..." alt="" coords="507,2762,725,2809"/>
+<area shape="rect" id="node93" href="$classprocess__dummy_1_1ProcessDummy.html" title="Methods to control slow laser switching devices. " alt="" coords="508,2832,724,2861"/>
 </map>

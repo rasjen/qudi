@@ -38,6 +38,7 @@ var searchData=
   ['microwave_5fon_5foff',['microwave_on_off',['../classpulsed__measurement__logic_1_1PulsedMeasurementLogic.html#a9bbb98b590bc3bc54b43d1c49bbf065a',1,'pulsed_measurement_logic::PulsedMeasurementLogic']]],
   ['microwave_5frunning_5fupdated',['microwave_running_updated',['../classpulsed__maingui_1_1PulsedMeasurementGui.html#a3e0a9d8b5adbcafa73ebddf4673a7aa7',1,'pulsed_maingui::PulsedMeasurementGui']]],
   ['microwave_5fsettings_5fupdated',['microwave_settings_updated',['../classpulsed__maingui_1_1PulsedMeasurementGui.html#ab1c2e61996f7f1fd6da63b1d248267b7',1,'pulsed_maingui::PulsedMeasurementGui']]],
+  ['microwaveagilent',['MicrowaveAgilent',['../classmicrowave_1_1mw__source__agilent_1_1MicrowaveAgilent.html',1,'microwave::mw_source_agilent']]],
   ['microwaveanritsu',['MicrowaveAnritsu',['../classmicrowave_1_1mw__source__anritsu_1_1MicrowaveAnritsu.html',1,'microwave::mw_source_anritsu']]],
   ['microwaveanritsu70ghz',['MicrowaveAnritsu70GHz',['../classmicrowave_1_1mw__source__anritsu70GHz_1_1MicrowaveAnritsu70GHz.html',1,'microwave::mw_source_anritsu70GHz']]],
   ['microwavedummy',['MicrowaveDummy',['../classmicrowave_1_1mw__source__dummy_1_1MicrowaveDummy.html',1,'microwave::mw_source_dummy']]],
