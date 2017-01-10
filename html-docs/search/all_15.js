@@ -35,6 +35,7 @@ var searchData=
   ['update_5fmeas_5fgraph',['update_meas_graph',['../classgui_1_1nuclear__operations_1_1nuclear__operations_1_1NuclearOperationsGui.html#af1f196e7dc404113a578037712ced93c',1,'gui::nuclear_operations::nuclear_operations::NuclearOperationsGui']]],
   ['update_5fmeas_5fparameter',['update_meas_parameter',['../classgui_1_1nuclear__operations_1_1nuclear__operations_1_1NuclearOperationsGui.html#a81c245b001ce767ef78e8328b65449df',1,'gui::nuclear_operations::nuclear_operations::NuclearOperationsGui']]],
   ['update_5foptimizer_5fsettings',['update_optimizer_settings',['../classgui_1_1confocal_1_1confocalgui_1_1ConfocalGui.html#aee9b9d1740804d3cffe9786df7254222',1,'gui::confocal::confocalgui::ConfocalGui']]],
+  ['update_5foversampling_5fspinbox',['update_oversampling_SpinBox',['../classcountergui_1_1CounterGui.html#a485796962856e984190e4e34ffc8bdde',1,'countergui::CounterGui']]],
   ['update_5fpos',['update_pos',['../classmagnet__gui_1_1MagnetGui.html#ac0483b10b59b53f7f450515d44003fa7',1,'magnet_gui::MagnetGui']]],
   ['update_5froi_5fdepth',['update_roi_depth',['../classgui_1_1confocal_1_1confocalgui_1_1ConfocalGui.html#ad127daab09029e5460d250d09fc6e9ca',1,'gui::confocal::confocalgui::ConfocalGui']]],
   ['update_5froi_5ffrom_5fabs_5fmovement',['update_roi_from_abs_movement',['../classmagnet__gui_1_1MagnetGui.html#a68503116f0644c0b2dee4cf6c67dbc87',1,'magnet_gui::MagnetGui']]],
