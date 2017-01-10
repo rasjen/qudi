@@ -1202,8 +1202,8 @@ IndexError: list index out of range
 /home/travis/build/Ulm-IQO/qudi/logic/counter_logic.py:48: warning: Member sigCountingSamplesChanged (variable) of class counter_logic::CounterLogic is not documented.
 /home/travis/build/Ulm-IQO/qudi/logic/counter_logic.py:49: warning: Member sigCountLengthChanged (variable) of class counter_logic::CounterLogic is not documented.
 /home/travis/build/Ulm-IQO/qudi/logic/counter_logic.py:50: warning: Member sigCountFrequencyChanged (variable) of class counter_logic::CounterLogic is not documented.
-/home/travis/build/Ulm-IQO/qudi/logic/counter_logic.py:51: warning: Member sigStartSavingChanged (variable) of class counter_logic::CounterLogic is not documented.
-/home/travis/build/Ulm-IQO/qudi/logic/counter_logic.py:52: warning: Member sigDataSaved (variable) of class counter_logic::CounterLogic is not documented.
+/home/travis/build/Ulm-IQO/qudi/logic/counter_logic.py:51: warning: Member sigSavingStatusChanged (variable) of class counter_logic::CounterLogic is not documented.
+/home/travis/build/Ulm-IQO/qudi/logic/counter_logic.py:52: warning: Member sigCountStatusChanged (variable) of class counter_logic::CounterLogic is not documented.
 /home/travis/build/Ulm-IQO/qudi/logic/counter_logic.py:53: warning: Member sigCountingModeChanged (variable) of class counter_logic::CounterLogic is not documented.
 /home/travis/build/Ulm-IQO/qudi/logic/counter_logic.py:39: warning: Found unknown command `\signal'
 /home/travis/build/Ulm-IQO/qudi/logic/counter_logic.py:40: warning: Found unknown command `\signal'
@@ -1220,8 +1220,8 @@ IndexError: list index out of range
 /home/travis/build/Ulm-IQO/qudi/logic/counter_logic.py:144: warning: argument 'object' of command @param is not found in the argument list of counter_logic.CounterLogic::on_deactivate(self, e)
 /home/travis/build/Ulm-IQO/qudi/logic/counter_logic.py:144: warning: The following parameters of counter_logic.CounterLogic.on_deactivate(self, e) are not documented:
   parameter 'e'
-/home/travis/build/Ulm-IQO/qudi/logic/counter_logic.py:753: warning: argument 'str' of command @param is not found in the argument list of counter_logic.CounterLogic::save_current_count_trace(self, name_tag='')
-/home/travis/build/Ulm-IQO/qudi/logic/counter_logic.py:753: warning: The following parameters of counter_logic.CounterLogic.save_current_count_trace(self, name_tag='') are not documented:
+/home/travis/build/Ulm-IQO/qudi/logic/counter_logic.py:758: warning: argument 'str' of command @param is not found in the argument list of counter_logic.CounterLogic::save_current_count_trace(self, name_tag='')
+/home/travis/build/Ulm-IQO/qudi/logic/counter_logic.py:758: warning: The following parameters of counter_logic.CounterLogic.save_current_count_trace(self, name_tag='') are not documented:
   parameter 'name_tag'
 /home/travis/build/Ulm-IQO/qudi/logic/counter_logic.py:295: warning: argument 'bool' of command @param is not found in the argument list of counter_logic.CounterLogic::save_data(self, to_file=True, postfix='')
 /home/travis/build/Ulm-IQO/qudi/logic/counter_logic.py:295: warning: argument 'str' of command @param is not found in the argument list of counter_logic.CounterLogic::save_data(self, to_file=True, postfix='')
@@ -1238,10 +1238,7 @@ IndexError: list index out of range
 /home/travis/build/Ulm-IQO/qudi/logic/counter_logic.py:161: warning: The following parameters of counter_logic.CounterLogic.set_counting_samples(self, samples=1) are not documented:
   parameter 'samples'
 /home/travis/build/Ulm-IQO/qudi/gui/counter/countergui.py:71: warning: Member __init__(self, config, kwargs) (function) of class countergui::CounterGui is not documented.
-/home/travis/build/Ulm-IQO/qudi/gui/counter/countergui.py:350: warning: Member update_count_freq_SpinBox(self, count_freq) (function) of class countergui::CounterGui is not documented.
-/home/travis/build/Ulm-IQO/qudi/gui/counter/countergui.py:354: warning: Member update_count_length_SpinBox(self, count_length) (function) of class countergui::CounterGui is not documented.
-/home/travis/build/Ulm-IQO/qudi/gui/counter/countergui.py:358: warning: Member update_saving_Action(self, start) (function) of class countergui::CounterGui is not documented.
-/home/travis/build/Ulm-IQO/qudi/gui/counter/countergui.py:369: warning: Member update_counting_mode_ComboBox(self) (function) of class countergui::CounterGui is not documented.
+/home/travis/build/Ulm-IQO/qudi/gui/counter/countergui.py:409: warning: Member update_counting_mode_ComboBox(self) (function) of class countergui::CounterGui is not documented.
 /home/travis/build/Ulm-IQO/qudi/gui/guibase.py:38: warning: Member show(self) (function) of class gui::guibase::GUIBase is not documented.
 /home/travis/build/Ulm-IQO/qudi/gui/guibase.py:42: warning: Member saveWindowPos(self, window) (function) of class gui::guibase::GUIBase is not documented.
 /home/travis/build/Ulm-IQO/qudi/gui/guibase.py:46: warning: Member restoreWindowPos(self, window) (function) of class gui::guibase::GUIBase is not documented.
@@ -1257,6 +1254,18 @@ IndexError: list index out of range
 /home/travis/build/Ulm-IQO/qudi/gui/counter/countergui.py:199: warning: argument 'object' of command @param is not found in the argument list of countergui.CounterGui::on_deactivate(self, e)
 /home/travis/build/Ulm-IQO/qudi/gui/counter/countergui.py:201: warning: The following parameters of countergui.CounterGui.on_deactivate(self, e) are not documented:
   parameter 'e'
+/home/travis/build/Ulm-IQO/qudi/gui/counter/countergui.py:360: warning: argument 'float' of command @param is not found in the argument list of countergui.CounterGui::update_count_freq_SpinBox(self, count_freq)
+/home/travis/build/Ulm-IQO/qudi/gui/counter/countergui.py:362: warning: The following parameters of countergui.CounterGui.update_count_freq_SpinBox(self, count_freq) are not documented:
+  parameter 'count_freq'
+/home/travis/build/Ulm-IQO/qudi/gui/counter/countergui.py:371: warning: argument 'int' of command @param is not found in the argument list of countergui.CounterGui::update_count_length_SpinBox(self, count_length)
+/home/travis/build/Ulm-IQO/qudi/gui/counter/countergui.py:373: warning: The following parameters of countergui.CounterGui.update_count_length_SpinBox(self, count_length) are not documented:
+  parameter 'count_length'
+/home/travis/build/Ulm-IQO/qudi/gui/counter/countergui.py:398: warning: argument 'bool' of command @param is not found in the argument list of countergui.CounterGui::update_count_status_Action(self, running)
+/home/travis/build/Ulm-IQO/qudi/gui/counter/countergui.py:400: warning: The following parameters of countergui.CounterGui.update_count_status_Action(self, running) are not documented:
+  parameter 'running'
+/home/travis/build/Ulm-IQO/qudi/gui/counter/countergui.py:382: warning: argument 'bool' of command @param is not found in the argument list of countergui.CounterGui::update_saving_Action(self, start)
+/home/travis/build/Ulm-IQO/qudi/gui/counter/countergui.py:384: warning: The following parameters of countergui.CounterGui.update_saving_Action(self, start) are not documented:
+  parameter 'start'
 /home/travis/build/Ulm-IQO/qudi/gui/counter/countergui.py:39: warning: Member __init__(self, kwargs) (function) of class countergui::CounterMainWindow is not documented.
 /home/travis/build/Ulm-IQO/qudi/hardware/CTC100_temperature.py:46: warning: Member on_activate(self, e) (function) of class CTC100_temperature::CTC100 is not documented.
 /home/travis/build/Ulm-IQO/qudi/hardware/CTC100_temperature.py:50: warning: Member on_deactivate(self, e) (function) of class CTC100_temperature::CTC100 is not documented.
