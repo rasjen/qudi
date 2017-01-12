@@ -91,15 +91,21 @@ Collaboration diagram for slow_counter_interface.SlowCounterInterface:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
+<tr class="memitem:a6f8045544669bfd809bfe8ba4014c157"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classslow__counter__interface_1_1SlowCounterInterface.html#a6f8045544669bfd809bfe8ba4014c157">get_constraints</a> (self)</td></tr>
+<tr class="memdesc:a6f8045544669bfd809bfe8ba4014c157"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the hardware constrains from the counter device.  <a href="#a6f8045544669bfd809bfe8ba4014c157">More...</a><br /></td></tr>
+<tr class="separator:a6f8045544669bfd809bfe8ba4014c157"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9e4712026ccaa87174889806dd4eb5f4"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classslow__counter__interface_1_1SlowCounterInterface.html#a9e4712026ccaa87174889806dd4eb5f4">set_up_clock</a> (self, clock_frequency=None, clock_channel=None)</td></tr>
 <tr class="memdesc:a9e4712026ccaa87174889806dd4eb5f4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Configures the hardware clock of the NiDAQ card to give the timing.  <a href="#a9e4712026ccaa87174889806dd4eb5f4">More...</a><br /></td></tr>
 <tr class="separator:a9e4712026ccaa87174889806dd4eb5f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a073ad2900e189f4ef8769314fef0918a"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classslow__counter__interface_1_1SlowCounterInterface.html#a073ad2900e189f4ef8769314fef0918a">set_up_counter</a> (self, counter_channel=None, photon_source=None, counter_channel2=None, photon_source2=None, clock_channel=None, counter_buffer=None)</td></tr>
-<tr class="memdesc:a073ad2900e189f4ef8769314fef0918a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Configures the actual counter with a given clock.  <a href="#a073ad2900e189f4ef8769314fef0918a">More...</a><br /></td></tr>
-<tr class="separator:a073ad2900e189f4ef8769314fef0918a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6b6af7cd5f120ce94c077a1b014b54e8"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classslow__counter__interface_1_1SlowCounterInterface.html#a6b6af7cd5f120ce94c077a1b014b54e8">set_up_counter</a> (self, counter_channels=None, sources=None, clock_channel=None, counter_buffer=None)</td></tr>
+<tr class="memdesc:a6b6af7cd5f120ce94c077a1b014b54e8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Configures the actual counter with a given clock.  <a href="#a6b6af7cd5f120ce94c077a1b014b54e8">More...</a><br /></td></tr>
+<tr class="separator:a6b6af7cd5f120ce94c077a1b014b54e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a61e3656f391dfa937f6f2969355c79a5"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classslow__counter__interface_1_1SlowCounterInterface.html#a61e3656f391dfa937f6f2969355c79a5">get_counter</a> (self, samples=None)</td></tr>
 <tr class="memdesc:a61e3656f391dfa937f6f2969355c79a5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the current counts per second of the counter.  <a href="#a61e3656f391dfa937f6f2969355c79a5">More...</a><br /></td></tr>
 <tr class="separator:a61e3656f391dfa937f6f2969355c79a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0ca414ef7fa780dbf7c071d16a890ef9"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classslow__counter__interface_1_1SlowCounterInterface.html#a0ca414ef7fa780dbf7c071d16a890ef9">get_counter_channels</a> (self)</td></tr>
+<tr class="memdesc:a0ca414ef7fa780dbf7c071d16a890ef9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the list of counter channel names.  <a href="#a0ca414ef7fa780dbf7c071d16a890ef9">More...</a><br /></td></tr>
+<tr class="separator:a0ca414ef7fa780dbf7c071d16a890ef9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a648e2468da262eb21a9e18732e769d5f"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classslow__counter__interface_1_1SlowCounterInterface.html#a648e2468da262eb21a9e18732e769d5f">close_counter</a> (self)</td></tr>
 <tr class="memdesc:a648e2468da262eb21a9e18732e769d5f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Closes the counter and cleans up afterwards.  <a href="#a648e2468da262eb21a9e18732e769d5f">More...</a><br /></td></tr>
 <tr class="separator:a648e2468da262eb21a9e18732e769d5f"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -152,6 +158,27 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="a6f8045544669bfd809bfe8ba4014c157"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6f8045544669bfd809bfe8ba4014c157">&#9670;&nbsp;</a></span>get_constraints()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">def slow_counter_interface.SlowCounterInterface.get_constraints </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Retrieve the hardware constrains from the counter device. </p>
+<dl class="section return"><dt>Returns</dt><dd><a class="el" href="classslow__counter__interface_1_1SlowCounterConstraints.html">SlowCounterConstraints</a>: object with constraints for the counter </dd></dl>
+
+</div>
+</div>
 <a id="a61e3656f391dfa937f6f2969355c79a5"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a61e3656f391dfa937f6f2969355c79a5">&#9670;&nbsp;</a></span>get_counter()</h2>
 
@@ -185,7 +212,29 @@ Public Member Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>numpy.array(uint32): the photon counts per second </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>numpy.array((n, uint32)): the photon counts per second for n channels </dd></dl>
+
+</div>
+</div>
+<a id="a0ca414ef7fa780dbf7c071d16a890ef9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0ca414ef7fa780dbf7c071d16a890ef9">&#9670;&nbsp;</a></span>get_counter_channels()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">def slow_counter_interface.SlowCounterInterface.get_counter_channels </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Returns the list of counter channel names. </p>
+<dl class="section return"><dt>Returns</dt><dd>list(str): channel names</dd></dl>
+<p>Most methods calling this might just care about the number of channels, though. </p>
 
 </div>
 </div>
@@ -225,7 +274,7 @@ Public Member Functions</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">float</td><td>clock_frequency: if defined, this sets the frequency of the clock </td></tr>
-    <tr><td class="paramname">string</td><td>clock_channel: if defined, this is the physical channel of the clock</td></tr>
+    <tr><td class="paramname">string</td><td>clock_channel: if defined, this is the physical channel of the clock </td></tr>
   </table>
   </dd>
 </dl>
@@ -233,8 +282,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a073ad2900e189f4ef8769314fef0918a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a073ad2900e189f4ef8769314fef0918a">&#9670;&nbsp;</a></span>set_up_counter()</h2>
+<a id="a6b6af7cd5f120ce94c077a1b014b54e8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6b6af7cd5f120ce94c077a1b014b54e8">&#9670;&nbsp;</a></span>set_up_counter()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -249,25 +298,13 @@ Public Member Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>counter_channel</em> = <code>None</code>, </td>
+          <td class="paramname"><em>counter_channels</em> = <code>None</code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>photon_source</em> = <code>None</code>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>counter_channel2</em> = <code>None</code>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>photon_source2</em> = <code>None</code>, </td>
+          <td class="paramname"><em>sources</em> = <code>None</code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -292,16 +329,15 @@ Public Member Functions</h2></td></tr>
 <p>Configures the actual counter with a given clock. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">str</td><td>counter_channel: optional, physical channel of the counter </td></tr>
-    <tr><td class="paramname">str</td><td>photon_source: optional, physical channel where the photons are to count from </td></tr>
-    <tr><td class="paramname">str</td><td>counter_channel2: optional, physical channel of the counter 2 </td></tr>
-    <tr><td class="paramname">str</td><td>photon_source2: optional, second physical channel where the photons are to count from </td></tr>
+    <tr><td class="paramname">list(str)</td><td>counter_channels: optional, physical channel of the counter </td></tr>
+    <tr><td class="paramname">list(str)</td><td>sources: optional, physical channel where the photons photons are to count from </td></tr>
     <tr><td class="paramname">str</td><td>clock_channel: optional, specifies the clock channel for the counter </td></tr>
     <tr><td class="paramname">int</td><td>counter_buffer: optional, a buffer of specified integer length, where in each bin the count numbers are saved.</td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>int: error code (0:OK, -1:error) </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>int: error code (0:OK, -1:error)</dd></dl>
+<p>There need to be exactly the same number sof sources and counter channels and they need to be given in the same order. All counter channels share the same clock. </p>
 
 </div>
 </div>

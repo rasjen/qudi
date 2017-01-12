@@ -103,9 +103,15 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:abdf703af0998903391fbe135248abcd1"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtimetagger__counter_1_1TimeTaggerCounter.html#abdf703af0998903391fbe135248abcd1">set_up_clock</a> (self, clock_frequency=None, clock_channel=None)</td></tr>
 <tr class="memdesc:abdf703af0998903391fbe135248abcd1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Configures the hardware clock of the NiDAQ card to give the timing.  <a href="#abdf703af0998903391fbe135248abcd1">More...</a><br /></td></tr>
 <tr class="separator:abdf703af0998903391fbe135248abcd1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8669b363bb350ce478516627f5c0ad5e"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtimetagger__counter_1_1TimeTaggerCounter.html#a8669b363bb350ce478516627f5c0ad5e">set_up_counter</a> (self, counter_channel=None, photon_source=None, counter_channel2=None, photon_source2=None, clock_channel=None, counter_buffer=None)</td></tr>
-<tr class="memdesc:a8669b363bb350ce478516627f5c0ad5e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Configures the actual counter with a given clock.  <a href="#a8669b363bb350ce478516627f5c0ad5e">More...</a><br /></td></tr>
-<tr class="separator:a8669b363bb350ce478516627f5c0ad5e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a786f1c1aed466bd7a6104ce0d271e831"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtimetagger__counter_1_1TimeTaggerCounter.html#a786f1c1aed466bd7a6104ce0d271e831">set_up_counter</a> (self, counter_channels=None, sources=None, clock_channel=None, counter_buffer=None)</td></tr>
+<tr class="memdesc:a786f1c1aed466bd7a6104ce0d271e831"><td class="mdescLeft">&#160;</td><td class="mdescRight">Configures the actual counter with a given clock.  <a href="#a786f1c1aed466bd7a6104ce0d271e831">More...</a><br /></td></tr>
+<tr class="separator:a786f1c1aed466bd7a6104ce0d271e831"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0dd107de3b4f30c33c47a4e4df7f93e3"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtimetagger__counter_1_1TimeTaggerCounter.html#a0dd107de3b4f30c33c47a4e4df7f93e3">get_counter_channels</a> (self)</td></tr>
+<tr class="memdesc:a0dd107de3b4f30c33c47a4e4df7f93e3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return one channel for now.  <a href="#a0dd107de3b4f30c33c47a4e4df7f93e3">More...</a><br /></td></tr>
+<tr class="separator:a0dd107de3b4f30c33c47a4e4df7f93e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a674174435071badb8e373aab382b44bf"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtimetagger__counter_1_1TimeTaggerCounter.html#a674174435071badb8e373aab382b44bf">get_constraints</a> (self)</td></tr>
+<tr class="memdesc:a674174435071badb8e373aab382b44bf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get hardware limits of NI device.  <a href="#a674174435071badb8e373aab382b44bf">More...</a><br /></td></tr>
+<tr class="separator:a674174435071badb8e373aab382b44bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9348b490edb9328ba0ea0cb142571d12"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtimetagger__counter_1_1TimeTaggerCounter.html#a9348b490edb9328ba0ea0cb142571d12">get_counter</a> (self, samples=None)</td></tr>
 <tr class="memdesc:a9348b490edb9328ba0ea0cb142571d12"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the current counts per second of the counter.  <a href="#a9348b490edb9328ba0ea0cb142571d12">More...</a><br /></td></tr>
 <tr class="separator:a9348b490edb9328ba0ea0cb142571d12"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -236,6 +242,28 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a id="a674174435071badb8e373aab382b44bf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a674174435071badb8e373aab382b44bf">&#9670;&nbsp;</a></span>get_constraints()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">def timetagger_counter.TimeTaggerCounter.get_constraints </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get hardware limits of NI device. </p>
+<dl class="section return"><dt>Returns</dt><dd>SlowCounterConstraints: constraints class for slow counter</dd></dl>
+<p>FIXME ask hardware for limits when module is loaded </p>
+
+</div>
+</div>
 <a id="a9348b490edb9328ba0ea0cb142571d12"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a9348b490edb9328ba0ea0cb142571d12">&#9670;&nbsp;</a></span>get_counter()</h2>
 
@@ -270,6 +298,26 @@ Additional Inherited Members</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>numpy.array(uint32): the photon counts per second </dd></dl>
+
+</div>
+</div>
+<a id="a0dd107de3b4f30c33c47a4e4df7f93e3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0dd107de3b4f30c33c47a4e4df7f93e3">&#9670;&nbsp;</a></span>get_counter_channels()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">def timetagger_counter.TimeTaggerCounter.get_counter_channels </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Return one channel for now. </p>
 
 </div>
 </div>
@@ -389,8 +437,8 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="a8669b363bb350ce478516627f5c0ad5e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8669b363bb350ce478516627f5c0ad5e">&#9670;&nbsp;</a></span>set_up_counter()</h2>
+<a id="a786f1c1aed466bd7a6104ce0d271e831"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a786f1c1aed466bd7a6104ce0d271e831">&#9670;&nbsp;</a></span>set_up_counter()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -405,25 +453,13 @@ Additional Inherited Members</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>counter_channel</em> = <code>None</code>, </td>
+          <td class="paramname"><em>counter_channels</em> = <code>None</code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>photon_source</em> = <code>None</code>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>counter_channel2</em> = <code>None</code>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>photon_source2</em> = <code>None</code>, </td>
+          <td class="paramname"><em>sources</em> = <code>None</code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>

@@ -26,6 +26,7 @@ var searchData=
   ['countergui',['CounterGui',['../classcountergui_1_1CounterGui.html',1,'countergui']]],
   ['counterlogic',['CounterLogic',['../classcounter__logic_1_1CounterLogic.html',1,'counter_logic']]],
   ['countermainwindow',['CounterMainWindow',['../classcountergui_1_1CounterMainWindow.html',1,'countergui']]],
+  ['countingmode',['CountingMode',['../classslow__counter__interface_1_1CountingMode.html',1,'slow_counter_interface']]],
   ['crossline',['CrossLine',['../classgui_1_1confocal_1_1confocalgui_1_1CrossLine.html',1,'gui.confocal.confocalgui.CrossLine'],['../classmagnet__gui_1_1CrossLine.html',1,'magnet_gui.CrossLine']]],
   ['crossroi',['CrossROI',['../classgui_1_1confocal_1_1confocalgui_1_1CrossROI.html',1,'gui.confocal.confocalgui.CrossROI'],['../classmagnet__gui_1_1CrossROI.html',1,'magnet_gui.CrossROI']]],
   ['ctc100',['CTC100',['../classCTC100__temperature_1_1CTC100.html',1,'CTC100_temperature']]],

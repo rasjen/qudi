@@ -106,6 +106,7 @@ IndexError: list index out of range
 /home/travis/build/Ulm-IQO/qudi/gui/colordefs.py:74: warning: Compound gui::colordefs::ColorScaleMagma is not documented.
 /home/travis/build/Ulm-IQO/qudi/hardware/pi_pwm.py:148: warning: Compound pi_pwm::PiPWMHalf is not documented.
 /home/travis/build/Ulm-IQO/qudi/gui/colordefs.py:1120: warning: Compound gui::colordefs::QudiPalette is not documented.
+/home/travis/build/Ulm-IQO/qudi/interface/slow_counter_interface.py:120: warning: Compound slow_counter_interface::CountingMode is not documented.
 /home/travis/build/Ulm-IQO/qudi/tools/qudikernel.py:36: warning: Compound qudikernel::Qudi is not documented.
 /home/travis/build/Ulm-IQO/qudi/logic/samples_write_methods.py:34: warning: Compound samples_write_methods::SamplesWriteMethods is not documented.
 /home/travis/build/Ulm-IQO/qudi/interface/vacuum_pump_interface.py:26: warning: Compound vacuum_pump_interface::VacuumPumpInterface is not documented.
@@ -122,6 +123,7 @@ IndexError: list index out of range
 /home/travis/build/Ulm-IQO/qudi/gui/pulsed/pulsed_maingui.py:130: warning: Compound pulsed_maingui::PredefinedMethodsTab is not documented.
 /home/travis/build/Ulm-IQO/qudi/gui/colordefs.py:597: warning: Compound gui::colordefs::ColorScalePlasma is not documented.
 /home/travis/build/Ulm-IQO/qudi/gui/pulsed/pulsed_maingui.py:76: warning: Compound pulsed_maingui::PulseGeneratorTab is not documented.
+/home/travis/build/Ulm-IQO/qudi/interface/slow_counter_interface.py:126: warning: Compound slow_counter_interface::SlowCounterConstraints is not documented.
 /home/travis/build/Ulm-IQO/qudi/hardware/switches/ok_fpga/ok_s6_switch.py:43: warning: Compound ok_s6_switch::HardwareSwitchFpga is not documented.
 /home/travis/build/Ulm-IQO/qudi/gui/manager/remotewidget.py:26: warning: Compound gui::manager::remotewidget::RemoteWidget is not documented.
 /home/travis/build/Ulm-IQO/qudi/hardware/influx_data_client.py:28: warning: Compound influx_data_client::InfluxDataClient is not documented.
@@ -140,7 +142,7 @@ IndexError: list index out of range
 
 /home/travis/build/Ulm-IQO/qudi/core/util/win_interrupt.py:27: warning: documented symbol `core::util::win_interrupt::_fields_' was not declared or defined.
 /home/travis/build/Ulm-IQO/qudi/gui/pulsed/pulsed_maingui.py:339: warning: documented symbol `pulsed_maingui.PulsedMeasurementGui::_encoding' was not declared or defined.
-/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:1962: warning: documented symbol `ni_card.NICard::_gated_count_data' was not declared or defined.
+/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:1986: warning: documented symbol `ni_card.NICard::_gated_count_data' was not declared or defined.
 /home/travis/build/Ulm-IQO/qudi/logic/generic_task.py:91: warning: documented symbol `generic_task.InterruptableTask::_stateDict' was not declared or defined.
 /home/travis/build/Ulm-IQO/qudi/logic/generic_task.py:384: warning: documented symbol `generic_task.PrePostTask::_default_callbacks' was not declared or defined.
 /home/travis/build/Ulm-IQO/qudi/logic/generic_task.py:388: warning: documented symbol `generic_task.PrePostTask::_stateList' was not declared or defined.
@@ -600,9 +602,9 @@ IndexError: list index out of range
 /home/travis/build/Ulm-IQO/qudi/logic/confocal_logic.py:132: warning: Member xy_image (variable) of class confocal_logic::ConfocalHistoryEntry is not documented.
 /home/travis/build/Ulm-IQO/qudi/logic/confocal_logic.py:140: warning: Member depth_image (variable) of class confocal_logic::ConfocalHistoryEntry is not documented.
 /home/travis/build/Ulm-IQO/qudi/logic/confocal_logic.py:289: warning: Member __init__(self, config, kwargs) (function) of class confocal_logic::ConfocalLogic is not documented.
-/home/travis/build/Ulm-IQO/qudi/logic/confocal_logic.py:1172: warning: Member set_tilt_correction(self, enabled) (function) of class confocal_logic::ConfocalLogic is not documented.
-/home/travis/build/Ulm-IQO/qudi/logic/confocal_logic.py:1178: warning: Member history_forward(self) (function) of class confocal_logic::ConfocalLogic is not documented.
-/home/travis/build/Ulm-IQO/qudi/logic/confocal_logic.py:1190: warning: Member history_back(self) (function) of class confocal_logic::ConfocalLogic is not documented.
+/home/travis/build/Ulm-IQO/qudi/logic/confocal_logic.py:1194: warning: Member set_tilt_correction(self, enabled) (function) of class confocal_logic::ConfocalLogic is not documented.
+/home/travis/build/Ulm-IQO/qudi/logic/confocal_logic.py:1200: warning: Member history_forward(self) (function) of class confocal_logic::ConfocalLogic is not documented.
+/home/travis/build/Ulm-IQO/qudi/logic/confocal_logic.py:1212: warning: Member history_back(self) (function) of class confocal_logic::ConfocalLogic is not documented.
 /home/travis/build/Ulm-IQO/qudi/logic/confocal_logic.py:299: warning: Member threadlock (variable) of class confocal_logic::ConfocalLogic is not documented.
 /home/travis/build/Ulm-IQO/qudi/logic/confocal_logic.py:304: warning: Member stopRequested (variable) of class confocal_logic::ConfocalLogic is not documented.
 /home/travis/build/Ulm-IQO/qudi/logic/confocal_logic.py:305: warning: Member depth_scan_dir_is_xz (variable) of class confocal_logic::ConfocalLogic is not documented.
@@ -616,9 +618,9 @@ IndexError: list index out of range
 /home/travis/build/Ulm-IQO/qudi/logic/confocal_logic.py:364: warning: Member history_index (variable) of class confocal_logic::ConfocalLogic is not documented.
 /home/travis/build/Ulm-IQO/qudi/logic/confocal_logic.py:522: warning: Member depth_image (variable) of class confocal_logic::ConfocalLogic is not documented.
 /home/travis/build/Ulm-IQO/qudi/logic/confocal_logic.py:542: warning: Member xy_image (variable) of class confocal_logic::ConfocalLogic is not documented.
-/home/travis/build/Ulm-IQO/qudi/logic/confocal_logic.py:1147: warning: Member point1 (variable) of class confocal_logic::ConfocalLogic is not documented.
-/home/travis/build/Ulm-IQO/qudi/logic/confocal_logic.py:1153: warning: Member point2 (variable) of class confocal_logic::ConfocalLogic is not documented.
-/home/travis/build/Ulm-IQO/qudi/logic/confocal_logic.py:1159: warning: Member point3 (variable) of class confocal_logic::ConfocalLogic is not documented.
+/home/travis/build/Ulm-IQO/qudi/logic/confocal_logic.py:1169: warning: Member point1 (variable) of class confocal_logic::ConfocalLogic is not documented.
+/home/travis/build/Ulm-IQO/qudi/logic/confocal_logic.py:1175: warning: Member point2 (variable) of class confocal_logic::ConfocalLogic is not documented.
+/home/travis/build/Ulm-IQO/qudi/logic/confocal_logic.py:1181: warning: Member point3 (variable) of class confocal_logic::ConfocalLogic is not documented.
 /home/travis/build/Ulm-IQO/qudi/logic/confocal_logic.py:270: warning: Member signal_start_scanning (variable) of class confocal_logic::ConfocalLogic is not documented.
 /home/travis/build/Ulm-IQO/qudi/logic/confocal_logic.py:271: warning: Member signal_continue_scanning (variable) of class confocal_logic::ConfocalLogic is not documented.
 /home/travis/build/Ulm-IQO/qudi/logic/confocal_logic.py:272: warning: Member signal_stop_scanning (variable) of class confocal_logic::ConfocalLogic is not documented.
@@ -635,8 +637,8 @@ IndexError: list index out of range
 /home/travis/build/Ulm-IQO/qudi/logic/confocal_logic.py:284: warning: Member sigImageXYInitialized (variable) of class confocal_logic::ConfocalLogic is not documented.
 /home/travis/build/Ulm-IQO/qudi/logic/confocal_logic.py:285: warning: Member sigImageDepthInitialized (variable) of class confocal_logic::ConfocalLogic is not documented.
 /home/travis/build/Ulm-IQO/qudi/logic/confocal_logic.py:287: warning: Member signal_history_event (variable) of class confocal_logic::ConfocalLogic is not documented.
-/home/travis/build/Ulm-IQO/qudi/logic/confocal_logic.py:1044: warning: expected whitespace after : command
-/home/travis/build/Ulm-IQO/qudi/logic/confocal_logic.py:829: warning: expected whitespace after : command
+/home/travis/build/Ulm-IQO/qudi/logic/confocal_logic.py:1066: warning: expected whitespace after : command
+/home/travis/build/Ulm-IQO/qudi/logic/confocal_logic.py:851: warning: expected whitespace after : command
 /home/travis/build/Ulm-IQO/qudi/logic/confocal_logic.py:408: warning: argument 'int' of command @param is not found in the argument list of confocal_logic.ConfocalLogic::set_clock_frequency(self, clock_frequency)
 /home/travis/build/Ulm-IQO/qudi/logic/confocal_logic.py:410: warning: The following parameters of confocal_logic.ConfocalLogic.set_clock_frequency(self, clock_frequency) are not documented:
   parameter 'clock_frequency'
@@ -660,68 +662,68 @@ IndexError: list index out of range
 /home/travis/build/Ulm-IQO/qudi/core/base.py:126: warning: Member connector (variable) of class core::base::Base is not documented.
 /home/travis/build/Ulm-IQO/qudi/core/base.py:49: warning: Member sigStateChanged (variable) of class core::base::Base is not documented.
 /home/travis/build/Ulm-IQO/qudi/core/base.py:168: warning: Member result (variable) of class core::base::Base is not documented.
-/home/travis/build/Ulm-IQO/qudi/hardware/confocal_scanner_dummy.py:471: warning: argument 'array' of command @param is not found in the argument list of confocal_scanner_dummy.ConfocalScannerDummy::gaussian_function(self, x_data=None, amplitude=None, x_zero=None, sigma=None, offset=None)
-/home/travis/build/Ulm-IQO/qudi/hardware/confocal_scanner_dummy.py:471: warning: argument 'float' of command @param is not found in the argument list of confocal_scanner_dummy.ConfocalScannerDummy::gaussian_function(self, x_data=None, amplitude=None, x_zero=None, sigma=None, offset=None)
-/home/travis/build/Ulm-IQO/qudi/hardware/confocal_scanner_dummy.py:471: warning: argument 'float' of command @param is not found in the argument list of confocal_scanner_dummy.ConfocalScannerDummy::gaussian_function(self, x_data=None, amplitude=None, x_zero=None, sigma=None, offset=None)
-/home/travis/build/Ulm-IQO/qudi/hardware/confocal_scanner_dummy.py:471: warning: argument 'float' of command @param is not found in the argument list of confocal_scanner_dummy.ConfocalScannerDummy::gaussian_function(self, x_data=None, amplitude=None, x_zero=None, sigma=None, offset=None)
-/home/travis/build/Ulm-IQO/qudi/hardware/confocal_scanner_dummy.py:471: warning: argument 'float' of command @param is not found in the argument list of confocal_scanner_dummy.ConfocalScannerDummy::gaussian_function(self, x_data=None, amplitude=None, x_zero=None, sigma=None, offset=None)
-/home/travis/build/Ulm-IQO/qudi/hardware/confocal_scanner_dummy.py:471: warning: The following parameters of confocal_scanner_dummy.ConfocalScannerDummy.gaussian_function(self, x_data=None, amplitude=None, x_zero=None, sigma=None, offset=None) are not documented:
+/home/travis/build/Ulm-IQO/qudi/hardware/confocal_scanner_dummy.py:449: warning: argument 'array' of command @param is not found in the argument list of confocal_scanner_dummy.ConfocalScannerDummy::gaussian_function(self, x_data=None, amplitude=None, x_zero=None, sigma=None, offset=None)
+/home/travis/build/Ulm-IQO/qudi/hardware/confocal_scanner_dummy.py:449: warning: argument 'float' of command @param is not found in the argument list of confocal_scanner_dummy.ConfocalScannerDummy::gaussian_function(self, x_data=None, amplitude=None, x_zero=None, sigma=None, offset=None)
+/home/travis/build/Ulm-IQO/qudi/hardware/confocal_scanner_dummy.py:449: warning: argument 'float' of command @param is not found in the argument list of confocal_scanner_dummy.ConfocalScannerDummy::gaussian_function(self, x_data=None, amplitude=None, x_zero=None, sigma=None, offset=None)
+/home/travis/build/Ulm-IQO/qudi/hardware/confocal_scanner_dummy.py:449: warning: argument 'float' of command @param is not found in the argument list of confocal_scanner_dummy.ConfocalScannerDummy::gaussian_function(self, x_data=None, amplitude=None, x_zero=None, sigma=None, offset=None)
+/home/travis/build/Ulm-IQO/qudi/hardware/confocal_scanner_dummy.py:449: warning: argument 'float' of command @param is not found in the argument list of confocal_scanner_dummy.ConfocalScannerDummy::gaussian_function(self, x_data=None, amplitude=None, x_zero=None, sigma=None, offset=None)
+/home/travis/build/Ulm-IQO/qudi/hardware/confocal_scanner_dummy.py:449: warning: The following parameters of confocal_scanner_dummy.ConfocalScannerDummy.gaussian_function(self, x_data=None, amplitude=None, x_zero=None, sigma=None, offset=None) are not documented:
   parameter 'x_data'
   parameter 'amplitude'
   parameter 'x_zero'
   parameter 'sigma'
   parameter 'offset'
-/home/travis/build/Ulm-IQO/qudi/hardware/confocal_scanner_dummy.py:89: warning: argument 'object' of command @param is not found in the argument list of confocal_scanner_dummy.ConfocalScannerDummy::on_activate(self, e)
-/home/travis/build/Ulm-IQO/qudi/hardware/confocal_scanner_dummy.py:89: warning: The following parameters of confocal_scanner_dummy.ConfocalScannerDummy.on_activate(self, e) are not documented:
+/home/travis/build/Ulm-IQO/qudi/hardware/confocal_scanner_dummy.py:87: warning: argument 'object' of command @param is not found in the argument list of confocal_scanner_dummy.ConfocalScannerDummy::on_activate(self, e)
+/home/travis/build/Ulm-IQO/qudi/hardware/confocal_scanner_dummy.py:87: warning: The following parameters of confocal_scanner_dummy.ConfocalScannerDummy.on_activate(self, e) are not documented:
   parameter 'e'
-/home/travis/build/Ulm-IQO/qudi/hardware/confocal_scanner_dummy.py:147: warning: argument 'object' of command @param is not found in the argument list of confocal_scanner_dummy.ConfocalScannerDummy::on_deactivate(self, e)
-/home/travis/build/Ulm-IQO/qudi/hardware/confocal_scanner_dummy.py:147: warning: The following parameters of confocal_scanner_dummy.ConfocalScannerDummy.on_deactivate(self, e) are not documented:
+/home/travis/build/Ulm-IQO/qudi/hardware/confocal_scanner_dummy.py:145: warning: argument 'object' of command @param is not found in the argument list of confocal_scanner_dummy.ConfocalScannerDummy::on_deactivate(self, e)
+/home/travis/build/Ulm-IQO/qudi/hardware/confocal_scanner_dummy.py:145: warning: The following parameters of confocal_scanner_dummy.ConfocalScannerDummy.on_deactivate(self, e) are not documented:
   parameter 'e'
-/home/travis/build/Ulm-IQO/qudi/hardware/confocal_scanner_dummy.py:337: warning: argument 'float' of command @param is not found in the argument list of confocal_scanner_dummy.ConfocalScannerDummy::scan_line(self, line_path=None)
-/home/travis/build/Ulm-IQO/qudi/hardware/confocal_scanner_dummy.py:337: warning: argument '4' of command @param is not found in the argument list of confocal_scanner_dummy.ConfocalScannerDummy::scan_line(self, line_path=None)
-/home/travis/build/Ulm-IQO/qudi/hardware/confocal_scanner_dummy.py:337: warning: The following parameters of confocal_scanner_dummy.ConfocalScannerDummy.scan_line(self, line_path=None) are not documented:
+/home/travis/build/Ulm-IQO/qudi/hardware/confocal_scanner_dummy.py:332: warning: argument 'float' of command @param is not found in the argument list of confocal_scanner_dummy.ConfocalScannerDummy::scan_line(self, line_path=None)
+/home/travis/build/Ulm-IQO/qudi/hardware/confocal_scanner_dummy.py:332: warning: argument '4' of command @param is not found in the argument list of confocal_scanner_dummy.ConfocalScannerDummy::scan_line(self, line_path=None)
+/home/travis/build/Ulm-IQO/qudi/hardware/confocal_scanner_dummy.py:332: warning: The following parameters of confocal_scanner_dummy.ConfocalScannerDummy.scan_line(self, line_path=None) are not documented:
   parameter 'line_path'
-/home/travis/build/Ulm-IQO/qudi/hardware/confocal_scanner_dummy.py:294: warning: argument 'float' of command @param is not found in the argument list of confocal_scanner_dummy.ConfocalScannerDummy::scanner_set_position(self, x=None, y=None, z=None, a=None)
-/home/travis/build/Ulm-IQO/qudi/hardware/confocal_scanner_dummy.py:294: warning: argument 'float' of command @param is not found in the argument list of confocal_scanner_dummy.ConfocalScannerDummy::scanner_set_position(self, x=None, y=None, z=None, a=None)
-/home/travis/build/Ulm-IQO/qudi/hardware/confocal_scanner_dummy.py:294: warning: argument 'float' of command @param is not found in the argument list of confocal_scanner_dummy.ConfocalScannerDummy::scanner_set_position(self, x=None, y=None, z=None, a=None)
-/home/travis/build/Ulm-IQO/qudi/hardware/confocal_scanner_dummy.py:294: warning: argument 'float' of command @param is not found in the argument list of confocal_scanner_dummy.ConfocalScannerDummy::scanner_set_position(self, x=None, y=None, z=None, a=None)
-/home/travis/build/Ulm-IQO/qudi/hardware/confocal_scanner_dummy.py:294: warning: The following parameters of confocal_scanner_dummy.ConfocalScannerDummy.scanner_set_position(self, x=None, y=None, z=None, a=None) are not documented:
+/home/travis/build/Ulm-IQO/qudi/hardware/confocal_scanner_dummy.py:292: warning: argument 'float' of command @param is not found in the argument list of confocal_scanner_dummy.ConfocalScannerDummy::scanner_set_position(self, x=None, y=None, z=None, a=None)
+/home/travis/build/Ulm-IQO/qudi/hardware/confocal_scanner_dummy.py:292: warning: argument 'float' of command @param is not found in the argument list of confocal_scanner_dummy.ConfocalScannerDummy::scanner_set_position(self, x=None, y=None, z=None, a=None)
+/home/travis/build/Ulm-IQO/qudi/hardware/confocal_scanner_dummy.py:292: warning: argument 'float' of command @param is not found in the argument list of confocal_scanner_dummy.ConfocalScannerDummy::scanner_set_position(self, x=None, y=None, z=None, a=None)
+/home/travis/build/Ulm-IQO/qudi/hardware/confocal_scanner_dummy.py:292: warning: argument 'float' of command @param is not found in the argument list of confocal_scanner_dummy.ConfocalScannerDummy::scanner_set_position(self, x=None, y=None, z=None, a=None)
+/home/travis/build/Ulm-IQO/qudi/hardware/confocal_scanner_dummy.py:292: warning: The following parameters of confocal_scanner_dummy.ConfocalScannerDummy.scanner_set_position(self, x=None, y=None, z=None, a=None) are not documented:
   parameter 'x'
   parameter 'y'
   parameter 'z'
   parameter 'a'
-/home/travis/build/Ulm-IQO/qudi/hardware/confocal_scanner_dummy.py:174: warning: argument 'float' of command @param is not found in the argument list of confocal_scanner_dummy.ConfocalScannerDummy::set_position_range(self, myrange=None)
-/home/travis/build/Ulm-IQO/qudi/hardware/confocal_scanner_dummy.py:174: warning: The following parameters of confocal_scanner_dummy.ConfocalScannerDummy.set_position_range(self, myrange=None) are not documented:
+/home/travis/build/Ulm-IQO/qudi/hardware/confocal_scanner_dummy.py:172: warning: argument 'float' of command @param is not found in the argument list of confocal_scanner_dummy.ConfocalScannerDummy::set_position_range(self, myrange=None)
+/home/travis/build/Ulm-IQO/qudi/hardware/confocal_scanner_dummy.py:172: warning: The following parameters of confocal_scanner_dummy.ConfocalScannerDummy.set_position_range(self, myrange=None) are not documented:
   parameter 'myrange'
-/home/travis/build/Ulm-IQO/qudi/hardware/confocal_scanner_dummy.py:321: warning: argument 'int' of command @param is not found in the argument list of confocal_scanner_dummy.ConfocalScannerDummy::set_up_line(self, length=100)
-/home/travis/build/Ulm-IQO/qudi/hardware/confocal_scanner_dummy.py:321: warning: The following parameters of confocal_scanner_dummy.ConfocalScannerDummy.set_up_line(self, length=100) are not documented:
+/home/travis/build/Ulm-IQO/qudi/hardware/confocal_scanner_dummy.py:316: warning: argument 'int' of command @param is not found in the argument list of confocal_scanner_dummy.ConfocalScannerDummy::set_up_line(self, length=100)
+/home/travis/build/Ulm-IQO/qudi/hardware/confocal_scanner_dummy.py:316: warning: The following parameters of confocal_scanner_dummy.ConfocalScannerDummy.set_up_line(self, length=100) are not documented:
   parameter 'length'
-/home/travis/build/Ulm-IQO/qudi/hardware/confocal_scanner_dummy.py:271: warning: argument 'str' of command @param is not found in the argument list of confocal_scanner_dummy.ConfocalScannerDummy::set_up_scanner(self, counter_channel=None, photon_source=None, clock_channel=None, scanner_ao_channels=None)
-/home/travis/build/Ulm-IQO/qudi/hardware/confocal_scanner_dummy.py:271: warning: argument 'str' of command @param is not found in the argument list of confocal_scanner_dummy.ConfocalScannerDummy::set_up_scanner(self, counter_channel=None, photon_source=None, clock_channel=None, scanner_ao_channels=None)
-/home/travis/build/Ulm-IQO/qudi/hardware/confocal_scanner_dummy.py:271: warning: argument 'str' of command @param is not found in the argument list of confocal_scanner_dummy.ConfocalScannerDummy::set_up_scanner(self, counter_channel=None, photon_source=None, clock_channel=None, scanner_ao_channels=None)
-/home/travis/build/Ulm-IQO/qudi/hardware/confocal_scanner_dummy.py:271: warning: argument 'str' of command @param is not found in the argument list of confocal_scanner_dummy.ConfocalScannerDummy::set_up_scanner(self, counter_channel=None, photon_source=None, clock_channel=None, scanner_ao_channels=None)
-/home/travis/build/Ulm-IQO/qudi/hardware/confocal_scanner_dummy.py:271: warning: The following parameters of confocal_scanner_dummy.ConfocalScannerDummy.set_up_scanner(self, counter_channel=None, photon_source=None, clock_channel=None, scanner_ao_channels=None) are not documented:
-  parameter 'counter_channel'
-  parameter 'photon_source'
+/home/travis/build/Ulm-IQO/qudi/hardware/confocal_scanner_dummy.py:275: warning: argument 'str' of command @param is not found in the argument list of confocal_scanner_dummy.ConfocalScannerDummy::set_up_scanner(self, counter_channels=None, sources=None, clock_channel=None, scanner_ao_channels=None)
+/home/travis/build/Ulm-IQO/qudi/hardware/confocal_scanner_dummy.py:275: warning: argument 'str' of command @param is not found in the argument list of confocal_scanner_dummy.ConfocalScannerDummy::set_up_scanner(self, counter_channels=None, sources=None, clock_channel=None, scanner_ao_channels=None)
+/home/travis/build/Ulm-IQO/qudi/hardware/confocal_scanner_dummy.py:275: warning: argument 'str' of command @param is not found in the argument list of confocal_scanner_dummy.ConfocalScannerDummy::set_up_scanner(self, counter_channels=None, sources=None, clock_channel=None, scanner_ao_channels=None)
+/home/travis/build/Ulm-IQO/qudi/hardware/confocal_scanner_dummy.py:275: warning: argument 'str' of command @param is not found in the argument list of confocal_scanner_dummy.ConfocalScannerDummy::set_up_scanner(self, counter_channels=None, sources=None, clock_channel=None, scanner_ao_channels=None)
+/home/travis/build/Ulm-IQO/qudi/hardware/confocal_scanner_dummy.py:275: warning: The following parameters of confocal_scanner_dummy.ConfocalScannerDummy.set_up_scanner(self, counter_channels=None, sources=None, clock_channel=None, scanner_ao_channels=None) are not documented:
+  parameter 'counter_channels'
+  parameter 'sources'
   parameter 'clock_channel'
   parameter 'scanner_ao_channels'
-/home/travis/build/Ulm-IQO/qudi/hardware/confocal_scanner_dummy.py:246: warning: argument 'float' of command @param is not found in the argument list of confocal_scanner_dummy.ConfocalScannerDummy::set_up_scanner_clock(self, clock_frequency=None, clock_channel=None)
-/home/travis/build/Ulm-IQO/qudi/hardware/confocal_scanner_dummy.py:246: warning: argument 'str' of command @param is not found in the argument list of confocal_scanner_dummy.ConfocalScannerDummy::set_up_scanner_clock(self, clock_frequency=None, clock_channel=None)
-/home/travis/build/Ulm-IQO/qudi/hardware/confocal_scanner_dummy.py:246: warning: The following parameters of confocal_scanner_dummy.ConfocalScannerDummy.set_up_scanner_clock(self, clock_frequency=None, clock_channel=None) are not documented:
+/home/travis/build/Ulm-IQO/qudi/hardware/confocal_scanner_dummy.py:252: warning: argument 'float' of command @param is not found in the argument list of confocal_scanner_dummy.ConfocalScannerDummy::set_up_scanner_clock(self, clock_frequency=None, clock_channel=None)
+/home/travis/build/Ulm-IQO/qudi/hardware/confocal_scanner_dummy.py:252: warning: argument 'str' of command @param is not found in the argument list of confocal_scanner_dummy.ConfocalScannerDummy::set_up_scanner_clock(self, clock_frequency=None, clock_channel=None)
+/home/travis/build/Ulm-IQO/qudi/hardware/confocal_scanner_dummy.py:252: warning: The following parameters of confocal_scanner_dummy.ConfocalScannerDummy.set_up_scanner_clock(self, clock_frequency=None, clock_channel=None) are not documented:
   parameter 'clock_frequency'
   parameter 'clock_channel'
-/home/travis/build/Ulm-IQO/qudi/hardware/confocal_scanner_dummy.py:209: warning: argument 'float' of command @param is not found in the argument list of confocal_scanner_dummy.ConfocalScannerDummy::set_voltage_range(self, myrange=None)
-/home/travis/build/Ulm-IQO/qudi/hardware/confocal_scanner_dummy.py:209: warning: The following parameters of confocal_scanner_dummy.ConfocalScannerDummy.set_voltage_range(self, myrange=None) are not documented:
+/home/travis/build/Ulm-IQO/qudi/hardware/confocal_scanner_dummy.py:207: warning: argument 'float' of command @param is not found in the argument list of confocal_scanner_dummy.ConfocalScannerDummy::set_voltage_range(self, myrange=None)
+/home/travis/build/Ulm-IQO/qudi/hardware/confocal_scanner_dummy.py:207: warning: The following parameters of confocal_scanner_dummy.ConfocalScannerDummy.set_voltage_range(self, myrange=None) are not documented:
   parameter 'myrange'
-/home/travis/build/Ulm-IQO/qudi/interface/confocal_scanner_interface.py:149: warning: argument 'float' of command @param is not found in the argument list of confocal_scanner_interface.ConfocalScannerInterface::scan_line(self, line_path=None)
-/home/travis/build/Ulm-IQO/qudi/interface/confocal_scanner_interface.py:149: warning: argument '4' of command @param is not found in the argument list of confocal_scanner_interface.ConfocalScannerInterface::scan_line(self, line_path=None)
-/home/travis/build/Ulm-IQO/qudi/interface/confocal_scanner_interface.py:150: warning: The following parameters of confocal_scanner_interface.ConfocalScannerInterface.scan_line(self, line_path=None) are not documented:
+/home/travis/build/Ulm-IQO/qudi/interface/confocal_scanner_interface.py:179: warning: argument 'float' of command @param is not found in the argument list of confocal_scanner_interface.ConfocalScannerInterface::scan_line(self, line_path=None)
+/home/travis/build/Ulm-IQO/qudi/interface/confocal_scanner_interface.py:179: warning: argument 'n' of command @param is not found in the argument list of confocal_scanner_interface.ConfocalScannerInterface::scan_line(self, line_path=None)
+/home/travis/build/Ulm-IQO/qudi/interface/confocal_scanner_interface.py:180: warning: The following parameters of confocal_scanner_interface.ConfocalScannerInterface.scan_line(self, line_path=None) are not documented:
   parameter 'line_path'
-/home/travis/build/Ulm-IQO/qudi/interface/confocal_scanner_interface.py:120: warning: argument 'float' of command @param is not found in the argument list of confocal_scanner_interface.ConfocalScannerInterface::scanner_set_position(self, x=None, y=None, z=None, a=None)
-/home/travis/build/Ulm-IQO/qudi/interface/confocal_scanner_interface.py:120: warning: argument 'float' of command @param is not found in the argument list of confocal_scanner_interface.ConfocalScannerInterface::scanner_set_position(self, x=None, y=None, z=None, a=None)
-/home/travis/build/Ulm-IQO/qudi/interface/confocal_scanner_interface.py:120: warning: argument 'float' of command @param is not found in the argument list of confocal_scanner_interface.ConfocalScannerInterface::scanner_set_position(self, x=None, y=None, z=None, a=None)
-/home/travis/build/Ulm-IQO/qudi/interface/confocal_scanner_interface.py:120: warning: argument 'float' of command @param is not found in the argument list of confocal_scanner_interface.ConfocalScannerInterface::scanner_set_position(self, x=None, y=None, z=None, a=None)
-/home/travis/build/Ulm-IQO/qudi/interface/confocal_scanner_interface.py:121: warning: The following parameters of confocal_scanner_interface.ConfocalScannerInterface.scanner_set_position(self, x=None, y=None, z=None, a=None) are not documented:
+/home/travis/build/Ulm-IQO/qudi/interface/confocal_scanner_interface.py:150: warning: argument 'float' of command @param is not found in the argument list of confocal_scanner_interface.ConfocalScannerInterface::scanner_set_position(self, x=None, y=None, z=None, a=None)
+/home/travis/build/Ulm-IQO/qudi/interface/confocal_scanner_interface.py:150: warning: argument 'float' of command @param is not found in the argument list of confocal_scanner_interface.ConfocalScannerInterface::scanner_set_position(self, x=None, y=None, z=None, a=None)
+/home/travis/build/Ulm-IQO/qudi/interface/confocal_scanner_interface.py:150: warning: argument 'float' of command @param is not found in the argument list of confocal_scanner_interface.ConfocalScannerInterface::scanner_set_position(self, x=None, y=None, z=None, a=None)
+/home/travis/build/Ulm-IQO/qudi/interface/confocal_scanner_interface.py:150: warning: argument 'float' of command @param is not found in the argument list of confocal_scanner_interface.ConfocalScannerInterface::scanner_set_position(self, x=None, y=None, z=None, a=None)
+/home/travis/build/Ulm-IQO/qudi/interface/confocal_scanner_interface.py:151: warning: The following parameters of confocal_scanner_interface.ConfocalScannerInterface.scanner_set_position(self, x=None, y=None, z=None, a=None) are not documented:
   parameter 'x'
   parameter 'y'
   parameter 'z'
@@ -729,21 +731,21 @@ IndexError: list index out of range
 /home/travis/build/Ulm-IQO/qudi/interface/confocal_scanner_interface.py:66: warning: argument 'float' of command @param is not found in the argument list of confocal_scanner_interface.ConfocalScannerInterface::set_position_range(self, myrange=None)
 /home/travis/build/Ulm-IQO/qudi/interface/confocal_scanner_interface.py:67: warning: The following parameters of confocal_scanner_interface.ConfocalScannerInterface.set_position_range(self, myrange=None) are not documented:
   parameter 'myrange'
-/home/travis/build/Ulm-IQO/qudi/interface/confocal_scanner_interface.py:138: warning: argument 'int' of command @param is not found in the argument list of confocal_scanner_interface.ConfocalScannerInterface::set_up_line(self, length=100)
-/home/travis/build/Ulm-IQO/qudi/interface/confocal_scanner_interface.py:139: warning: The following parameters of confocal_scanner_interface.ConfocalScannerInterface.set_up_line(self, length=100) are not documented:
+/home/travis/build/Ulm-IQO/qudi/interface/confocal_scanner_interface.py:168: warning: argument 'int' of command @param is not found in the argument list of confocal_scanner_interface.ConfocalScannerInterface::set_up_line(self, length=100)
+/home/travis/build/Ulm-IQO/qudi/interface/confocal_scanner_interface.py:169: warning: The following parameters of confocal_scanner_interface.ConfocalScannerInterface.set_up_line(self, length=100) are not documented:
   parameter 'length'
-/home/travis/build/Ulm-IQO/qudi/interface/confocal_scanner_interface.py:106: warning: argument 'str' of command @param is not found in the argument list of confocal_scanner_interface.ConfocalScannerInterface::set_up_scanner(self, counter_channel=None, photon_source=None, clock_channel=None, scanner_ao_channels=None)
-/home/travis/build/Ulm-IQO/qudi/interface/confocal_scanner_interface.py:106: warning: argument 'str' of command @param is not found in the argument list of confocal_scanner_interface.ConfocalScannerInterface::set_up_scanner(self, counter_channel=None, photon_source=None, clock_channel=None, scanner_ao_channels=None)
-/home/travis/build/Ulm-IQO/qudi/interface/confocal_scanner_interface.py:106: warning: argument 'str' of command @param is not found in the argument list of confocal_scanner_interface.ConfocalScannerInterface::set_up_scanner(self, counter_channel=None, photon_source=None, clock_channel=None, scanner_ao_channels=None)
-/home/travis/build/Ulm-IQO/qudi/interface/confocal_scanner_interface.py:106: warning: argument 'str' of command @param is not found in the argument list of confocal_scanner_interface.ConfocalScannerInterface::set_up_scanner(self, counter_channel=None, photon_source=None, clock_channel=None, scanner_ao_channels=None)
-/home/travis/build/Ulm-IQO/qudi/interface/confocal_scanner_interface.py:107: warning: The following parameters of confocal_scanner_interface.ConfocalScannerInterface.set_up_scanner(self, counter_channel=None, photon_source=None, clock_channel=None, scanner_ao_channels=None) are not documented:
-  parameter 'counter_channel'
-  parameter 'photon_source'
+/home/travis/build/Ulm-IQO/qudi/interface/confocal_scanner_interface.py:133: warning: argument 'str' of command @param is not found in the argument list of confocal_scanner_interface.ConfocalScannerInterface::set_up_scanner(self, counter_channels=None, sources=None, clock_channel=None, scanner_ao_channels=None)
+/home/travis/build/Ulm-IQO/qudi/interface/confocal_scanner_interface.py:133: warning: argument 'str' of command @param is not found in the argument list of confocal_scanner_interface.ConfocalScannerInterface::set_up_scanner(self, counter_channels=None, sources=None, clock_channel=None, scanner_ao_channels=None)
+/home/travis/build/Ulm-IQO/qudi/interface/confocal_scanner_interface.py:133: warning: argument 'str' of command @param is not found in the argument list of confocal_scanner_interface.ConfocalScannerInterface::set_up_scanner(self, counter_channels=None, sources=None, clock_channel=None, scanner_ao_channels=None)
+/home/travis/build/Ulm-IQO/qudi/interface/confocal_scanner_interface.py:133: warning: argument 'str' of command @param is not found in the argument list of confocal_scanner_interface.ConfocalScannerInterface::set_up_scanner(self, counter_channels=None, sources=None, clock_channel=None, scanner_ao_channels=None)
+/home/travis/build/Ulm-IQO/qudi/interface/confocal_scanner_interface.py:134: warning: The following parameters of confocal_scanner_interface.ConfocalScannerInterface.set_up_scanner(self, counter_channels=None, sources=None, clock_channel=None, scanner_ao_channels=None) are not documented:
+  parameter 'counter_channels'
+  parameter 'sources'
   parameter 'clock_channel'
   parameter 'scanner_ao_channels'
-/home/travis/build/Ulm-IQO/qudi/interface/confocal_scanner_interface.py:89: warning: argument 'float' of command @param is not found in the argument list of confocal_scanner_interface.ConfocalScannerInterface::set_up_scanner_clock(self, clock_frequency=None, clock_channel=None)
-/home/travis/build/Ulm-IQO/qudi/interface/confocal_scanner_interface.py:89: warning: argument 'str' of command @param is not found in the argument list of confocal_scanner_interface.ConfocalScannerInterface::set_up_scanner_clock(self, clock_frequency=None, clock_channel=None)
-/home/travis/build/Ulm-IQO/qudi/interface/confocal_scanner_interface.py:90: warning: The following parameters of confocal_scanner_interface.ConfocalScannerInterface.set_up_scanner_clock(self, clock_frequency=None, clock_channel=None) are not documented:
+/home/travis/build/Ulm-IQO/qudi/interface/confocal_scanner_interface.py:117: warning: argument 'float' of command @param is not found in the argument list of confocal_scanner_interface.ConfocalScannerInterface::set_up_scanner_clock(self, clock_frequency=None, clock_channel=None)
+/home/travis/build/Ulm-IQO/qudi/interface/confocal_scanner_interface.py:117: warning: argument 'str' of command @param is not found in the argument list of confocal_scanner_interface.ConfocalScannerInterface::set_up_scanner_clock(self, clock_frequency=None, clock_channel=None)
+/home/travis/build/Ulm-IQO/qudi/interface/confocal_scanner_interface.py:118: warning: The following parameters of confocal_scanner_interface.ConfocalScannerInterface.set_up_scanner_clock(self, clock_frequency=None, clock_channel=None) are not documented:
   parameter 'clock_frequency'
   parameter 'clock_channel'
 /home/travis/build/Ulm-IQO/qudi/interface/confocal_scanner_interface.py:76: warning: argument 'float' of command @param is not found in the argument list of confocal_scanner_interface.ConfocalScannerInterface::set_voltage_range(self, myrange=None)
@@ -755,15 +757,15 @@ IndexError: list index out of range
 /home/travis/build/Ulm-IQO/qudi/core/base.py:126: warning: Member connector (variable) of class core::base::Base is not documented.
 /home/travis/build/Ulm-IQO/qudi/core/base.py:49: warning: Member sigStateChanged (variable) of class core::base::Base is not documented.
 /home/travis/build/Ulm-IQO/qudi/core/base.py:168: warning: Member result (variable) of class core::base::Base is not documented.
-/home/travis/build/Ulm-IQO/qudi/logic/interfuse/confocal_scanner_spectrometer_interfuse.py:213: warning: argument 'float' of command @param is not found in the argument list of confocal_scanner_spectrometer_interfuse.SpectrometerScannerInterfuse::scan_line(self, line_path=None)
-/home/travis/build/Ulm-IQO/qudi/logic/interfuse/confocal_scanner_spectrometer_interfuse.py:213: warning: argument '4' of command @param is not found in the argument list of confocal_scanner_spectrometer_interfuse.SpectrometerScannerInterfuse::scan_line(self, line_path=None)
-/home/travis/build/Ulm-IQO/qudi/logic/interfuse/confocal_scanner_spectrometer_interfuse.py:213: warning: The following parameters of confocal_scanner_spectrometer_interfuse.SpectrometerScannerInterfuse.scan_line(self, line_path=None) are not documented:
+/home/travis/build/Ulm-IQO/qudi/logic/interfuse/confocal_scanner_spectrometer_interfuse.py:211: warning: argument 'float' of command @param is not found in the argument list of confocal_scanner_spectrometer_interfuse.SpectrometerScannerInterfuse::scan_line(self, line_path=None)
+/home/travis/build/Ulm-IQO/qudi/logic/interfuse/confocal_scanner_spectrometer_interfuse.py:211: warning: argument '4' of command @param is not found in the argument list of confocal_scanner_spectrometer_interfuse.SpectrometerScannerInterfuse::scan_line(self, line_path=None)
+/home/travis/build/Ulm-IQO/qudi/logic/interfuse/confocal_scanner_spectrometer_interfuse.py:211: warning: The following parameters of confocal_scanner_spectrometer_interfuse.SpectrometerScannerInterfuse.scan_line(self, line_path=None) are not documented:
   parameter 'line_path'
-/home/travis/build/Ulm-IQO/qudi/logic/interfuse/confocal_scanner_spectrometer_interfuse.py:180: warning: argument 'float' of command @param is not found in the argument list of confocal_scanner_spectrometer_interfuse.SpectrometerScannerInterfuse::scanner_set_position(self, x=None, y=None, z=None, a=None)
-/home/travis/build/Ulm-IQO/qudi/logic/interfuse/confocal_scanner_spectrometer_interfuse.py:180: warning: argument 'float' of command @param is not found in the argument list of confocal_scanner_spectrometer_interfuse.SpectrometerScannerInterfuse::scanner_set_position(self, x=None, y=None, z=None, a=None)
-/home/travis/build/Ulm-IQO/qudi/logic/interfuse/confocal_scanner_spectrometer_interfuse.py:180: warning: argument 'float' of command @param is not found in the argument list of confocal_scanner_spectrometer_interfuse.SpectrometerScannerInterfuse::scanner_set_position(self, x=None, y=None, z=None, a=None)
-/home/travis/build/Ulm-IQO/qudi/logic/interfuse/confocal_scanner_spectrometer_interfuse.py:180: warning: argument 'float' of command @param is not found in the argument list of confocal_scanner_spectrometer_interfuse.SpectrometerScannerInterfuse::scanner_set_position(self, x=None, y=None, z=None, a=None)
-/home/travis/build/Ulm-IQO/qudi/logic/interfuse/confocal_scanner_spectrometer_interfuse.py:181: warning: The following parameters of confocal_scanner_spectrometer_interfuse.SpectrometerScannerInterfuse.scanner_set_position(self, x=None, y=None, z=None, a=None) are not documented:
+/home/travis/build/Ulm-IQO/qudi/logic/interfuse/confocal_scanner_spectrometer_interfuse.py:179: warning: argument 'float' of command @param is not found in the argument list of confocal_scanner_spectrometer_interfuse.SpectrometerScannerInterfuse::scanner_set_position(self, x=None, y=None, z=None, a=None)
+/home/travis/build/Ulm-IQO/qudi/logic/interfuse/confocal_scanner_spectrometer_interfuse.py:179: warning: argument 'float' of command @param is not found in the argument list of confocal_scanner_spectrometer_interfuse.SpectrometerScannerInterfuse::scanner_set_position(self, x=None, y=None, z=None, a=None)
+/home/travis/build/Ulm-IQO/qudi/logic/interfuse/confocal_scanner_spectrometer_interfuse.py:179: warning: argument 'float' of command @param is not found in the argument list of confocal_scanner_spectrometer_interfuse.SpectrometerScannerInterfuse::scanner_set_position(self, x=None, y=None, z=None, a=None)
+/home/travis/build/Ulm-IQO/qudi/logic/interfuse/confocal_scanner_spectrometer_interfuse.py:179: warning: argument 'float' of command @param is not found in the argument list of confocal_scanner_spectrometer_interfuse.SpectrometerScannerInterfuse::scanner_set_position(self, x=None, y=None, z=None, a=None)
+/home/travis/build/Ulm-IQO/qudi/logic/interfuse/confocal_scanner_spectrometer_interfuse.py:180: warning: The following parameters of confocal_scanner_spectrometer_interfuse.SpectrometerScannerInterfuse.scanner_set_position(self, x=None, y=None, z=None, a=None) are not documented:
   parameter 'x'
   parameter 'y'
   parameter 'z'
@@ -771,21 +773,21 @@ IndexError: list index out of range
 /home/travis/build/Ulm-IQO/qudi/logic/interfuse/confocal_scanner_spectrometer_interfuse.py:115: warning: argument 'float' of command @param is not found in the argument list of confocal_scanner_spectrometer_interfuse.SpectrometerScannerInterfuse::set_position_range(self, myrange=None)
 /home/travis/build/Ulm-IQO/qudi/logic/interfuse/confocal_scanner_spectrometer_interfuse.py:116: warning: The following parameters of confocal_scanner_spectrometer_interfuse.SpectrometerScannerInterfuse.set_position_range(self, myrange=None) are not documented:
   parameter 'myrange'
-/home/travis/build/Ulm-IQO/qudi/logic/interfuse/confocal_scanner_spectrometer_interfuse.py:202: warning: argument 'int' of command @param is not found in the argument list of confocal_scanner_spectrometer_interfuse.SpectrometerScannerInterfuse::set_up_line(self, length=100)
-/home/travis/build/Ulm-IQO/qudi/logic/interfuse/confocal_scanner_spectrometer_interfuse.py:202: warning: The following parameters of confocal_scanner_spectrometer_interfuse.SpectrometerScannerInterfuse.set_up_line(self, length=100) are not documented:
+/home/travis/build/Ulm-IQO/qudi/logic/interfuse/confocal_scanner_spectrometer_interfuse.py:200: warning: argument 'int' of command @param is not found in the argument list of confocal_scanner_spectrometer_interfuse.SpectrometerScannerInterfuse::set_up_line(self, length=100)
+/home/travis/build/Ulm-IQO/qudi/logic/interfuse/confocal_scanner_spectrometer_interfuse.py:200: warning: The following parameters of confocal_scanner_spectrometer_interfuse.SpectrometerScannerInterfuse.set_up_line(self, length=100) are not documented:
   parameter 'length'
-/home/travis/build/Ulm-IQO/qudi/logic/interfuse/confocal_scanner_spectrometer_interfuse.py:164: warning: argument 'string' of command @param is not found in the argument list of confocal_scanner_spectrometer_interfuse.SpectrometerScannerInterfuse::set_up_scanner(self, counter_channel=None, photon_source=None, clock_channel=None, scanner_ao_channels=None)
-/home/travis/build/Ulm-IQO/qudi/logic/interfuse/confocal_scanner_spectrometer_interfuse.py:164: warning: argument 'string' of command @param is not found in the argument list of confocal_scanner_spectrometer_interfuse.SpectrometerScannerInterfuse::set_up_scanner(self, counter_channel=None, photon_source=None, clock_channel=None, scanner_ao_channels=None)
-/home/travis/build/Ulm-IQO/qudi/logic/interfuse/confocal_scanner_spectrometer_interfuse.py:164: warning: argument 'string' of command @param is not found in the argument list of confocal_scanner_spectrometer_interfuse.SpectrometerScannerInterfuse::set_up_scanner(self, counter_channel=None, photon_source=None, clock_channel=None, scanner_ao_channels=None)
-/home/travis/build/Ulm-IQO/qudi/logic/interfuse/confocal_scanner_spectrometer_interfuse.py:164: warning: argument 'string' of command @param is not found in the argument list of confocal_scanner_spectrometer_interfuse.SpectrometerScannerInterfuse::set_up_scanner(self, counter_channel=None, photon_source=None, clock_channel=None, scanner_ao_channels=None)
-/home/travis/build/Ulm-IQO/qudi/logic/interfuse/confocal_scanner_spectrometer_interfuse.py:164: warning: The following parameters of confocal_scanner_spectrometer_interfuse.SpectrometerScannerInterfuse.set_up_scanner(self, counter_channel=None, photon_source=None, clock_channel=None, scanner_ao_channels=None) are not documented:
+/home/travis/build/Ulm-IQO/qudi/logic/interfuse/confocal_scanner_spectrometer_interfuse.py:162: warning: argument 'string' of command @param is not found in the argument list of confocal_scanner_spectrometer_interfuse.SpectrometerScannerInterfuse::set_up_scanner(self, counter_channel=None, photon_source=None, clock_channel=None, scanner_ao_channels=None)
+/home/travis/build/Ulm-IQO/qudi/logic/interfuse/confocal_scanner_spectrometer_interfuse.py:162: warning: argument 'string' of command @param is not found in the argument list of confocal_scanner_spectrometer_interfuse.SpectrometerScannerInterfuse::set_up_scanner(self, counter_channel=None, photon_source=None, clock_channel=None, scanner_ao_channels=None)
+/home/travis/build/Ulm-IQO/qudi/logic/interfuse/confocal_scanner_spectrometer_interfuse.py:162: warning: argument 'string' of command @param is not found in the argument list of confocal_scanner_spectrometer_interfuse.SpectrometerScannerInterfuse::set_up_scanner(self, counter_channel=None, photon_source=None, clock_channel=None, scanner_ao_channels=None)
+/home/travis/build/Ulm-IQO/qudi/logic/interfuse/confocal_scanner_spectrometer_interfuse.py:162: warning: argument 'string' of command @param is not found in the argument list of confocal_scanner_spectrometer_interfuse.SpectrometerScannerInterfuse::set_up_scanner(self, counter_channel=None, photon_source=None, clock_channel=None, scanner_ao_channels=None)
+/home/travis/build/Ulm-IQO/qudi/logic/interfuse/confocal_scanner_spectrometer_interfuse.py:162: warning: The following parameters of confocal_scanner_spectrometer_interfuse.SpectrometerScannerInterfuse.set_up_scanner(self, counter_channel=None, photon_source=None, clock_channel=None, scanner_ao_channels=None) are not documented:
   parameter 'counter_channel'
   parameter 'photon_source'
   parameter 'clock_channel'
   parameter 'scanner_ao_channels'
-/home/travis/build/Ulm-IQO/qudi/logic/interfuse/confocal_scanner_spectrometer_interfuse.py:147: warning: argument 'float' of command @param is not found in the argument list of confocal_scanner_spectrometer_interfuse.SpectrometerScannerInterfuse::set_up_scanner_clock(self, clock_frequency=None, clock_channel=None)
-/home/travis/build/Ulm-IQO/qudi/logic/interfuse/confocal_scanner_spectrometer_interfuse.py:147: warning: argument 'string' of command @param is not found in the argument list of confocal_scanner_spectrometer_interfuse.SpectrometerScannerInterfuse::set_up_scanner_clock(self, clock_frequency=None, clock_channel=None)
-/home/travis/build/Ulm-IQO/qudi/logic/interfuse/confocal_scanner_spectrometer_interfuse.py:148: warning: The following parameters of confocal_scanner_spectrometer_interfuse.SpectrometerScannerInterfuse.set_up_scanner_clock(self, clock_frequency=None, clock_channel=None) are not documented:
+/home/travis/build/Ulm-IQO/qudi/logic/interfuse/confocal_scanner_spectrometer_interfuse.py:145: warning: argument 'float' of command @param is not found in the argument list of confocal_scanner_spectrometer_interfuse.SpectrometerScannerInterfuse::set_up_scanner_clock(self, clock_frequency=None, clock_channel=None)
+/home/travis/build/Ulm-IQO/qudi/logic/interfuse/confocal_scanner_spectrometer_interfuse.py:145: warning: argument 'string' of command @param is not found in the argument list of confocal_scanner_spectrometer_interfuse.SpectrometerScannerInterfuse::set_up_scanner_clock(self, clock_frequency=None, clock_channel=None)
+/home/travis/build/Ulm-IQO/qudi/logic/interfuse/confocal_scanner_spectrometer_interfuse.py:146: warning: The following parameters of confocal_scanner_spectrometer_interfuse.SpectrometerScannerInterfuse.set_up_scanner_clock(self, clock_frequency=None, clock_channel=None) are not documented:
   parameter 'clock_frequency'
   parameter 'clock_channel'
 /home/travis/build/Ulm-IQO/qudi/logic/interfuse/confocal_scanner_spectrometer_interfuse.py:130: warning: argument 'float' of command @param is not found in the argument list of confocal_scanner_spectrometer_interfuse.SpectrometerScannerInterfuse::set_voltage_range(self, myrange=None)
@@ -1185,86 +1187,85 @@ IndexError: list index out of range
 /home/travis/build/Ulm-IQO/qudi/core/util/mutex.py:276: warning: Member __setattr__(self, attr, val) (function) of class core::util::mutex::ThreadsafeWrapper is not documented.
 /home/travis/build/Ulm-IQO/qudi/core/util/mutex.py:284: warning: Member __wrap_object__(self, obj) (function) of class core::util::mutex::ThreadsafeWrapper is not documented.
 /home/travis/build/Ulm-IQO/qudi/core/util/mutex.py:293: warning: Member __wrapped_object__(self) (function) of class core::util::mutex::ThreadsafeWrapper is not documented.
-/home/travis/build/Ulm-IQO/qudi/logic/counter_logic.py:86: warning: Member threadlock (variable) of class counter_logic::CounterLogic is not documented.
-/home/travis/build/Ulm-IQO/qudi/logic/counter_logic.py:114: warning: Member countdata (variable) of class counter_logic::CounterLogic is not documented.
-/home/travis/build/Ulm-IQO/qudi/logic/counter_logic.py:115: warning: Member countdata_smoothed (variable) of class counter_logic::CounterLogic is not documented.
-/home/travis/build/Ulm-IQO/qudi/logic/counter_logic.py:116: warning: Member countdata2 (variable) of class counter_logic::CounterLogic is not documented.
-/home/travis/build/Ulm-IQO/qudi/logic/counter_logic.py:117: warning: Member countdata_smoothed2 (variable) of class counter_logic::CounterLogic is not documented.
-/home/travis/build/Ulm-IQO/qudi/logic/counter_logic.py:118: warning: Member rawdata (variable) of class counter_logic::CounterLogic is not documented.
-/home/travis/build/Ulm-IQO/qudi/logic/counter_logic.py:120: warning: Member running (variable) of class counter_logic::CounterLogic is not documented.
-/home/travis/build/Ulm-IQO/qudi/logic/counter_logic.py:121: warning: Member stopRequested (variable) of class counter_logic::CounterLogic is not documented.
-/home/travis/build/Ulm-IQO/qudi/logic/counter_logic.py:40: warning: Member sigCounterUpdated (variable) of class counter_logic::CounterLogic is not documented.
-/home/travis/build/Ulm-IQO/qudi/logic/counter_logic.py:41: warning: Member sigCountContinuousNext (variable) of class counter_logic::CounterLogic is not documented.
-/home/travis/build/Ulm-IQO/qudi/logic/counter_logic.py:42: warning: Member sigCountGatedNext (variable) of class counter_logic::CounterLogic is not documented.
-/home/travis/build/Ulm-IQO/qudi/logic/counter_logic.py:44: warning: Member sigCountFiniteGatedNext (variable) of class counter_logic::CounterLogic is not documented.
-/home/travis/build/Ulm-IQO/qudi/logic/counter_logic.py:45: warning: Member sigGatedCounterFinished (variable) of class counter_logic::CounterLogic is not documented.
-/home/travis/build/Ulm-IQO/qudi/logic/counter_logic.py:46: warning: Member sigGatedCounterContinue (variable) of class counter_logic::CounterLogic is not documented.
-/home/travis/build/Ulm-IQO/qudi/logic/counter_logic.py:48: warning: Member sigCountingSamplesChanged (variable) of class counter_logic::CounterLogic is not documented.
-/home/travis/build/Ulm-IQO/qudi/logic/counter_logic.py:49: warning: Member sigCountLengthChanged (variable) of class counter_logic::CounterLogic is not documented.
-/home/travis/build/Ulm-IQO/qudi/logic/counter_logic.py:50: warning: Member sigCountFrequencyChanged (variable) of class counter_logic::CounterLogic is not documented.
-/home/travis/build/Ulm-IQO/qudi/logic/counter_logic.py:51: warning: Member sigSavingStatusChanged (variable) of class counter_logic::CounterLogic is not documented.
-/home/travis/build/Ulm-IQO/qudi/logic/counter_logic.py:52: warning: Member sigCountStatusChanged (variable) of class counter_logic::CounterLogic is not documented.
-/home/travis/build/Ulm-IQO/qudi/logic/counter_logic.py:53: warning: Member sigCountingModeChanged (variable) of class counter_logic::CounterLogic is not documented.
-/home/travis/build/Ulm-IQO/qudi/logic/counter_logic.py:39: warning: Found unknown command `\signal'
-/home/travis/build/Ulm-IQO/qudi/logic/counter_logic.py:40: warning: Found unknown command `\signal'
-/home/travis/build/Ulm-IQO/qudi/logic/counter_logic.py:42: warning: Found unknown command `\sigmal'
-/home/travis/build/Ulm-IQO/qudi/logic/counter_logic.py:82: warning: argument 'dict' of command @param is not found in the argument list of counter_logic.CounterLogic::__init__(self, config, kwargs)
-/home/travis/build/Ulm-IQO/qudi/logic/counter_logic.py:82: warning: argument 'dict' of command @param is not found in the argument list of counter_logic.CounterLogic::__init__(self, config, kwargs)
-/home/travis/build/Ulm-IQO/qudi/logic/counter_logic.py:82: warning: The following parameters of counter_logic.CounterLogic.__init__(self, config, kwargs) are not documented:
+/home/travis/build/Ulm-IQO/qudi/logic/counter_logic.py:88: warning: Member threadlock (variable) of class counter_logic::CounterLogic is not documented.
+/home/travis/build/Ulm-IQO/qudi/logic/counter_logic.py:127: warning: Member countdata (variable) of class counter_logic::CounterLogic is not documented.
+/home/travis/build/Ulm-IQO/qudi/logic/counter_logic.py:129: warning: Member countdata_smoothed (variable) of class counter_logic::CounterLogic is not documented.
+/home/travis/build/Ulm-IQO/qudi/logic/counter_logic.py:131: warning: Member rawdata (variable) of class counter_logic::CounterLogic is not documented.
+/home/travis/build/Ulm-IQO/qudi/logic/counter_logic.py:134: warning: Member running (variable) of class counter_logic::CounterLogic is not documented.
+/home/travis/build/Ulm-IQO/qudi/logic/counter_logic.py:135: warning: Member stopRequested (variable) of class counter_logic::CounterLogic is not documented.
+/home/travis/build/Ulm-IQO/qudi/logic/counter_logic.py:42: warning: Member sigCounterUpdated (variable) of class counter_logic::CounterLogic is not documented.
+/home/travis/build/Ulm-IQO/qudi/logic/counter_logic.py:43: warning: Member sigCountContinuousNext (variable) of class counter_logic::CounterLogic is not documented.
+/home/travis/build/Ulm-IQO/qudi/logic/counter_logic.py:44: warning: Member sigCountGatedNext (variable) of class counter_logic::CounterLogic is not documented.
+/home/travis/build/Ulm-IQO/qudi/logic/counter_logic.py:46: warning: Member sigCountFiniteGatedNext (variable) of class counter_logic::CounterLogic is not documented.
+/home/travis/build/Ulm-IQO/qudi/logic/counter_logic.py:47: warning: Member sigGatedCounterFinished (variable) of class counter_logic::CounterLogic is not documented.
+/home/travis/build/Ulm-IQO/qudi/logic/counter_logic.py:48: warning: Member sigGatedCounterContinue (variable) of class counter_logic::CounterLogic is not documented.
+/home/travis/build/Ulm-IQO/qudi/logic/counter_logic.py:50: warning: Member sigCountingSamplesChanged (variable) of class counter_logic::CounterLogic is not documented.
+/home/travis/build/Ulm-IQO/qudi/logic/counter_logic.py:51: warning: Member sigCountLengthChanged (variable) of class counter_logic::CounterLogic is not documented.
+/home/travis/build/Ulm-IQO/qudi/logic/counter_logic.py:52: warning: Member sigCountFrequencyChanged (variable) of class counter_logic::CounterLogic is not documented.
+/home/travis/build/Ulm-IQO/qudi/logic/counter_logic.py:53: warning: Member sigSavingStatusChanged (variable) of class counter_logic::CounterLogic is not documented.
+/home/travis/build/Ulm-IQO/qudi/logic/counter_logic.py:54: warning: Member sigCountStatusChanged (variable) of class counter_logic::CounterLogic is not documented.
+/home/travis/build/Ulm-IQO/qudi/logic/counter_logic.py:55: warning: Member sigCountingModeChanged (variable) of class counter_logic::CounterLogic is not documented.
+/home/travis/build/Ulm-IQO/qudi/logic/counter_logic.py:41: warning: Found unknown command `\signal'
+/home/travis/build/Ulm-IQO/qudi/logic/counter_logic.py:42: warning: Found unknown command `\signal'
+/home/travis/build/Ulm-IQO/qudi/logic/counter_logic.py:44: warning: Found unknown command `\sigmal'
+/home/travis/build/Ulm-IQO/qudi/logic/counter_logic.py:84: warning: argument 'dict' of command @param is not found in the argument list of counter_logic.CounterLogic::__init__(self, config, kwargs)
+/home/travis/build/Ulm-IQO/qudi/logic/counter_logic.py:84: warning: argument 'dict' of command @param is not found in the argument list of counter_logic.CounterLogic::__init__(self, config, kwargs)
+/home/travis/build/Ulm-IQO/qudi/logic/counter_logic.py:84: warning: The following parameters of counter_logic.CounterLogic.__init__(self, config, kwargs) are not documented:
   parameter 'config'
   parameter 'kwargs'
 /home/travis/build/Ulm-IQO/qudi/logic/counter_logic.py:345: warning: expected whitespace after : command
-/home/travis/build/Ulm-IQO/qudi/logic/counter_logic.py:113: warning: argument 'object' of command @param is not found in the argument list of counter_logic.CounterLogic::on_activate(self, e)
-/home/travis/build/Ulm-IQO/qudi/logic/counter_logic.py:113: warning: The following parameters of counter_logic.CounterLogic.on_activate(self, e) are not documented:
+/home/travis/build/Ulm-IQO/qudi/logic/counter_logic.py:119: warning: argument 'object' of command @param is not found in the argument list of counter_logic.CounterLogic::on_activate(self, e)
+/home/travis/build/Ulm-IQO/qudi/logic/counter_logic.py:119: warning: The following parameters of counter_logic.CounterLogic.on_activate(self, e) are not documented:
   parameter 'e'
-/home/travis/build/Ulm-IQO/qudi/logic/counter_logic.py:144: warning: argument 'object' of command @param is not found in the argument list of counter_logic.CounterLogic::on_deactivate(self, e)
-/home/travis/build/Ulm-IQO/qudi/logic/counter_logic.py:144: warning: The following parameters of counter_logic.CounterLogic.on_deactivate(self, e) are not documented:
+/home/travis/build/Ulm-IQO/qudi/logic/counter_logic.py:160: warning: argument 'object' of command @param is not found in the argument list of counter_logic.CounterLogic::on_deactivate(self, e)
+/home/travis/build/Ulm-IQO/qudi/logic/counter_logic.py:160: warning: The following parameters of counter_logic.CounterLogic.on_deactivate(self, e) are not documented:
   parameter 'e'
-/home/travis/build/Ulm-IQO/qudi/logic/counter_logic.py:758: warning: argument 'str' of command @param is not found in the argument list of counter_logic.CounterLogic::save_current_count_trace(self, name_tag='')
-/home/travis/build/Ulm-IQO/qudi/logic/counter_logic.py:758: warning: The following parameters of counter_logic.CounterLogic.save_current_count_trace(self, name_tag='') are not documented:
+/home/travis/build/Ulm-IQO/qudi/logic/counter_logic.py:720: warning: argument 'str' of command @param is not found in the argument list of counter_logic.CounterLogic::save_current_count_trace(self, name_tag='')
+/home/travis/build/Ulm-IQO/qudi/logic/counter_logic.py:720: warning: The following parameters of counter_logic.CounterLogic.save_current_count_trace(self, name_tag='') are not documented:
   parameter 'name_tag'
 /home/travis/build/Ulm-IQO/qudi/logic/counter_logic.py:295: warning: argument 'bool' of command @param is not found in the argument list of counter_logic.CounterLogic::save_data(self, to_file=True, postfix='')
 /home/travis/build/Ulm-IQO/qudi/logic/counter_logic.py:295: warning: argument 'str' of command @param is not found in the argument list of counter_logic.CounterLogic::save_data(self, to_file=True, postfix='')
 /home/travis/build/Ulm-IQO/qudi/logic/counter_logic.py:295: warning: The following parameters of counter_logic.CounterLogic.save_data(self, to_file=True, postfix='') are not documented:
   parameter 'to_file'
   parameter 'postfix'
-/home/travis/build/Ulm-IQO/qudi/logic/counter_logic.py:219: warning: argument 'int' of command @param is not found in the argument list of counter_logic.CounterLogic::set_count_frequency(self, frequency=50)
-/home/travis/build/Ulm-IQO/qudi/logic/counter_logic.py:219: warning: The following parameters of counter_logic.CounterLogic.set_count_frequency(self, frequency=50) are not documented:
+/home/travis/build/Ulm-IQO/qudi/logic/counter_logic.py:228: warning: argument 'float' of command @param is not found in the argument list of counter_logic.CounterLogic::set_count_frequency(self, frequency=50)
+/home/travis/build/Ulm-IQO/qudi/logic/counter_logic.py:228: warning: The following parameters of counter_logic.CounterLogic.set_count_frequency(self, frequency=50) are not documented:
   parameter 'frequency'
-/home/travis/build/Ulm-IQO/qudi/logic/counter_logic.py:190: warning: argument 'int' of command @param is not found in the argument list of counter_logic.CounterLogic::set_count_length(self, length=300)
-/home/travis/build/Ulm-IQO/qudi/logic/counter_logic.py:190: warning: The following parameters of counter_logic.CounterLogic.set_count_length(self, length=300) are not documented:
+/home/travis/build/Ulm-IQO/qudi/logic/counter_logic.py:208: warning: argument 'int' of command @param is not found in the argument list of counter_logic.CounterLogic::set_count_length(self, length=300)
+/home/travis/build/Ulm-IQO/qudi/logic/counter_logic.py:208: warning: The following parameters of counter_logic.CounterLogic.set_count_length(self, length=300) are not documented:
   parameter 'length'
-/home/travis/build/Ulm-IQO/qudi/logic/counter_logic.py:161: warning: argument 'int' of command @param is not found in the argument list of counter_logic.CounterLogic::set_counting_samples(self, samples=1)
-/home/travis/build/Ulm-IQO/qudi/logic/counter_logic.py:161: warning: The following parameters of counter_logic.CounterLogic.set_counting_samples(self, samples=1) are not documented:
+/home/travis/build/Ulm-IQO/qudi/logic/counter_logic.py:188: warning: argument 'int' of command @param is not found in the argument list of counter_logic.CounterLogic::set_counting_samples(self, samples=1)
+/home/travis/build/Ulm-IQO/qudi/logic/counter_logic.py:188: warning: The following parameters of counter_logic.CounterLogic.set_counting_samples(self, samples=1) are not documented:
   parameter 'samples'
 /home/travis/build/Ulm-IQO/qudi/gui/counter/countergui.py:71: warning: Member __init__(self, config, kwargs) (function) of class countergui::CounterGui is not documented.
-/home/travis/build/Ulm-IQO/qudi/gui/counter/countergui.py:409: warning: Member update_counting_mode_ComboBox(self) (function) of class countergui::CounterGui is not documented.
+/home/travis/build/Ulm-IQO/qudi/gui/counter/countergui.py:385: warning: Member update_counting_mode_ComboBox(self) (function) of class countergui::CounterGui is not documented.
 /home/travis/build/Ulm-IQO/qudi/gui/guibase.py:38: warning: Member show(self) (function) of class gui::guibase::GUIBase is not documented.
 /home/travis/build/Ulm-IQO/qudi/gui/guibase.py:42: warning: Member saveWindowPos(self, window) (function) of class gui::guibase::GUIBase is not documented.
 /home/travis/build/Ulm-IQO/qudi/gui/guibase.py:46: warning: Member restoreWindowPos(self, window) (function) of class gui::guibase::GUIBase is not documented.
 /home/travis/build/Ulm-IQO/qudi/core/FysomAdapter.py:31: warning: Member __getattr__(self, name) (function) of class core::FysomAdapter::Fysom is not documented.
+/home/travis/build/Ulm-IQO/qudi/gui/counter/countergui.py:109: warning: Member curves (variable) of class countergui::CounterGui is not documented.
+/home/travis/build/Ulm-IQO/qudi/core/base.py:126: warning: Member connector (variable) of class core::base::Base is not documented.
 /home/travis/build/Ulm-IQO/qudi/gui/counter/countergui.py:68: warning: Member sigStartCounter (variable) of class countergui::CounterGui is not documented.
 /home/travis/build/Ulm-IQO/qudi/gui/counter/countergui.py:69: warning: Member sigStopCounter (variable) of class countergui::CounterGui is not documented.
 /home/travis/build/Ulm-IQO/qudi/core/base.py:49: warning: Member sigStateChanged (variable) of class core::base::Base is not documented.
 /home/travis/build/Ulm-IQO/qudi/core/base.py:168: warning: Member result (variable) of class core::base::Base is not documented.
-/home/travis/build/Ulm-IQO/qudi/core/base.py:126: warning: Member connector (variable) of class core::base::Base is not documented.
 /home/travis/build/Ulm-IQO/qudi/gui/counter/countergui.py:90: warning: argument 'object' of command @param is not found in the argument list of countergui.CounterGui::on_activate(self, e)
 /home/travis/build/Ulm-IQO/qudi/gui/counter/countergui.py:90: warning: The following parameters of countergui.CounterGui.on_activate(self, e) are not documented:
   parameter 'e'
-/home/travis/build/Ulm-IQO/qudi/gui/counter/countergui.py:199: warning: argument 'object' of command @param is not found in the argument list of countergui.CounterGui::on_deactivate(self, e)
-/home/travis/build/Ulm-IQO/qudi/gui/counter/countergui.py:201: warning: The following parameters of countergui.CounterGui.on_deactivate(self, e) are not documented:
+/home/travis/build/Ulm-IQO/qudi/gui/counter/countergui.py:195: warning: argument 'object' of command @param is not found in the argument list of countergui.CounterGui::on_deactivate(self, e)
+/home/travis/build/Ulm-IQO/qudi/gui/counter/countergui.py:197: warning: The following parameters of countergui.CounterGui.on_deactivate(self, e) are not documented:
   parameter 'e'
-/home/travis/build/Ulm-IQO/qudi/gui/counter/countergui.py:360: warning: argument 'float' of command @param is not found in the argument list of countergui.CounterGui::update_count_freq_SpinBox(self, count_freq)
-/home/travis/build/Ulm-IQO/qudi/gui/counter/countergui.py:362: warning: The following parameters of countergui.CounterGui.update_count_freq_SpinBox(self, count_freq) are not documented:
+/home/travis/build/Ulm-IQO/qudi/gui/counter/countergui.py:337: warning: argument 'float' of command @param is not found in the argument list of countergui.CounterGui::update_count_freq_SpinBox(self, count_freq)
+/home/travis/build/Ulm-IQO/qudi/gui/counter/countergui.py:339: warning: The following parameters of countergui.CounterGui.update_count_freq_SpinBox(self, count_freq) are not documented:
   parameter 'count_freq'
-/home/travis/build/Ulm-IQO/qudi/gui/counter/countergui.py:371: warning: argument 'int' of command @param is not found in the argument list of countergui.CounterGui::update_count_length_SpinBox(self, count_length)
-/home/travis/build/Ulm-IQO/qudi/gui/counter/countergui.py:373: warning: The following parameters of countergui.CounterGui.update_count_length_SpinBox(self, count_length) are not documented:
+/home/travis/build/Ulm-IQO/qudi/gui/counter/countergui.py:348: warning: argument 'int' of command @param is not found in the argument list of countergui.CounterGui::update_count_length_SpinBox(self, count_length)
+/home/travis/build/Ulm-IQO/qudi/gui/counter/countergui.py:350: warning: The following parameters of countergui.CounterGui.update_count_length_SpinBox(self, count_length) are not documented:
   parameter 'count_length'
-/home/travis/build/Ulm-IQO/qudi/gui/counter/countergui.py:398: warning: argument 'bool' of command @param is not found in the argument list of countergui.CounterGui::update_count_status_Action(self, running)
-/home/travis/build/Ulm-IQO/qudi/gui/counter/countergui.py:400: warning: The following parameters of countergui.CounterGui.update_count_status_Action(self, running) are not documented:
+/home/travis/build/Ulm-IQO/qudi/gui/counter/countergui.py:375: warning: argument 'bool' of command @param is not found in the argument list of countergui.CounterGui::update_count_status_Action(self, running)
+/home/travis/build/Ulm-IQO/qudi/gui/counter/countergui.py:377: warning: The following parameters of countergui.CounterGui.update_count_status_Action(self, running) are not documented:
   parameter 'running'
-/home/travis/build/Ulm-IQO/qudi/gui/counter/countergui.py:382: warning: argument 'bool' of command @param is not found in the argument list of countergui.CounterGui::update_saving_Action(self, start)
-/home/travis/build/Ulm-IQO/qudi/gui/counter/countergui.py:384: warning: The following parameters of countergui.CounterGui.update_saving_Action(self, start) are not documented:
+/home/travis/build/Ulm-IQO/qudi/gui/counter/countergui.py:359: warning: argument 'bool' of command @param is not found in the argument list of countergui.CounterGui::update_saving_Action(self, start)
+/home/travis/build/Ulm-IQO/qudi/gui/counter/countergui.py:361: warning: The following parameters of countergui.CounterGui.update_saving_Action(self, start) are not documented:
   parameter 'start'
 /home/travis/build/Ulm-IQO/qudi/gui/counter/countergui.py:39: warning: Member __init__(self, kwargs) (function) of class countergui::CounterMainWindow is not documented.
 /home/travis/build/Ulm-IQO/qudi/hardware/CTC100_temperature.py:46: warning: Member on_activate(self, e) (function) of class CTC100_temperature::CTC100 is not documented.
@@ -1740,8 +1741,8 @@ IndexError: list index out of range
 /home/travis/build/Ulm-IQO/qudi/gui/colordefs.py:1158: warning: Member purple (variable) of class gui::colordefs::QudiPalettePale is not documented.
 /home/travis/build/Ulm-IQO/qudi/gui/colordefs.py:1159: warning: Member c6 (variable) of class gui::colordefs::QudiPalettePale is not documented.
 /home/travis/build/Ulm-IQO/qudi/gui/confocal/confocalgui.py:203: warning: Member __init__(self, config, kwargs) (function) of class gui::confocal::confocalgui::ConfocalGui is not documented.
-/home/travis/build/Ulm-IQO/qudi/gui/confocal/confocalgui.py:1173: warning: Member update_roi_xy_size(self) (function) of class gui::confocal::confocalgui::ConfocalGui is not documented.
-/home/travis/build/Ulm-IQO/qudi/gui/confocal/confocalgui.py:1184: warning: Member update_roi_depth_size(self) (function) of class gui::confocal::confocalgui::ConfocalGui is not documented.
+/home/travis/build/Ulm-IQO/qudi/gui/confocal/confocalgui.py:1179: warning: Member update_roi_xy_size(self) (function) of class gui::confocal::confocalgui::ConfocalGui is not documented.
+/home/travis/build/Ulm-IQO/qudi/gui/confocal/confocalgui.py:1190: warning: Member update_roi_depth_size(self) (function) of class gui::confocal::confocalgui::ConfocalGui is not documented.
 /home/travis/build/Ulm-IQO/qudi/gui/guibase.py:38: warning: Member show(self) (function) of class gui::guibase::GUIBase is not documented.
 /home/travis/build/Ulm-IQO/qudi/gui/guibase.py:42: warning: Member saveWindowPos(self, window) (function) of class gui::guibase::GUIBase is not documented.
 /home/travis/build/Ulm-IQO/qudi/gui/guibase.py:46: warning: Member restoreWindowPos(self, window) (function) of class gui::guibase::GUIBase is not documented.
@@ -1774,15 +1775,15 @@ IndexError: list index out of range
 /home/travis/build/Ulm-IQO/qudi/gui/confocal/confocalgui.py:201: warning: Member sigStartOptimizer (variable) of class gui::confocal::confocalgui::ConfocalGui is not documented.
 /home/travis/build/Ulm-IQO/qudi/core/base.py:49: warning: Member sigStateChanged (variable) of class core::base::Base is not documented.
 /home/travis/build/Ulm-IQO/qudi/core/base.py:168: warning: Member result (variable) of class core::base::Base is not documented.
-/home/travis/build/Ulm-IQO/qudi/gui/confocal/confocalgui.py:1779: warning: argument 'object' of command @param is not found in the argument list of gui.confocal.confocalgui.ConfocalGui::adjust_aspect_roi_depth(self, viewbox=None)
-/home/travis/build/Ulm-IQO/qudi/gui/confocal/confocalgui.py:1779: warning: The following parameters of gui.confocal.confocalgui.ConfocalGui.adjust_aspect_roi_depth(self, viewbox=None) are not documented:
+/home/travis/build/Ulm-IQO/qudi/gui/confocal/confocalgui.py:1785: warning: argument 'object' of command @param is not found in the argument list of gui.confocal.confocalgui.ConfocalGui::adjust_aspect_roi_depth(self, viewbox=None)
+/home/travis/build/Ulm-IQO/qudi/gui/confocal/confocalgui.py:1785: warning: The following parameters of gui.confocal.confocalgui.ConfocalGui.adjust_aspect_roi_depth(self, viewbox=None) are not documented:
   parameter 'viewbox'
-/home/travis/build/Ulm-IQO/qudi/gui/confocal/confocalgui.py:1752: warning: argument 'object' of command @param is not found in the argument list of gui.confocal.confocalgui.ConfocalGui::adjust_aspect_roi_xy(self)
-/home/travis/build/Ulm-IQO/qudi/gui/confocal/confocalgui.py:2067: warning: argument 'QEvent' of command @param is not found in the argument list of gui.confocal.confocalgui.ConfocalGui::depth_scan_end_zoom_point(self, event)
-/home/travis/build/Ulm-IQO/qudi/gui/confocal/confocalgui.py:2067: warning: The following parameters of gui.confocal.confocalgui.ConfocalGui.depth_scan_end_zoom_point(self, event) are not documented:
+/home/travis/build/Ulm-IQO/qudi/gui/confocal/confocalgui.py:1758: warning: argument 'object' of command @param is not found in the argument list of gui.confocal.confocalgui.ConfocalGui::adjust_aspect_roi_xy(self)
+/home/travis/build/Ulm-IQO/qudi/gui/confocal/confocalgui.py:2073: warning: argument 'QEvent' of command @param is not found in the argument list of gui.confocal.confocalgui.ConfocalGui::depth_scan_end_zoom_point(self, event)
+/home/travis/build/Ulm-IQO/qudi/gui/confocal/confocalgui.py:2073: warning: The following parameters of gui.confocal.confocalgui.ConfocalGui.depth_scan_end_zoom_point(self, event) are not documented:
   parameter 'event'
-/home/travis/build/Ulm-IQO/qudi/gui/confocal/confocalgui.py:2050: warning: argument 'QMouseEvent' of command @param is not found in the argument list of gui.confocal.confocalgui.ConfocalGui::depth_scan_start_zoom_point(self, event)
-/home/travis/build/Ulm-IQO/qudi/gui/confocal/confocalgui.py:2050: warning: The following parameters of gui.confocal.confocalgui.ConfocalGui.depth_scan_start_zoom_point(self, event) are not documented:
+/home/travis/build/Ulm-IQO/qudi/gui/confocal/confocalgui.py:2056: warning: argument 'QMouseEvent' of command @param is not found in the argument list of gui.confocal.confocalgui.ConfocalGui::depth_scan_start_zoom_point(self, event)
+/home/travis/build/Ulm-IQO/qudi/gui/confocal/confocalgui.py:2056: warning: The following parameters of gui.confocal.confocalgui.ConfocalGui.depth_scan_start_zoom_point(self, event) are not documented:
   parameter 'event'
 /home/travis/build/Ulm-IQO/qudi/gui/confocal/confocalgui.py:264: warning: argument 'object' of command @param is not found in the argument list of gui.confocal.confocalgui.ConfocalGui::initMainUI(self, e=None)
 /home/travis/build/Ulm-IQO/qudi/gui/confocal/confocalgui.py:264: warning: The following parameters of gui.confocal.confocalgui.ConfocalGui.initMainUI(self, e=None) are not documented:
@@ -1802,54 +1803,54 @@ IndexError: list index out of range
 /home/travis/build/Ulm-IQO/qudi/gui/confocal/confocalgui.py:738: warning: argument 'object' of command @param is not found in the argument list of gui.confocal.confocalgui.ConfocalGui::on_deactivate(self, e)
 /home/travis/build/Ulm-IQO/qudi/gui/confocal/confocalgui.py:740: warning: The following parameters of gui.confocal.confocalgui.ConfocalGui.on_deactivate(self, e) are not documented:
   parameter 'e'
-/home/travis/build/Ulm-IQO/qudi/gui/confocal/confocalgui.py:1082: warning: argument 'str' of command @param is not found in the argument list of gui.confocal.confocalgui.ConfocalGui::update_crosshair_position_from_logic(self, tag)
-/home/travis/build/Ulm-IQO/qudi/gui/confocal/confocalgui.py:1082: warning: The following parameters of gui.confocal.confocalgui.ConfocalGui.update_crosshair_position_from_logic(self, tag) are not documented:
+/home/travis/build/Ulm-IQO/qudi/gui/confocal/confocalgui.py:1085: warning: argument 'str' of command @param is not found in the argument list of gui.confocal.confocalgui.ConfocalGui::update_crosshair_position_from_logic(self, tag)
+/home/travis/build/Ulm-IQO/qudi/gui/confocal/confocalgui.py:1085: warning: The following parameters of gui.confocal.confocalgui.ConfocalGui.update_crosshair_position_from_logic(self, tag) are not documented:
   parameter 'tag'
-/home/travis/build/Ulm-IQO/qudi/gui/confocal/confocalgui.py:1279: warning: argument 'float' of command @param is not found in the argument list of gui.confocal.confocalgui.ConfocalGui::update_from_key(self, x=None, y=None, z=None)
-/home/travis/build/Ulm-IQO/qudi/gui/confocal/confocalgui.py:1279: warning: argument 'float' of command @param is not found in the argument list of gui.confocal.confocalgui.ConfocalGui::update_from_key(self, x=None, y=None, z=None)
-/home/travis/build/Ulm-IQO/qudi/gui/confocal/confocalgui.py:1279: warning: argument 'float' of command @param is not found in the argument list of gui.confocal.confocalgui.ConfocalGui::update_from_key(self, x=None, y=None, z=None)
-/home/travis/build/Ulm-IQO/qudi/gui/confocal/confocalgui.py:1279: warning: The following parameters of gui.confocal.confocalgui.ConfocalGui.update_from_key(self, x=None, y=None, z=None) are not documented:
+/home/travis/build/Ulm-IQO/qudi/gui/confocal/confocalgui.py:1285: warning: argument 'float' of command @param is not found in the argument list of gui.confocal.confocalgui.ConfocalGui::update_from_key(self, x=None, y=None, z=None)
+/home/travis/build/Ulm-IQO/qudi/gui/confocal/confocalgui.py:1285: warning: argument 'float' of command @param is not found in the argument list of gui.confocal.confocalgui.ConfocalGui::update_from_key(self, x=None, y=None, z=None)
+/home/travis/build/Ulm-IQO/qudi/gui/confocal/confocalgui.py:1285: warning: argument 'float' of command @param is not found in the argument list of gui.confocal.confocalgui.ConfocalGui::update_from_key(self, x=None, y=None, z=None)
+/home/travis/build/Ulm-IQO/qudi/gui/confocal/confocalgui.py:1285: warning: The following parameters of gui.confocal.confocalgui.ConfocalGui.update_from_key(self, x=None, y=None, z=None) are not documented:
   parameter 'x'
   parameter 'y'
   parameter 'z'
-/home/travis/build/Ulm-IQO/qudi/gui/confocal/confocalgui.py:1248: warning: Found unknown command `\params'
-/home/travis/build/Ulm-IQO/qudi/gui/confocal/confocalgui.py:1219: warning: Found unknown command `\params'
-/home/travis/build/Ulm-IQO/qudi/gui/confocal/confocalgui.py:1353: warning: Found unknown command `\params'
-/home/travis/build/Ulm-IQO/qudi/gui/confocal/confocalgui.py:1365: warning: Found unknown command `\params'
-/home/travis/build/Ulm-IQO/qudi/gui/confocal/confocalgui.py:1376: warning: Found unknown command `\params'
-/home/travis/build/Ulm-IQO/qudi/gui/confocal/confocalgui.py:1329: warning: argument 'float' of command @param is not found in the argument list of gui.confocal.confocalgui.ConfocalGui::update_input_x(self, x_pos)
-/home/travis/build/Ulm-IQO/qudi/gui/confocal/confocalgui.py:1329: warning: The following parameters of gui.confocal.confocalgui.ConfocalGui.update_input_x(self, x_pos) are not documented:
+/home/travis/build/Ulm-IQO/qudi/gui/confocal/confocalgui.py:1254: warning: Found unknown command `\params'
+/home/travis/build/Ulm-IQO/qudi/gui/confocal/confocalgui.py:1225: warning: Found unknown command `\params'
+/home/travis/build/Ulm-IQO/qudi/gui/confocal/confocalgui.py:1359: warning: Found unknown command `\params'
+/home/travis/build/Ulm-IQO/qudi/gui/confocal/confocalgui.py:1371: warning: Found unknown command `\params'
+/home/travis/build/Ulm-IQO/qudi/gui/confocal/confocalgui.py:1382: warning: Found unknown command `\params'
+/home/travis/build/Ulm-IQO/qudi/gui/confocal/confocalgui.py:1335: warning: argument 'float' of command @param is not found in the argument list of gui.confocal.confocalgui.ConfocalGui::update_input_x(self, x_pos)
+/home/travis/build/Ulm-IQO/qudi/gui/confocal/confocalgui.py:1335: warning: The following parameters of gui.confocal.confocalgui.ConfocalGui.update_input_x(self, x_pos) are not documented:
   parameter 'x_pos'
-/home/travis/build/Ulm-IQO/qudi/gui/confocal/confocalgui.py:1337: warning: argument 'float' of command @param is not found in the argument list of gui.confocal.confocalgui.ConfocalGui::update_input_y(self, y_pos)
-/home/travis/build/Ulm-IQO/qudi/gui/confocal/confocalgui.py:1337: warning: The following parameters of gui.confocal.confocalgui.ConfocalGui.update_input_y(self, y_pos) are not documented:
+/home/travis/build/Ulm-IQO/qudi/gui/confocal/confocalgui.py:1343: warning: argument 'float' of command @param is not found in the argument list of gui.confocal.confocalgui.ConfocalGui::update_input_y(self, y_pos)
+/home/travis/build/Ulm-IQO/qudi/gui/confocal/confocalgui.py:1343: warning: The following parameters of gui.confocal.confocalgui.ConfocalGui.update_input_y(self, y_pos) are not documented:
   parameter 'y_pos'
-/home/travis/build/Ulm-IQO/qudi/gui/confocal/confocalgui.py:1345: warning: argument 'float' of command @param is not found in the argument list of gui.confocal.confocalgui.ConfocalGui::update_input_z(self, z_pos)
-/home/travis/build/Ulm-IQO/qudi/gui/confocal/confocalgui.py:1345: warning: The following parameters of gui.confocal.confocalgui.ConfocalGui.update_input_z(self, z_pos) are not documented:
+/home/travis/build/Ulm-IQO/qudi/gui/confocal/confocalgui.py:1351: warning: argument 'float' of command @param is not found in the argument list of gui.confocal.confocalgui.ConfocalGui::update_input_z(self, z_pos)
+/home/travis/build/Ulm-IQO/qudi/gui/confocal/confocalgui.py:1351: warning: The following parameters of gui.confocal.confocalgui.ConfocalGui.update_input_z(self, z_pos) are not documented:
   parameter 'z_pos'
-/home/travis/build/Ulm-IQO/qudi/gui/confocal/confocalgui.py:1206: warning: argument 'float' of command @param is not found in the argument list of gui.confocal.confocalgui.ConfocalGui::update_roi_depth(self, x=None, z=None)
-/home/travis/build/Ulm-IQO/qudi/gui/confocal/confocalgui.py:1206: warning: argument 'float' of command @param is not found in the argument list of gui.confocal.confocalgui.ConfocalGui::update_roi_depth(self, x=None, z=None)
-/home/travis/build/Ulm-IQO/qudi/gui/confocal/confocalgui.py:1206: warning: The following parameters of gui.confocal.confocalgui.ConfocalGui.update_roi_depth(self, x=None, z=None) are not documented:
+/home/travis/build/Ulm-IQO/qudi/gui/confocal/confocalgui.py:1212: warning: argument 'float' of command @param is not found in the argument list of gui.confocal.confocalgui.ConfocalGui::update_roi_depth(self, x=None, z=None)
+/home/travis/build/Ulm-IQO/qudi/gui/confocal/confocalgui.py:1212: warning: argument 'float' of command @param is not found in the argument list of gui.confocal.confocalgui.ConfocalGui::update_roi_depth(self, x=None, z=None)
+/home/travis/build/Ulm-IQO/qudi/gui/confocal/confocalgui.py:1212: warning: The following parameters of gui.confocal.confocalgui.ConfocalGui.update_roi_depth(self, x=None, z=None) are not documented:
   parameter 'x'
   parameter 'z'
-/home/travis/build/Ulm-IQO/qudi/gui/confocal/confocalgui.py:1162: warning: argument 'float' of command @param is not found in the argument list of gui.confocal.confocalgui.ConfocalGui::update_roi_xy(self, x=None, y=None)
-/home/travis/build/Ulm-IQO/qudi/gui/confocal/confocalgui.py:1162: warning: argument 'float' of command @param is not found in the argument list of gui.confocal.confocalgui.ConfocalGui::update_roi_xy(self, x=None, y=None)
-/home/travis/build/Ulm-IQO/qudi/gui/confocal/confocalgui.py:1162: warning: The following parameters of gui.confocal.confocalgui.ConfocalGui.update_roi_xy(self, x=None, y=None) are not documented:
+/home/travis/build/Ulm-IQO/qudi/gui/confocal/confocalgui.py:1168: warning: argument 'float' of command @param is not found in the argument list of gui.confocal.confocalgui.ConfocalGui::update_roi_xy(self, x=None, y=None)
+/home/travis/build/Ulm-IQO/qudi/gui/confocal/confocalgui.py:1168: warning: argument 'float' of command @param is not found in the argument list of gui.confocal.confocalgui.ConfocalGui::update_roi_xy(self, x=None, y=None)
+/home/travis/build/Ulm-IQO/qudi/gui/confocal/confocalgui.py:1168: warning: The following parameters of gui.confocal.confocalgui.ConfocalGui.update_roi_xy(self, x=None, y=None) are not documented:
   parameter 'x'
   parameter 'y'
-/home/travis/build/Ulm-IQO/qudi/gui/confocal/confocalgui.py:1387: warning: argument 'float' of command @param is not found in the argument list of gui.confocal.confocalgui.ConfocalGui::update_slider_x(self, x_pos)
-/home/travis/build/Ulm-IQO/qudi/gui/confocal/confocalgui.py:1387: warning: The following parameters of gui.confocal.confocalgui.ConfocalGui.update_slider_x(self, x_pos) are not documented:
+/home/travis/build/Ulm-IQO/qudi/gui/confocal/confocalgui.py:1393: warning: argument 'float' of command @param is not found in the argument list of gui.confocal.confocalgui.ConfocalGui::update_slider_x(self, x_pos)
+/home/travis/build/Ulm-IQO/qudi/gui/confocal/confocalgui.py:1393: warning: The following parameters of gui.confocal.confocalgui.ConfocalGui.update_slider_x(self, x_pos) are not documented:
   parameter 'x_pos'
-/home/travis/build/Ulm-IQO/qudi/gui/confocal/confocalgui.py:1394: warning: argument 'float' of command @param is not found in the argument list of gui.confocal.confocalgui.ConfocalGui::update_slider_y(self, y_pos)
-/home/travis/build/Ulm-IQO/qudi/gui/confocal/confocalgui.py:1394: warning: The following parameters of gui.confocal.confocalgui.ConfocalGui.update_slider_y(self, y_pos) are not documented:
+/home/travis/build/Ulm-IQO/qudi/gui/confocal/confocalgui.py:1400: warning: argument 'float' of command @param is not found in the argument list of gui.confocal.confocalgui.ConfocalGui::update_slider_y(self, y_pos)
+/home/travis/build/Ulm-IQO/qudi/gui/confocal/confocalgui.py:1400: warning: The following parameters of gui.confocal.confocalgui.ConfocalGui.update_slider_y(self, y_pos) are not documented:
   parameter 'y_pos'
-/home/travis/build/Ulm-IQO/qudi/gui/confocal/confocalgui.py:1401: warning: argument 'float' of command @param is not found in the argument list of gui.confocal.confocalgui.ConfocalGui::update_slider_z(self, z_pos)
-/home/travis/build/Ulm-IQO/qudi/gui/confocal/confocalgui.py:1401: warning: The following parameters of gui.confocal.confocalgui.ConfocalGui.update_slider_z(self, z_pos) are not documented:
+/home/travis/build/Ulm-IQO/qudi/gui/confocal/confocalgui.py:1407: warning: argument 'float' of command @param is not found in the argument list of gui.confocal.confocalgui.ConfocalGui::update_slider_z(self, z_pos)
+/home/travis/build/Ulm-IQO/qudi/gui/confocal/confocalgui.py:1407: warning: The following parameters of gui.confocal.confocalgui.ConfocalGui.update_slider_z(self, z_pos) are not documented:
   parameter 'z_pos'
-/home/travis/build/Ulm-IQO/qudi/gui/confocal/confocalgui.py:1977: warning: argument 'QEvent' of command @param is not found in the argument list of gui.confocal.confocalgui.ConfocalGui::xy_scan_end_zoom_point(self, event)
-/home/travis/build/Ulm-IQO/qudi/gui/confocal/confocalgui.py:1977: warning: The following parameters of gui.confocal.confocalgui.ConfocalGui.xy_scan_end_zoom_point(self, event) are not documented:
+/home/travis/build/Ulm-IQO/qudi/gui/confocal/confocalgui.py:1983: warning: argument 'QEvent' of command @param is not found in the argument list of gui.confocal.confocalgui.ConfocalGui::xy_scan_end_zoom_point(self, event)
+/home/travis/build/Ulm-IQO/qudi/gui/confocal/confocalgui.py:1983: warning: The following parameters of gui.confocal.confocalgui.ConfocalGui.xy_scan_end_zoom_point(self, event) are not documented:
   parameter 'event'
-/home/travis/build/Ulm-IQO/qudi/gui/confocal/confocalgui.py:1960: warning: argument 'QMouseEvent' of command @param is not found in the argument list of gui.confocal.confocalgui.ConfocalGui::xy_scan_start_zoom_point(self, event)
-/home/travis/build/Ulm-IQO/qudi/gui/confocal/confocalgui.py:1960: warning: The following parameters of gui.confocal.confocalgui.ConfocalGui.xy_scan_start_zoom_point(self, event) are not documented:
+/home/travis/build/Ulm-IQO/qudi/gui/confocal/confocalgui.py:1966: warning: argument 'QMouseEvent' of command @param is not found in the argument list of gui.confocal.confocalgui.ConfocalGui::xy_scan_start_zoom_point(self, event)
+/home/travis/build/Ulm-IQO/qudi/gui/confocal/confocalgui.py:1966: warning: The following parameters of gui.confocal.confocalgui.ConfocalGui.xy_scan_start_zoom_point(self, event) are not documented:
   parameter 'event'
 /home/travis/build/Ulm-IQO/qudi/gui/confocal/confocalgui.py:138: warning: Member __init__(self) (function) of class gui::confocal::confocalgui::ConfocalMainWindow is not documented.
 /home/travis/build/Ulm-IQO/qudi/gui/confocal/confocalgui.py:136: warning: Member sigPressKeyBoard (variable) of class gui::confocal::confocalgui::ConfocalMainWindow is not documented.
@@ -3520,174 +3521,175 @@ IndexError: list index out of range
 /home/travis/build/Ulm-IQO/qudi/core/base.py:126: warning: Member connector (variable) of class core::base::Base is not documented.
 /home/travis/build/Ulm-IQO/qudi/core/base.py:49: warning: Member sigStateChanged (variable) of class core::base::Base is not documented.
 /home/travis/build/Ulm-IQO/qudi/core/base.py:168: warning: Member result (variable) of class core::base::Base is not documented.
-/home/travis/build/Ulm-IQO/qudi/logic/interfuse/mw_differential_scanner.py:313: warning: argument 'float' of command @param is not found in the argument list of mw_differential_scanner.ConfocalScannerInterfaceDummy::scan_line(self, line_path=None)
-/home/travis/build/Ulm-IQO/qudi/logic/interfuse/mw_differential_scanner.py:313: warning: argument '4' of command @param is not found in the argument list of mw_differential_scanner.ConfocalScannerInterfaceDummy::scan_line(self, line_path=None)
-/home/travis/build/Ulm-IQO/qudi/logic/interfuse/mw_differential_scanner.py:313: warning: The following parameters of mw_differential_scanner.ConfocalScannerInterfaceDummy.scan_line(self, line_path=None) are not documented:
+/home/travis/build/Ulm-IQO/qudi/logic/interfuse/mw_differential_scanner.py:317: warning: argument 'float' of command @param is not found in the argument list of mw_differential_scanner.ConfocalScannerInterfaceDummy::scan_line(self, line_path=None)
+/home/travis/build/Ulm-IQO/qudi/logic/interfuse/mw_differential_scanner.py:317: warning: argument '4' of command @param is not found in the argument list of mw_differential_scanner.ConfocalScannerInterfaceDummy::scan_line(self, line_path=None)
+/home/travis/build/Ulm-IQO/qudi/logic/interfuse/mw_differential_scanner.py:317: warning: The following parameters of mw_differential_scanner.ConfocalScannerInterfaceDummy.scan_line(self, line_path=None) are not documented:
   parameter 'line_path'
-/home/travis/build/Ulm-IQO/qudi/logic/interfuse/mw_differential_scanner.py:271: warning: argument 'float' of command @param is not found in the argument list of mw_differential_scanner.ConfocalScannerInterfaceDummy::scanner_set_position(self, x=None, y=None, z=None, a=None)
-/home/travis/build/Ulm-IQO/qudi/logic/interfuse/mw_differential_scanner.py:271: warning: argument 'float' of command @param is not found in the argument list of mw_differential_scanner.ConfocalScannerInterfaceDummy::scanner_set_position(self, x=None, y=None, z=None, a=None)
-/home/travis/build/Ulm-IQO/qudi/logic/interfuse/mw_differential_scanner.py:271: warning: argument 'float' of command @param is not found in the argument list of mw_differential_scanner.ConfocalScannerInterfaceDummy::scanner_set_position(self, x=None, y=None, z=None, a=None)
-/home/travis/build/Ulm-IQO/qudi/logic/interfuse/mw_differential_scanner.py:271: warning: argument 'float' of command @param is not found in the argument list of mw_differential_scanner.ConfocalScannerInterfaceDummy::scanner_set_position(self, x=None, y=None, z=None, a=None)
-/home/travis/build/Ulm-IQO/qudi/logic/interfuse/mw_differential_scanner.py:271: warning: The following parameters of mw_differential_scanner.ConfocalScannerInterfaceDummy.scanner_set_position(self, x=None, y=None, z=None, a=None) are not documented:
+/home/travis/build/Ulm-IQO/qudi/logic/interfuse/mw_differential_scanner.py:275: warning: argument 'float' of command @param is not found in the argument list of mw_differential_scanner.ConfocalScannerInterfaceDummy::scanner_set_position(self, x=None, y=None, z=None, a=None)
+/home/travis/build/Ulm-IQO/qudi/logic/interfuse/mw_differential_scanner.py:275: warning: argument 'float' of command @param is not found in the argument list of mw_differential_scanner.ConfocalScannerInterfaceDummy::scanner_set_position(self, x=None, y=None, z=None, a=None)
+/home/travis/build/Ulm-IQO/qudi/logic/interfuse/mw_differential_scanner.py:275: warning: argument 'float' of command @param is not found in the argument list of mw_differential_scanner.ConfocalScannerInterfaceDummy::scanner_set_position(self, x=None, y=None, z=None, a=None)
+/home/travis/build/Ulm-IQO/qudi/logic/interfuse/mw_differential_scanner.py:275: warning: argument 'float' of command @param is not found in the argument list of mw_differential_scanner.ConfocalScannerInterfaceDummy::scanner_set_position(self, x=None, y=None, z=None, a=None)
+/home/travis/build/Ulm-IQO/qudi/logic/interfuse/mw_differential_scanner.py:275: warning: The following parameters of mw_differential_scanner.ConfocalScannerInterfaceDummy.scanner_set_position(self, x=None, y=None, z=None, a=None) are not documented:
   parameter 'x'
   parameter 'y'
   parameter 'z'
   parameter 'a'
-/home/travis/build/Ulm-IQO/qudi/logic/interfuse/mw_differential_scanner.py:159: warning: argument 'float' of command @param is not found in the argument list of mw_differential_scanner.ConfocalScannerInterfaceDummy::set_position_range(self, myrange=None)
-/home/travis/build/Ulm-IQO/qudi/logic/interfuse/mw_differential_scanner.py:159: warning: The following parameters of mw_differential_scanner.ConfocalScannerInterfaceDummy.set_position_range(self, myrange=None) are not documented:
+/home/travis/build/Ulm-IQO/qudi/logic/interfuse/mw_differential_scanner.py:163: warning: argument 'float' of command @param is not found in the argument list of mw_differential_scanner.ConfocalScannerInterfaceDummy::set_position_range(self, myrange=None)
+/home/travis/build/Ulm-IQO/qudi/logic/interfuse/mw_differential_scanner.py:163: warning: The following parameters of mw_differential_scanner.ConfocalScannerInterfaceDummy.set_position_range(self, myrange=None) are not documented:
   parameter 'myrange'
-/home/travis/build/Ulm-IQO/qudi/logic/interfuse/mw_differential_scanner.py:298: warning: argument 'int' of command @param is not found in the argument list of mw_differential_scanner.ConfocalScannerInterfaceDummy::set_up_line(self, length=100)
-/home/travis/build/Ulm-IQO/qudi/logic/interfuse/mw_differential_scanner.py:298: warning: The following parameters of mw_differential_scanner.ConfocalScannerInterfaceDummy.set_up_line(self, length=100) are not documented:
+/home/travis/build/Ulm-IQO/qudi/logic/interfuse/mw_differential_scanner.py:302: warning: argument 'int' of command @param is not found in the argument list of mw_differential_scanner.ConfocalScannerInterfaceDummy::set_up_line(self, length=100)
+/home/travis/build/Ulm-IQO/qudi/logic/interfuse/mw_differential_scanner.py:302: warning: The following parameters of mw_differential_scanner.ConfocalScannerInterfaceDummy.set_up_line(self, length=100) are not documented:
   parameter 'length'
-/home/travis/build/Ulm-IQO/qudi/logic/interfuse/mw_differential_scanner.py:249: warning: argument 'string' of command @param is not found in the argument list of mw_differential_scanner.ConfocalScannerInterfaceDummy::set_up_scanner(self, counter_channel=None, photon_source=None, clock_channel=None, scanner_ao_channels=None)
-/home/travis/build/Ulm-IQO/qudi/logic/interfuse/mw_differential_scanner.py:249: warning: argument 'string' of command @param is not found in the argument list of mw_differential_scanner.ConfocalScannerInterfaceDummy::set_up_scanner(self, counter_channel=None, photon_source=None, clock_channel=None, scanner_ao_channels=None)
-/home/travis/build/Ulm-IQO/qudi/logic/interfuse/mw_differential_scanner.py:249: warning: argument 'string' of command @param is not found in the argument list of mw_differential_scanner.ConfocalScannerInterfaceDummy::set_up_scanner(self, counter_channel=None, photon_source=None, clock_channel=None, scanner_ao_channels=None)
-/home/travis/build/Ulm-IQO/qudi/logic/interfuse/mw_differential_scanner.py:249: warning: argument 'string' of command @param is not found in the argument list of mw_differential_scanner.ConfocalScannerInterfaceDummy::set_up_scanner(self, counter_channel=None, photon_source=None, clock_channel=None, scanner_ao_channels=None)
-/home/travis/build/Ulm-IQO/qudi/logic/interfuse/mw_differential_scanner.py:249: warning: The following parameters of mw_differential_scanner.ConfocalScannerInterfaceDummy.set_up_scanner(self, counter_channel=None, photon_source=None, clock_channel=None, scanner_ao_channels=None) are not documented:
+/home/travis/build/Ulm-IQO/qudi/logic/interfuse/mw_differential_scanner.py:253: warning: argument 'string' of command @param is not found in the argument list of mw_differential_scanner.ConfocalScannerInterfaceDummy::set_up_scanner(self, counter_channel=None, photon_source=None, clock_channel=None, scanner_ao_channels=None)
+/home/travis/build/Ulm-IQO/qudi/logic/interfuse/mw_differential_scanner.py:253: warning: argument 'string' of command @param is not found in the argument list of mw_differential_scanner.ConfocalScannerInterfaceDummy::set_up_scanner(self, counter_channel=None, photon_source=None, clock_channel=None, scanner_ao_channels=None)
+/home/travis/build/Ulm-IQO/qudi/logic/interfuse/mw_differential_scanner.py:253: warning: argument 'string' of command @param is not found in the argument list of mw_differential_scanner.ConfocalScannerInterfaceDummy::set_up_scanner(self, counter_channel=None, photon_source=None, clock_channel=None, scanner_ao_channels=None)
+/home/travis/build/Ulm-IQO/qudi/logic/interfuse/mw_differential_scanner.py:253: warning: argument 'string' of command @param is not found in the argument list of mw_differential_scanner.ConfocalScannerInterfaceDummy::set_up_scanner(self, counter_channel=None, photon_source=None, clock_channel=None, scanner_ao_channels=None)
+/home/travis/build/Ulm-IQO/qudi/logic/interfuse/mw_differential_scanner.py:253: warning: The following parameters of mw_differential_scanner.ConfocalScannerInterfaceDummy.set_up_scanner(self, counter_channel=None, photon_source=None, clock_channel=None, scanner_ao_channels=None) are not documented:
   parameter 'counter_channel'
   parameter 'photon_source'
   parameter 'clock_channel'
   parameter 'scanner_ao_channels'
-/home/travis/build/Ulm-IQO/qudi/logic/interfuse/mw_differential_scanner.py:228: warning: argument 'float' of command @param is not found in the argument list of mw_differential_scanner.ConfocalScannerInterfaceDummy::set_up_scanner_clock(self, clock_frequency=None, clock_channel=None)
-/home/travis/build/Ulm-IQO/qudi/logic/interfuse/mw_differential_scanner.py:228: warning: argument 'string' of command @param is not found in the argument list of mw_differential_scanner.ConfocalScannerInterfaceDummy::set_up_scanner_clock(self, clock_frequency=None, clock_channel=None)
-/home/travis/build/Ulm-IQO/qudi/logic/interfuse/mw_differential_scanner.py:228: warning: The following parameters of mw_differential_scanner.ConfocalScannerInterfaceDummy.set_up_scanner_clock(self, clock_frequency=None, clock_channel=None) are not documented:
+/home/travis/build/Ulm-IQO/qudi/logic/interfuse/mw_differential_scanner.py:232: warning: argument 'float' of command @param is not found in the argument list of mw_differential_scanner.ConfocalScannerInterfaceDummy::set_up_scanner_clock(self, clock_frequency=None, clock_channel=None)
+/home/travis/build/Ulm-IQO/qudi/logic/interfuse/mw_differential_scanner.py:232: warning: argument 'string' of command @param is not found in the argument list of mw_differential_scanner.ConfocalScannerInterfaceDummy::set_up_scanner_clock(self, clock_frequency=None, clock_channel=None)
+/home/travis/build/Ulm-IQO/qudi/logic/interfuse/mw_differential_scanner.py:232: warning: The following parameters of mw_differential_scanner.ConfocalScannerInterfaceDummy.set_up_scanner_clock(self, clock_frequency=None, clock_channel=None) are not documented:
   parameter 'clock_frequency'
   parameter 'clock_channel'
-/home/travis/build/Ulm-IQO/qudi/logic/interfuse/mw_differential_scanner.py:193: warning: argument 'float' of command @param is not found in the argument list of mw_differential_scanner.ConfocalScannerInterfaceDummy::set_voltage_range(self, myrange=None)
-/home/travis/build/Ulm-IQO/qudi/logic/interfuse/mw_differential_scanner.py:193: warning: The following parameters of mw_differential_scanner.ConfocalScannerInterfaceDummy.set_voltage_range(self, myrange=None) are not documented:
+/home/travis/build/Ulm-IQO/qudi/logic/interfuse/mw_differential_scanner.py:197: warning: argument 'float' of command @param is not found in the argument list of mw_differential_scanner.ConfocalScannerInterfaceDummy::set_voltage_range(self, myrange=None)
+/home/travis/build/Ulm-IQO/qudi/logic/interfuse/mw_differential_scanner.py:197: warning: The following parameters of mw_differential_scanner.ConfocalScannerInterfaceDummy.set_voltage_range(self, myrange=None) are not documented:
   parameter 'myrange'
 /home/travis/build/Ulm-IQO/qudi/core/FysomAdapter.py:31: warning: Member __getattr__(self, name) (function) of class core::FysomAdapter::Fysom is not documented.
 /home/travis/build/Ulm-IQO/qudi/core/base.py:126: warning: Member connector (variable) of class core::base::Base is not documented.
 /home/travis/build/Ulm-IQO/qudi/core/base.py:49: warning: Member sigStateChanged (variable) of class core::base::Base is not documented.
 /home/travis/build/Ulm-IQO/qudi/core/base.py:168: warning: Member result (variable) of class core::base::Base is not documented.
-/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:862: warning: argument 'bool' of command @param is not found in the argument list of ni_card.NICard::close_clock(self, scanner=False)
-/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:862: warning: The following parameters of ni_card.NICard.close_clock(self, scanner=False) are not documented:
+/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:840: warning: argument 'bool' of command @param is not found in the argument list of ni_card.NICard::close_clock(self, scanner=False)
+/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:840: warning: The following parameters of ni_card.NICard.close_clock(self, scanner=False) are not documented:
   parameter 'scanner'
-/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:814: warning: argument 'bool' of command @param is not found in the argument list of ni_card.NICard::close_counter(self, scanner=False)
-/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:814: warning: The following parameters of ni_card.NICard.close_counter(self, scanner=False) are not documented:
+/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:804: warning: argument 'bool' of command @param is not found in the argument list of ni_card.NICard::close_counter(self, scanner=False)
+/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:804: warning: The following parameters of ni_card.NICard.close_counter(self, scanner=False) are not documented:
   parameter 'scanner'
-/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:1698: warning: argument 'int' of command @param is not found in the argument list of ni_card.NICard::count_odmr(self, length=100)
-/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:1698: warning: The following parameters of ni_card.NICard.count_odmr(self, length=100) are not documented:
+/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:1721: warning: argument 'int' of command @param is not found in the argument list of ni_card.NICard::count_odmr(self, length=100)
+/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:1721: warning: The following parameters of ni_card.NICard.count_odmr(self, length=100) are not documented:
   parameter 'length'
-/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:743: warning: argument 'int' of command @param is not found in the argument list of ni_card.NICard::get_counter(self, samples=None)
-/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:743: warning: The following parameters of ni_card.NICard.get_counter(self, samples=None) are not documented:
+/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:752: warning: argument 'int' of command @param is not found in the argument list of ni_card.NICard::get_counter(self, samples=None)
+/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:752: warning: The following parameters of ni_card.NICard.get_counter(self, samples=None) are not documented:
   parameter 'samples'
-/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:1951: warning: argument 'int' of command @param is not found in the argument list of ni_card.NICard::get_gated_counts(self, samples=None, timeout=None, read_available_samples=False)
-/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:1951: warning: argument 'int' of command @param is not found in the argument list of ni_card.NICard::get_gated_counts(self, samples=None, timeout=None, read_available_samples=False)
-/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:1951: warning: argument 'bool' of command @param is not found in the argument list of ni_card.NICard::get_gated_counts(self, samples=None, timeout=None, read_available_samples=False)
-/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:1951: warning: The following parameters of ni_card.NICard.get_gated_counts(self, samples=None, timeout=None, read_available_samples=False) are not documented:
+/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:1975: warning: argument 'int' of command @param is not found in the argument list of ni_card.NICard::get_gated_counts(self, samples=None, timeout=None, read_available_samples=False)
+/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:1975: warning: argument 'int' of command @param is not found in the argument list of ni_card.NICard::get_gated_counts(self, samples=None, timeout=None, read_available_samples=False)
+/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:1975: warning: argument 'bool' of command @param is not found in the argument list of ni_card.NICard::get_gated_counts(self, samples=None, timeout=None, read_available_samples=False)
+/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:1975: warning: The following parameters of ni_card.NICard.get_gated_counts(self, samples=None, timeout=None, read_available_samples=False) are not documented:
   parameter 'samples'
   parameter 'timeout'
   parameter 'read_available_samples'
-/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:164: warning: argument 'object' of command @param is not found in the argument list of ni_card.NICard::on_activate(self, e=None)
-/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:164: warning: The following parameters of ni_card.NICard.on_activate(self, e=None) are not documented:
+/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:166: warning: argument 'object' of command @param is not found in the argument list of ni_card.NICard::on_activate(self, e=None)
+/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:166: warning: The following parameters of ni_card.NICard.on_activate(self, e=None) are not documented:
   parameter 'e'
-/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:368: warning: argument 'object' of command @param is not found in the argument list of ni_card.NICard::on_deactivate(self, e=None)
-/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:368: warning: The following parameters of ni_card.NICard.on_deactivate(self, e=None) are not documented:
+/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:449: warning: argument 'object' of command @param is not found in the argument list of ni_card.NICard::on_deactivate(self, e=None)
+/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:449: warning: The following parameters of ni_card.NICard.on_deactivate(self, e=None) are not documented:
   parameter 'e'
-/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:1426: warning: argument 'float' of command @param is not found in the argument list of ni_card.NICard::scan_line(self, line_path=None)
-/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:1426: warning: argument '4' of command @param is not found in the argument list of ni_card.NICard::scan_line(self, line_path=None)
-/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:1426: warning: The following parameters of ni_card.NICard.scan_line(self, line_path=None) are not documented:
+/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:1432: warning: argument 'float' of command @param is not found in the argument list of ni_card.NICard::scan_line(self, line_path=None)
+/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:1432: warning: argument 'n' of command @param is not found in the argument list of ni_card.NICard::scan_line(self, line_path=None)
+/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:1432: warning: The following parameters of ni_card.NICard.scan_line(self, line_path=None) are not documented:
   parameter 'line_path'
-/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:1196: warning: explicit link request to 'FIXME' could not be resolved
-/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:1196: warning: argument 'float' of command @param is not found in the argument list of ni_card.NICard::scanner_set_position(self, x=None, y=None, z=None, a=None)
-/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:1196: warning: argument 'float' of command @param is not found in the argument list of ni_card.NICard::scanner_set_position(self, x=None, y=None, z=None, a=None)
-/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:1196: warning: argument 'float' of command @param is not found in the argument list of ni_card.NICard::scanner_set_position(self, x=None, y=None, z=None, a=None)
-/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:1196: warning: argument 'float' of command @param is not found in the argument list of ni_card.NICard::scanner_set_position(self, x=None, y=None, z=None, a=None)
-/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:1196: warning: The following parameters of ni_card.NICard.scanner_set_position(self, x=None, y=None, z=None, a=None) are not documented:
+/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:1207: warning: explicit link request to 'FIXME' could not be resolved
+/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:1207: warning: argument 'float' of command @param is not found in the argument list of ni_card.NICard::scanner_set_position(self, x=None, y=None, z=None, a=None)
+/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:1207: warning: argument 'float' of command @param is not found in the argument list of ni_card.NICard::scanner_set_position(self, x=None, y=None, z=None, a=None)
+/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:1207: warning: argument 'float' of command @param is not found in the argument list of ni_card.NICard::scanner_set_position(self, x=None, y=None, z=None, a=None)
+/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:1207: warning: argument 'float' of command @param is not found in the argument list of ni_card.NICard::scanner_set_position(self, x=None, y=None, z=None, a=None)
+/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:1207: warning: The following parameters of ni_card.NICard.scanner_set_position(self, x=None, y=None, z=None, a=None) are not documented:
   parameter 'x'
   parameter 'y'
   parameter 'z'
   parameter 'a'
-/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:1647: warning: argument 'int' of command @param is not found in the argument list of ni_card.NICard::set_odmr_length(self, length=100)
-/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:1647: warning: The following parameters of ni_card.NICard.set_odmr_length(self, length=100) are not documented:
+/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:1669: warning: argument 'int' of command @param is not found in the argument list of ni_card.NICard::set_odmr_length(self, length=100)
+/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:1669: warning: The following parameters of ni_card.NICard.set_odmr_length(self, length=100) are not documented:
   parameter 'length'
-/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:941: warning: argument 'float' of command @param is not found in the argument list of ni_card.NICard::set_position_range(self, myrange=None)
-/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:941: warning: The following parameters of ni_card.NICard.set_position_range(self, myrange=None) are not documented:
+/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:937: warning: argument 'float' of command @param is not found in the argument list of ni_card.NICard::set_position_range(self, myrange=None)
+/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:937: warning: The following parameters of ni_card.NICard.set_position_range(self, myrange=None) are not documented:
   parameter 'myrange'
-/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:389: warning: argument 'float' of command @param is not found in the argument list of ni_card.NICard::set_up_clock(self, clock_frequency=None, clock_channel=None, scanner=False, idle=False)
-/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:389: warning: argument 'string' of command @param is not found in the argument list of ni_card.NICard::set_up_clock(self, clock_frequency=None, clock_channel=None, scanner=False, idle=False)
-/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:389: warning: argument 'bool' of command @param is not found in the argument list of ni_card.NICard::set_up_clock(self, clock_frequency=None, clock_channel=None, scanner=False, idle=False)
-/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:389: warning: argument 'bool' of command @param is not found in the argument list of ni_card.NICard::set_up_clock(self, clock_frequency=None, clock_channel=None, scanner=False, idle=False)
-/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:389: warning: The following parameters of ni_card.NICard.set_up_clock(self, clock_frequency=None, clock_channel=None, scanner=False, idle=False) are not documented:
+/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:484: warning: argument 'float' of command @param is not found in the argument list of ni_card.NICard::set_up_clock(self, clock_frequency=None, clock_channel=None, scanner=False, idle=False)
+/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:484: warning: argument 'string' of command @param is not found in the argument list of ni_card.NICard::set_up_clock(self, clock_frequency=None, clock_channel=None, scanner=False, idle=False)
+/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:484: warning: argument 'bool' of command @param is not found in the argument list of ni_card.NICard::set_up_clock(self, clock_frequency=None, clock_channel=None, scanner=False, idle=False)
+/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:484: warning: argument 'bool' of command @param is not found in the argument list of ni_card.NICard::set_up_clock(self, clock_frequency=None, clock_channel=None, scanner=False, idle=False)
+/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:484: warning: The following parameters of ni_card.NICard.set_up_clock(self, clock_frequency=None, clock_channel=None, scanner=False, idle=False) are not documented:
   parameter 'clock_frequency'
   parameter 'clock_channel'
   parameter 'scanner'
   parameter 'idle'
-/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:505: warning: argument 'str' of command @param is not found in the argument list of ni_card.NICard::set_up_counter(self, counter_channel=None, photon_source=None, counter_channel2=None, photon_source2=None, clock_channel=None, counter_buffer=None)
-/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:505: warning: argument 'str' of command @param is not found in the argument list of ni_card.NICard::set_up_counter(self, counter_channel=None, photon_source=None, counter_channel2=None, photon_source2=None, clock_channel=None, counter_buffer=None)
-/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:505: warning: argument 'str' of command @param is not found in the argument list of ni_card.NICard::set_up_counter(self, counter_channel=None, photon_source=None, counter_channel2=None, photon_source2=None, clock_channel=None, counter_buffer=None)
-/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:505: warning: argument 'str' of command @param is not found in the argument list of ni_card.NICard::set_up_counter(self, counter_channel=None, photon_source=None, counter_channel2=None, photon_source2=None, clock_channel=None, counter_buffer=None)
-/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:505: warning: argument 'str' of command @param is not found in the argument list of ni_card.NICard::set_up_counter(self, counter_channel=None, photon_source=None, counter_channel2=None, photon_source2=None, clock_channel=None, counter_buffer=None)
-/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:505: warning: argument 'int' of command @param is not found in the argument list of ni_card.NICard::set_up_counter(self, counter_channel=None, photon_source=None, counter_channel2=None, photon_source2=None, clock_channel=None, counter_buffer=None)
-/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:505: warning: The following parameters of ni_card.NICard.set_up_counter(self, counter_channel=None, photon_source=None, counter_channel2=None, photon_source2=None, clock_channel=None, counter_buffer=None) are not documented:
-  parameter 'counter_channel'
-  parameter 'photon_source'
-  parameter 'counter_channel2'
-  parameter 'photon_source2'
+/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:598: warning: argument 'list' of command @param is not found in the argument list of ni_card.NICard::set_up_counter(self, counter_channels=None, sources=None, clock_channel=None, counter_buffer=None)
+/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:598: warning: argument 'str' of command @param is not found in the argument list of ni_card.NICard::set_up_counter(self, counter_channels=None, sources=None, clock_channel=None, counter_buffer=None)
+/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:598: warning: argument 'list' of command @param is not found in the argument list of ni_card.NICard::set_up_counter(self, counter_channels=None, sources=None, clock_channel=None, counter_buffer=None)
+/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:598: warning: argument 'str' of command @param is not found in the argument list of ni_card.NICard::set_up_counter(self, counter_channels=None, sources=None, clock_channel=None, counter_buffer=None)
+/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:598: warning: argument 'str' of command @param is not found in the argument list of ni_card.NICard::set_up_counter(self, counter_channels=None, sources=None, clock_channel=None, counter_buffer=None)
+/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:598: warning: argument 'int' of command @param is not found in the argument list of ni_card.NICard::set_up_counter(self, counter_channels=None, sources=None, clock_channel=None, counter_buffer=None)
+/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:598: warning: The following parameters of ni_card.NICard.set_up_counter(self, counter_channels=None, sources=None, clock_channel=None, counter_buffer=None) are not documented:
+  parameter 'counter_channels'
+  parameter 'sources'
   parameter 'clock_channel'
   parameter 'counter_buffer'
-/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:1843: warning: argument 'int' of command @param is not found in the argument list of ni_card.NICard::set_up_gated_counter(self, buffer_length, read_available_samples=False)
-/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:1843: warning: argument 'bool' of command @param is not found in the argument list of ni_card.NICard::set_up_gated_counter(self, buffer_length, read_available_samples=False)
-/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:1843: warning: The following parameters of ni_card.NICard.set_up_gated_counter(self, buffer_length, read_available_samples=False) are not documented:
+/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:1867: warning: argument 'int' of command @param is not found in the argument list of ni_card.NICard::set_up_gated_counter(self, buffer_length, read_available_samples=False)
+/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:1867: warning: argument 'bool' of command @param is not found in the argument list of ni_card.NICard::set_up_gated_counter(self, buffer_length, read_available_samples=False)
+/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:1867: warning: The following parameters of ni_card.NICard.set_up_gated_counter(self, buffer_length, read_available_samples=False) are not documented:
   parameter 'buffer_length'
   parameter 'read_available_samples'
-/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:1335: warning: argument 'int' of command @param is not found in the argument list of ni_card.NICard::set_up_line(self, length=100)
-/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:1335: warning: The following parameters of ni_card.NICard.set_up_line(self, length=100) are not documented:
+/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:1338: warning: argument 'int' of command @param is not found in the argument list of ni_card.NICard::set_up_line(self, length=100)
+/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:1338: warning: The following parameters of ni_card.NICard.set_up_line(self, length=100) are not documented:
   parameter 'length'
-/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:1567: warning: argument 'string' of command @param is not found in the argument list of ni_card.NICard::set_up_odmr(self, counter_channel=None, photon_source=None, clock_channel=None, odmr_trigger_channel=None)
-/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:1567: warning: argument 'string' of command @param is not found in the argument list of ni_card.NICard::set_up_odmr(self, counter_channel=None, photon_source=None, clock_channel=None, odmr_trigger_channel=None)
-/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:1567: warning: argument 'string' of command @param is not found in the argument list of ni_card.NICard::set_up_odmr(self, counter_channel=None, photon_source=None, clock_channel=None, odmr_trigger_channel=None)
-/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:1567: warning: argument 'string' of command @param is not found in the argument list of ni_card.NICard::set_up_odmr(self, counter_channel=None, photon_source=None, clock_channel=None, odmr_trigger_channel=None)
-/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:1567: warning: The following parameters of ni_card.NICard.set_up_odmr(self, counter_channel=None, photon_source=None, clock_channel=None, odmr_trigger_channel=None) are not documented:
+/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:1583: warning: argument 'string' of command @param is not found in the argument list of ni_card.NICard::set_up_odmr(self, counter_channel=None, photon_source=None, clock_channel=None, odmr_trigger_channel=None)
+/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:1583: warning: argument 'string' of command @param is not found in the argument list of ni_card.NICard::set_up_odmr(self, counter_channel=None, photon_source=None, clock_channel=None, odmr_trigger_channel=None)
+/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:1583: warning: argument 'string' of command @param is not found in the argument list of ni_card.NICard::set_up_odmr(self, counter_channel=None, photon_source=None, clock_channel=None, odmr_trigger_channel=None)
+/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:1583: warning: argument 'string' of command @param is not found in the argument list of ni_card.NICard::set_up_odmr(self, counter_channel=None, photon_source=None, clock_channel=None, odmr_trigger_channel=None)
+/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:1583: warning: The following parameters of ni_card.NICard.set_up_odmr(self, counter_channel=None, photon_source=None, clock_channel=None, odmr_trigger_channel=None) are not documented:
   parameter 'counter_channel'
   parameter 'photon_source'
   parameter 'clock_channel'
   parameter 'odmr_trigger_channel'
-/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:1547: warning: argument 'float' of command @param is not found in the argument list of ni_card.NICard::set_up_odmr_clock(self, clock_frequency=None, clock_channel=None)
-/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:1547: warning: argument 'string' of command @param is not found in the argument list of ni_card.NICard::set_up_odmr_clock(self, clock_frequency=None, clock_channel=None)
-/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:1547: warning: The following parameters of ni_card.NICard.set_up_odmr_clock(self, clock_frequency=None, clock_channel=None) are not documented:
+/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:1563: warning: argument 'float' of command @param is not found in the argument list of ni_card.NICard::set_up_odmr_clock(self, clock_frequency=None, clock_channel=None)
+/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:1563: warning: argument 'string' of command @param is not found in the argument list of ni_card.NICard::set_up_odmr_clock(self, clock_frequency=None, clock_channel=None)
+/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:1563: warning: The following parameters of ni_card.NICard.set_up_odmr_clock(self, clock_frequency=None, clock_channel=None) are not documented:
   parameter 'clock_frequency'
   parameter 'clock_channel'
-/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:1102: warning: argument 'string' of command @param is not found in the argument list of ni_card.NICard::set_up_scanner(self, counter_channel=None, photon_source=None, clock_channel=None, scanner_ao_channels=None)
-/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:1102: warning: argument 'string' of command @param is not found in the argument list of ni_card.NICard::set_up_scanner(self, counter_channel=None, photon_source=None, clock_channel=None, scanner_ao_channels=None)
-/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:1102: warning: argument 'string' of command @param is not found in the argument list of ni_card.NICard::set_up_scanner(self, counter_channel=None, photon_source=None, clock_channel=None, scanner_ao_channels=None)
-/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:1102: warning: argument 'string' of command @param is not found in the argument list of ni_card.NICard::set_up_scanner(self, counter_channel=None, photon_source=None, clock_channel=None, scanner_ao_channels=None)
-/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:1102: warning: The following parameters of ni_card.NICard.set_up_scanner(self, counter_channel=None, photon_source=None, clock_channel=None, scanner_ao_channels=None) are not documented:
-  parameter 'counter_channel'
-  parameter 'photon_source'
+/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:1097: warning: argument 'list' of command @param is not found in the argument list of ni_card.NICard::set_up_scanner(self, counter_channels=None, sources=None, clock_channel=None, scanner_ao_channels=None)
+/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:1097: warning: argument 'str' of command @param is not found in the argument list of ni_card.NICard::set_up_scanner(self, counter_channels=None, sources=None, clock_channel=None, scanner_ao_channels=None)
+/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:1097: warning: argument 'list' of command @param is not found in the argument list of ni_card.NICard::set_up_scanner(self, counter_channels=None, sources=None, clock_channel=None, scanner_ao_channels=None)
+/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:1097: warning: argument 'str' of command @param is not found in the argument list of ni_card.NICard::set_up_scanner(self, counter_channels=None, sources=None, clock_channel=None, scanner_ao_channels=None)
+/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:1097: warning: argument 'string' of command @param is not found in the argument list of ni_card.NICard::set_up_scanner(self, counter_channels=None, sources=None, clock_channel=None, scanner_ao_channels=None)
+/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:1097: warning: argument 'list' of command @param is not found in the argument list of ni_card.NICard::set_up_scanner(self, counter_channels=None, sources=None, clock_channel=None, scanner_ao_channels=None)
+/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:1097: warning: argument 'str' of command @param is not found in the argument list of ni_card.NICard::set_up_scanner(self, counter_channels=None, sources=None, clock_channel=None, scanner_ao_channels=None)
+/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:1097: warning: The following parameters of ni_card.NICard.set_up_scanner(self, counter_channels=None, sources=None, clock_channel=None, scanner_ao_channels=None) are not documented:
+  parameter 'counter_channels'
+  parameter 'sources'
   parameter 'clock_channel'
   parameter 'scanner_ao_channels'
-/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:1076: warning: argument 'float' of command @param is not found in the argument list of ni_card.NICard::set_up_scanner_clock(self, clock_frequency=None, clock_channel=None)
-/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:1076: warning: argument 'string' of command @param is not found in the argument list of ni_card.NICard::set_up_scanner_clock(self, clock_frequency=None, clock_channel=None)
-/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:1076: warning: The following parameters of ni_card.NICard.set_up_scanner_clock(self, clock_frequency=None, clock_channel=None) are not documented:
+/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:1074: warning: argument 'float' of command @param is not found in the argument list of ni_card.NICard::set_up_scanner_clock(self, clock_frequency=None, clock_channel=None)
+/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:1074: warning: argument 'string' of command @param is not found in the argument list of ni_card.NICard::set_up_scanner_clock(self, clock_frequency=None, clock_channel=None)
+/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:1074: warning: The following parameters of ni_card.NICard.set_up_scanner_clock(self, clock_frequency=None, clock_channel=None) are not documented:
   parameter 'clock_frequency'
   parameter 'clock_channel'
-/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:975: warning: argument 'float' of command @param is not found in the argument list of ni_card.NICard::set_voltage_range(self, myrange=None)
-/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:975: warning: The following parameters of ni_card.NICard.set_voltage_range(self, myrange=None) are not documented:
+/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:971: warning: argument 'float' of command @param is not found in the argument list of ni_card.NICard::set_voltage_range(self, myrange=None)
+/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:971: warning: The following parameters of ni_card.NICard.set_voltage_range(self, myrange=None) are not documented:
   parameter 'myrange'
 /home/travis/build/Ulm-IQO/qudi/core/FysomAdapter.py:31: warning: Member __getattr__(self, name) (function) of class core::FysomAdapter::Fysom is not documented.
 /home/travis/build/Ulm-IQO/qudi/core/base.py:126: warning: Member connector (variable) of class core::base::Base is not documented.
 /home/travis/build/Ulm-IQO/qudi/core/base.py:49: warning: Member sigStateChanged (variable) of class core::base::Base is not documented.
 /home/travis/build/Ulm-IQO/qudi/core/base.py:168: warning: Member result (variable) of class core::base::Base is not documented.
-/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:2175: warning: argument 'int' of command @param is not found in the argument list of ni_card.SlowGatedNICard::get_counter(self, samples=None)
-/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:2175: warning: The following parameters of ni_card.SlowGatedNICard.get_counter(self, samples=None) are not documented:
+/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:2197: warning: argument 'int' of command @param is not found in the argument list of ni_card.SlowGatedNICard::get_counter(self, samples=None)
+/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:2197: warning: The following parameters of ni_card.SlowGatedNICard.get_counter(self, samples=None) are not documented:
   parameter 'samples'
-/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:2072: warning: argument 'object' of command @param is not found in the argument list of ni_card.SlowGatedNICard::on_activate(self, e=None)
-/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:2072: warning: The following parameters of ni_card.SlowGatedNICard.on_activate(self, e=None) are not documented:
+/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:2096: warning: argument 'object' of command @param is not found in the argument list of ni_card.SlowGatedNICard::on_activate(self, e=None)
+/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:2096: warning: The following parameters of ni_card.SlowGatedNICard.on_activate(self, e=None) are not documented:
   parameter 'e'
-/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:2137: warning: argument 'float' of command @param is not found in the argument list of ni_card.SlowGatedNICard::set_up_clock(self, clock_frequency=None, clock_channel=None)
-/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:2137: warning: argument 'string' of command @param is not found in the argument list of ni_card.SlowGatedNICard::set_up_clock(self, clock_frequency=None, clock_channel=None)
-/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:2137: warning: The following parameters of ni_card.SlowGatedNICard.set_up_clock(self, clock_frequency=None, clock_channel=None) are not documented:
+/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:2159: warning: argument 'float' of command @param is not found in the argument list of ni_card.SlowGatedNICard::set_up_clock(self, clock_frequency=None, clock_channel=None)
+/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:2159: warning: argument 'string' of command @param is not found in the argument list of ni_card.SlowGatedNICard::set_up_clock(self, clock_frequency=None, clock_channel=None)
+/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:2159: warning: The following parameters of ni_card.SlowGatedNICard.set_up_clock(self, clock_frequency=None, clock_channel=None) are not documented:
   parameter 'clock_frequency'
   parameter 'clock_channel'
-/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:2158: warning: argument 'str' of command @param is not found in the argument list of ni_card.SlowGatedNICard::set_up_counter(self, counter_channel=None, photon_source=None, counter_channel2=None, photon_source2=None, clock_channel=None, counter_buffer=None)
-/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:2158: warning: argument 'str' of command @param is not found in the argument list of ni_card.SlowGatedNICard::set_up_counter(self, counter_channel=None, photon_source=None, counter_channel2=None, photon_source2=None, clock_channel=None, counter_buffer=None)
-/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:2158: warning: argument 'str' of command @param is not found in the argument list of ni_card.SlowGatedNICard::set_up_counter(self, counter_channel=None, photon_source=None, counter_channel2=None, photon_source2=None, clock_channel=None, counter_buffer=None)
-/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:2158: warning: argument 'str' of command @param is not found in the argument list of ni_card.SlowGatedNICard::set_up_counter(self, counter_channel=None, photon_source=None, counter_channel2=None, photon_source2=None, clock_channel=None, counter_buffer=None)
-/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:2158: warning: argument 'str' of command @param is not found in the argument list of ni_card.SlowGatedNICard::set_up_counter(self, counter_channel=None, photon_source=None, counter_channel2=None, photon_source2=None, clock_channel=None, counter_buffer=None)
-/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:2158: warning: argument 'int' of command @param is not found in the argument list of ni_card.SlowGatedNICard::set_up_counter(self, counter_channel=None, photon_source=None, counter_channel2=None, photon_source2=None, clock_channel=None, counter_buffer=None)
-/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:2158: warning: The following parameters of ni_card.SlowGatedNICard.set_up_counter(self, counter_channel=None, photon_source=None, counter_channel2=None, photon_source2=None, clock_channel=None, counter_buffer=None) are not documented:
+/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:2180: warning: argument 'str' of command @param is not found in the argument list of ni_card.SlowGatedNICard::set_up_counter(self, counter_channel=None, photon_source=None, counter_channel2=None, photon_source2=None, clock_channel=None, counter_buffer=None)
+/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:2180: warning: argument 'str' of command @param is not found in the argument list of ni_card.SlowGatedNICard::set_up_counter(self, counter_channel=None, photon_source=None, counter_channel2=None, photon_source2=None, clock_channel=None, counter_buffer=None)
+/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:2180: warning: argument 'str' of command @param is not found in the argument list of ni_card.SlowGatedNICard::set_up_counter(self, counter_channel=None, photon_source=None, counter_channel2=None, photon_source2=None, clock_channel=None, counter_buffer=None)
+/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:2180: warning: argument 'str' of command @param is not found in the argument list of ni_card.SlowGatedNICard::set_up_counter(self, counter_channel=None, photon_source=None, counter_channel2=None, photon_source2=None, clock_channel=None, counter_buffer=None)
+/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:2180: warning: argument 'str' of command @param is not found in the argument list of ni_card.SlowGatedNICard::set_up_counter(self, counter_channel=None, photon_source=None, counter_channel2=None, photon_source2=None, clock_channel=None, counter_buffer=None)
+/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:2180: warning: argument 'int' of command @param is not found in the argument list of ni_card.SlowGatedNICard::set_up_counter(self, counter_channel=None, photon_source=None, counter_channel2=None, photon_source2=None, clock_channel=None, counter_buffer=None)
+/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:2180: warning: The following parameters of ni_card.SlowGatedNICard.set_up_counter(self, counter_channel=None, photon_source=None, counter_channel2=None, photon_source2=None, clock_channel=None, counter_buffer=None) are not documented:
   parameter 'counter_channel'
   parameter 'photon_source'
   parameter 'counter_channel2'
@@ -4042,10 +4044,9 @@ IndexError: list index out of range
 /home/travis/build/Ulm-IQO/qudi/hardware/switches/ok_fpga/ok_s6_switch.py:104: warning: The following parameters of ok_s6_switch.HardwareSwitchFpga.on_deactivate(self, e) are not documented:
   parameter 'e'
 /home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:87: warning: Member __init__(self, config, kwargs) (function) of class optimizer_logic::OptimizerLogic is not documented.
-/home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:208: warning: Member testing(self) (function) of class optimizer_logic::OptimizerLogic is not documented.
-/home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:237: warning: Member set_refocus_XY_size(self, size) (function) of class optimizer_logic::OptimizerLogic is not documented.
-/home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:241: warning: Member set_refocus_Z_size(self, size) (function) of class optimizer_logic::OptimizerLogic is not documented.
-/home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:655: warning: Member set_position(self, tag, x=None, y=None, z=None, a=None) (function) of class optimizer_logic::OptimizerLogic is not documented.
+/home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:234: warning: Member set_refocus_XY_size(self, size) (function) of class optimizer_logic::OptimizerLogic is not documented.
+/home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:238: warning: Member set_refocus_Z_size(self, size) (function) of class optimizer_logic::OptimizerLogic is not documented.
+/home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:674: warning: Member set_position(self, tag, x=None, y=None, z=None, a=None) (function) of class optimizer_logic::OptimizerLogic is not documented.
 /home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:97: warning: Member refocus_XY_size (variable) of class optimizer_logic::OptimizerLogic is not documented.
 /home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:98: warning: Member optimizer_XY_res (variable) of class optimizer_logic::OptimizerLogic is not documented.
 /home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:99: warning: Member refocus_Z_size (variable) of class optimizer_logic::OptimizerLogic is not documented.
@@ -4073,9 +4074,9 @@ IndexError: list index out of range
 /home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:170: warning: Member point2 (variable) of class optimizer_logic::OptimizerLogic is not documented.
 /home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:171: warning: Member point3 (variable) of class optimizer_logic::OptimizerLogic is not documented.
 /home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:177: warning: Member use_custom_params (variable) of class optimizer_logic::OptimizerLogic is not documented.
-/home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:312: warning: Member xy_refocus_image (variable) of class optimizer_logic::OptimizerLogic is not documented.
-/home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:334: warning: Member z_refocus_line (variable) of class optimizer_logic::OptimizerLogic is not documented.
-/home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:335: warning: Member z_fit_data (variable) of class optimizer_logic::OptimizerLogic is not documented.
+/home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:309: warning: Member xy_refocus_image (variable) of class optimizer_logic::OptimizerLogic is not documented.
+/home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:331: warning: Member z_refocus_line (variable) of class optimizer_logic::OptimizerLogic is not documented.
+/home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:332: warning: Member z_fit_data (variable) of class optimizer_logic::OptimizerLogic is not documented.
 /home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:79: warning: Member sigImageUpdated (variable) of class optimizer_logic::OptimizerLogic is not documented.
 /home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:80: warning: Member sigRefocusStarted (variable) of class optimizer_logic::OptimizerLogic is not documented.
 /home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:81: warning: Member sigRefocusXySizeChanged (variable) of class optimizer_logic::OptimizerLogic is not documented.
@@ -4083,10 +4084,10 @@ IndexError: list index out of range
 /home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:83: warning: Member sigRefocusFinished (variable) of class optimizer_logic::OptimizerLogic is not documented.
 /home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:84: warning: Member sigClockFrequencyChanged (variable) of class optimizer_logic::OptimizerLogic is not documented.
 /home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:85: warning: Member sigPositionChanged (variable) of class optimizer_logic::OptimizerLogic is not documented.
-/home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:226: warning: argument 'int' of command @param is not found in the argument list of optimizer_logic.OptimizerLogic::set_clock_frequency(self, clock_frequency)
-/home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:228: warning: The following parameters of optimizer_logic.OptimizerLogic.set_clock_frequency(self, clock_frequency) are not documented:
+/home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:223: warning: argument 'int' of command @param is not found in the argument list of optimizer_logic.OptimizerLogic::set_clock_frequency(self, clock_frequency)
+/home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:225: warning: The following parameters of optimizer_logic.OptimizerLogic.set_clock_frequency(self, clock_frequency) are not documented:
   parameter 'clock_frequency'
-/home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:249: warning: The following parameters of optimizer_logic.OptimizerLogic.start_refocus(self, initial_pos=None, caller_tag='unknown') are not documented:
+/home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:246: warning: The following parameters of optimizer_logic.OptimizerLogic.start_refocus(self, initial_pos=None, caller_tag='unknown') are not documented:
   parameter 'caller_tag'
 /home/travis/build/Ulm-IQO/qudi/tools/parentpoller.py:29: warning: Member __init__(self) (function) of class parentpoller::ParentPollerUnix is not documented.
 /home/travis/build/Ulm-IQO/qudi/tools/parentpoller.py:33: warning: Member run(self) (function) of class parentpoller::ParentPollerUnix is not documented.
@@ -4321,12 +4322,12 @@ IndexError: list index out of range
 /home/travis/build/Ulm-IQO/qudi/logic/polarisation_dep_logic.py:82: warning: The following parameters of polarisation_dep_logic.PolarisationDepLogic.on_deactivate(self, e) are not documented:
   parameter 'e'
 /home/travis/build/Ulm-IQO/qudi/logic/measurement_simulator/polarisation_dependence_sim.py:84: warning: Member on_deactivate(self, e) (function) of class polarisation_dependence_sim::PolarizationDependenceSim is not documented.
-/home/travis/build/Ulm-IQO/qudi/logic/measurement_simulator/polarisation_dependence_sim.py:198: warning: Member abort(self) (function) of class polarisation_dependence_sim::PolarizationDependenceSim is not documented.
-/home/travis/build/Ulm-IQO/qudi/logic/measurement_simulator/polarisation_dependence_sim.py:202: warning: Member get_pos(self, axis=None) (function) of class polarisation_dependence_sim::PolarizationDependenceSim is not documented.
-/home/travis/build/Ulm-IQO/qudi/logic/measurement_simulator/polarisation_dependence_sim.py:205: warning: Member get_status(self) (function) of class polarisation_dependence_sim::PolarizationDependenceSim is not documented.
-/home/travis/build/Ulm-IQO/qudi/logic/measurement_simulator/polarisation_dependence_sim.py:208: warning: Member calibrate(self, axis=None) (function) of class polarisation_dependence_sim::PolarizationDependenceSim is not documented.
-/home/travis/build/Ulm-IQO/qudi/logic/measurement_simulator/polarisation_dependence_sim.py:212: warning: Member get_velocity(self, axis=None) (function) of class polarisation_dependence_sim::PolarizationDependenceSim is not documented.
-/home/travis/build/Ulm-IQO/qudi/logic/measurement_simulator/polarisation_dependence_sim.py:215: warning: Member set_velocity(self, axis=None, velocity=None) (function) of class polarisation_dependence_sim::PolarizationDependenceSim is not documented.
+/home/travis/build/Ulm-IQO/qudi/logic/measurement_simulator/polarisation_dependence_sim.py:202: warning: Member abort(self) (function) of class polarisation_dependence_sim::PolarizationDependenceSim is not documented.
+/home/travis/build/Ulm-IQO/qudi/logic/measurement_simulator/polarisation_dependence_sim.py:206: warning: Member get_pos(self, axis=None) (function) of class polarisation_dependence_sim::PolarizationDependenceSim is not documented.
+/home/travis/build/Ulm-IQO/qudi/logic/measurement_simulator/polarisation_dependence_sim.py:209: warning: Member get_status(self) (function) of class polarisation_dependence_sim::PolarizationDependenceSim is not documented.
+/home/travis/build/Ulm-IQO/qudi/logic/measurement_simulator/polarisation_dependence_sim.py:212: warning: Member calibrate(self, axis=None) (function) of class polarisation_dependence_sim::PolarizationDependenceSim is not documented.
+/home/travis/build/Ulm-IQO/qudi/logic/measurement_simulator/polarisation_dependence_sim.py:216: warning: Member get_velocity(self, axis=None) (function) of class polarisation_dependence_sim::PolarizationDependenceSim is not documented.
+/home/travis/build/Ulm-IQO/qudi/logic/measurement_simulator/polarisation_dependence_sim.py:219: warning: Member set_velocity(self, axis=None, velocity=None) (function) of class polarisation_dependence_sim::PolarizationDependenceSim is not documented.
 /home/travis/build/Ulm-IQO/qudi/core/FysomAdapter.py:31: warning: Member __getattr__(self, name) (function) of class core::FysomAdapter::Fysom is not documented.
 /home/travis/build/Ulm-IQO/qudi/logic/measurement_simulator/polarisation_dependence_sim.py:72: warning: Member hwp_angle (variable) of class polarisation_dependence_sim::PolarizationDependenceSim is not documented.
 /home/travis/build/Ulm-IQO/qudi/logic/measurement_simulator/polarisation_dependence_sim.py:74: warning: Member dipole_angle (variable) of class polarisation_dependence_sim::PolarizationDependenceSim is not documented.
@@ -4334,7 +4335,7 @@ IndexError: list index out of range
 /home/travis/build/Ulm-IQO/qudi/logic/measurement_simulator/polarisation_dependence_sim.py:77: warning: Member clock_frequency (variable) of class polarisation_dependence_sim::PolarizationDependenceSim is not documented.
 /home/travis/build/Ulm-IQO/qudi/logic/measurement_simulator/polarisation_dependence_sim.py:78: warning: Member forwards_motion (variable) of class polarisation_dependence_sim::PolarizationDependenceSim is not documented.
 /home/travis/build/Ulm-IQO/qudi/logic/measurement_simulator/polarisation_dependence_sim.py:79: warning: Member moving (variable) of class polarisation_dependence_sim::PolarizationDependenceSim is not documented.
-/home/travis/build/Ulm-IQO/qudi/logic/measurement_simulator/polarisation_dependence_sim.py:138: warning: Member destination (variable) of class polarisation_dependence_sim::PolarizationDependenceSim is not documented.
+/home/travis/build/Ulm-IQO/qudi/logic/measurement_simulator/polarisation_dependence_sim.py:142: warning: Member destination (variable) of class polarisation_dependence_sim::PolarizationDependenceSim is not documented.
 /home/travis/build/Ulm-IQO/qudi/core/base.py:126: warning: Member connector (variable) of class core::base::Base is not documented.
 /home/travis/build/Ulm-IQO/qudi/core/base.py:49: warning: Member sigStateChanged (variable) of class core::base::Base is not documented.
 /home/travis/build/Ulm-IQO/qudi/core/base.py:168: warning: Member result (variable) of class core::base::Base is not documented.
@@ -5313,15 +5314,15 @@ IndexError: list index out of range
 /home/travis/build/Ulm-IQO/qudi/logic/interfuse/scanner_tilt_interfuse.py:74: warning: argument 'object' of command @param is not found in the argument list of scanner_tilt_interfuse.ScannerTiltInterfuse::on_deactivate(self, e)
 /home/travis/build/Ulm-IQO/qudi/logic/interfuse/scanner_tilt_interfuse.py:74: warning: The following parameters of scanner_tilt_interfuse.ScannerTiltInterfuse.on_deactivate(self, e) are not documented:
   parameter 'e'
-/home/travis/build/Ulm-IQO/qudi/logic/interfuse/scanner_tilt_interfuse.py:201: warning: argument 'float' of command @param is not found in the argument list of scanner_tilt_interfuse.ScannerTiltInterfuse::scan_line(self, line_path=None)
-/home/travis/build/Ulm-IQO/qudi/logic/interfuse/scanner_tilt_interfuse.py:201: warning: argument '4' of command @param is not found in the argument list of scanner_tilt_interfuse.ScannerTiltInterfuse::scan_line(self, line_path=None)
-/home/travis/build/Ulm-IQO/qudi/logic/interfuse/scanner_tilt_interfuse.py:201: warning: The following parameters of scanner_tilt_interfuse.ScannerTiltInterfuse.scan_line(self, line_path=None) are not documented:
+/home/travis/build/Ulm-IQO/qudi/logic/interfuse/scanner_tilt_interfuse.py:208: warning: argument 'float' of command @param is not found in the argument list of scanner_tilt_interfuse.ScannerTiltInterfuse::scan_line(self, line_path=None)
+/home/travis/build/Ulm-IQO/qudi/logic/interfuse/scanner_tilt_interfuse.py:208: warning: argument '4' of command @param is not found in the argument list of scanner_tilt_interfuse.ScannerTiltInterfuse::scan_line(self, line_path=None)
+/home/travis/build/Ulm-IQO/qudi/logic/interfuse/scanner_tilt_interfuse.py:208: warning: The following parameters of scanner_tilt_interfuse.ScannerTiltInterfuse.scan_line(self, line_path=None) are not documented:
   parameter 'line_path'
-/home/travis/build/Ulm-IQO/qudi/logic/interfuse/scanner_tilt_interfuse.py:159: warning: argument 'float' of command @param is not found in the argument list of scanner_tilt_interfuse.ScannerTiltInterfuse::scanner_set_position(self, x=None, y=None, z=None, a=None)
-/home/travis/build/Ulm-IQO/qudi/logic/interfuse/scanner_tilt_interfuse.py:159: warning: argument 'float' of command @param is not found in the argument list of scanner_tilt_interfuse.ScannerTiltInterfuse::scanner_set_position(self, x=None, y=None, z=None, a=None)
-/home/travis/build/Ulm-IQO/qudi/logic/interfuse/scanner_tilt_interfuse.py:159: warning: argument 'float' of command @param is not found in the argument list of scanner_tilt_interfuse.ScannerTiltInterfuse::scanner_set_position(self, x=None, y=None, z=None, a=None)
-/home/travis/build/Ulm-IQO/qudi/logic/interfuse/scanner_tilt_interfuse.py:159: warning: argument 'float' of command @param is not found in the argument list of scanner_tilt_interfuse.ScannerTiltInterfuse::scanner_set_position(self, x=None, y=None, z=None, a=None)
-/home/travis/build/Ulm-IQO/qudi/logic/interfuse/scanner_tilt_interfuse.py:159: warning: The following parameters of scanner_tilt_interfuse.ScannerTiltInterfuse.scanner_set_position(self, x=None, y=None, z=None, a=None) are not documented:
+/home/travis/build/Ulm-IQO/qudi/logic/interfuse/scanner_tilt_interfuse.py:166: warning: argument 'float' of command @param is not found in the argument list of scanner_tilt_interfuse.ScannerTiltInterfuse::scanner_set_position(self, x=None, y=None, z=None, a=None)
+/home/travis/build/Ulm-IQO/qudi/logic/interfuse/scanner_tilt_interfuse.py:166: warning: argument 'float' of command @param is not found in the argument list of scanner_tilt_interfuse.ScannerTiltInterfuse::scanner_set_position(self, x=None, y=None, z=None, a=None)
+/home/travis/build/Ulm-IQO/qudi/logic/interfuse/scanner_tilt_interfuse.py:166: warning: argument 'float' of command @param is not found in the argument list of scanner_tilt_interfuse.ScannerTiltInterfuse::scanner_set_position(self, x=None, y=None, z=None, a=None)
+/home/travis/build/Ulm-IQO/qudi/logic/interfuse/scanner_tilt_interfuse.py:166: warning: argument 'float' of command @param is not found in the argument list of scanner_tilt_interfuse.ScannerTiltInterfuse::scanner_set_position(self, x=None, y=None, z=None, a=None)
+/home/travis/build/Ulm-IQO/qudi/logic/interfuse/scanner_tilt_interfuse.py:166: warning: The following parameters of scanner_tilt_interfuse.ScannerTiltInterfuse.scanner_set_position(self, x=None, y=None, z=None, a=None) are not documented:
   parameter 'x'
   parameter 'y'
   parameter 'z'
@@ -5329,21 +5330,21 @@ IndexError: list index out of range
 /home/travis/build/Ulm-IQO/qudi/logic/interfuse/scanner_tilt_interfuse.py:100: warning: argument 'float' of command @param is not found in the argument list of scanner_tilt_interfuse.ScannerTiltInterfuse::set_position_range(self, myrange=None)
 /home/travis/build/Ulm-IQO/qudi/logic/interfuse/scanner_tilt_interfuse.py:100: warning: The following parameters of scanner_tilt_interfuse.ScannerTiltInterfuse.set_position_range(self, myrange=None) are not documented:
   parameter 'myrange'
-/home/travis/build/Ulm-IQO/qudi/logic/interfuse/scanner_tilt_interfuse.py:191: warning: argument 'int' of command @param is not found in the argument list of scanner_tilt_interfuse.ScannerTiltInterfuse::set_up_line(self, length=100)
-/home/travis/build/Ulm-IQO/qudi/logic/interfuse/scanner_tilt_interfuse.py:191: warning: The following parameters of scanner_tilt_interfuse.ScannerTiltInterfuse.set_up_line(self, length=100) are not documented:
+/home/travis/build/Ulm-IQO/qudi/logic/interfuse/scanner_tilt_interfuse.py:198: warning: argument 'int' of command @param is not found in the argument list of scanner_tilt_interfuse.ScannerTiltInterfuse::set_up_line(self, length=100)
+/home/travis/build/Ulm-IQO/qudi/logic/interfuse/scanner_tilt_interfuse.py:198: warning: The following parameters of scanner_tilt_interfuse.ScannerTiltInterfuse.set_up_line(self, length=100) are not documented:
   parameter 'length'
-/home/travis/build/Ulm-IQO/qudi/logic/interfuse/scanner_tilt_interfuse.py:141: warning: argument 'str' of command @param is not found in the argument list of scanner_tilt_interfuse.ScannerTiltInterfuse::set_up_scanner(self, counter_channel=None, photon_source=None, clock_channel=None, scanner_ao_channels=None)
-/home/travis/build/Ulm-IQO/qudi/logic/interfuse/scanner_tilt_interfuse.py:141: warning: argument 'str' of command @param is not found in the argument list of scanner_tilt_interfuse.ScannerTiltInterfuse::set_up_scanner(self, counter_channel=None, photon_source=None, clock_channel=None, scanner_ao_channels=None)
-/home/travis/build/Ulm-IQO/qudi/logic/interfuse/scanner_tilt_interfuse.py:141: warning: argument 'str' of command @param is not found in the argument list of scanner_tilt_interfuse.ScannerTiltInterfuse::set_up_scanner(self, counter_channel=None, photon_source=None, clock_channel=None, scanner_ao_channels=None)
-/home/travis/build/Ulm-IQO/qudi/logic/interfuse/scanner_tilt_interfuse.py:141: warning: argument 'str' of command @param is not found in the argument list of scanner_tilt_interfuse.ScannerTiltInterfuse::set_up_scanner(self, counter_channel=None, photon_source=None, clock_channel=None, scanner_ao_channels=None)
-/home/travis/build/Ulm-IQO/qudi/logic/interfuse/scanner_tilt_interfuse.py:141: warning: The following parameters of scanner_tilt_interfuse.ScannerTiltInterfuse.set_up_scanner(self, counter_channel=None, photon_source=None, clock_channel=None, scanner_ao_channels=None) are not documented:
+/home/travis/build/Ulm-IQO/qudi/logic/interfuse/scanner_tilt_interfuse.py:149: warning: argument 'str' of command @param is not found in the argument list of scanner_tilt_interfuse.ScannerTiltInterfuse::set_up_scanner(self, counter_channel=None, photon_source=None, clock_channel=None, scanner_ao_channels=None)
+/home/travis/build/Ulm-IQO/qudi/logic/interfuse/scanner_tilt_interfuse.py:149: warning: argument 'str' of command @param is not found in the argument list of scanner_tilt_interfuse.ScannerTiltInterfuse::set_up_scanner(self, counter_channel=None, photon_source=None, clock_channel=None, scanner_ao_channels=None)
+/home/travis/build/Ulm-IQO/qudi/logic/interfuse/scanner_tilt_interfuse.py:149: warning: argument 'str' of command @param is not found in the argument list of scanner_tilt_interfuse.ScannerTiltInterfuse::set_up_scanner(self, counter_channel=None, photon_source=None, clock_channel=None, scanner_ao_channels=None)
+/home/travis/build/Ulm-IQO/qudi/logic/interfuse/scanner_tilt_interfuse.py:149: warning: argument 'str' of command @param is not found in the argument list of scanner_tilt_interfuse.ScannerTiltInterfuse::set_up_scanner(self, counter_channel=None, photon_source=None, clock_channel=None, scanner_ao_channels=None)
+/home/travis/build/Ulm-IQO/qudi/logic/interfuse/scanner_tilt_interfuse.py:149: warning: The following parameters of scanner_tilt_interfuse.ScannerTiltInterfuse.set_up_scanner(self, counter_channel=None, photon_source=None, clock_channel=None, scanner_ao_channels=None) are not documented:
   parameter 'counter_channel'
   parameter 'photon_source'
   parameter 'clock_channel'
   parameter 'scanner_ao_channels'
-/home/travis/build/Ulm-IQO/qudi/logic/interfuse/scanner_tilt_interfuse.py:125: warning: argument 'float' of command @param is not found in the argument list of scanner_tilt_interfuse.ScannerTiltInterfuse::set_up_scanner_clock(self, clock_frequency=None, clock_channel=None)
-/home/travis/build/Ulm-IQO/qudi/logic/interfuse/scanner_tilt_interfuse.py:125: warning: argument 'str' of command @param is not found in the argument list of scanner_tilt_interfuse.ScannerTiltInterfuse::set_up_scanner_clock(self, clock_frequency=None, clock_channel=None)
-/home/travis/build/Ulm-IQO/qudi/logic/interfuse/scanner_tilt_interfuse.py:125: warning: The following parameters of scanner_tilt_interfuse.ScannerTiltInterfuse.set_up_scanner_clock(self, clock_frequency=None, clock_channel=None) are not documented:
+/home/travis/build/Ulm-IQO/qudi/logic/interfuse/scanner_tilt_interfuse.py:133: warning: argument 'float' of command @param is not found in the argument list of scanner_tilt_interfuse.ScannerTiltInterfuse::set_up_scanner_clock(self, clock_frequency=None, clock_channel=None)
+/home/travis/build/Ulm-IQO/qudi/logic/interfuse/scanner_tilt_interfuse.py:133: warning: argument 'str' of command @param is not found in the argument list of scanner_tilt_interfuse.ScannerTiltInterfuse::set_up_scanner_clock(self, clock_frequency=None, clock_channel=None)
+/home/travis/build/Ulm-IQO/qudi/logic/interfuse/scanner_tilt_interfuse.py:133: warning: The following parameters of scanner_tilt_interfuse.ScannerTiltInterfuse.set_up_scanner_clock(self, clock_frequency=None, clock_channel=None) are not documented:
   parameter 'clock_frequency'
   parameter 'clock_channel'
 /home/travis/build/Ulm-IQO/qudi/logic/interfuse/scanner_tilt_interfuse.py:111: warning: argument 'float' of command @param is not found in the argument list of scanner_tilt_interfuse.ScannerTiltInterfuse::set_voltage_range(self, myrange=None)
@@ -5501,64 +5502,69 @@ IndexError: list index out of range
 /home/travis/build/Ulm-IQO/qudi/gui/simpledatagui/simpledatagui.py:143: warning: The following parameters of simpledatagui.SimpleDataGui.on_deactivate(self, e) are not documented:
   parameter 'e'
 /home/travis/build/Ulm-IQO/qudi/gui/simpledatagui/simpledatagui.py:35: warning: Member __init__(self) (function) of class simpledatagui::SimpleMainWindow is not documented.
-/home/travis/build/Ulm-IQO/qudi/hardware/slow_counter_dummy.py:50: warning: Member __init__(self, config, kwargs) (function) of class slow_counter_dummy::SlowCounterDummy is not documented.
+/home/travis/build/Ulm-IQO/qudi/hardware/slow_counter_dummy.py:52: warning: Member __init__(self, config, kwargs) (function) of class slow_counter_dummy::SlowCounterDummy is not documented.
 /home/travis/build/Ulm-IQO/qudi/core/FysomAdapter.py:31: warning: Member __getattr__(self, name) (function) of class core::FysomAdapter::Fysom is not documented.
-/home/travis/build/Ulm-IQO/qudi/hardware/slow_counter_dummy.py:95: warning: Member dist (variable) of class slow_counter_dummy::SlowCounterDummy is not documented.
-/home/travis/build/Ulm-IQO/qudi/hardware/slow_counter_dummy.py:111: warning: Member mean_signal (variable) of class slow_counter_dummy::SlowCounterDummy is not documented.
-/home/travis/build/Ulm-IQO/qudi/hardware/slow_counter_dummy.py:112: warning: Member contrast (variable) of class slow_counter_dummy::SlowCounterDummy is not documented.
-/home/travis/build/Ulm-IQO/qudi/hardware/slow_counter_dummy.py:117: warning: Member mean_signal2 (variable) of class slow_counter_dummy::SlowCounterDummy is not documented.
-/home/travis/build/Ulm-IQO/qudi/hardware/slow_counter_dummy.py:118: warning: Member noise_amplitude (variable) of class slow_counter_dummy::SlowCounterDummy is not documented.
-/home/travis/build/Ulm-IQO/qudi/hardware/slow_counter_dummy.py:120: warning: Member life_time_bright (variable) of class slow_counter_dummy::SlowCounterDummy is not documented.
-/home/travis/build/Ulm-IQO/qudi/hardware/slow_counter_dummy.py:121: warning: Member life_time_dark (variable) of class slow_counter_dummy::SlowCounterDummy is not documented.
-/home/travis/build/Ulm-IQO/qudi/hardware/slow_counter_dummy.py:124: warning: Member current_dec_time (variable) of class slow_counter_dummy::SlowCounterDummy is not documented.
-/home/travis/build/Ulm-IQO/qudi/hardware/slow_counter_dummy.py:125: warning: Member curr_state_b (variable) of class slow_counter_dummy::SlowCounterDummy is not documented.
-/home/travis/build/Ulm-IQO/qudi/hardware/slow_counter_dummy.py:126: warning: Member total_time (variable) of class slow_counter_dummy::SlowCounterDummy is not documented.
+/home/travis/build/Ulm-IQO/qudi/hardware/slow_counter_dummy.py:92: warning: Member source_channels (variable) of class slow_counter_dummy::SlowCounterDummy is not documented.
+/home/travis/build/Ulm-IQO/qudi/hardware/slow_counter_dummy.py:97: warning: Member dist (variable) of class slow_counter_dummy::SlowCounterDummy is not documented.
+/home/travis/build/Ulm-IQO/qudi/hardware/slow_counter_dummy.py:109: warning: Member mean_signal (variable) of class slow_counter_dummy::SlowCounterDummy is not documented.
+/home/travis/build/Ulm-IQO/qudi/hardware/slow_counter_dummy.py:110: warning: Member contrast (variable) of class slow_counter_dummy::SlowCounterDummy is not documented.
+/home/travis/build/Ulm-IQO/qudi/hardware/slow_counter_dummy.py:115: warning: Member mean_signal2 (variable) of class slow_counter_dummy::SlowCounterDummy is not documented.
+/home/travis/build/Ulm-IQO/qudi/hardware/slow_counter_dummy.py:116: warning: Member noise_amplitude (variable) of class slow_counter_dummy::SlowCounterDummy is not documented.
+/home/travis/build/Ulm-IQO/qudi/hardware/slow_counter_dummy.py:118: warning: Member life_time_bright (variable) of class slow_counter_dummy::SlowCounterDummy is not documented.
+/home/travis/build/Ulm-IQO/qudi/hardware/slow_counter_dummy.py:119: warning: Member life_time_dark (variable) of class slow_counter_dummy::SlowCounterDummy is not documented.
+/home/travis/build/Ulm-IQO/qudi/hardware/slow_counter_dummy.py:122: warning: Member current_dec_time (variable) of class slow_counter_dummy::SlowCounterDummy is not documented.
+/home/travis/build/Ulm-IQO/qudi/hardware/slow_counter_dummy.py:123: warning: Member curr_state_b (variable) of class slow_counter_dummy::SlowCounterDummy is not documented.
+/home/travis/build/Ulm-IQO/qudi/hardware/slow_counter_dummy.py:124: warning: Member total_time (variable) of class slow_counter_dummy::SlowCounterDummy is not documented.
 /home/travis/build/Ulm-IQO/qudi/core/base.py:126: warning: Member connector (variable) of class core::base::Base is not documented.
 /home/travis/build/Ulm-IQO/qudi/core/base.py:49: warning: Member sigStateChanged (variable) of class core::base::Base is not documented.
 /home/travis/build/Ulm-IQO/qudi/core/base.py:168: warning: Member result (variable) of class core::base::Base is not documented.
-/home/travis/build/Ulm-IQO/qudi/hardware/slow_counter_dummy.py:182: warning: argument 'int' of command @param is not found in the argument list of slow_counter_dummy.SlowCounterDummy::get_counter(self, samples=None)
-/home/travis/build/Ulm-IQO/qudi/hardware/slow_counter_dummy.py:182: warning: The following parameters of slow_counter_dummy.SlowCounterDummy.get_counter(self, samples=None) are not documented:
+/home/travis/build/Ulm-IQO/qudi/hardware/slow_counter_dummy.py:185: warning: argument 'int' of command @param is not found in the argument list of slow_counter_dummy.SlowCounterDummy::get_counter(self, samples=None)
+/home/travis/build/Ulm-IQO/qudi/hardware/slow_counter_dummy.py:185: warning: The following parameters of slow_counter_dummy.SlowCounterDummy.get_counter(self, samples=None) are not documented:
   parameter 'samples'
-/home/travis/build/Ulm-IQO/qudi/hardware/slow_counter_dummy.py:69: warning: argument 'object' of command @param is not found in the argument list of slow_counter_dummy.SlowCounterDummy::on_activate(self, e)
-/home/travis/build/Ulm-IQO/qudi/hardware/slow_counter_dummy.py:69: warning: The following parameters of slow_counter_dummy.SlowCounterDummy.on_activate(self, e) are not documented:
+/home/travis/build/Ulm-IQO/qudi/hardware/slow_counter_dummy.py:71: warning: argument 'object' of command @param is not found in the argument list of slow_counter_dummy.SlowCounterDummy::on_activate(self, e)
+/home/travis/build/Ulm-IQO/qudi/hardware/slow_counter_dummy.py:71: warning: The following parameters of slow_counter_dummy.SlowCounterDummy.on_activate(self, e) are not documented:
   parameter 'e'
-/home/travis/build/Ulm-IQO/qudi/hardware/slow_counter_dummy.py:133: warning: argument 'object' of command @param is not found in the argument list of slow_counter_dummy.SlowCounterDummy::on_deactivate(self, e)
-/home/travis/build/Ulm-IQO/qudi/hardware/slow_counter_dummy.py:133: warning: The following parameters of slow_counter_dummy.SlowCounterDummy.on_deactivate(self, e) are not documented:
+/home/travis/build/Ulm-IQO/qudi/hardware/slow_counter_dummy.py:131: warning: argument 'object' of command @param is not found in the argument list of slow_counter_dummy.SlowCounterDummy::on_deactivate(self, e)
+/home/travis/build/Ulm-IQO/qudi/hardware/slow_counter_dummy.py:131: warning: The following parameters of slow_counter_dummy.SlowCounterDummy.on_deactivate(self, e) are not documented:
   parameter 'e'
-/home/travis/build/Ulm-IQO/qudi/hardware/slow_counter_dummy.py:143: warning: argument 'float' of command @param is not found in the argument list of slow_counter_dummy.SlowCounterDummy::set_up_clock(self, clock_frequency=None, clock_channel=None)
-/home/travis/build/Ulm-IQO/qudi/hardware/slow_counter_dummy.py:143: warning: argument 'string' of command @param is not found in the argument list of slow_counter_dummy.SlowCounterDummy::set_up_clock(self, clock_frequency=None, clock_channel=None)
-/home/travis/build/Ulm-IQO/qudi/hardware/slow_counter_dummy.py:143: warning: The following parameters of slow_counter_dummy.SlowCounterDummy.set_up_clock(self, clock_frequency=None, clock_channel=None) are not documented:
+/home/travis/build/Ulm-IQO/qudi/hardware/slow_counter_dummy.py:153: warning: argument 'float' of command @param is not found in the argument list of slow_counter_dummy.SlowCounterDummy::set_up_clock(self, clock_frequency=None, clock_channel=None)
+/home/travis/build/Ulm-IQO/qudi/hardware/slow_counter_dummy.py:153: warning: argument 'string' of command @param is not found in the argument list of slow_counter_dummy.SlowCounterDummy::set_up_clock(self, clock_frequency=None, clock_channel=None)
+/home/travis/build/Ulm-IQO/qudi/hardware/slow_counter_dummy.py:153: warning: The following parameters of slow_counter_dummy.SlowCounterDummy.set_up_clock(self, clock_frequency=None, clock_channel=None) are not documented:
   parameter 'clock_frequency'
   parameter 'clock_channel'
-/home/travis/build/Ulm-IQO/qudi/hardware/slow_counter_dummy.py:162: warning: argument 'string' of command @param is not found in the argument list of slow_counter_dummy.SlowCounterDummy::set_up_counter(self, counter_channel=None, photon_source=None, counter_channel2=None, photon_source2=None, clock_channel=None, counter_buffer=None)
-/home/travis/build/Ulm-IQO/qudi/hardware/slow_counter_dummy.py:162: warning: argument 'string' of command @param is not found in the argument list of slow_counter_dummy.SlowCounterDummy::set_up_counter(self, counter_channel=None, photon_source=None, counter_channel2=None, photon_source2=None, clock_channel=None, counter_buffer=None)
-/home/travis/build/Ulm-IQO/qudi/hardware/slow_counter_dummy.py:162: warning: argument 'string' of command @param is not found in the argument list of slow_counter_dummy.SlowCounterDummy::set_up_counter(self, counter_channel=None, photon_source=None, counter_channel2=None, photon_source2=None, clock_channel=None, counter_buffer=None)
-/home/travis/build/Ulm-IQO/qudi/hardware/slow_counter_dummy.py:162: warning: The following parameters of slow_counter_dummy.SlowCounterDummy.set_up_counter(self, counter_channel=None, photon_source=None, counter_channel2=None, photon_source2=None, clock_channel=None, counter_buffer=None) are not documented:
-  parameter 'counter_channel'
-  parameter 'photon_source'
-  parameter 'counter_channel2'
-  parameter 'photon_source2'
+/home/travis/build/Ulm-IQO/qudi/hardware/slow_counter_dummy.py:169: warning: argument 'string' of command @param is not found in the argument list of slow_counter_dummy.SlowCounterDummy::set_up_counter(self, counter_channels=None, sources=None, clock_channel=None, counter_buffer=None)
+/home/travis/build/Ulm-IQO/qudi/hardware/slow_counter_dummy.py:169: warning: argument 'string' of command @param is not found in the argument list of slow_counter_dummy.SlowCounterDummy::set_up_counter(self, counter_channels=None, sources=None, clock_channel=None, counter_buffer=None)
+/home/travis/build/Ulm-IQO/qudi/hardware/slow_counter_dummy.py:169: warning: argument 'string' of command @param is not found in the argument list of slow_counter_dummy.SlowCounterDummy::set_up_counter(self, counter_channels=None, sources=None, clock_channel=None, counter_buffer=None)
+/home/travis/build/Ulm-IQO/qudi/hardware/slow_counter_dummy.py:169: warning: The following parameters of slow_counter_dummy.SlowCounterDummy.set_up_counter(self, counter_channels=None, sources=None, clock_channel=None, counter_buffer=None) are not documented:
+  parameter 'counter_channels'
+  parameter 'sources'
   parameter 'clock_channel'
   parameter 'counter_buffer'
-/home/travis/build/Ulm-IQO/qudi/interface/slow_counter_interface.py:84: warning: argument 'int' of command @param is not found in the argument list of slow_counter_interface.SlowCounterInterface::get_counter(self, samples=None)
-/home/travis/build/Ulm-IQO/qudi/interface/slow_counter_interface.py:85: warning: The following parameters of slow_counter_interface.SlowCounterInterface.get_counter(self, samples=None) are not documented:
+/home/travis/build/Ulm-IQO/qudi/interface/slow_counter_interface.py:121: warning: Member CONTINUOUS (variable) of class slow_counter_interface::CountingMode is not documented.
+/home/travis/build/Ulm-IQO/qudi/interface/slow_counter_interface.py:122: warning: Member GATED (variable) of class slow_counter_interface::CountingMode is not documented.
+/home/travis/build/Ulm-IQO/qudi/interface/slow_counter_interface.py:123: warning: Member FINITE_GATED (variable) of class slow_counter_interface::CountingMode is not documented.
+/home/travis/build/Ulm-IQO/qudi/interface/slow_counter_interface.py:128: warning: Member __init__(self) (function) of class slow_counter_interface::SlowCounterConstraints is not documented.
+/home/travis/build/Ulm-IQO/qudi/interface/slow_counter_interface.py:130: warning: Member max_detectors (variable) of class slow_counter_interface::SlowCounterConstraints is not documented.
+/home/travis/build/Ulm-IQO/qudi/interface/slow_counter_interface.py:132: warning: Member min_count_frequency (variable) of class slow_counter_interface::SlowCounterConstraints is not documented.
+/home/travis/build/Ulm-IQO/qudi/interface/slow_counter_interface.py:133: warning: Member max_count_frequency (variable) of class slow_counter_interface::SlowCounterConstraints is not documented.
+/home/travis/build/Ulm-IQO/qudi/interface/slow_counter_interface.py:135: warning: Member counting_mode (variable) of class slow_counter_interface::SlowCounterConstraints is not documented.
+/home/travis/build/Ulm-IQO/qudi/interface/slow_counter_interface.py:89: warning: argument 'int' of command @param is not found in the argument list of slow_counter_interface.SlowCounterInterface::get_counter(self, samples=None)
+/home/travis/build/Ulm-IQO/qudi/interface/slow_counter_interface.py:90: warning: The following parameters of slow_counter_interface.SlowCounterInterface.get_counter(self, samples=None) are not documented:
   parameter 'samples'
-/home/travis/build/Ulm-IQO/qudi/interface/slow_counter_interface.py:48: warning: argument 'float' of command @param is not found in the argument list of slow_counter_interface.SlowCounterInterface::set_up_clock(self, clock_frequency=None, clock_channel=None)
-/home/travis/build/Ulm-IQO/qudi/interface/slow_counter_interface.py:48: warning: argument 'string' of command @param is not found in the argument list of slow_counter_interface.SlowCounterInterface::set_up_clock(self, clock_frequency=None, clock_channel=None)
-/home/travis/build/Ulm-IQO/qudi/interface/slow_counter_interface.py:49: warning: The following parameters of slow_counter_interface.SlowCounterInterface.set_up_clock(self, clock_frequency=None, clock_channel=None) are not documented:
+/home/travis/build/Ulm-IQO/qudi/interface/slow_counter_interface.py:54: warning: argument 'float' of command @param is not found in the argument list of slow_counter_interface.SlowCounterInterface::set_up_clock(self, clock_frequency=None, clock_channel=None)
+/home/travis/build/Ulm-IQO/qudi/interface/slow_counter_interface.py:54: warning: argument 'string' of command @param is not found in the argument list of slow_counter_interface.SlowCounterInterface::set_up_clock(self, clock_frequency=None, clock_channel=None)
+/home/travis/build/Ulm-IQO/qudi/interface/slow_counter_interface.py:55: warning: The following parameters of slow_counter_interface.SlowCounterInterface.set_up_clock(self, clock_frequency=None, clock_channel=None) are not documented:
   parameter 'clock_frequency'
   parameter 'clock_channel'
-/home/travis/build/Ulm-IQO/qudi/interface/slow_counter_interface.py:68: warning: argument 'str' of command @param is not found in the argument list of slow_counter_interface.SlowCounterInterface::set_up_counter(self, counter_channel=None, photon_source=None, counter_channel2=None, photon_source2=None, clock_channel=None, counter_buffer=None)
-/home/travis/build/Ulm-IQO/qudi/interface/slow_counter_interface.py:68: warning: argument 'str' of command @param is not found in the argument list of slow_counter_interface.SlowCounterInterface::set_up_counter(self, counter_channel=None, photon_source=None, counter_channel2=None, photon_source2=None, clock_channel=None, counter_buffer=None)
-/home/travis/build/Ulm-IQO/qudi/interface/slow_counter_interface.py:68: warning: argument 'str' of command @param is not found in the argument list of slow_counter_interface.SlowCounterInterface::set_up_counter(self, counter_channel=None, photon_source=None, counter_channel2=None, photon_source2=None, clock_channel=None, counter_buffer=None)
-/home/travis/build/Ulm-IQO/qudi/interface/slow_counter_interface.py:68: warning: argument 'str' of command @param is not found in the argument list of slow_counter_interface.SlowCounterInterface::set_up_counter(self, counter_channel=None, photon_source=None, counter_channel2=None, photon_source2=None, clock_channel=None, counter_buffer=None)
-/home/travis/build/Ulm-IQO/qudi/interface/slow_counter_interface.py:68: warning: argument 'str' of command @param is not found in the argument list of slow_counter_interface.SlowCounterInterface::set_up_counter(self, counter_channel=None, photon_source=None, counter_channel2=None, photon_source2=None, clock_channel=None, counter_buffer=None)
-/home/travis/build/Ulm-IQO/qudi/interface/slow_counter_interface.py:68: warning: argument 'int' of command @param is not found in the argument list of slow_counter_interface.SlowCounterInterface::set_up_counter(self, counter_channel=None, photon_source=None, counter_channel2=None, photon_source2=None, clock_channel=None, counter_buffer=None)
-/home/travis/build/Ulm-IQO/qudi/interface/slow_counter_interface.py:69: warning: The following parameters of slow_counter_interface.SlowCounterInterface.set_up_counter(self, counter_channel=None, photon_source=None, counter_channel2=None, photon_source2=None, clock_channel=None, counter_buffer=None) are not documented:
-  parameter 'counter_channel'
-  parameter 'photon_source'
-  parameter 'counter_channel2'
-  parameter 'photon_source2'
+/home/travis/build/Ulm-IQO/qudi/interface/slow_counter_interface.py:75: warning: argument 'list' of command @param is not found in the argument list of slow_counter_interface.SlowCounterInterface::set_up_counter(self, counter_channels=None, sources=None, clock_channel=None, counter_buffer=None)
+/home/travis/build/Ulm-IQO/qudi/interface/slow_counter_interface.py:75: warning: argument 'str' of command @param is not found in the argument list of slow_counter_interface.SlowCounterInterface::set_up_counter(self, counter_channels=None, sources=None, clock_channel=None, counter_buffer=None)
+/home/travis/build/Ulm-IQO/qudi/interface/slow_counter_interface.py:75: warning: argument 'list' of command @param is not found in the argument list of slow_counter_interface.SlowCounterInterface::set_up_counter(self, counter_channels=None, sources=None, clock_channel=None, counter_buffer=None)
+/home/travis/build/Ulm-IQO/qudi/interface/slow_counter_interface.py:75: warning: argument 'str' of command @param is not found in the argument list of slow_counter_interface.SlowCounterInterface::set_up_counter(self, counter_channels=None, sources=None, clock_channel=None, counter_buffer=None)
+/home/travis/build/Ulm-IQO/qudi/interface/slow_counter_interface.py:75: warning: argument 'str' of command @param is not found in the argument list of slow_counter_interface.SlowCounterInterface::set_up_counter(self, counter_channels=None, sources=None, clock_channel=None, counter_buffer=None)
+/home/travis/build/Ulm-IQO/qudi/interface/slow_counter_interface.py:75: warning: argument 'int' of command @param is not found in the argument list of slow_counter_interface.SlowCounterInterface::set_up_counter(self, counter_channels=None, sources=None, clock_channel=None, counter_buffer=None)
+/home/travis/build/Ulm-IQO/qudi/interface/slow_counter_interface.py:76: warning: The following parameters of slow_counter_interface.SlowCounterInterface.set_up_counter(self, counter_channels=None, sources=None, clock_channel=None, counter_buffer=None) are not documented:
+  parameter 'counter_channels'
+  parameter 'sources'
   parameter 'clock_channel'
   parameter 'counter_buffer'
 /home/travis/build/Ulm-IQO/qudi/logic/software_pid_controller.py:58: warning: Member __init__(self, config, kwargs) (function) of class software_pid_controller::SoftPIDController is not documented.
@@ -5903,12 +5909,12 @@ IndexError: list index out of range
 /home/travis/build/Ulm-IQO/qudi/logic/tasks/prepostdummy.py:35: warning: Member postExecute(self) (function) of class tasks::prepostdummy::Task is not documented.
 /home/travis/build/Ulm-IQO/qudi/logic/tasks/refocus.py:27: warning: Member __init__(self, kwargs) (function) of class tasks::refocus::Task is not documented.
 /home/travis/build/Ulm-IQO/qudi/core/FysomAdapter.py:31: warning: Member __getattr__(self, name) (function) of class core::FysomAdapter::Fysom is not documented.
-/home/travis/build/Ulm-IQO/qudi/hardware/timetagger_counter.py:122: warning: Member counter (variable) of class timetagger_counter::TimeTaggerCounter is not documented.
+/home/travis/build/Ulm-IQO/qudi/hardware/timetagger_counter.py:119: warning: Member counter (variable) of class timetagger_counter::TimeTaggerCounter is not documented.
 /home/travis/build/Ulm-IQO/qudi/core/base.py:126: warning: Member connector (variable) of class core::base::Base is not documented.
 /home/travis/build/Ulm-IQO/qudi/core/base.py:49: warning: Member sigStateChanged (variable) of class core::base::Base is not documented.
 /home/travis/build/Ulm-IQO/qudi/core/base.py:168: warning: Member result (variable) of class core::base::Base is not documented.
-/home/travis/build/Ulm-IQO/qudi/hardware/timetagger_counter.py:132: warning: argument 'int' of command @param is not found in the argument list of timetagger_counter.TimeTaggerCounter::get_counter(self, samples=None)
-/home/travis/build/Ulm-IQO/qudi/hardware/timetagger_counter.py:132: warning: The following parameters of timetagger_counter.TimeTaggerCounter.get_counter(self, samples=None) are not documented:
+/home/travis/build/Ulm-IQO/qudi/hardware/timetagger_counter.py:151: warning: argument 'int' of command @param is not found in the argument list of timetagger_counter.TimeTaggerCounter::get_counter(self, samples=None)
+/home/travis/build/Ulm-IQO/qudi/hardware/timetagger_counter.py:151: warning: The following parameters of timetagger_counter.TimeTaggerCounter.get_counter(self, samples=None) are not documented:
   parameter 'samples'
 /home/travis/build/Ulm-IQO/qudi/hardware/timetagger_counter.py:60: warning: argument 'object' of command @param is not found in the argument list of timetagger_counter.TimeTaggerCounter::on_activate(self, e=None)
 /home/travis/build/Ulm-IQO/qudi/hardware/timetagger_counter.py:60: warning: The following parameters of timetagger_counter.TimeTaggerCounter.on_activate(self, e=None) are not documented:
@@ -5921,17 +5927,15 @@ IndexError: list index out of range
 /home/travis/build/Ulm-IQO/qudi/hardware/timetagger_counter.py:93: warning: The following parameters of timetagger_counter.TimeTaggerCounter.set_up_clock(self, clock_frequency=None, clock_channel=None) are not documented:
   parameter 'clock_frequency'
   parameter 'clock_channel'
-/home/travis/build/Ulm-IQO/qudi/hardware/timetagger_counter.py:114: warning: argument 'str' of command @param is not found in the argument list of timetagger_counter.TimeTaggerCounter::set_up_counter(self, counter_channel=None, photon_source=None, counter_channel2=None, photon_source2=None, clock_channel=None, counter_buffer=None)
-/home/travis/build/Ulm-IQO/qudi/hardware/timetagger_counter.py:114: warning: argument 'str' of command @param is not found in the argument list of timetagger_counter.TimeTaggerCounter::set_up_counter(self, counter_channel=None, photon_source=None, counter_channel2=None, photon_source2=None, clock_channel=None, counter_buffer=None)
-/home/travis/build/Ulm-IQO/qudi/hardware/timetagger_counter.py:114: warning: argument 'str' of command @param is not found in the argument list of timetagger_counter.TimeTaggerCounter::set_up_counter(self, counter_channel=None, photon_source=None, counter_channel2=None, photon_source2=None, clock_channel=None, counter_buffer=None)
-/home/travis/build/Ulm-IQO/qudi/hardware/timetagger_counter.py:114: warning: argument 'str' of command @param is not found in the argument list of timetagger_counter.TimeTaggerCounter::set_up_counter(self, counter_channel=None, photon_source=None, counter_channel2=None, photon_source2=None, clock_channel=None, counter_buffer=None)
-/home/travis/build/Ulm-IQO/qudi/hardware/timetagger_counter.py:114: warning: argument 'str' of command @param is not found in the argument list of timetagger_counter.TimeTaggerCounter::set_up_counter(self, counter_channel=None, photon_source=None, counter_channel2=None, photon_source2=None, clock_channel=None, counter_buffer=None)
-/home/travis/build/Ulm-IQO/qudi/hardware/timetagger_counter.py:114: warning: argument 'int' of command @param is not found in the argument list of timetagger_counter.TimeTaggerCounter::set_up_counter(self, counter_channel=None, photon_source=None, counter_channel2=None, photon_source2=None, clock_channel=None, counter_buffer=None)
-/home/travis/build/Ulm-IQO/qudi/hardware/timetagger_counter.py:114: warning: The following parameters of timetagger_counter.TimeTaggerCounter.set_up_counter(self, counter_channel=None, photon_source=None, counter_channel2=None, photon_source2=None, clock_channel=None, counter_buffer=None) are not documented:
-  parameter 'counter_channel'
-  parameter 'photon_source'
-  parameter 'counter_channel2'
-  parameter 'photon_source2'
+/home/travis/build/Ulm-IQO/qudi/hardware/timetagger_counter.py:114: warning: argument 'str' of command @param is not found in the argument list of timetagger_counter.TimeTaggerCounter::set_up_counter(self, counter_channels=None, sources=None, clock_channel=None, counter_buffer=None)
+/home/travis/build/Ulm-IQO/qudi/hardware/timetagger_counter.py:114: warning: argument 'str' of command @param is not found in the argument list of timetagger_counter.TimeTaggerCounter::set_up_counter(self, counter_channels=None, sources=None, clock_channel=None, counter_buffer=None)
+/home/travis/build/Ulm-IQO/qudi/hardware/timetagger_counter.py:114: warning: argument 'str' of command @param is not found in the argument list of timetagger_counter.TimeTaggerCounter::set_up_counter(self, counter_channels=None, sources=None, clock_channel=None, counter_buffer=None)
+/home/travis/build/Ulm-IQO/qudi/hardware/timetagger_counter.py:114: warning: argument 'str' of command @param is not found in the argument list of timetagger_counter.TimeTaggerCounter::set_up_counter(self, counter_channels=None, sources=None, clock_channel=None, counter_buffer=None)
+/home/travis/build/Ulm-IQO/qudi/hardware/timetagger_counter.py:114: warning: argument 'str' of command @param is not found in the argument list of timetagger_counter.TimeTaggerCounter::set_up_counter(self, counter_channels=None, sources=None, clock_channel=None, counter_buffer=None)
+/home/travis/build/Ulm-IQO/qudi/hardware/timetagger_counter.py:114: warning: argument 'int' of command @param is not found in the argument list of timetagger_counter.TimeTaggerCounter::set_up_counter(self, counter_channels=None, sources=None, clock_channel=None, counter_buffer=None)
+/home/travis/build/Ulm-IQO/qudi/hardware/timetagger_counter.py:114: warning: The following parameters of timetagger_counter.TimeTaggerCounter.set_up_counter(self, counter_channels=None, sources=None, clock_channel=None, counter_buffer=None) are not documented:
+  parameter 'counter_channels'
+  parameter 'sources'
   parameter 'clock_channel'
   parameter 'counter_buffer'
 /home/travis/build/Ulm-IQO/qudi/logic/trace_analysis_logic.py:405: warning: Member do_doublegaussian_fit(self, axis, data) (function) of class trace_analysis_logic::TraceAnalysisLogic is not documented.

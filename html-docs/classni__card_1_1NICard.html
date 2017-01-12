@@ -100,12 +100,18 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a711d4ab0dff688ccbc343d292a68a4af"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classni__card_1_1NICard.html#a711d4ab0dff688ccbc343d292a68a4af">on_deactivate</a> (self, e=None)</td></tr>
 <tr class="memdesc:a711d4ab0dff688ccbc343d292a68a4af"><td class="mdescLeft">&#160;</td><td class="mdescRight">Shut down the NI card.  <a href="#a711d4ab0dff688ccbc343d292a68a4af">More...</a><br /></td></tr>
 <tr class="separator:a711d4ab0dff688ccbc343d292a68a4af"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a94351394f0e7a270787bc8fdc304eb6e"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classni__card_1_1NICard.html#a94351394f0e7a270787bc8fdc304eb6e">get_constraints</a> (self)</td></tr>
+<tr class="memdesc:a94351394f0e7a270787bc8fdc304eb6e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get hardware limits of NI device.  <a href="#a94351394f0e7a270787bc8fdc304eb6e">More...</a><br /></td></tr>
+<tr class="separator:a94351394f0e7a270787bc8fdc304eb6e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa4e1697039257ef32c6324bd958942c0"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classni__card_1_1NICard.html#aa4e1697039257ef32c6324bd958942c0">set_up_clock</a> (self, clock_frequency=None, clock_channel=None, scanner=False, idle=False)</td></tr>
 <tr class="memdesc:aa4e1697039257ef32c6324bd958942c0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Configures the hardware clock of the NiDAQ card to give the timing.  <a href="#aa4e1697039257ef32c6324bd958942c0">More...</a><br /></td></tr>
 <tr class="separator:aa4e1697039257ef32c6324bd958942c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a55128084d8c5c1d5b9bb487f96b991ef"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classni__card_1_1NICard.html#a55128084d8c5c1d5b9bb487f96b991ef">set_up_counter</a> (self, counter_channel=None, photon_source=None, counter_channel2=None, photon_source2=None, clock_channel=None, counter_buffer=None)</td></tr>
-<tr class="memdesc:a55128084d8c5c1d5b9bb487f96b991ef"><td class="mdescLeft">&#160;</td><td class="mdescRight">Configures the actual counter with a given clock.  <a href="#a55128084d8c5c1d5b9bb487f96b991ef">More...</a><br /></td></tr>
-<tr class="separator:a55128084d8c5c1d5b9bb487f96b991ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac3fc37611b383c9229731c689acb2ea6"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classni__card_1_1NICard.html#ac3fc37611b383c9229731c689acb2ea6">set_up_counter</a> (self, counter_channels=None, sources=None, clock_channel=None, counter_buffer=None)</td></tr>
+<tr class="memdesc:ac3fc37611b383c9229731c689acb2ea6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Configures the actual counter with a given clock.  <a href="#ac3fc37611b383c9229731c689acb2ea6">More...</a><br /></td></tr>
+<tr class="separator:ac3fc37611b383c9229731c689acb2ea6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8f349fb7f6461c49bef0cf251371768a"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classni__card_1_1NICard.html#a8f349fb7f6461c49bef0cf251371768a">get_counter_channels</a> (self)</td></tr>
+<tr class="memdesc:a8f349fb7f6461c49bef0cf251371768a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the list of counter channel names.  <a href="#a8f349fb7f6461c49bef0cf251371768a">More...</a><br /></td></tr>
+<tr class="separator:a8f349fb7f6461c49bef0cf251371768a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6789bd4425a4acb2c625df91a319dc11"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classni__card_1_1NICard.html#a6789bd4425a4acb2c625df91a319dc11">get_counter</a> (self, samples=None)</td></tr>
 <tr class="memdesc:a6789bd4425a4acb2c625df91a319dc11"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the current counts per second of the counter.  <a href="#a6789bd4425a4acb2c625df91a319dc11">More...</a><br /></td></tr>
 <tr class="separator:a6789bd4425a4acb2c625df91a319dc11"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -118,6 +124,14 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a3ad424a77445bdea11026484c137ad89"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classni__card_1_1NICard.html#a3ad424a77445bdea11026484c137ad89">reset_hardware</a> (self)</td></tr>
 <tr class="memdesc:a3ad424a77445bdea11026484c137ad89"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resets the NI hardware, so the connection is lost and other programs can access it.  <a href="#a3ad424a77445bdea11026484c137ad89">More...</a><br /></td></tr>
 <tr class="separator:a3ad424a77445bdea11026484c137ad89"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad96472c58e0419946575aa379165d7e6"><td class="memItemLeft" align="right" valign="top"><a id="ad96472c58e0419946575aa379165d7e6"></a>
+def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classni__card_1_1NICard.html#ad96472c58e0419946575aa379165d7e6">get_scanner_axes</a> (self)</td></tr>
+<tr class="memdesc:ad96472c58e0419946575aa379165d7e6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Scanner axes depends on how many channels tha analog output task has. <br /></td></tr>
+<tr class="separator:ad96472c58e0419946575aa379165d7e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0be8446ab426bc5645dd55416c5f14d9"><td class="memItemLeft" align="right" valign="top"><a id="a0be8446ab426bc5645dd55416c5f14d9"></a>
+def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classni__card_1_1NICard.html#a0be8446ab426bc5645dd55416c5f14d9">get_scanner_count_channels</a> (self)</td></tr>
+<tr class="memdesc:a0be8446ab426bc5645dd55416c5f14d9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return list of counter channels. <br /></td></tr>
+<tr class="separator:a0be8446ab426bc5645dd55416c5f14d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af5267dc97a7819a87e23395d626ae683"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classni__card_1_1NICard.html#af5267dc97a7819a87e23395d626ae683">get_position_range</a> (self)</td></tr>
 <tr class="memdesc:af5267dc97a7819a87e23395d626ae683"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the physical range of the scanner.  <a href="#af5267dc97a7819a87e23395d626ae683">More...</a><br /></td></tr>
 <tr class="separator:af5267dc97a7819a87e23395d626ae683"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -130,9 +144,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ad588ef812b7f227eba9a356d1bd97ef6"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classni__card_1_1NICard.html#ad588ef812b7f227eba9a356d1bd97ef6">set_up_scanner_clock</a> (self, clock_frequency=None, clock_channel=None)</td></tr>
 <tr class="memdesc:ad588ef812b7f227eba9a356d1bd97ef6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Configures the hardware clock of the NiDAQ card to give the timing.  <a href="#ad588ef812b7f227eba9a356d1bd97ef6">More...</a><br /></td></tr>
 <tr class="separator:ad588ef812b7f227eba9a356d1bd97ef6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3bd995cd1a024c9a15d2c4016a48dac0"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classni__card_1_1NICard.html#a3bd995cd1a024c9a15d2c4016a48dac0">set_up_scanner</a> (self, counter_channel=None, photon_source=None, clock_channel=None, scanner_ao_channels=None)</td></tr>
-<tr class="memdesc:a3bd995cd1a024c9a15d2c4016a48dac0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Configures the actual scanner with a given clock.  <a href="#a3bd995cd1a024c9a15d2c4016a48dac0">More...</a><br /></td></tr>
-<tr class="separator:a3bd995cd1a024c9a15d2c4016a48dac0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a816cadbc91ebe56757c85ec07fd44c1c"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classni__card_1_1NICard.html#a816cadbc91ebe56757c85ec07fd44c1c">set_up_scanner</a> (self, counter_channels=None, sources=None, clock_channel=None, scanner_ao_channels=None)</td></tr>
+<tr class="memdesc:a816cadbc91ebe56757c85ec07fd44c1c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Configures the actual scanner with a given clock.  <a href="#a816cadbc91ebe56757c85ec07fd44c1c">More...</a><br /></td></tr>
+<tr class="separator:a816cadbc91ebe56757c85ec07fd44c1c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4f68689c37ed37d9a1499720030c87d8"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classni__card_1_1NICard.html#a4f68689c37ed37d9a1499720030c87d8">scanner_set_position</a> (self, x=None, y=None, z=None, a=None)</td></tr>
 <tr class="memdesc:a4f68689c37ed37d9a1499720030c87d8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Move stage to x, y, z, a (where a is the fourth voltage channel).  <a href="#a4f68689c37ed37d9a1499720030c87d8">More...</a><br /></td></tr>
 <tr class="separator:a4f68689c37ed37d9a1499720030c87d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -506,6 +520,28 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a id="a94351394f0e7a270787bc8fdc304eb6e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a94351394f0e7a270787bc8fdc304eb6e">&#9670;&nbsp;</a></span>get_constraints()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">def ni_card.NICard.get_constraints </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get hardware limits of NI device. </p>
+<dl class="section return"><dt>Returns</dt><dd>SlowCounterConstraints: constraints class for slow counter</dd></dl>
+<p>FIXME ask hardware for limits when module is loaded </p>
+
+</div>
+</div>
 <a id="a6789bd4425a4acb2c625df91a319dc11"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a6789bd4425a4acb2c625df91a319dc11">&#9670;&nbsp;</a></span>get_counter()</h2>
 
@@ -540,6 +576,28 @@ Additional Inherited Members</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>float [samples]: array with entries as photon counts per second </dd></dl>
+
+</div>
+</div>
+<a id="a8f349fb7f6461c49bef0cf251371768a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8f349fb7f6461c49bef0cf251371768a">&#9670;&nbsp;</a></span>get_counter_channels()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">def ni_card.NICard.get_counter_channels </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Returns the list of counter channel names. </p>
+<dl class="section return"><dt>Returns</dt><dd>tuple(str): channel names</dd></dl>
+<p>Most methods calling this might just care about the number of channels, though. </p>
 
 </div>
 </div>
@@ -778,12 +836,12 @@ Additional Inherited Members</h2></td></tr>
 <p>Scans a line and return the counts on that line. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">float[][4]</td><td>line_path: array of 4-part tuples defining the voltage points</td></tr>
+    <tr><td class="paramname">float[][n]</td><td>line_path: array of n-part tuples defining the voltage points</td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>float[]: the photon counts per second</dd></dl>
-<p>The input array looks for a xy scan of 5x5 points at the position z=-2 like the following: [ [1,2,3,4,5],[1,1,1,1,],[-2,-2,-2,-2],[0,0,0,0]] </p>
+<p>The input array looks for a xy scan of 5x5 points at the position z=-2 like the following: [ [1, 2, 3, 4, 5], [1, 1, 1, 1, 1], [-2, -2, -2, -2] ] n is the number of scanner axes, which can vary. Typical values are 2 for galvo scanners, 3 for xyz scanners and 4 for xyz scanners with a special function on the a axis. </p>
 
 </div>
 </div>
@@ -977,8 +1035,8 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="a55128084d8c5c1d5b9bb487f96b991ef"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a55128084d8c5c1d5b9bb487f96b991ef">&#9670;&nbsp;</a></span>set_up_counter()</h2>
+<a id="ac3fc37611b383c9229731c689acb2ea6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac3fc37611b383c9229731c689acb2ea6">&#9670;&nbsp;</a></span>set_up_counter()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -993,25 +1051,13 @@ Additional Inherited Members</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>counter_channel</em> = <code>None</code>, </td>
+          <td class="paramname"><em>counter_channels</em> = <code>None</code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>photon_source</em> = <code>None</code>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>counter_channel2</em> = <code>None</code>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>photon_source2</em> = <code>None</code>, </td>
+          <td class="paramname"><em>sources</em> = <code>None</code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -1036,10 +1082,8 @@ Additional Inherited Members</h2></td></tr>
 <p>Configures the actual counter with a given clock. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">str</td><td>counter_channel: optional, physical channel of the counter </td></tr>
-    <tr><td class="paramname">str</td><td>photon_source: optional, physical channel where the photons are to count from </td></tr>
-    <tr><td class="paramname">str</td><td>counter_channel2: optional, physical channel of the counter 2 </td></tr>
-    <tr><td class="paramname">str</td><td>photon_source2: optional, second physical channel where the photons are to count from </td></tr>
+    <tr><td class="paramname">list(str)</td><td>counter_channels: optional, physical channel of the counter </td></tr>
+    <tr><td class="paramname">list(str)</td><td>sources: optional, physical channel where the photons are to count from </td></tr>
     <tr><td class="paramname">str</td><td>clock_channel: optional, specifies the clock channel for the counter </td></tr>
     <tr><td class="paramname">int</td><td>counter_buffer: optional, a buffer of specified integer length, where in each bin the count numbers are saved.</td></tr>
   </table>
@@ -1232,8 +1276,8 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="a3bd995cd1a024c9a15d2c4016a48dac0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3bd995cd1a024c9a15d2c4016a48dac0">&#9670;&nbsp;</a></span>set_up_scanner()</h2>
+<a id="a816cadbc91ebe56757c85ec07fd44c1c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a816cadbc91ebe56757c85ec07fd44c1c">&#9670;&nbsp;</a></span>set_up_scanner()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1248,13 +1292,13 @@ Additional Inherited Members</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>counter_channel</em> = <code>None</code>, </td>
+          <td class="paramname"><em>counter_channels</em> = <code>None</code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>photon_source</em> = <code>None</code>, </td>
+          <td class="paramname"><em>sources</em> = <code>None</code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -1280,10 +1324,10 @@ Additional Inherited Members</h2></td></tr>
 <p>The scanner works pretty much like the counter. Here you connect a created clock with a counting task. That can be seen as a gated counting, where the counts where sampled by the underlying clock.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">string</td><td>counter_channel: optional, if defined, this is the physical channel of the counter </td></tr>
-    <tr><td class="paramname">string</td><td>photon_source: optional, if defined, this is the physical channel where the photons are to count from </td></tr>
+    <tr><td class="paramname">list(str)</td><td>counter_channels: this is the physical channel of the counter </td></tr>
+    <tr><td class="paramname">list(str)</td><td>sources: this is the physical channel where the photons are to count from </td></tr>
     <tr><td class="paramname">string</td><td>clock_channel: optional, if defined, this specifies the clock for the counter </td></tr>
-    <tr><td class="paramname">string</td><td>scanner_ao_channels: optional, if defined, this specifies the analog output channels</td></tr>
+    <tr><td class="paramname">list(str)</td><td>scanner_ao_channels: optional, if defined, this specifies the analog output channels</td></tr>
   </table>
   </dd>
 </dl>
@@ -1364,7 +1408,7 @@ Additional Inherited Members</h2></td></tr>
 <p>Sets the voltage range of the NI Card. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">float</td><td>[2] myrange: array containing lower and upper limit</td></tr>
+    <tr><td class="paramname">float</td><td>[n][2] myrange: array containing lower and upper limit</td></tr>
   </table>
   </dd>
 </dl>

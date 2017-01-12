@@ -2,7 +2,7 @@ var searchData=
 [
   ['tabbedwebpage',['TabbedWebPage',['../classnotebookgui_1_1TabbedWebPage.html',1,'notebookgui']]],
   ['tabbedwebview',['TabbedWebView',['../classnotebookgui_1_1TabbedWebView.html',1,'notebookgui']]],
-  ['task',['Task',['../classtasks_1_1refocus_1_1Task.html',1,'tasks.refocus.Task'],['../classtasks_1_1dummy_1_1Task.html',1,'tasks.dummy.Task'],['../classtasks_1_1flipmirror_1_1Task.html',1,'tasks.flipmirror.Task'],['../classtasks_1_1prepostdummy_1_1Task.html',1,'tasks.prepostdummy.Task']]],
+  ['task',['Task',['../classtasks_1_1refocus_1_1Task.html',1,'tasks.refocus.Task'],['../classtasks_1_1flipmirror_1_1Task.html',1,'tasks.flipmirror.Task'],['../classtasks_1_1dummy_1_1Task.html',1,'tasks.dummy.Task'],['../classtasks_1_1prepostdummy_1_1Task.html',1,'tasks.prepostdummy.Task']]],
   ['taskgui',['TaskGui',['../classgui_1_1taskrunner_1_1taskgui_1_1TaskGui.html',1,'gui::taskrunner::taskgui']]],
   ['tasklisttablemodel',['TaskListTableModel',['../classtaskrunner_1_1TaskListTableModel.html',1,'taskrunner']]],
   ['taskmainwindow',['TaskMainWindow',['../classgui_1_1taskrunner_1_1taskgui_1_1TaskMainWindow.html',1,'gui::taskrunner::taskgui']]],

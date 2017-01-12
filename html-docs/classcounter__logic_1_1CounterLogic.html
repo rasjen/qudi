@@ -100,11 +100,14 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a0162e8337f5868f734c7d121d6c9064b"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcounter__logic_1_1CounterLogic.html#a0162e8337f5868f734c7d121d6c9064b">on_deactivate</a> (self, e)</td></tr>
 <tr class="memdesc:a0162e8337f5868f734c7d121d6c9064b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Deinitialisation performed during deactivation of the module.  <a href="#a0162e8337f5868f734c7d121d6c9064b">More...</a><br /></td></tr>
 <tr class="separator:a0162e8337f5868f734c7d121d6c9064b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a697520ca4662696afaa9ad2f122a11d6"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcounter__logic_1_1CounterLogic.html#a697520ca4662696afaa9ad2f122a11d6">get_hardware_constraints</a> (self)</td></tr>
+<tr class="memdesc:a697520ca4662696afaa9ad2f122a11d6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the hardware constrains from the counter device.  <a href="#a697520ca4662696afaa9ad2f122a11d6">More...</a><br /></td></tr>
+<tr class="separator:a697520ca4662696afaa9ad2f122a11d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab5e711f8279c5a17dcbb5995ffc7d990"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcounter__logic_1_1CounterLogic.html#ab5e711f8279c5a17dcbb5995ffc7d990">set_counting_samples</a> (self, samples=1)</td></tr>
 <tr class="memdesc:ab5e711f8279c5a17dcbb5995ffc7d990"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the length of the counted bins.  <a href="#ab5e711f8279c5a17dcbb5995ffc7d990">More...</a><br /></td></tr>
 <tr class="separator:ab5e711f8279c5a17dcbb5995ffc7d990"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:accf2754e9a8927a55a2fbc5433a65527"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcounter__logic_1_1CounterLogic.html#accf2754e9a8927a55a2fbc5433a65527">set_count_length</a> (self, length=300)</td></tr>
-<tr class="memdesc:accf2754e9a8927a55a2fbc5433a65527"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the length of the counted bins.  <a href="#accf2754e9a8927a55a2fbc5433a65527">More...</a><br /></td></tr>
+<tr class="memdesc:accf2754e9a8927a55a2fbc5433a65527"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the time trace in units of bins.  <a href="#accf2754e9a8927a55a2fbc5433a65527">More...</a><br /></td></tr>
 <tr class="separator:accf2754e9a8927a55a2fbc5433a65527"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a28c27ce3194f59abc78b19c50a132c59"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcounter__logic_1_1CounterLogic.html#a28c27ce3194f59abc78b19c50a132c59">set_count_frequency</a> (self, frequency=50)</td></tr>
 <tr class="memdesc:a28c27ce3194f59abc78b19c50a132c59"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the frequency with which the data is acquired.  <a href="#a28c27ce3194f59abc78b19c50a132c59">More...</a><br /></td></tr>
@@ -122,7 +125,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a770e2b1324a351846d37bd2683fab901"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns if the data is saved in the moment.  <a href="#a770e2b1324a351846d37bd2683fab901">More...</a><br /></td></tr>
 <tr class="separator:a770e2b1324a351846d37bd2683fab901"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af16b4f2b61df0fdcbee754027397044a"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcounter__logic_1_1CounterLogic.html#af16b4f2b61df0fdcbee754027397044a">start_saving</a> (self, resume=False)</td></tr>
-<tr class="memdesc:af16b4f2b61df0fdcbee754027397044a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Starts saving the data in a list.  <a href="#af16b4f2b61df0fdcbee754027397044a">More...</a><br /></td></tr>
+<tr class="memdesc:af16b4f2b61df0fdcbee754027397044a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets up start-time and initializes data array, if not resuming, and changes saving state If the counter is not running it will be started in order to have data to save.  <a href="#af16b4f2b61df0fdcbee754027397044a">More...</a><br /></td></tr>
 <tr class="separator:af16b4f2b61df0fdcbee754027397044a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af4203adc07ed8df9a50eeee05da7b400"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcounter__logic_1_1CounterLogic.html#af4203adc07ed8df9a50eeee05da7b400">save_data</a> (self, to_file=True, postfix='')</td></tr>
 <tr class="memdesc:af4203adc07ed8df9a50eeee05da7b400"><td class="mdescLeft">&#160;</td><td class="mdescRight">Save the counter trace data and writes it to a file.  <a href="#af4203adc07ed8df9a50eeee05da7b400">More...</a><br /></td></tr>
@@ -136,9 +139,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a41800f48c9271c9444f697bb90876707"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcounter__logic_1_1CounterLogic.html#a41800f48c9271c9444f697bb90876707">get_counting_mode</a> (self)</td></tr>
 <tr class="memdesc:a41800f48c9271c9444f697bb90876707"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the current counting mode.  <a href="#a41800f48c9271c9444f697bb90876707">More...</a><br /></td></tr>
 <tr class="separator:a41800f48c9271c9444f697bb90876707"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad0edd692e99594014e4ad2d69eb7bbfb"><td class="memItemLeft" align="right" valign="top"><a id="ad0edd692e99594014e4ad2d69eb7bbfb"></a>
-def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcounter__logic_1_1CounterLogic.html#ad0edd692e99594014e4ad2d69eb7bbfb">startCount</a> (self)</td></tr>
-<tr class="memdesc:ad0edd692e99594014e4ad2d69eb7bbfb"><td class="mdescLeft">&#160;</td><td class="mdescRight">This is called externally, and is basically a wrapper that redirects to the chosen counting mode start function. <br /></td></tr>
+<tr class="memitem:ad0edd692e99594014e4ad2d69eb7bbfb"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcounter__logic_1_1CounterLogic.html#ad0edd692e99594014e4ad2d69eb7bbfb">startCount</a> (self)</td></tr>
+<tr class="memdesc:ad0edd692e99594014e4ad2d69eb7bbfb"><td class="mdescLeft">&#160;</td><td class="mdescRight">This is called externally, and is basically a wrapper that redirects to the chosen counting mode start function.  <a href="#ad0edd692e99594014e4ad2d69eb7bbfb">More...</a><br /></td></tr>
 <tr class="separator:ad0edd692e99594014e4ad2d69eb7bbfb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7d412ee284b8c973d29321c4008bc536"><td class="memItemLeft" align="right" valign="top"><a id="a7d412ee284b8c973d29321c4008bc536"></a>
 def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcounter__logic_1_1CounterLogic.html#a7d412ee284b8c973d29321c4008bc536">stopCount</a> (self)</td></tr>
@@ -154,8 +156,11 @@ def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class
 <tr class="memdesc:ac1ea5da4736e682bf714247f66acaaa8"><td class="mdescLeft">&#160;</td><td class="mdescRight">This method gets the count data from the hardware for the finite gated counting mode.  <a href="#ac1ea5da4736e682bf714247f66acaaa8">More...</a><br /></td></tr>
 <tr class="separator:ac1ea5da4736e682bf714247f66acaaa8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8d8ae274fc4dbdeb304e63758c4b48ee"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcounter__logic_1_1CounterLogic.html#a8d8ae274fc4dbdeb304e63758c4b48ee">save_current_count_trace</a> (self, name_tag='')</td></tr>
-<tr class="memdesc:a8d8ae274fc4dbdeb304e63758c4b48ee"><td class="mdescLeft">&#160;</td><td class="mdescRight">The current displayed counttrace will be saved.  <a href="#a8d8ae274fc4dbdeb304e63758c4b48ee">More...</a><br /></td></tr>
+<tr class="memdesc:a8d8ae274fc4dbdeb304e63758c4b48ee"><td class="mdescLeft">&#160;</td><td class="mdescRight">The currently displayed counttrace will be saved.  <a href="#a8d8ae274fc4dbdeb304e63758c4b48ee">More...</a><br /></td></tr>
 <tr class="separator:a8d8ae274fc4dbdeb304e63758c4b48ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aab798e1331e7849f115a6f1ae44c2b4d"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcounter__logic_1_1CounterLogic.html#aab798e1331e7849f115a6f1ae44c2b4d">get_channels</a> (self)</td></tr>
+<tr class="memdesc:aab798e1331e7849f115a6f1ae44c2b4d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Shortcut for hardware get_counter_channels.  <a href="#aab798e1331e7849f115a6f1ae44c2b4d">More...</a><br /></td></tr>
+<tr class="separator:aab798e1331e7849f115a6f1ae44c2b4d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -168,12 +173,6 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:af2454fe73ac294859f99f44357062668"><td class="memItemLeft" align="right" valign="top"><a id="af2454fe73ac294859f99f44357062668"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>countdata_smoothed</b></td></tr>
 <tr class="separator:af2454fe73ac294859f99f44357062668"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6f1b510f64e0504b466e073bb5d990df"><td class="memItemLeft" align="right" valign="top"><a id="a6f1b510f64e0504b466e073bb5d990df"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>countdata2</b></td></tr>
-<tr class="separator:a6f1b510f64e0504b466e073bb5d990df"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a01ac125c44dc4ebfb9f8043fd610c161"><td class="memItemLeft" align="right" valign="top"><a id="a01ac125c44dc4ebfb9f8043fd610c161"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>countdata_smoothed2</b></td></tr>
-<tr class="separator:a01ac125c44dc4ebfb9f8043fd610c161"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4a8caa111485a1a88fee6895d53b1bf1"><td class="memItemLeft" align="right" valign="top"><a id="a4a8caa111485a1a88fee6895d53b1bf1"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>rawdata</b></td></tr>
 <tr class="separator:a4a8caa111485a1a88fee6895d53b1bf1"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -225,7 +224,8 @@ Static Public Attributes</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>This logic module gathers data from a hardware counting device. </p>
-<p>sigCounterUpdate: there is new counting data available  sigCountContinuousNext: used to simulate a loop in which the data acquisition runs.  sigCountGatedNext: ??? </p>
+<p>sigCounterUpdate: there is new counting data available  sigCountContinuousNext: used to simulate a loop in which the data acquisition runs.  sigCountGatedNext: ???</p>
+<dl class="section return"><dt>Returns</dt><dd>error: 0 is OK, -1 is error </dd></dl>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a96ecae60b76cbd4be2c64d7c20401f18"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a96ecae60b76cbd4be2c64d7c20401f18">&#9670;&nbsp;</a></span>__init__()</h2>
@@ -370,6 +370,27 @@ Static Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="aab798e1331e7849f115a6f1ae44c2b4d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aab798e1331e7849f115a6f1ae44c2b4d">&#9670;&nbsp;</a></span>get_channels()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">def counter_logic.CounterLogic.get_channels </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Shortcut for hardware get_counter_channels. </p>
+<dl class="section return"><dt>Returns</dt><dd>list(str): return list of active counter channel names </dd></dl>
+
+</div>
+</div>
 <a id="ac307102ae68b4a2b7005109905484b8a"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ac307102ae68b4a2b7005109905484b8a">&#9670;&nbsp;</a></span>get_count_frequency()</h2>
 
@@ -387,7 +408,7 @@ Static Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Returns the currently set frequency of counting (resolution). </p>
-<dl class="section return"><dt>Returns</dt><dd>int: count_frequency </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>float: count_frequency </dd></dl>
 
 </div>
 </div>
@@ -451,6 +472,27 @@ Static Public Attributes</h2></td></tr>
 
 <p>Returns the currently set number of samples counted per readout. </p>
 <dl class="section return"><dt>Returns</dt><dd>int: counting_samples </dd></dl>
+
+</div>
+</div>
+<a id="a697520ca4662696afaa9ad2f122a11d6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a697520ca4662696afaa9ad2f122a11d6">&#9670;&nbsp;</a></span>get_hardware_constraints()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">def counter_logic.CounterLogic.get_hardware_constraints </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Retrieve the hardware constrains from the counter device. </p>
+<dl class="section return"><dt>Returns</dt><dd>SlowCounterConstraints: object with constraints for the counter </dd></dl>
 
 </div>
 </div>
@@ -573,14 +615,16 @@ Static Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>The current displayed counttrace will be saved. </p>
+<p>The currently displayed counttrace will be saved. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">str</td><td>name_tag: optional, personal description that will be appended to the file name</td></tr>
   </table>
   </dd>
 </dl>
-<p>This method saves the already displayed counts to file and does not accumulate them. The counttrace variable will be saved to file with the provided name! </p>
+<dl class="section return"><dt>Returns</dt><dd>: dict data: Data which was saved str Filepath dict Experiment parameters str Filelabel <pre class="fragment">This method saves the already displayed counts to file and does not
+accumulate them. The counttrace variable will be saved to file with the
+provided name!</pre> </dd></dl>
 
 </div>
 </div>
@@ -624,7 +668,7 @@ Static Public Attributes</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>np.array([2 or 3][X]), OrderedDict: array with the </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>dict parameters: Dictionary which contains the saving parameters </dd></dl>
 
 </div>
 </div>
@@ -657,11 +701,11 @@ Static Public Attributes</h2></td></tr>
 <p>Sets the frequency with which the data is acquired. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">int</td><td>frequency: the frequency of counting in Hz.</td></tr>
+    <tr><td class="paramname">float</td><td>frequency: the desired frequency of counting in Hz</td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>int: error code (0:OK, -1:error)</dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>float: the actual frequency of counting in Hz</dd></dl>
 <p>This makes sure, the counter is stopped first and restarted afterwards. </p>
 
 </div>
@@ -692,14 +736,14 @@ Static Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Sets the length of the counted bins. </p>
+<p>Sets the time trace in units of bins. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">int</td><td>length: the length of the array to be set.</td></tr>
+    <tr><td class="paramname">int</td><td>length: time trace in units of bins (positive int).</td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>int: error code (0:OK, -1:error)</dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>int: length of time trace in units of bins</dd></dl>
 <p>This makes sure, the counter is stopped first and restarted afterwards. </p>
 
 </div>
@@ -731,7 +775,8 @@ Static Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Set the counting mode, to change between continuous and gated counting. </p>
-<p>Possible options are: 'continuous' = counts continuously 'gated' = bins the counts according to a gate signal 'finite-gated' = finite measurement with predefined number of samples </p>
+<p>Possible options are: 'continuous' = counts continuously 'gated' = bins the counts according to a gate signal 'finite-gated' = finite measurement with predefined number of samples</p>
+<dl class="section return"><dt>Returns</dt><dd>str: counting mode </dd></dl>
 
 </div>
 </div>
@@ -764,11 +809,11 @@ Static Public Attributes</h2></td></tr>
 <p>Sets the length of the counted bins. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">int</td><td>length: the length of the array to be set.</td></tr>
+    <tr><td class="paramname">int</td><td>samples: oversampling in units of bins (positive int ).</td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>int: error code (0:OK, -1:error)</dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>int: oversampling in units of bins.</dd></dl>
 <p>This makes sure, the counter is stopped first and restarted afterwards. </p>
 
 </div>
@@ -799,8 +844,29 @@ Static Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Starts saving the data in a list. </p>
-<dl class="section return"><dt>Returns</dt><dd>int: error code (0:OK, -1:error) </dd></dl>
+<p>Sets up start-time and initializes data array, if not resuming, and changes saving state If the counter is not running it will be started in order to have data to save. </p>
+<dl class="section return"><dt>Returns</dt><dd>bool: saving state </dd></dl>
+
+</div>
+</div>
+<a id="ad0edd692e99594014e4ad2d69eb7bbfb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad0edd692e99594014e4ad2d69eb7bbfb">&#9670;&nbsp;</a></span>startCount()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">def counter_logic.CounterLogic.startCount </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>This is called externally, and is basically a wrapper that redirects to the chosen counting mode start function. </p>
+<dl class="section return"><dt>Returns</dt><dd>error: 0 is OK, -1 is error </dd></dl>
 
 </div>
 </div>

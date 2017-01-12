@@ -119,6 +119,7 @@ var searchData=
   ['countergui',['CounterGui',['../classcountergui_1_1CounterGui.html',1,'countergui']]],
   ['counterlogic',['CounterLogic',['../classcounter__logic_1_1CounterLogic.html',1,'counter_logic']]],
   ['countermainwindow',['CounterMainWindow',['../classcountergui_1_1CounterMainWindow.html',1,'countergui']]],
+  ['countingmode',['CountingMode',['../classslow__counter__interface_1_1CountingMode.html',1,'slow_counter_interface']]],
   ['countloopbody_5fcontinuous',['countLoopBody_continuous',['../classcounter__logic_1_1CounterLogic.html#a196074906bfedfcf28ae7be7438db3c3',1,'counter_logic::CounterLogic']]],
   ['countloopbody_5ffinite_5fgated',['countLoopBody_finite_gated',['../classcounter__logic_1_1CounterLogic.html#ac1ea5da4736e682bf714247f66acaaa8',1,'counter_logic::CounterLogic']]],
   ['countloopbody_5fgated',['countLoopBody_gated',['../classcounter__logic_1_1CounterLogic.html#a0ea4814320eacb479e02ebcf9cf3de9d',1,'counter_logic::CounterLogic']]],
