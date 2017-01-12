@@ -4046,7 +4046,7 @@ IndexError: list index out of range
 /home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:87: warning: Member __init__(self, config, kwargs) (function) of class optimizer_logic::OptimizerLogic is not documented.
 /home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:234: warning: Member set_refocus_XY_size(self, size) (function) of class optimizer_logic::OptimizerLogic is not documented.
 /home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:238: warning: Member set_refocus_Z_size(self, size) (function) of class optimizer_logic::OptimizerLogic is not documented.
-/home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:674: warning: Member set_position(self, tag, x=None, y=None, z=None, a=None) (function) of class optimizer_logic::OptimizerLogic is not documented.
+/home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:675: warning: Member set_position(self, tag, x=None, y=None, z=None, a=None) (function) of class optimizer_logic::OptimizerLogic is not documented.
 /home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:97: warning: Member refocus_XY_size (variable) of class optimizer_logic::OptimizerLogic is not documented.
 /home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:98: warning: Member optimizer_XY_res (variable) of class optimizer_logic::OptimizerLogic is not documented.
 /home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:99: warning: Member refocus_Z_size (variable) of class optimizer_logic::OptimizerLogic is not documented.
@@ -4074,9 +4074,9 @@ IndexError: list index out of range
 /home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:170: warning: Member point2 (variable) of class optimizer_logic::OptimizerLogic is not documented.
 /home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:171: warning: Member point3 (variable) of class optimizer_logic::OptimizerLogic is not documented.
 /home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:177: warning: Member use_custom_params (variable) of class optimizer_logic::OptimizerLogic is not documented.
-/home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:309: warning: Member xy_refocus_image (variable) of class optimizer_logic::OptimizerLogic is not documented.
-/home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:331: warning: Member z_refocus_line (variable) of class optimizer_logic::OptimizerLogic is not documented.
-/home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:332: warning: Member z_fit_data (variable) of class optimizer_logic::OptimizerLogic is not documented.
+/home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:310: warning: Member xy_refocus_image (variable) of class optimizer_logic::OptimizerLogic is not documented.
+/home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:332: warning: Member z_refocus_line (variable) of class optimizer_logic::OptimizerLogic is not documented.
+/home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:333: warning: Member z_fit_data (variable) of class optimizer_logic::OptimizerLogic is not documented.
 /home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:79: warning: Member sigImageUpdated (variable) of class optimizer_logic::OptimizerLogic is not documented.
 /home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:80: warning: Member sigRefocusStarted (variable) of class optimizer_logic::OptimizerLogic is not documented.
 /home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:81: warning: Member sigRefocusXySizeChanged (variable) of class optimizer_logic::OptimizerLogic is not documented.
