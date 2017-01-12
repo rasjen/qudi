@@ -242,6 +242,7 @@ var searchData=
   ['stop_5facqusition',['stop_acqusition',['../classhigh__finesse__wavemeter_1_1HighFinesseWavemeter.html#a10f06b28ff04f9b3ede0b856eb71ec5a',1,'high_finesse_wavemeter.HighFinesseWavemeter.stop_acqusition()'],['../classwavemeter__dummy_1_1WavemeterDummy.html#ab259060c3ad99a7e2f6eb721d2dee0d8',1,'wavemeter_dummy.WavemeterDummy.stop_acqusition()'],['../classwavemeter__interface_1_1WavemeterInterface.html#a49309eb373f19ed89bfc5a2a927687c6',1,'wavemeter_interface.WavemeterInterface.stop_acqusition()']]],
   ['stop_5falignment',['stop_alignment',['../classmagnet__logic_1_1MagnetLogic.html#a8329c09cb9b55a54259c2f1b8e6ecb14',1,'magnet_logic::MagnetLogic']]],
   ['stop_5fclicked',['stop_clicked',['../classgated__counter__gui_1_1GatedCounterGui.html#af6809ac0ee0ead7bb99fbfbce3f3ba92',1,'gated_counter_gui::GatedCounterGui']]],
+  ['stop_5fcounter',['stop_counter',['../classcounter__logic_1_1CounterLogic.html#aa7cf94b97ded007346413a9daa428949',1,'counter_logic::CounterLogic']]],
   ['stop_5fdifferential_5fspectrum',['stop_differential_spectrum',['../classspectrum_1_1SpectrumLogic.html#a5f2a8bb07a7d2f2ca1cd44d725d3a149',1,'spectrum::SpectrumLogic']]],
   ['stop_5fgated_5fcounter',['stop_gated_counter',['../classni__card_1_1NICard.html#ad020dd3cb95dd98cb2524f2f4369ba73',1,'ni_card::NICard']]],
   ['stop_5fhard',['stop_hard',['../classsc__magnet_1_1magnet_1_1Magnet.html#ac2cb71b24fbdd61e3cc36af3880b7498',1,'sc_magnet::magnet::Magnet']]],

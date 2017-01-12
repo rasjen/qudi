@@ -146,6 +146,9 @@ Public Member Functions</h2></td></tr>
 def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcounter__logic_1_1CounterLogic.html#a7d412ee284b8c973d29321c4008bc536">stopCount</a> (self)</td></tr>
 <tr class="memdesc:a7d412ee284b8c973d29321c4008bc536"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set a flag to request stopping counting. <br /></td></tr>
 <tr class="separator:a7d412ee284b8c973d29321c4008bc536"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa7cf94b97ded007346413a9daa428949"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcounter__logic_1_1CounterLogic.html#aa7cf94b97ded007346413a9daa428949">stop_counter</a> (self)</td></tr>
+<tr class="memdesc:aa7cf94b97ded007346413a9daa428949"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stops the counter if it is running and returns whether it was running.  <a href="#aa7cf94b97ded007346413a9daa428949">More...</a><br /></td></tr>
+<tr class="separator:aa7cf94b97ded007346413a9daa428949"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a196074906bfedfcf28ae7be7438db3c3"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcounter__logic_1_1CounterLogic.html#a196074906bfedfcf28ae7be7438db3c3">countLoopBody_continuous</a> (self)</td></tr>
 <tr class="memdesc:a196074906bfedfcf28ae7be7438db3c3"><td class="mdescLeft">&#160;</td><td class="mdescRight">This method gets the count data from the hardware for the continuous counting mode (default).  <a href="#a196074906bfedfcf28ae7be7438db3c3">More...</a><br /></td></tr>
 <tr class="separator:a196074906bfedfcf28ae7be7438db3c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -867,6 +870,27 @@ provided name!</pre> </dd></dl>
 
 <p>This is called externally, and is basically a wrapper that redirects to the chosen counting mode start function. </p>
 <dl class="section return"><dt>Returns</dt><dd>error: 0 is OK, -1 is error </dd></dl>
+
+</div>
+</div>
+<a id="aa7cf94b97ded007346413a9daa428949"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa7cf94b97ded007346413a9daa428949">&#9670;&nbsp;</a></span>stop_counter()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">def counter_logic.CounterLogic.stop_counter </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Stops the counter if it is running and returns whether it was running. </p>
+<dl class="section return"><dt>Returns</dt><dd>bool restart: True if counter was running </dd></dl>
 
 </div>
 </div>
