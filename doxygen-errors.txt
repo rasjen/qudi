@@ -3,6 +3,19 @@ Traceback (most recent call last):
     sys.exit(main())
   File "/home/travis/miniconda/envs/test/lib/python3.4/site-packages/doxypypy/doxypypy.py", line 830, in main
     astWalker.parseLines()
+  File "/home/travis/miniconda/envs/test/lib/python3.4/site-packages/doxypypy/doxypypy.py", line 741, in parseLines
+    inAst = parse(''.join(self.lines), self.inFilename)
+  File "/home/travis/miniconda/envs/test/lib/python3.4/ast.py", line 35, in parse
+    return compile(source, filename, mode, PyCF_ONLY_AST)
+  File "/home/travis/build/Ulm-IQO/qudi/hardware/ni_pulser.py", line 75
+    n = 2048
+    ^
+IndentationError: unexpected indent
+Traceback (most recent call last):
+  File "/home/travis/miniconda/envs/test/bin/doxypypy", line 11, in <module>
+    sys.exit(main())
+  File "/home/travis/miniconda/envs/test/lib/python3.4/site-packages/doxypypy/doxypypy.py", line 830, in main
+    astWalker.parseLines()
   File "/home/travis/miniconda/envs/test/lib/python3.4/site-packages/doxypypy/doxypypy.py", line 743, in parseLines
     self.visit(inAst)
   File "/home/travis/miniconda/envs/test/lib/python3.4/site-packages/doxypypy/doxypypy.py", line 569, in visit
