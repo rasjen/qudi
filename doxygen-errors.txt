@@ -1220,8 +1220,8 @@ IndexError: list index out of range
 /home/travis/build/Ulm-IQO/qudi/logic/counter_logic.py:160: warning: argument 'object' of command @param is not found in the argument list of counter_logic.CounterLogic::on_deactivate(self, e)
 /home/travis/build/Ulm-IQO/qudi/logic/counter_logic.py:160: warning: The following parameters of counter_logic.CounterLogic.on_deactivate(self, e) are not documented:
   parameter 'e'
-/home/travis/build/Ulm-IQO/qudi/logic/counter_logic.py:732: warning: argument 'str' of command @param is not found in the argument list of counter_logic.CounterLogic::save_current_count_trace(self, name_tag='')
-/home/travis/build/Ulm-IQO/qudi/logic/counter_logic.py:732: warning: The following parameters of counter_logic.CounterLogic.save_current_count_trace(self, name_tag='') are not documented:
+/home/travis/build/Ulm-IQO/qudi/logic/counter_logic.py:734: warning: argument 'str' of command @param is not found in the argument list of counter_logic.CounterLogic::save_current_count_trace(self, name_tag='')
+/home/travis/build/Ulm-IQO/qudi/logic/counter_logic.py:734: warning: The following parameters of counter_logic.CounterLogic.save_current_count_trace(self, name_tag='') are not documented:
   parameter 'name_tag'
 /home/travis/build/Ulm-IQO/qudi/logic/counter_logic.py:295: warning: argument 'bool' of command @param is not found in the argument list of counter_logic.CounterLogic::save_data(self, to_file=True, postfix='')
 /home/travis/build/Ulm-IQO/qudi/logic/counter_logic.py:295: warning: argument 'str' of command @param is not found in the argument list of counter_logic.CounterLogic::save_data(self, to_file=True, postfix='')
@@ -1238,8 +1238,8 @@ IndexError: list index out of range
 /home/travis/build/Ulm-IQO/qudi/logic/counter_logic.py:188: warning: The following parameters of counter_logic.CounterLogic.set_counting_samples(self, samples=1) are not documented:
   parameter 'samples'
 /home/travis/build/Ulm-IQO/qudi/gui/counter/countergui.py:71: warning: Member __init__(self, config, kwargs) (function) of class countergui::CounterGui is not documented.
-/home/travis/build/Ulm-IQO/qudi/gui/counter/countergui.py:387: warning: Member update_counting_mode_ComboBox(self) (function) of class countergui::CounterGui is not documented.
-/home/travis/build/Ulm-IQO/qudi/gui/counter/countergui.py:392: warning: Member update_smoothing_ComboBox(self) (function) of class countergui::CounterGui is not documented.
+/home/travis/build/Ulm-IQO/qudi/gui/counter/countergui.py:388: warning: Member update_counting_mode_ComboBox(self) (function) of class countergui::CounterGui is not documented.
+/home/travis/build/Ulm-IQO/qudi/gui/counter/countergui.py:393: warning: Member update_smoothing_ComboBox(self) (function) of class countergui::CounterGui is not documented.
 /home/travis/build/Ulm-IQO/qudi/gui/guibase.py:38: warning: Member show(self) (function) of class gui::guibase::GUIBase is not documented.
 /home/travis/build/Ulm-IQO/qudi/gui/guibase.py:42: warning: Member saveWindowPos(self, window) (function) of class gui::guibase::GUIBase is not documented.
 /home/travis/build/Ulm-IQO/qudi/gui/guibase.py:46: warning: Member restoreWindowPos(self, window) (function) of class gui::guibase::GUIBase is not documented.
@@ -1256,17 +1256,17 @@ IndexError: list index out of range
 /home/travis/build/Ulm-IQO/qudi/gui/counter/countergui.py:195: warning: argument 'object' of command @param is not found in the argument list of countergui.CounterGui::on_deactivate(self, e)
 /home/travis/build/Ulm-IQO/qudi/gui/counter/countergui.py:197: warning: The following parameters of countergui.CounterGui.on_deactivate(self, e) are not documented:
   parameter 'e'
-/home/travis/build/Ulm-IQO/qudi/gui/counter/countergui.py:337: warning: argument 'float' of command @param is not found in the argument list of countergui.CounterGui::update_count_freq_SpinBox(self, count_freq)
-/home/travis/build/Ulm-IQO/qudi/gui/counter/countergui.py:339: warning: The following parameters of countergui.CounterGui.update_count_freq_SpinBox(self, count_freq) are not documented:
+/home/travis/build/Ulm-IQO/qudi/gui/counter/countergui.py:338: warning: argument 'float' of command @param is not found in the argument list of countergui.CounterGui::update_count_freq_SpinBox(self, count_freq)
+/home/travis/build/Ulm-IQO/qudi/gui/counter/countergui.py:340: warning: The following parameters of countergui.CounterGui.update_count_freq_SpinBox(self, count_freq) are not documented:
   parameter 'count_freq'
-/home/travis/build/Ulm-IQO/qudi/gui/counter/countergui.py:349: warning: argument 'int' of command @param is not found in the argument list of countergui.CounterGui::update_count_length_SpinBox(self, count_length)
-/home/travis/build/Ulm-IQO/qudi/gui/counter/countergui.py:351: warning: The following parameters of countergui.CounterGui.update_count_length_SpinBox(self, count_length) are not documented:
+/home/travis/build/Ulm-IQO/qudi/gui/counter/countergui.py:350: warning: argument 'int' of command @param is not found in the argument list of countergui.CounterGui::update_count_length_SpinBox(self, count_length)
+/home/travis/build/Ulm-IQO/qudi/gui/counter/countergui.py:352: warning: The following parameters of countergui.CounterGui.update_count_length_SpinBox(self, count_length) are not documented:
   parameter 'count_length'
-/home/travis/build/Ulm-IQO/qudi/gui/counter/countergui.py:377: warning: argument 'bool' of command @param is not found in the argument list of countergui.CounterGui::update_count_status_Action(self, running)
-/home/travis/build/Ulm-IQO/qudi/gui/counter/countergui.py:379: warning: The following parameters of countergui.CounterGui.update_count_status_Action(self, running) are not documented:
+/home/travis/build/Ulm-IQO/qudi/gui/counter/countergui.py:378: warning: argument 'bool' of command @param is not found in the argument list of countergui.CounterGui::update_count_status_Action(self, running)
+/home/travis/build/Ulm-IQO/qudi/gui/counter/countergui.py:380: warning: The following parameters of countergui.CounterGui.update_count_status_Action(self, running) are not documented:
   parameter 'running'
-/home/travis/build/Ulm-IQO/qudi/gui/counter/countergui.py:361: warning: argument 'bool' of command @param is not found in the argument list of countergui.CounterGui::update_saving_Action(self, start)
-/home/travis/build/Ulm-IQO/qudi/gui/counter/countergui.py:363: warning: The following parameters of countergui.CounterGui.update_saving_Action(self, start) are not documented:
+/home/travis/build/Ulm-IQO/qudi/gui/counter/countergui.py:362: warning: argument 'bool' of command @param is not found in the argument list of countergui.CounterGui::update_saving_Action(self, start)
+/home/travis/build/Ulm-IQO/qudi/gui/counter/countergui.py:364: warning: The following parameters of countergui.CounterGui.update_saving_Action(self, start) are not documented:
   parameter 'start'
 /home/travis/build/Ulm-IQO/qudi/gui/counter/countergui.py:39: warning: Member __init__(self, kwargs) (function) of class countergui::CounterMainWindow is not documented.
 /home/travis/build/Ulm-IQO/qudi/hardware/CTC100_temperature.py:46: warning: Member on_activate(self, e) (function) of class CTC100_temperature::CTC100 is not documented.
@@ -4045,39 +4045,31 @@ IndexError: list index out of range
 /home/travis/build/Ulm-IQO/qudi/hardware/switches/ok_fpga/ok_s6_switch.py:104: warning: The following parameters of ok_s6_switch.HardwareSwitchFpga.on_deactivate(self, e) are not documented:
   parameter 'e'
 /home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:87: warning: Member __init__(self, config, kwargs) (function) of class optimizer_logic::OptimizerLogic is not documented.
-/home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:234: warning: Member set_refocus_XY_size(self, size) (function) of class optimizer_logic::OptimizerLogic is not documented.
-/home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:238: warning: Member set_refocus_Z_size(self, size) (function) of class optimizer_logic::OptimizerLogic is not documented.
-/home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:675: warning: Member set_position(self, tag, x=None, y=None, z=None, a=None) (function) of class optimizer_logic::OptimizerLogic is not documented.
-/home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:97: warning: Member refocus_XY_size (variable) of class optimizer_logic::OptimizerLogic is not documented.
-/home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:98: warning: Member optimizer_XY_res (variable) of class optimizer_logic::OptimizerLogic is not documented.
-/home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:99: warning: Member refocus_Z_size (variable) of class optimizer_logic::OptimizerLogic is not documented.
-/home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:100: warning: Member optimizer_Z_res (variable) of class optimizer_logic::OptimizerLogic is not documented.
-/home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:101: warning: Member hw_settle_time (variable) of class optimizer_logic::OptimizerLogic is not documented.
-/home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:104: warning: Member optimization_sequence (variable) of class optimizer_logic::OptimizerLogic is not documented.
-/home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:107: warning: Member do_surface_subtraction (variable) of class optimizer_logic::OptimizerLogic is not documented.
-/home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:108: warning: Member surface_subtr_scan_offset (variable) of class optimizer_logic::OptimizerLogic is not documented.
-/home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:111: warning: Member threadlock (variable) of class optimizer_logic::OptimizerLogic is not documented.
-/home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:113: warning: Member stopRequested (variable) of class optimizer_logic::OptimizerLogic is not documented.
-/home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:114: warning: Member is_crosshair (variable) of class optimizer_logic::OptimizerLogic is not documented.
-/home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:136: warning: Member return_slowness (variable) of class optimizer_logic::OptimizerLogic is not documented.
-/home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:141: warning: Member x_range (variable) of class optimizer_logic::OptimizerLogic is not documented.
-/home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:142: warning: Member y_range (variable) of class optimizer_logic::OptimizerLogic is not documented.
-/home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:143: warning: Member z_range (variable) of class optimizer_logic::OptimizerLogic is not documented.
-/home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:148: warning: Member optim_pos_x (variable) of class optimizer_logic::OptimizerLogic is not documented.
-/home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:149: warning: Member optim_pos_y (variable) of class optimizer_logic::OptimizerLogic is not documented.
-/home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:150: warning: Member optim_pos_z (variable) of class optimizer_logic::OptimizerLogic is not documented.
-/home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:161: warning: Member tilt_correction (variable) of class optimizer_logic::OptimizerLogic is not documented.
-/home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:163: warning: Member tilt_reference_x (variable) of class optimizer_logic::OptimizerLogic is not documented.
-/home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:164: warning: Member tilt_reference_y (variable) of class optimizer_logic::OptimizerLogic is not documented.
-/home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:166: warning: Member tilt_slope_x (variable) of class optimizer_logic::OptimizerLogic is not documented.
-/home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:167: warning: Member tilt_slope_y (variable) of class optimizer_logic::OptimizerLogic is not documented.
-/home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:169: warning: Member point1 (variable) of class optimizer_logic::OptimizerLogic is not documented.
-/home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:170: warning: Member point2 (variable) of class optimizer_logic::OptimizerLogic is not documented.
-/home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:171: warning: Member point3 (variable) of class optimizer_logic::OptimizerLogic is not documented.
-/home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:177: warning: Member use_custom_params (variable) of class optimizer_logic::OptimizerLogic is not documented.
-/home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:310: warning: Member xy_refocus_image (variable) of class optimizer_logic::OptimizerLogic is not documented.
-/home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:332: warning: Member z_refocus_line (variable) of class optimizer_logic::OptimizerLogic is not documented.
-/home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:333: warning: Member z_fit_data (variable) of class optimizer_logic::OptimizerLogic is not documented.
+/home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:255: warning: Member set_refocus_XY_size(self, size) (function) of class optimizer_logic::OptimizerLogic is not documented.
+/home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:259: warning: Member set_refocus_Z_size(self, size) (function) of class optimizer_logic::OptimizerLogic is not documented.
+/home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:696: warning: Member set_position(self, tag, x=None, y=None, z=None, a=None) (function) of class optimizer_logic::OptimizerLogic is not documented.
+/home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:97: warning: Member threadlock (variable) of class optimizer_logic::OptimizerLogic is not documented.
+/home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:99: warning: Member stopRequested (variable) of class optimizer_logic::OptimizerLogic is not documented.
+/home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:100: warning: Member is_crosshair (variable) of class optimizer_logic::OptimizerLogic is not documented.
+/home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:122: warning: Member return_slowness (variable) of class optimizer_logic::OptimizerLogic is not documented.
+/home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:127: warning: Member refocus_XY_size (variable) of class optimizer_logic::OptimizerLogic is not documented.
+/home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:132: warning: Member optimizer_XY_res (variable) of class optimizer_logic::OptimizerLogic is not documented.
+/home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:137: warning: Member refocus_Z_size (variable) of class optimizer_logic::OptimizerLogic is not documented.
+/home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:142: warning: Member optimizer_Z_res (variable) of class optimizer_logic::OptimizerLogic is not documented.
+/home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:147: warning: Member hw_settle_time (variable) of class optimizer_logic::OptimizerLogic is not documented.
+/home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:152: warning: Member optimization_sequence (variable) of class optimizer_logic::OptimizerLogic is not documented.
+/home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:157: warning: Member do_surface_subtraction (variable) of class optimizer_logic::OptimizerLogic is not documented.
+/home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:162: warning: Member surface_subtr_scan_offset (variable) of class optimizer_logic::OptimizerLogic is not documented.
+/home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:168: warning: Member x_range (variable) of class optimizer_logic::OptimizerLogic is not documented.
+/home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:169: warning: Member y_range (variable) of class optimizer_logic::OptimizerLogic is not documented.
+/home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:170: warning: Member z_range (variable) of class optimizer_logic::OptimizerLogic is not documented.
+/home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:175: warning: Member optim_pos_x (variable) of class optimizer_logic::OptimizerLogic is not documented.
+/home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:176: warning: Member optim_pos_y (variable) of class optimizer_logic::OptimizerLogic is not documented.
+/home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:177: warning: Member optim_pos_z (variable) of class optimizer_logic::OptimizerLogic is not documented.
+/home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:191: warning: Member use_custom_params (variable) of class optimizer_logic::OptimizerLogic is not documented.
+/home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:331: warning: Member xy_refocus_image (variable) of class optimizer_logic::OptimizerLogic is not documented.
+/home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:353: warning: Member z_refocus_line (variable) of class optimizer_logic::OptimizerLogic is not documented.
+/home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:354: warning: Member z_fit_data (variable) of class optimizer_logic::OptimizerLogic is not documented.
 /home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:79: warning: Member sigImageUpdated (variable) of class optimizer_logic::OptimizerLogic is not documented.
 /home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:80: warning: Member sigRefocusStarted (variable) of class optimizer_logic::OptimizerLogic is not documented.
 /home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:81: warning: Member sigRefocusXySizeChanged (variable) of class optimizer_logic::OptimizerLogic is not documented.
@@ -4085,10 +4077,10 @@ IndexError: list index out of range
 /home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:83: warning: Member sigRefocusFinished (variable) of class optimizer_logic::OptimizerLogic is not documented.
 /home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:84: warning: Member sigClockFrequencyChanged (variable) of class optimizer_logic::OptimizerLogic is not documented.
 /home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:85: warning: Member sigPositionChanged (variable) of class optimizer_logic::OptimizerLogic is not documented.
-/home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:223: warning: argument 'int' of command @param is not found in the argument list of optimizer_logic.OptimizerLogic::set_clock_frequency(self, clock_frequency)
-/home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:225: warning: The following parameters of optimizer_logic.OptimizerLogic.set_clock_frequency(self, clock_frequency) are not documented:
+/home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:244: warning: argument 'int' of command @param is not found in the argument list of optimizer_logic.OptimizerLogic::set_clock_frequency(self, clock_frequency)
+/home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:246: warning: The following parameters of optimizer_logic.OptimizerLogic.set_clock_frequency(self, clock_frequency) are not documented:
   parameter 'clock_frequency'
-/home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:246: warning: The following parameters of optimizer_logic.OptimizerLogic.start_refocus(self, initial_pos=None, caller_tag='unknown') are not documented:
+/home/travis/build/Ulm-IQO/qudi/logic/optimizer_logic.py:267: warning: The following parameters of optimizer_logic.OptimizerLogic.start_refocus(self, initial_pos=None, caller_tag='unknown') are not documented:
   parameter 'caller_tag'
 /home/travis/build/Ulm-IQO/qudi/tools/parentpoller.py:29: warning: Member __init__(self) (function) of class parentpoller::ParentPollerUnix is not documented.
 /home/travis/build/Ulm-IQO/qudi/tools/parentpoller.py:33: warning: Member run(self) (function) of class parentpoller::ParentPollerUnix is not documented.
