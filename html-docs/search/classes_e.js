@@ -1,7 +1,7 @@
 var searchData=
 [
   ['parentpollerunix',['ParentPollerUnix',['../classparentpoller_1_1ParentPollerUnix.html',1,'parentpoller.ParentPollerUnix'],['../classcore_1_1parentpoller_1_1ParentPollerUnix.html',1,'core.parentpoller.ParentPollerUnix']]],
-  ['parentpollerwindows',['ParentPollerWindows',['../classcore_1_1parentpoller_1_1ParentPollerWindows.html',1,'core.parentpoller.ParentPollerWindows'],['../classparentpoller_1_1ParentPollerWindows.html',1,'parentpoller.ParentPollerWindows']]],
+  ['parentpollerwindows',['ParentPollerWindows',['../classparentpoller_1_1ParentPollerWindows.html',1,'parentpoller.ParentPollerWindows'],['../classcore_1_1parentpoller_1_1ParentPollerWindows.html',1,'core.parentpoller.ParentPollerWindows']]],
   ['pidcontrollerinterface',['PIDControllerInterface',['../classpid__controller__interface_1_1PIDControllerInterface.html',1,'pid_controller_interface']]],
   ['pidgui',['PIDGui',['../classpidgui_1_1PIDGui.html',1,'pidgui']]],
   ['pidlogic',['PIDLogic',['../classpid__logic_1_1PIDLogic.html',1,'pid_logic']]],

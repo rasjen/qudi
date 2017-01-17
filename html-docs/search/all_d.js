@@ -72,7 +72,7 @@ var searchData=
   ['mutex',['Mutex',['../classcore_1_1util_1_1mutex_1_1Mutex.html',1,'core::util::mutex']]],
   ['mutexlocker',['MutexLocker',['../classcore_1_1util_1_1mutex_1_1MutexLocker.html',1,'core::util::mutex']]],
   ['mw_5foff',['mw_off',['../classnuclear__operations__logic_1_1NuclearOperationsLogic.html#aefba01bdfbfb5ec91e8ef37c483f3c05',1,'nuclear_operations_logic.NuclearOperationsLogic.mw_off()'],['../classodmr__logic_1_1ODMRLogic.html#a2144b00991b47f2e34bb05324f226eba',1,'odmr_logic.ODMRLogic.MW_off()']]],
-  ['mw_5fon',['mw_on',['../classnuclear__operations__logic_1_1NuclearOperationsLogic.html#a7e146606651e9f46401064d4b157aa89',1,'nuclear_operations_logic.NuclearOperationsLogic.mw_on()'],['../classodmr__logic_1_1ODMRLogic.html#a69917b8450dc48a829196bd60304424f',1,'odmr_logic.ODMRLogic.MW_on()']]],
+  ['mw_5fon',['MW_on',['../classodmr__logic_1_1ODMRLogic.html#a69917b8450dc48a829196bd60304424f',1,'odmr_logic.ODMRLogic.MW_on()'],['../classnuclear__operations__logic_1_1NuclearOperationsLogic.html#a7e146606651e9f46401064d4b157aa89',1,'nuclear_operations_logic.NuclearOperationsLogic.mw_on()']]],
   ['mw_5fstop',['mw_stop',['../classodmrgui_1_1ODMRGui.html#a74c112dbf1fed5fa01a239113a179856',1,'odmrgui::ODMRGui']]],
   ['my_5fcolors',['my_colors',['../classgui_1_1confocal_1_1confocalgui_1_1ConfocalGui.html#a58a0bce9ca8f9ad6034bdca47644fca2',1,'gui::confocal::confocalgui::ConfocalGui']]],
   ['mythreadhasquit',['myThreadHasQuit',['../classcore_1_1threadmanager_1_1ThreadItem.html#a3a3746a8a696084962c5616dda6ef98f',1,'core::threadmanager::ThreadItem']]]
