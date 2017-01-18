@@ -142,7 +142,7 @@ IndexError: list index out of range
 
 /home/travis/build/Ulm-IQO/qudi/core/util/win_interrupt.py:27: warning: documented symbol `core::util::win_interrupt::_fields_' was not declared or defined.
 /home/travis/build/Ulm-IQO/qudi/gui/pulsed/pulsed_maingui.py:339: warning: documented symbol `pulsed_maingui.PulsedMeasurementGui::_encoding' was not declared or defined.
-/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:1986: warning: documented symbol `ni_card.NICard::_gated_count_data' was not declared or defined.
+/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:1987: warning: documented symbol `ni_card.NICard::_gated_count_data' was not declared or defined.
 /home/travis/build/Ulm-IQO/qudi/logic/generic_task.py:91: warning: documented symbol `generic_task.InterruptableTask::_stateDict' was not declared or defined.
 /home/travis/build/Ulm-IQO/qudi/logic/generic_task.py:384: warning: documented symbol `generic_task.PrePostTask::_default_callbacks' was not declared or defined.
 /home/travis/build/Ulm-IQO/qudi/logic/generic_task.py:388: warning: documented symbol `generic_task.PrePostTask::_stateList' was not declared or defined.
@@ -3574,10 +3574,10 @@ IndexError: list index out of range
 /home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:752: warning: argument 'int' of command @param is not found in the argument list of ni_card.NICard::get_counter(self, samples=None)
 /home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:752: warning: The following parameters of ni_card.NICard.get_counter(self, samples=None) are not documented:
   parameter 'samples'
-/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:1975: warning: argument 'int' of command @param is not found in the argument list of ni_card.NICard::get_gated_counts(self, samples=None, timeout=None, read_available_samples=False)
-/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:1975: warning: argument 'int' of command @param is not found in the argument list of ni_card.NICard::get_gated_counts(self, samples=None, timeout=None, read_available_samples=False)
-/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:1975: warning: argument 'bool' of command @param is not found in the argument list of ni_card.NICard::get_gated_counts(self, samples=None, timeout=None, read_available_samples=False)
-/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:1975: warning: The following parameters of ni_card.NICard.get_gated_counts(self, samples=None, timeout=None, read_available_samples=False) are not documented:
+/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:1976: warning: argument 'int' of command @param is not found in the argument list of ni_card.NICard::get_gated_counts(self, samples=None, timeout=None, read_available_samples=False)
+/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:1976: warning: argument 'int' of command @param is not found in the argument list of ni_card.NICard::get_gated_counts(self, samples=None, timeout=None, read_available_samples=False)
+/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:1976: warning: argument 'bool' of command @param is not found in the argument list of ni_card.NICard::get_gated_counts(self, samples=None, timeout=None, read_available_samples=False)
+/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:1976: warning: The following parameters of ni_card.NICard.get_gated_counts(self, samples=None, timeout=None, read_available_samples=False) are not documented:
   parameter 'samples'
   parameter 'timeout'
   parameter 'read_available_samples'
@@ -3627,9 +3627,9 @@ IndexError: list index out of range
   parameter 'sources'
   parameter 'clock_channel'
   parameter 'counter_buffer'
-/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:1867: warning: argument 'int' of command @param is not found in the argument list of ni_card.NICard::set_up_gated_counter(self, buffer_length, read_available_samples=False)
-/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:1867: warning: argument 'bool' of command @param is not found in the argument list of ni_card.NICard::set_up_gated_counter(self, buffer_length, read_available_samples=False)
-/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:1867: warning: The following parameters of ni_card.NICard.set_up_gated_counter(self, buffer_length, read_available_samples=False) are not documented:
+/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:1868: warning: argument 'int' of command @param is not found in the argument list of ni_card.NICard::set_up_gated_counter(self, buffer_length, read_available_samples=False)
+/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:1868: warning: argument 'bool' of command @param is not found in the argument list of ni_card.NICard::set_up_gated_counter(self, buffer_length, read_available_samples=False)
+/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:1868: warning: The following parameters of ni_card.NICard.set_up_gated_counter(self, buffer_length, read_available_samples=False) are not documented:
   parameter 'buffer_length'
   parameter 'read_available_samples'
 /home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:1338: warning: argument 'int' of command @param is not found in the argument list of ni_card.NICard::set_up_line(self, length=100)
@@ -3673,24 +3673,24 @@ IndexError: list index out of range
 /home/travis/build/Ulm-IQO/qudi/core/base.py:126: warning: Member connector (variable) of class core::base::Base is not documented.
 /home/travis/build/Ulm-IQO/qudi/core/base.py:49: warning: Member sigStateChanged (variable) of class core::base::Base is not documented.
 /home/travis/build/Ulm-IQO/qudi/core/base.py:168: warning: Member result (variable) of class core::base::Base is not documented.
-/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:2197: warning: argument 'int' of command @param is not found in the argument list of ni_card.SlowGatedNICard::get_counter(self, samples=None)
-/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:2197: warning: The following parameters of ni_card.SlowGatedNICard.get_counter(self, samples=None) are not documented:
+/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:2198: warning: argument 'int' of command @param is not found in the argument list of ni_card.SlowGatedNICard::get_counter(self, samples=None)
+/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:2198: warning: The following parameters of ni_card.SlowGatedNICard.get_counter(self, samples=None) are not documented:
   parameter 'samples'
-/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:2096: warning: argument 'object' of command @param is not found in the argument list of ni_card.SlowGatedNICard::on_activate(self, e=None)
-/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:2096: warning: The following parameters of ni_card.SlowGatedNICard.on_activate(self, e=None) are not documented:
+/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:2097: warning: argument 'object' of command @param is not found in the argument list of ni_card.SlowGatedNICard::on_activate(self, e=None)
+/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:2097: warning: The following parameters of ni_card.SlowGatedNICard.on_activate(self, e=None) are not documented:
   parameter 'e'
-/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:2159: warning: argument 'float' of command @param is not found in the argument list of ni_card.SlowGatedNICard::set_up_clock(self, clock_frequency=None, clock_channel=None)
-/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:2159: warning: argument 'string' of command @param is not found in the argument list of ni_card.SlowGatedNICard::set_up_clock(self, clock_frequency=None, clock_channel=None)
-/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:2159: warning: The following parameters of ni_card.SlowGatedNICard.set_up_clock(self, clock_frequency=None, clock_channel=None) are not documented:
+/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:2160: warning: argument 'float' of command @param is not found in the argument list of ni_card.SlowGatedNICard::set_up_clock(self, clock_frequency=None, clock_channel=None)
+/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:2160: warning: argument 'string' of command @param is not found in the argument list of ni_card.SlowGatedNICard::set_up_clock(self, clock_frequency=None, clock_channel=None)
+/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:2160: warning: The following parameters of ni_card.SlowGatedNICard.set_up_clock(self, clock_frequency=None, clock_channel=None) are not documented:
   parameter 'clock_frequency'
   parameter 'clock_channel'
-/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:2180: warning: argument 'str' of command @param is not found in the argument list of ni_card.SlowGatedNICard::set_up_counter(self, counter_channel=None, photon_source=None, counter_channel2=None, photon_source2=None, clock_channel=None, counter_buffer=None)
-/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:2180: warning: argument 'str' of command @param is not found in the argument list of ni_card.SlowGatedNICard::set_up_counter(self, counter_channel=None, photon_source=None, counter_channel2=None, photon_source2=None, clock_channel=None, counter_buffer=None)
-/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:2180: warning: argument 'str' of command @param is not found in the argument list of ni_card.SlowGatedNICard::set_up_counter(self, counter_channel=None, photon_source=None, counter_channel2=None, photon_source2=None, clock_channel=None, counter_buffer=None)
-/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:2180: warning: argument 'str' of command @param is not found in the argument list of ni_card.SlowGatedNICard::set_up_counter(self, counter_channel=None, photon_source=None, counter_channel2=None, photon_source2=None, clock_channel=None, counter_buffer=None)
-/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:2180: warning: argument 'str' of command @param is not found in the argument list of ni_card.SlowGatedNICard::set_up_counter(self, counter_channel=None, photon_source=None, counter_channel2=None, photon_source2=None, clock_channel=None, counter_buffer=None)
-/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:2180: warning: argument 'int' of command @param is not found in the argument list of ni_card.SlowGatedNICard::set_up_counter(self, counter_channel=None, photon_source=None, counter_channel2=None, photon_source2=None, clock_channel=None, counter_buffer=None)
-/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:2180: warning: The following parameters of ni_card.SlowGatedNICard.set_up_counter(self, counter_channel=None, photon_source=None, counter_channel2=None, photon_source2=None, clock_channel=None, counter_buffer=None) are not documented:
+/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:2181: warning: argument 'str' of command @param is not found in the argument list of ni_card.SlowGatedNICard::set_up_counter(self, counter_channel=None, photon_source=None, counter_channel2=None, photon_source2=None, clock_channel=None, counter_buffer=None)
+/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:2181: warning: argument 'str' of command @param is not found in the argument list of ni_card.SlowGatedNICard::set_up_counter(self, counter_channel=None, photon_source=None, counter_channel2=None, photon_source2=None, clock_channel=None, counter_buffer=None)
+/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:2181: warning: argument 'str' of command @param is not found in the argument list of ni_card.SlowGatedNICard::set_up_counter(self, counter_channel=None, photon_source=None, counter_channel2=None, photon_source2=None, clock_channel=None, counter_buffer=None)
+/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:2181: warning: argument 'str' of command @param is not found in the argument list of ni_card.SlowGatedNICard::set_up_counter(self, counter_channel=None, photon_source=None, counter_channel2=None, photon_source2=None, clock_channel=None, counter_buffer=None)
+/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:2181: warning: argument 'str' of command @param is not found in the argument list of ni_card.SlowGatedNICard::set_up_counter(self, counter_channel=None, photon_source=None, counter_channel2=None, photon_source2=None, clock_channel=None, counter_buffer=None)
+/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:2181: warning: argument 'int' of command @param is not found in the argument list of ni_card.SlowGatedNICard::set_up_counter(self, counter_channel=None, photon_source=None, counter_channel2=None, photon_source2=None, clock_channel=None, counter_buffer=None)
+/home/travis/build/Ulm-IQO/qudi/hardware/ni_card.py:2181: warning: The following parameters of ni_card.SlowGatedNICard.set_up_counter(self, counter_channel=None, photon_source=None, counter_channel2=None, photon_source2=None, clock_channel=None, counter_buffer=None) are not documented:
   parameter 'counter_channel'
   parameter 'photon_source'
   parameter 'counter_channel2'
