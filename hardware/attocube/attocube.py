@@ -23,7 +23,8 @@ top-level directory of this distribution and at <https://github.com/Ulm-IQO/qudi
 import numpy as np
 import re
 
-from hardware.attocube.pyanc350v4 import ANC350v4lib as ANC
+#from hardware.attocube.pyanc350v4 import ANC350v4lib as ANC
+from hardware.attocube.pyanc350v4 import Positioner
 import ctypes, math, time
 
 import PyDAQmx as daq
@@ -34,7 +35,8 @@ from interface.odmr_counter_interface import ODMRCounterInterface
 from interface.confocal_scanner_interface import ConfocalScannerInterface
 
 
-class Attocube(Base, ConfocalScannerInterface):
+#class Attocube(Base, ConfocalScannerInterface):
+class Attocube(Base):
    
 
     _modtype = 'Attocube'
@@ -56,7 +58,7 @@ class Attocube(Base, ConfocalScannerInterface):
                          had happened.
         """
 
-        self.anc = ANC.Positioner()
+        self.anc = Positioner()
 		
 
     def on_deactivate(self, e=None):
@@ -65,7 +67,9 @@ class Attocube(Base, ConfocalScannerInterface):
         @param object e: Event class object from Fysom. A more detailed
                          explanation can be found in method activation.
         """
-        self.reset_hardware()
+        #self.reset_hardware()
+        self.anc.disconnect()
+        pass
 
     # ================ ConfocalScannerInterface Commands =======================
     def reset_hardware(self):
@@ -710,4 +714,7 @@ class Attocube(Base, ConfocalScannerInterface):
 
     # ================ End ConfocalScannerInterface Commands ===================
 
+
+    def test(self):
+        self.log.status('test')
 
