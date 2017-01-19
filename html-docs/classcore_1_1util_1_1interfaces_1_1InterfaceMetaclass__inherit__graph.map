@@ -9,11 +9,12 @@
 <area shape="rect" id="node21" href="$classpid__controller__interface_1_1PIDControllerInterface.html" title="pid_controller_interface.\lPIDControllerInterface" alt="" coords="440,458,600,505"/>
 <area shape="rect" id="node23" href="$classprocess__control__interface_1_1ProcessControlInterface.html" title="A very simple interface to control a single value. " alt="" coords="433,527,607,574"/>
 <area shape="rect" id="node25" href="$classprocess__interface_1_1ProcessInterface.html" title="A very simple interface to measure a single value. " alt="" coords="432,597,608,643"/>
-<area shape="rect" id="node27" href="$classsimple__data__interface_1_1SimpleDataInterface.html" title="simple_data_interface.Simple\lDataInterface" alt="" coords="424,666,616,713"/>
-<area shape="rect" id="node29" href="$classsimple__laser__interface_1_1SimpleLaserInterface.html" title="simple_laser_interface.Simple\lLaserInterface" alt="" coords="423,735,617,782"/>
-<area shape="rect" id="node31" href="$classslow__counter__interface_1_1SlowCounterInterface.html" title="Define the controls for a slow counter. " alt="" coords="425,805,615,851"/>
-<area shape="rect" id="node33" href="$classspectrometer__interface_1_1SpectrometerInterface.html" title="This is the Interface class to define the controls for the simple optical spectrometer. " alt="" coords="401,874,639,921"/>
-<area shape="rect" id="node35" href="$classswitch__interface_1_1SwitchInterface.html" title="Methods to control slow (mechaincal) laser switching devices. " alt="" coords="415,944,625,973"/>
-<area shape="rect" id="node37" href="$classvacuum__pump__interface_1_1VacuumPumpInterface.html" title="vacuum_pump_interface.Vacuum\lPumpInterface" alt="" coords="412,997,628,1043"/>
-<area shape="rect" id="node39" href="$classwavemeter__interface_1_1WavemeterInterface.html" title="Define the controls for a wavemeter hardware. " alt="" coords="413,1066,627,1113"/>
+<area shape="rect" id="node27" href="$classpulser__interface_1_1PulserInterface.html" title="Interface class to define the abstract controls and communication with all pulsing devices..." alt="" coords="417,667,623,696"/>
+<area shape="rect" id="node29" href="$classsimple__data__interface_1_1SimpleDataInterface.html" title="simple_data_interface.Simple\lDataInterface" alt="" coords="424,719,616,766"/>
+<area shape="rect" id="node31" href="$classsimple__laser__interface_1_1SimpleLaserInterface.html" title="simple_laser_interface.Simple\lLaserInterface" alt="" coords="423,789,617,835"/>
+<area shape="rect" id="node33" href="$classslow__counter__interface_1_1SlowCounterInterface.html" title="Define the controls for a slow counter. " alt="" coords="425,858,615,905"/>
+<area shape="rect" id="node35" href="$classspectrometer__interface_1_1SpectrometerInterface.html" title="This is the Interface class to define the controls for the simple optical spectrometer. " alt="" coords="401,927,639,974"/>
+<area shape="rect" id="node37" href="$classswitch__interface_1_1SwitchInterface.html" title="Methods to control slow (mechaincal) laser switching devices. " alt="" coords="415,997,625,1027"/>
+<area shape="rect" id="node39" href="$classvacuum__pump__interface_1_1VacuumPumpInterface.html" title="vacuum_pump_interface.Vacuum\lPumpInterface" alt="" coords="412,1050,628,1097"/>
+<area shape="rect" id="node41" href="$classwavemeter__interface_1_1WavemeterInterface.html" title="Define the controls for a wavemeter hardware. " alt="" coords="413,1119,627,1166"/>
 </map>

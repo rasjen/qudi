@@ -72,6 +72,22 @@ $(function() {
 
 <p>Interface class to define the abstract controls and communication with all pulsing devices.  
  <a href="classpulser__interface_1_1PulserInterface.html#details">More...</a></p>
+<div class="dynheader">
+Inheritance diagram for pulser_interface.PulserInterface:</div>
+<div class="dyncontent">
+<div class="center"><img src="classpulser__interface_1_1PulserInterface__inherit__graph.png" border="0" usemap="#pulser__interface_8PulserInterface_inherit__map" alt="Inheritance graph"/></div>
+<map name="pulser__interface_8PulserInterface_inherit__map" id="pulser__interface_8PulserInterface_inherit__map">
+<area shape="rect" id="node4" href="classcore_1_1util_1_1interfaces_1_1InterfaceMetaclass.html" title="Metaclass for interfaces. " alt="" coords="112,83,296,130"/>
+</map>
+<center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
+<div class="dynheader">
+Collaboration diagram for pulser_interface.PulserInterface:</div>
+<div class="dyncontent">
+<div class="center"><img src="classpulser__interface_1_1PulserInterface__coll__graph.png" border="0" usemap="#pulser__interface_8PulserInterface_coll__map" alt="Collaboration graph"/></div>
+<map name="pulser__interface_8PulserInterface_coll__map" id="pulser__interface_8PulserInterface_coll__map">
+<area shape="rect" id="node4" href="classcore_1_1util_1_1interfaces_1_1InterfaceMetaclass.html" title="Metaclass for interfaces. " alt="" coords="112,83,296,130"/>
+</map>
+<center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
@@ -85,7 +101,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a25e22aba6bc1029ece4fa89f0294b4a2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Switches the pulsing device off.  <a href="#a25e22aba6bc1029ece4fa89f0294b4a2">More...</a><br /></td></tr>
 <tr class="separator:a25e22aba6bc1029ece4fa89f0294b4a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aad2c879b401f14867791c840bf625cc5"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpulser__interface_1_1PulserInterface.html#aad2c879b401f14867791c840bf625cc5">upload_asset</a> (self, asset_name=None)</td></tr>
-<tr class="memdesc:aad2c879b401f14867791c840bf625cc5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Upload an already hardware conform file to the device.  <a href="#aad2c879b401f14867791c840bf625cc5">More...</a><br /></td></tr>
+<tr class="memdesc:aad2c879b401f14867791c840bf625cc5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Upload an already hardware conform file to the device mass memory.  <a href="#aad2c879b401f14867791c840bf625cc5">More...</a><br /></td></tr>
 <tr class="separator:aad2c879b401f14867791c840bf625cc5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8b6f846fd562037424b14c09dd0c3b6b"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpulser__interface_1_1PulserInterface.html#a8b6f846fd562037424b14c09dd0c3b6b">load_asset</a> (self, asset_name, load_dict=None)</td></tr>
 <tr class="memdesc:a8b6f846fd562037424b14c09dd0c3b6b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Loads a sequence or waveform to the specified channel of the pulsing device.  <a href="#a8b6f846fd562037424b14c09dd0c3b6b">More...</a><br /></td></tr>
@@ -94,7 +110,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a0b4f85b77be8b3ce4a276a11a809ead2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the currently loaded asset name of the device.  <a href="#a0b4f85b77be8b3ce4a276a11a809ead2">More...</a><br /></td></tr>
 <tr class="separator:a0b4f85b77be8b3ce4a276a11a809ead2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a96943f0d8ae8d04c871bd9118ea673f5"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpulser__interface_1_1PulserInterface.html#a96943f0d8ae8d04c871bd9118ea673f5">clear_all</a> (self)</td></tr>
-<tr class="memdesc:a96943f0d8ae8d04c871bd9118ea673f5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clears all loaded waveforms from the pulse generators RAM.  <a href="#a96943f0d8ae8d04c871bd9118ea673f5">More...</a><br /></td></tr>
+<tr class="memdesc:a96943f0d8ae8d04c871bd9118ea673f5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clears all loaded waveforms from the pulse generators RAM/workspace.  <a href="#a96943f0d8ae8d04c871bd9118ea673f5">More...</a><br /></td></tr>
 <tr class="separator:a96943f0d8ae8d04c871bd9118ea673f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a21f5eb1e9fa7838758fcbbf9de7ce564"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpulser__interface_1_1PulserInterface.html#a21f5eb1e9fa7838758fcbbf9de7ce564">get_status</a> (self)</td></tr>
 <tr class="memdesc:a21f5eb1e9fa7838758fcbbf9de7ce564"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the status of the pulsing hardware.  <a href="#a21f5eb1e9fa7838758fcbbf9de7ce564">More...</a><br /></td></tr>
@@ -109,10 +125,10 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a21a05284ca3b543698fdaee761c895d4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the analog amplitude and offset of the provided channels.  <a href="#a21a05284ca3b543698fdaee761c895d4">More...</a><br /></td></tr>
 <tr class="separator:a21a05284ca3b543698fdaee761c895d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa7d34dc1e43359ec27b46092bafa52e6"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpulser__interface_1_1PulserInterface.html#aa7d34dc1e43359ec27b46092bafa52e6">set_analog_level</a> (self, amplitude=None, offset=None)</td></tr>
-<tr class="memdesc:aa7d34dc1e43359ec27b46092bafa52e6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set amplitude and/or offset value of the provided analog channel.  <a href="#aa7d34dc1e43359ec27b46092bafa52e6">More...</a><br /></td></tr>
+<tr class="memdesc:aa7d34dc1e43359ec27b46092bafa52e6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set amplitude and/or offset value of the provided analog channel(s).  <a href="#aa7d34dc1e43359ec27b46092bafa52e6">More...</a><br /></td></tr>
 <tr class="separator:aa7d34dc1e43359ec27b46092bafa52e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a508e2af9ec93318e0d0c3017a1b990db"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpulser__interface_1_1PulserInterface.html#a508e2af9ec93318e0d0c3017a1b990db">get_digital_level</a> (self, low=None, high=None)</td></tr>
-<tr class="memdesc:a508e2af9ec93318e0d0c3017a1b990db"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the digital low and high level of the provided channels.  <a href="#a508e2af9ec93318e0d0c3017a1b990db">More...</a><br /></td></tr>
+<tr class="memdesc:a508e2af9ec93318e0d0c3017a1b990db"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the digital low and high level of the provided/all channels.  <a href="#a508e2af9ec93318e0d0c3017a1b990db">More...</a><br /></td></tr>
 <tr class="separator:a508e2af9ec93318e0d0c3017a1b990db"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a686965ad350b417bff0a41feb2b2163d"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpulser__interface_1_1PulserInterface.html#a686965ad350b417bff0a41feb2b2163d">set_digital_level</a> (self, low=None, high=None)</td></tr>
 <tr class="memdesc:a686965ad350b417bff0a41feb2b2163d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set low and/or high value of the provided digital channel.  <a href="#a686965ad350b417bff0a41feb2b2163d">More...</a><br /></td></tr>
@@ -130,7 +146,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a09624fb00166362c43937d738ac8fb20"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve the names of all sampled and saved assets on the host PC.  <a href="#a09624fb00166362c43937d738ac8fb20">More...</a><br /></td></tr>
 <tr class="separator:a09624fb00166362c43937d738ac8fb20"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab804b18df0f444e45392f3b20abffeca"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpulser__interface_1_1PulserInterface.html#ab804b18df0f444e45392f3b20abffeca">delete_asset</a> (self, asset_name)</td></tr>
-<tr class="memdesc:ab804b18df0f444e45392f3b20abffeca"><td class="mdescLeft">&#160;</td><td class="mdescRight">Delete all files associated with an asset with the passed asset_name from the device memory.  <a href="#ab804b18df0f444e45392f3b20abffeca">More...</a><br /></td></tr>
+<tr class="memdesc:ab804b18df0f444e45392f3b20abffeca"><td class="mdescLeft">&#160;</td><td class="mdescRight">Delete all files associated with an asset with the passed asset_name from the device memory (mass storage as well as i.e.  <a href="#ab804b18df0f444e45392f3b20abffeca">More...</a><br /></td></tr>
 <tr class="separator:ab804b18df0f444e45392f3b20abffeca"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afa2da6cd0ca56f620c2e733221a5d705"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classpulser__interface_1_1PulserInterface.html#afa2da6cd0ca56f620c2e733221a5d705">set_asset_dir_on_device</a> (self, dir_path)</td></tr>
 <tr class="memdesc:afa2da6cd0ca56f620c2e733221a5d705"><td class="mdescLeft">&#160;</td><td class="mdescRight">Change the directory where the assets are stored on the device.  <a href="#afa2da6cd0ca56f620c2e733221a5d705">More...</a><br /></td></tr>
@@ -213,9 +229,8 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Clears all loaded waveforms from the pulse generators RAM. </p>
-<dl class="section return"><dt>Returns</dt><dd>int: error code (0:OK, -1:error)</dd></dl>
-<p>Unused for digital pulse generators without storage capability (PulseBlaster, FPGA). </p>
+<p>Clears all loaded waveforms from the pulse generators RAM/workspace. </p>
+<dl class="section return"><dt>Returns</dt><dd>int: error code (0:OK, -1:error) </dd></dl>
 
 </div>
 </div>
@@ -245,16 +260,13 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Delete all files associated with an asset with the passed asset_name from the device memory. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">str</td><td>asset_name: The name of the asset to be deleted Optionally a list of asset names can be passed.</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>list: a list with strings of the files which were deleted.</dd></dl>
-<p>Unused for digital pulse generators without sequence storage capability (PulseBlaster, FPGA). </p>
+<p>Delete all files associated with an asset with the passed asset_name from the device memory (mass storage as well as i.e. </p>
+<p>awg workspace/channels). </p><pre class="fragment">   @param str asset_name: The name of the asset to be deleted
+                          Optionally a list of asset names can be passed.
 
+   @return list: a list with strings of the files which were deleted.
+
+   Unused for pulse generators without sequence storage capability (PulseBlaster, FPGA).</pre> 
 </div>
 </div>
 <a id="a8f4161306892eed47cedc982a74d707e"></a>
@@ -290,9 +302,9 @@ Public Member Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>dict: where keys denoting the channel number and items boolean expressions whether channel are active or not.</dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>dict: where keys denoting the channel string and items boolean expressions whether channel are active or not.</dd></dl>
 <p>Example for an possible input (order is not important): ch = ['a_ch2', 'd_ch2', 'a_ch1', 'd_ch5', 'd_ch1'] then the output might look like {'a_ch2': True, 'd_ch2': False, 'a_ch1': False, 'd_ch5': True, 'd_ch1': False}</p>
-<p>If no parameters are passed to this method all channels will be asked for their setting. </p>
+<p>If no parameter (or None) is passed to this method all channel states will be returned. </p>
 
 </div>
 </div>
@@ -331,14 +343,15 @@ Public Member Functions</h2></td></tr>
 <p>Retrieve the analog amplitude and offset of the provided channels. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">list</td><td>amplitude: optional, if a specific amplitude value (in Volt peak to peak, i.e. the full amplitude) of a channel is desired. </td></tr>
-    <tr><td class="paramname">list</td><td>offset: optional, if a specific high value (in Volt) of a channel is desired.</td></tr>
+    <tr><td class="paramname">list</td><td>amplitude: optional, if the amplitude value (in Volt peak to peak, i.e. the full amplitude) of a specific channel is desired. </td></tr>
+    <tr><td class="paramname">list</td><td>offset: optional, if the offset value (in Volt) of a specific channel is desired.</td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>: (dict, dict): tuple of two dicts, with keys being the channel number and items being the values for those channels. Amplitude is always denoted in Volt-peak-to-peak and Offset in (absolute) Voltage.</dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>: (dict, dict): tuple of two dicts, with keys being the channel descriptor string (i.e. 'a_ch1') and items being the values for those channels. Amplitude is always denoted in Volt-peak-to-peak and Offset in volts.</dd></dl>
 <dl class="section note"><dt>Note</dt><dd>Do not return a saved amplitude and/or offset value but instead retrieve the current amplitude and/or offset directly from the device.</dd></dl>
-<p>If no entries provided then the levels of all channels where simply returned. If no analog channels provided, return just an empty dict. Example of a possible input: amplitude = [1,4], offset =[1,3] to obtain the amplitude of channel 1 and 4 and the offset {1: -0.5, 4: 2.0} {} since no high request was performed.</p>
+<p>If nothing (or None) is passed then the levels of all channels will be returned. If no analog channels are present in the device, return just empty dicts.</p>
+<p>Example of a possible input: amplitude = ['a_ch1', 'a_ch4'], offset = None to obtain the amplitude of channel 1 and 4 and the offset of all channels {'a_ch1': -0.5, 'a_ch4': 2.0} {'a_ch1': 0.0, 'a_ch2': 0.0, 'a_ch3': 1.0, 'a_ch4': 0.0}</p>
 <p>The major difference to digital signals is that analog signals are always oscillating or changing signals, otherwise you can use just digital output. In contrast to digital output levels, analog output levels are defined by an amplitude (here total signal span, denoted in Voltage peak to peak) and an offset (a value around which the signal oscillates, denoted by an (absolute) voltage).</p>
 <p>In general there is no bijective correspondence between (amplitude, offset) and (value high, value low)! </p>
 
@@ -362,7 +375,7 @@ Public Member Functions</h2></td></tr>
 
 <p>Ask for the directory where the hardware conform files are stored on the device. </p>
 <dl class="section return"><dt>Returns</dt><dd>str: The current file directory</dd></dl>
-<p>Unused for digital pulse generators without changeable file structure (PulseBlaster, FPGA). </p>
+<p>Unused for pulse generators without changeable file structure (i.e. PulseBlaster, FPGA). </p>
 
 </div>
 </div>
@@ -452,18 +465,18 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Retrieve the digital low and high level of the provided channels. </p>
+<p>Retrieve the digital low and high level of the provided/all channels. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">list</td><td>low: optional, if a specific low value (in Volt) of a channel is desired. </td></tr>
-    <tr><td class="paramname">list</td><td>high: optional, if a specific high value (in Volt) of a channel is desired.</td></tr>
+    <tr><td class="paramname">list</td><td>low: optional, if the low value (in Volt) of a specific channel is desired. </td></tr>
+    <tr><td class="paramname">list</td><td>high: optional, if the high value (in Volt) of a specific channel is desired.</td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>: (dict, dict): tuple of two dicts, with keys being the channel number and items being the values for those channels. Both low and high value of a channel is denoted in (absolute) Voltage.</dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>: (dict, dict): tuple of two dicts, with keys being the channel descriptor strings (i.e. 'd_ch1', 'd_ch2') and items being the values for those channels. Both low and high value of a channel is denoted in volts.</dd></dl>
 <dl class="section note"><dt>Note</dt><dd>Do not return a saved low and/or high value but instead retrieve the current low and/or high value directly from the device.</dd></dl>
-<p>If no entries provided then the levels of all channels where simply returned. If no digital channels provided, return just an empty dict.</p>
-<p>Example of a possible input: low = [1,4] to obtain the low voltage values of digital channel 1 an 4. A possible answer might be {1: -0.5, 4: 2.0} {} since no high request was performed.</p>
+<p>If nothing (or None) is passed then the levels of all channels are being returned. If no digital channels are present, return just an empty dict.</p>
+<p>Example of a possible input: low = ['d_ch1', 'd_ch4'] to obtain the low voltage values of digital channel 1 an 4. A possible answer might be {'d_ch1': -0.5, 'd_ch4': 2.0} {'d_ch1': 1.0, 'd_ch2': 1.0, 'd_ch3': 1.0, 'd_ch4': 4.0} Since no high request was performed, the high values for ALL channels are returned (here 4).</p>
 <p>The major difference to analog signals is that digital signals are either ON or OFF, whereas analog channels have a varying amplitude range. In contrast to analog output levels, digital output levels are defined by a voltage, which corresponds to the ON status and a voltage which corresponds to the OFF status (both denoted in (absolute) voltage)</p>
 <p>In general there is no bijective correspondence between (amplitude, offset) and (value high, value low)! </p>
 
@@ -487,7 +500,7 @@ Public Member Functions</h2></td></tr>
 
 <p>Check whether Interleave is ON or OFF in AWG. </p>
 <dl class="section return"><dt>Returns</dt><dd>bool: True: ON, False: OFF</dd></dl>
-<p>Unused for pulse generator hardware other than an AWG. </p>
+<p>Will always return False for pulse generator hardware without interleave. </p>
 
 </div>
 </div>
@@ -508,7 +521,7 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Retrieve the currently loaded asset name of the device. </p>
-<dl class="section return"><dt>Returns</dt><dd>str: Name of the current asset, that can be either a filename a waveform, a sequence ect. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>str: Name of the current asset ready to play. (no filename) </dd></dl>
 
 </div>
 </div>
@@ -530,7 +543,7 @@ Public Member Functions</h2></td></tr>
 
 <p>Get the sample rate of the pulse generator hardware. </p>
 <dl class="section return"><dt>Returns</dt><dd>float: The current sample rate of the device (in Hz)</dd></dl>
-<p>Do not return a saved sample rate in a class variable, but instead retrieve the current sample rate directly from the device. </p>
+<p>Do not return a saved sample rate from an attribute, but instead retrieve the current sample rate directly from the device. </p>
 
 </div>
 </div>
@@ -595,7 +608,7 @@ Public Member Functions</h2></td></tr>
 
 <p>Retrieve the names of all uploaded assets on the device. </p>
 <dl class="section return"><dt>Returns</dt><dd>list: List of all uploaded asset name strings in the current device directory. This is no list of the file names.</dd></dl>
-<p>Unused for digital pulse generators without sequence storage capability (PulseBlaster, FPGA). </p>
+<p>Unused for pulse generators without sequence storage capability (PulseBlaster, FPGA). </p>
 
 </div>
 </div>
@@ -653,15 +666,15 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Loads a sequence or waveform to the specified channel of the pulsing device. </p>
+<p>For devices that have a workspace (i.e. AWG) this will load the asset from the device workspace into the channel. For a device without mass memory this will transfer the waveform/sequence/pattern data directly to the device so that it is ready to play.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">str</td><td>asset_name: The name of the asset to be loaded</td></tr>
-    <tr><td class="paramname">dict</td><td>load_dict: a dictionary with keys being one of the available channel numbers and items being the name of the already sampled waveform/sequence files. Examples {1: rabi_Ch1, 2: rabi_Ch2} {1: rabi_Ch2, 2: rabi_Ch1} This parameter is optional. If none is given then the channel association is invoked from the sequence generation, i.e. the filename appendix (_Ch1, _Ch2 etc.)</td></tr>
+    <tr><td class="paramname">dict</td><td>load_dict: a dictionary with keys being one of the available channel numbers and items being the name of the already sampled waveform/sequence files. Examples {1: rabi_Ch1, 2: rabi_Ch2} {1: rabi_Ch2, 2: rabi_Ch1} This parameter is optional. If none is given then the channel association is invoked from the file name, i.e. the appendix (_ch1, _ch2 etc.)</td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>int: error code (0:OK, -1:error)</dd></dl>
-<p>Unused for digital pulse generators without sequence storage capability (PulseBlaster, FPGA). </p>
+<dl class="section return"><dt>Returns</dt><dd>int: error code (0:OK, -1:error) </dd></dl>
 
 </div>
 </div>
@@ -757,13 +770,14 @@ Public Member Functions</h2></td></tr>
 <p>Set the active channels for the pulse generator hardware. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">dict</td><td>ch: dictionary with keys being the analog or digital string generic names for the channels with items being a boolean value.</td></tr>
+    <tr><td class="paramname">dict</td><td>ch: dictionary with keys being the analog or digital string generic names for the channels (i.e. 'd_ch1', 'a_ch2') with items being a boolean value. True Activate channel, False: Deactivate channel <pre class="fragment">@return dict: with the actual set values for ALL active analog and digital channels
+
+If nothing is passed then the command will simply return the unchanged current state.
+</pre></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>dict: with the actual set values for active channels for analog and digital values.</dd></dl>
-<p>If nothing is passed then the command will return an empty dict.</p>
-<dl class="section note"><dt>Note</dt><dd>After setting the active channels of the device, retrieve them again for obtaining the actual set value(s) and use that information for further processing.</dd></dl>
+<dl class="section note"><dt>Note</dt><dd>After setting the active channels of the device, use the returned dict for further processing.</dd></dl>
 <p>Example for possible input: ch True, 'd_ch1': False, 'd_ch3': True, 'd_ch4': True} to activate analog channel 2 digital channel 3 and 4 and to deactivate digital channel 1.</p>
 <p>The hardware itself has to handle, whether separate channel activation is possible. </p>
 
@@ -801,17 +815,17 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Set amplitude and/or offset value of the provided analog channel. </p>
+<p>Set amplitude and/or offset value of the provided analog channel(s). </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">dict</td><td>amplitude: dictionary, with key being the channel and items being the amplitude values (in Volt peak to peak, i.e. the full amplitude) for the desired channel. </td></tr>
-    <tr><td class="paramname">dict</td><td>offset: dictionary, with key being the channel and items being the offset values (in absolute volt) for the desired channel.</td></tr>
+    <tr><td class="paramname">dict</td><td>amplitude: dictionary, with key being the channel descriptor string (i.e. 'a_ch1', 'a_ch2') and items being the amplitude values (in Volt peak to peak, i.e. the full amplitude) for the desired channel. </td></tr>
+    <tr><td class="paramname">dict</td><td>offset: dictionary, with key being the channel descriptor string (i.e. 'a_ch1', 'a_ch2') and items being the offset values (in absolute volt) for the desired channel.</td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>(dict, dict): tuple of two dicts with the actual set values for amplitude and offset.</dd></dl>
-<p>If nothing is passed then the command will return two empty dicts.</p>
-<dl class="section note"><dt>Note</dt><dd>After setting the analog and/or offset of the device, retrieve them again for obtaining the actual set value(s) and use that information for further processing.</dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>(dict, dict): tuple of two dicts with the actual set values for amplitude and offset for ALL channels.</dd></dl>
+<p>If nothing is passed then the command will return the current amplitudes/offsets.</p>
+<dl class="section note"><dt>Note</dt><dd>After setting the amplitude and/or offset values of the device, use the actual set return values for further processing.</dd></dl>
 <p>The major difference to digital signals is that analog signals are always oscillating or changing signals, otherwise you can use just digital output. In contrast to digital output levels, analog output levels are defined by an amplitude (here total signal span, denoted in Voltage peak to peak) and an offset (a value around which the signal oscillates, denoted by an (absolute) voltage).</p>
 <p>In general there is no bijective correspondence between (amplitude, offset) and (value high, value low)! </p>
 
@@ -851,7 +865,7 @@ Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>int: error code (0:OK, -1:error)</dd></dl>
-<p>Unused for digital pulse generators without changeable file structure (PulseBlaster, FPGA). </p>
+<p>Unused for pulse generators without changeable file structure (PulseBlaster, FPGA). </p>
 
 </div>
 </div>
@@ -890,14 +904,14 @@ Public Member Functions</h2></td></tr>
 <p>Set low and/or high value of the provided digital channel. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">dict</td><td>low: dictionary, with key being the channel and items being the low values (in volt) for the desired channel. </td></tr>
-    <tr><td class="paramname">dict</td><td>high: dictionary, with key being the channel and items being the high values (in volt) for the desired channel.</td></tr>
+    <tr><td class="paramname">dict</td><td>low: dictionary, with key being the channel descriptor string (i.e. 'd_ch1', 'd_ch2') and items being the low values (in volt) for the desired channel. </td></tr>
+    <tr><td class="paramname">dict</td><td>high: dictionary, with key being the channel descriptor string (i.e. 'd_ch1', 'd_ch2') and items being the high values (in volt) for the desired channel.</td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>(dict, dict): tuple of two dicts where first dict denotes the current low value and the second dict the high value.</dd></dl>
-<p>If nothing is passed then the command will return two empty dicts.</p>
-<dl class="section note"><dt>Note</dt><dd>After setting the high and/or low values of the device, retrieve them again for obtaining the actual set value(s) and use that information for further processing.</dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>(dict, dict): tuple of two dicts where first dict denotes the current low value and the second dict the high value for ALL digital channels. Keys are the channel descriptor strings (i.e. 'd_ch1', 'd_ch2')</dd></dl>
+<p>If nothing is passed then the command will return the current voltage levels.</p>
+<dl class="section note"><dt>Note</dt><dd>After setting the high and/or low values of the device, use the actual set return values for further processing.</dd></dl>
 <p>The major difference to analog signals is that digital signals are either ON or OFF, whereas analog channels have a varying amplitude range. In contrast to analog output levels, digital output levels are defined by a voltage, which corresponds to the ON status and a voltage which corresponds to the OFF status (both denoted in (absolute) voltage)</p>
 <p>In general there is no bijective correspondence between (amplitude, offset) and (value high, value low)! </p>
 
@@ -975,8 +989,8 @@ Public Member Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>float: the sample rate returned from the device.</dd></dl>
-<dl class="section note"><dt>Note</dt><dd>After setting the sampling rate of the device, retrieve it again for obtaining the actual set value and use that information for further processing. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>float: the sample rate returned from the device (in Hz).</dd></dl>
+<dl class="section note"><dt>Note</dt><dd>After setting the sampling rate of the device, use the actually set return value for further processing. </dd></dl>
 
 </div>
 </div>
@@ -1043,16 +1057,17 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Upload an already hardware conform file to the device. </p>
-<p>Does NOT load it into channels.</p>
+<p>Upload an already hardware conform file to the device mass memory. </p>
+<p>Also loads these files into the device workspace if present. Does NOT load waveforms/sequences/patterns into channels.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">name</td><td>string, name of the ensemble/seqeunce to be uploaded</td></tr>
+    <tr><td class="paramname">asset_name</td><td>string, name of the ensemble/sequence to be uploaded</td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>int: error code (0:OK, -1:error)</dd></dl>
-<p>If nothing is passed, method will be skipped. </p>
+<p>If nothing is passed, method will be skipped.</p>
+<p>This method has no effect when using pulser hardware without own mass memory (i.e. PulseBlaster, FPGA) </p>
 
 </div>
 </div>
