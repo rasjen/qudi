@@ -149,6 +149,17 @@ class PredefinedMethodsConfigDialog(QtWidgets.QDialog):
 
         uic.loadUi(ui_file, self)
 
+class SSRFastComTec(QtWidgets.QDialog):
+    def __init__(self):
+        # Get the path to the *.ui file
+        this_dir = os.path.dirname(__file__)
+        ui_file = os.path.join(this_dir, 'ui_SSR_fastcomtec.ui')
+
+        # Load it
+        super().__init__()
+
+        uic.loadUi(ui_file, self)
+
 
 class PulsedMeasurementGui(GUIBase):
     """ This is the main GUI Class for pulsed measurements. """
@@ -269,10 +280,19 @@ class PulsedMeasurementGui(GUIBase):
         self._pm_cfg.buttonBox.button(QtWidgets.QDialogButtonBox.Apply).clicked.connect(
             self.apply_predefined_methods_config)
 
+
         if 'predefined_methods_to_show' in self._statusVariables:
             self._predefined_methods_to_show = self._statusVariables['predefined_methods_to_show']
         if 'functions_to_show' in self._statusVariables:
             self._functions_to_show = self._statusVariables['functions_to_show']
+
+        self._pm_ssr = SSRFastComTec()
+        self._pm_ssr.accepted.connect(self.apply_ssr_fastcomtec)
+        self._pm_ssr.rejected.connect(self.keep_former_ssr_fastcomtec)
+        self._pm_ssr.buttonBox.button(QtWidgets.QDialogButtonBox.Apply).clicked.connect(
+            self.apply_ssr_fastcomtec)
+
+        self._mw.action_ssr_fastcomtec.triggered.connect(self.show_ssr_fastcomtec)
 
         # connect the menu to the actions:
         self._mw.action_Settings_Block_Generation.triggered.connect(self.show_generator_settings)
@@ -519,6 +539,27 @@ class PulsedMeasurementGui(GUIBase):
 
         self._pm.hintLabel.setVisible(len(self._predefined_methods_to_show) == 0)
         return
+
+    def apply_ssr_fastcomtec(self):
+        state = self._pm_ssr.ssr_fastcomtec_Checkbox.checkState()
+        preset = self._pm_ssr.preset_SpinBox.value()
+        cycles = self._pm_ssr.cycles_SpinBox.value()
+        self._pulsed_master_logic._measurement_logic.set_ssr_fastcomtec(state,preset,cycles)
+        return
+
+    def keep_former_ssr_fastcomtec(self):
+        state, preset, cycles = self._pulsed_master_logic._measurement_logic.get_ssr_fastcomtec()
+        self._pm_ssr.ssr_fastcomtec_Checkbox.setCheckState(state)
+        self._pm_ssr.preset_SpinBox.setValue(preset)
+        self._pm_ssr.cycles_SpinBox.setValue(cycles)
+        return
+
+    def show_ssr_fastcomtec(self):
+        """ Opens the Window for the config of predefined methods."""
+        self._pm_ssr.show()
+        self._pm_ssr.raise_()
+        return
+
 
     ###########################################################################
     ###   Methods related to Tab 'Pulse Generator' in the Pulsed Window:    ###
@@ -1710,6 +1751,8 @@ class PulsedMeasurementGui(GUIBase):
 
     def ext_mw_params_changed(self):
         """ Shows or hides input widgets which are necessary if an external mw is turned on"""
+        if self._mw.action_run_stop.isChecked():
+            return
         use_ext_microwave = self._pa.ext_control_use_mw_CheckBox.isChecked()
         microwave_freq = self._pa.ext_control_mw_freq_DoubleSpinBox.value()
         microwave_power = self._pa.ext_control_mw_power_DoubleSpinBox.value()
@@ -1781,6 +1824,8 @@ class PulsedMeasurementGui(GUIBase):
 
         @return:
         """
+        if self._mw.action_run_stop.isChecked():
+            return
         # FIXME: Properly implement amplitude and interleave
         sample_rate_hz = self._pa.pulser_sample_freq_DSpinBox.value()
         activation_config_name = self._pa.pulser_activation_config_ComboBox.currentText()
@@ -1830,6 +1875,8 @@ class PulsedMeasurementGui(GUIBase):
 
         @return:
         """
+        if self._mw.action_run_stop.isChecked():
+            return
         record_length_s = self._pa.ana_param_record_length_SpinBox.value()
         bin_width_s = float(self._pa.ana_param_fc_bins_ComboBox.currentText())
         self._pulsed_master_logic.fast_counter_settings_changed(bin_width_s, record_length_s)
@@ -1859,6 +1906,8 @@ class PulsedMeasurementGui(GUIBase):
 
         @return:
         """
+        if self._mw.action_run_stop.isChecked():
+            return
         laser_ignore_list = []
         if self._pa.ana_param_ignore_first_CheckBox.isChecked():
             laser_ignore_list.append(0)
