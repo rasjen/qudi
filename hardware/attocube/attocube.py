@@ -29,6 +29,7 @@ import ctypes, math, time
 
 import PyDAQmx as daq
 
+
 from core.base import Base
 from interface.slow_counter_interface import SlowCounterInterface
 from interface.odmr_counter_interface import ODMRCounterInterface
@@ -59,6 +60,291 @@ class Attocube(Base):
         """
 
         self.anc = Positioner()
+        
+        self.axisNo = {0: 'y', 1: 'x', 2: 'z'}
+        
+        
+        
+        ''' NI card '''
+        # the tasks used on that hardware device:
+        self._counter_daq_tasks = []
+        self._clock_daq_task = None
+        self._scanner_clock_daq_task = None
+        self._scanner_do_task = None
+        self._scanner_counter_daq_tasks = []
+        self._line_length = None
+        self._odmr_length = None
+        self._gated_counter_daq_task = None
+
+        # used as a default for expected maximum counts
+        self._max_counts = 3e7
+        # timeout for the Read or/and write process in s
+        self._RWTimeout = 10
+
+        self._clock_frequency_default = 100             # in Hz
+        self._scanner_clock_frequency_default = 100     # in Hz
+        # number of readout samples, mainly used for gated counter
+        self._samples_number_default = 50
+
+        config = self.getConfiguration()
+
+        self._scanner_do_channels = []
+        self._voltage_range = []
+        self._position_range = []
+        self._current_position = []
+        self._counter_channels = []
+        self._scanner_counter_channels = []
+        self._photon_sources = []
+        
+        
+        self._scanner_do_channels.append(config['scanner_do_channels'])
+        self._scanner_do_channels.append(config['scanner_do_channels2'])
+        # handle all the parameters given by the config
+        if 'scanner_x_do' in config.keys():
+            self._scanner_do_channels.append(config['scanner_x_do'])
+            self._current_position.append(0)
+            self._position_range.append([0., 100.])
+            self._voltage_range.append([-10., 10.])
+            if 'scanner_y_do' in config.keys():
+                self._scanner_do_channels.append(config['scanner_y_do'])
+                self._current_position.append(0)
+                self._position_range.append([0., 100.])
+                self._voltage_range.append([-10., 10.])
+                if 'scanner_z_do' in config.keys():
+                    self._scanner_do_channels.append(config['scanner_z_do'])
+                    self._current_position.append(0)
+                    self._position_range.append([0., 100.])
+                    self._voltage_range.append([-10., 10.])
+                    if 'scanner_a_ao' in config.keys():
+                        self._scanner_do_channels.append(config['scanner_a_do'])
+                        self._current_position.append(0)
+                        self._position_range.append([0., 100.])
+                        self._voltage_range.append([-10., 10.])
+
+#        if len(self._scanner_ao_channels) < 1:
+#            self.log.error(
+#                'Not enough scanner channels found in the configuration!\n'
+#                'Be sure to start with scanner_x_ao\n'
+#                'Assign to that parameter an appropriate channel from your NI Card, '
+#                'otherwise you cannot control the analog channels!')
+
+        if 'odmr_trigger_channel' in config.keys():
+            self._odmr_trigger_channel = config['odmr_trigger_channel']
+        else:
+            self.log.error(
+                'No parameter "odmr_trigger_channel" found in configuration!\n'
+                'Assign to that parameter an appropriate channel from your NI Card!')
+
+        if 'clock_channel' in config.keys():
+            self._clock_channel = config['clock_channel']
+        else:
+            self.log.error(
+                'No parameter "clock_channel" configured.'
+                'Assign to that parameter an appropriate channel from your NI Card!')
+
+        if 'photon_source' in config.keys():
+            self._photon_sources.append(config['photon_source'])
+            n = 2
+            while 'photon_source{0}'.format(n) in config.keys():
+                self._photon_sources.append(config['photon_source{0}'.format(n)])
+                n += 1
+        else:
+            self.log.error(
+                'No parameter "photon_source" configured.\n'
+                'Assign to that parameter an appropriated channel from your NI Card!')
+
+        if 'counter_channel' in config.keys():
+            self._counter_channels.append(config['counter_channel'])
+            n = 2
+            while 'counter_channel{0}'.format(n) in config.keys():
+                self._counter_channels.append(config['counter_channel{0}'.format(n)])
+                n += 1
+        else:
+            self.log.error(
+                'No parameter "counter_channel" configured.\n'
+                'Assign to that parameter an appropriate channel from your NI Card!')
+
+        if 'scanner_counter_channel' in config.keys():
+            self._scanner_counter_channels.append(config['scanner_counter_channel'])
+            n = 2
+            while 'scanner_counter_channel{0}'.format(n) in config.keys():
+                self._scanner_counter_channels.append(
+                    config['scanner_counter_channel{0}'.format(n)])
+                n += 1
+        else:
+            self.log.error(
+                'No parameter "scanner_counter_channel" configured.\n'
+                'Assign to that parameter an appropriate channel from your NI Card!')
+
+        if 'scanner_clock_channel' in config.keys():
+            self._scanner_clock_channel = config['scanner_clock_channel']
+        else:
+            self.log.error(
+                'No parameter "scanner_clock_channel" configured.\n'
+                'Assign to that parameter an appropriate channel from your NI Card!')
+
+        if 'clock_frequency' in config.keys():
+            self._clock_frequency = config['clock_frequency']
+        else:
+            self._clock_frequency = self._clock_frequency_default
+            self.log.warning(
+                'No clock_frequency configured, taking 100 Hz instead.')
+
+        if 'gate_in_channel' in config.keys():
+            self._gate_in_channel = config['gate_in_channel']
+        else:
+            self.log.error(
+                'No parameter "gate_in_channel" configured.\n'
+                'Choose the proper channel on your NI Card and assign it to that parameter!')
+
+        if 'counting_edge_rising' in config.keys():
+            if config['counting_edge_rising']:
+                self._counting_edge = daq.DAQmx_Val_Rising
+            else:
+                self._counting_edge = daq.DAQmx_Val_Falling
+        else:
+            self.log.warning(
+                'No parameter "counting_edge_rising" configured.\n'
+                'Set this parameter either to True (rising edge) or to False (falling edge).\n'
+                'Taking the default value {0}'.format(self._counting_edge_default))
+            self._counting_edge = self._counting_edge_default
+
+        if 'scanner_clock_frequency' in config.keys():
+            self._scanner_clock_frequency = config['scanner_clock_frequency']
+        else:
+            self._scanner_clock_frequency = self._scanner_clock_frequency_default
+            self.log.warning(
+                'No scanner_clock_frequency configured, taking 100 Hz instead.')
+
+        if 'samples_number' in config.keys():
+            self._samples_number = config['samples_number']
+        else:
+            self._samples_number = self._samples_number_default
+            self.log.warning(
+                'No parameter "samples_number" configured taking the default value "{0}" instead.'
+                ''.format(self._samples_number_default))
+            self._samples_number = self._samples_number_default
+
+        if 'x_range' in config.keys() and len(self._position_range) > 0:
+            if float(config['x_range'][0]) < float(config['x_range'][1]):
+                self._position_range[0] = [float(config['x_range'][0]),
+                                           float(config['x_range'][1])]
+            else:
+                self.log.warning(
+                    'Configuration ({}) of x_range incorrect, taking [0,100] instead.'
+                    ''.format(config['x_range']))
+        else:
+            if len(self._position_range) > 0:
+                self.log.warning('No x_range configured taking [0,100] instead.')
+
+        if 'y_range' in config.keys() and len(self._position_range) > 1:
+            if float(config['y_range'][0]) < float(config['y_range'][1]):
+                self._position_range[1] = [float(config['y_range'][0]),
+                                           float(config['y_range'][1])]
+            else:
+                self.log.warning(
+                    'Configuration ({}) of y_range incorrect, taking [0,100] instead.'
+                    ''.format(config['y_range']))
+        else:
+            if len(self._position_range) > 1:
+                self.log.warning('No y_range configured taking [0,100] instead.')
+
+        if 'z_range' in config.keys() and len(self._position_range) > 2:
+            if float(config['z_range'][0]) < float(config['z_range'][1]):
+                self._position_range[2] = [float(config['z_range'][0]),
+                                           float(config['z_range'][1])]
+            else:
+                self.log.warning(
+                    'Configuration ({}) of z_range incorrect, taking [0,100] instead.'
+                    ''.format(config['z_range']))
+        else:
+            if len(self._position_range) > 2:
+                self.log.warning('No z_range configured taking [0,100] instead.')
+
+        if 'a_range' in config.keys() and len(self._position_range) > 3:
+            if float(config['a_range'][0]) < float(config['a_range'][1]):
+                self._position_range[3] = [float(config['a_range'][0]),
+                                           float(config['a_range'][1])]
+            else:
+                self.log.warning(
+                    'Configuration ({}) of a_range incorrect, taking [0,100] instead.'
+                    ''.format(config['a_range']))
+        else:
+            if len(self._position_range) > 3:
+                self.log.warning('No a_range configured taking [0,100] instead.')
+
+#        if 'voltage_range' in config.keys():
+#            if float(config['voltage_range'][0]) < float(config['voltage_range'][1]):
+#                vlow = float(config['voltage_range'][0])
+#                vhigh = float(config['voltage_range'][1])
+#                self._voltage_range = [
+#                    [vlow, vhigh], [vlow, vhigh], [vlow, vhigh], [vlow, vhigh]
+#                    ][0:len(self._voltage_range)]
+#            else:
+#                self.log.warning(
+#                    'Configuration ({}) of voltage_range incorrect, taking [-10,10] instead.'
+#                    ''.format(config['voltage_range']))
+#        else:
+#            self.log.warning('No voltage_range configured, taking [-10,10] instead.')
+
+        if 'x_voltage_range' in config.keys() and len(self._voltage_range) > 0:
+            if float(config['x_voltage_range'][0]) < float(config['x_voltage_range'][1]):
+                vlow = float(config['x_voltage_range'][0])
+                vhigh = float(config['x_voltage_range'][1])
+                self._voltage_range[0] = [vlow, vhigh]
+            else:
+                self.log.warning(
+                    'Configuration ({0}) of x_voltage_range incorrect, taking [-10, 10] instead.'
+                    ''.format(config['x_voltage_range']))
+        else:
+            if 'voltage_range' not in config.keys():
+                self.log.warning('No x_voltage_range configured, taking [-10, 10] instead.')
+
+        if 'y_voltage_range' in config.keys() and len(self._voltage_range) > 1:
+            if float(config['y_voltage_range'][0]) < float(config['y_voltage_range'][1]):
+                vlow = float(config['y_voltage_range'][0])
+                vhigh = float(config['y_voltage_range'][1])
+                self._voltage_range[1] = [vlow, vhigh]
+            else:
+                self.log.warning(
+                    'Configuration ({0}) of y_voltage_range incorrect, taking [-10, 10] instead.'
+                    ''.format(config['y_voltage_range']))
+        else:
+            if 'voltage_range' not in config.keys():
+                self.log.warning('No y_voltage_range configured, taking [-10, 10] instead.')
+
+        if 'z_voltage_range' in config.keys() and len(self._voltage_range) > 2:
+            if float(config['z_voltage_range'][0]) < float(config['z_voltage_range'][1]):
+                vlow = float(config['z_voltage_range'][0])
+                vhigh = float(config['z_voltage_range'][1])
+                self._voltage_range[2] = [vlow, vhigh]
+            else:
+                self.log.warning(
+                    'Configuration ({0}) of z_voltage_range incorrect, taking [-10, 10] instead.'
+                    ''.format(config['z_voltage_range']))
+        else:
+            if 'voltage_range' not in config.keys():
+                self.log.warning('No z_voltage_range configured, taking [-10, 10] instead.')
+
+        if 'a_voltage_range' in config.keys() and len(self._voltage_range) > 3:
+            if float(config['a_voltage_range'][0]) < float(config['a_voltage_range'][1]):
+                vlow = float(config['a_voltage_range'][0])
+                vhigh = float(config['a_voltage_range'][1])
+                self._voltage_range[3] = [vlow, vhigh]
+            else:
+                self.log.warning(
+                    'Configuration ({0}) of a_voltage_range incorrect, taking [-10, 10] instead.'
+                    ''.format(config['a_voltage_range']))
+        else:
+            if 'voltage_range' not in config.keys():
+                self.log.warning('No a_voltage_range configured taking [-10, 10] instead.')
+
+        # Analog output is always needed and it does not interfere with the
+        # rest, so start it always and leave it running
+#        if self._start_analog_output() < 0:
+#            self.log.error('Failed to start analog output.')
+#            raise Exception('Failed to start NI Card module due to analog output failure.')
+        
 		
 
     def on_deactivate(self, e=None):
@@ -67,8 +353,8 @@ class Attocube(Base):
         @param object e: Event class object from Fysom. A more detailed
                          explanation can be found in method activation.
         """
-        #self.reset_hardware()
-        self.anc.disconnect()
+        self.reset_hardware()
+        #self.anc.disconnect()
         pass
 
     # ================ ConfocalScannerInterface Commands =======================
@@ -78,28 +364,43 @@ class Attocube(Base):
 
         @return int: error code (0:OK, -1:error)
         """
+        self.anc.disconnect()
+        self.anc.discover()
+        self.anc.device = self.anc.connect()
+        
+        '''  NI card '''
+     
+        self.close_scanner_clock()
+        self._stop_digital_output()
+        try:
+            daq.DAQmxClearTask('ScannerClock')
+            daq.DAQmxClearTask('ScannerDO')
+        except:
+            self.log.warning('no scanner clock')
+        
         retval = 0
-        chanlist = (
-            self._scanner_ao_channels,
+        chanlist = [
             self._odmr_trigger_channel,
             self._clock_channel,
-            self._counter_channel,
-            self._counter_channel2,
             self._scanner_clock_channel,
-            self._scanner_counter_channel,
-            self._photon_source,
-            self._photon_source2,
             self._gate_in_channel
-            )
+            ]
+        chanlist.extend(self._scanner_do_channels)
+        chanlist.extend(self._photon_sources)
+        chanlist.extend(self._counter_channels)
+        chanlist.extend(self._scanner_counter_channels)
+
         devicelist = []
-        for ch in chanlist:
-            if ch is None:
+        for channel in chanlist:
+            if channel is None:
                 continue
-            match = re.match('^/(?P<dev>[0-9A-Za-z\- ]+[0-9A-Za-z\-_ ]*)/(?P<chan>[0-9A-Za-z]+)', ch)
+            match = re.match(
+                '^/(?P<dev>[0-9A-Za-z\- ]+[0-9A-Za-z\-_ ]*)/(?P<chan>[0-9A-Za-z]+)',
+                channel)
             if match:
                 devicelist.append(match.group('dev'))
             else:
-                self.log.error('Did not find device name in {0}.'.format(ch))
+                self.log.error('Did not find device name in {0}.'.format(channel))
         for device in set(devicelist):
             self.log.info('Reset device {0}.'.format(device))
             try:
@@ -108,6 +409,7 @@ class Attocube(Base):
                 self.log.exception('Could not reset NI device {0}'.format(device))
                 retval = -1
         return retval
+        
 
     def get_position_range(self):
         """ Returns the physical range of the scanner.
@@ -154,99 +456,148 @@ class Attocube(Base):
         self._position_range = myrange
         return 0
 
-    def set_voltage_range(self, myrange=None):
-        """ Sets the voltage range of the NI Card.
+        
+    def get_scanner_axes(self):
+        """ Find out how many axes the scanning device is using for confocal and their names.
+ 
+        @return list(str): list of axis names
+ 
+        Example:
+          For 3D confocal microscopy in cartesian coordinates, ['x', 'y', 'z'] is a sensible value.
+          For 2D, ['x', 'y'] would be typical.
+          You could build a turntable microscope with ['r', 'phi', 'z'].
+          Most callers of this function will only care about the number of axes, though.
+ 
+          On error, return an empty list.
+        """
+        try:
+            for i in range(3):
+                if not self.anc.getAxisStatus(i)[0] == 1:
+                    break
+            return ['x', 'y', 'z']
+        except:
+            return -1 
 
-        @param float [2] myrange: array containing lower and upper limit
+    def get_scanner_count_channels(self):
+        """ Return list of counter channels """
+        return self._scanner_counter_channels
+        
+    def set_up_clock(self, clock_frequency=None, clock_channel=None, scanner=False, idle=False):
+        """ Configures the hardware clock of the NiDAQ card to give the timing.
+
+        @param float clock_frequency: if defined, this sets the frequency of
+                                      the clock in Hz
+        @param string clock_channel: if defined, this is the physical channel
+                                     of the clock within the NI card.
+        @param bool scanner: if set to True method will set up a clock function
+                             for the scanner, otherwise a clock function for a
+                             counter will be set.
+        @param bool idle: set whether idle situation of the counter (where
+                          counter is doing nothing) is defined as
+                                True  = 'Voltage High/Rising Edge'
+                                False = 'Voltage Low/Falling Edge'
 
         @return int: error code (0:OK, -1:error)
         """
-        if myrange is None:
-            myrange = [-10., 10.]
 
-        if not isinstance(myrange, (frozenset, list, set, tuple, np.ndarray, ) ):
-            self.log.error('Given range is no array type.')
+        if not scanner and self._clock_daq_task is not None:
+            self.log.error('Another counter clock is already running, close this one first.')
             return -1
 
-        if len(myrange) != 2:
-            self.log.error(
-                'Given range should have dimension 2, but has {0:d} instead.'
-                ''.format(len(myrange)))
+        if scanner and self._scanner_clock_daq_task is not None:
+            self.log.error('Another scanner clock is already running, close this one first.')
             return -1
 
-        if myrange[0] > myrange[1]:
-            self.log.error('Given range limit {0:d} has the wrong order.'.format(myrange))
-            return -1
+        # Create handle for task, this task will generate pulse signal for
+        # photon counting
+        my_clock_daq_task = daq.TaskHandle()
 
-        self._voltage_range = myrange
+        # assign the clock frequency, if given
+        if clock_frequency is not None:
+            if not scanner:
+                self._clock_frequency = float(clock_frequency)
+            else:
+                self._scanner_clock_frequency = float(clock_frequency)
+
+        # use the correct clock in this method
+        if scanner:
+            my_clock_frequency = self._scanner_clock_frequency * 2
+        else:
+            my_clock_frequency = self._clock_frequency
+
+        # assign the clock channel, if given
+        if clock_channel is not None:
+            if not scanner:
+                self._clock_channel = clock_channel
+            else:
+                self._scanner_clock_channel = clock_channel
+
+        # use the correct clock channel in this method
+        if scanner:
+            my_clock_channel = self._scanner_clock_channel
+        else:
+            my_clock_channel = self._clock_channel
+
+        # check whether only one clock pair is available, since some NI cards
+        # only one clock channel pair.
+        if self._scanner_clock_channel == self._clock_channel:
+            if not ((self._clock_daq_task is None) and (self._scanner_clock_daq_task is None)):
+                self.log.error(
+                    'Only one clock channel is available!\n'
+                    'Another clock is already running, close this one first '
+                    'in order to use it for your purpose!')
+                return -1
+
+        # Adjust the idle state if necessary
+        my_idle = daq.DAQmx_Val_High if idle else daq.DAQmx_Val_Low
+        try:
+            # create task for clock
+            task_name = 'ScannerClock' if scanner else 'CounterClock'
+            daq.DAQmxCreateTask(task_name, daq.byref(my_clock_daq_task))
+
+            # create a digital clock channel with specific clock frequency:
+            daq.DAQmxCreateCOPulseChanFreq(
+                # The task to which to add the channels
+                my_clock_daq_task,
+                # which channel is used?
+                my_clock_channel,
+                # Name to assign to task (NIDAQ uses by # default the physical channel name as
+                # the virtual channel name. If name is specified, then you must use the name
+                # when you refer to that channel in other NIDAQ functions)
+                'Clock Producer',
+                # units, Hertz in our case
+                daq.DAQmx_Val_Hz,
+                # idle state
+                my_idle,
+                # initial delay
+                0,
+                # pulse frequency, divide by 2 such that length of semi period = count_interval
+                my_clock_frequency / 2,
+                # duty cycle of pulses, 0.5 such that high and low duration are both
+                # equal to count_interval
+                0.5)
+
+            # Configure Implicit Timing.
+            # Set timing to continuous, i.e. set only the number of samples to
+            # acquire or generate without specifying timing:
+            daq.DAQmxCfgImplicitTiming(
+                # Define task
+                my_clock_daq_task,
+                # Sample Mode: set the task to generate a continuous amount of running samples
+                daq.DAQmx_Val_ContSamps,
+                # buffer length which stores temporarily the number of generated samples
+                1000)
+
+            if scanner:
+                self._scanner_clock_daq_task=my_clock_daq_task
+            else:
+                # actually start the preconfigured clock task
+                daq.DAQmxStartTask(my_clock_daq_task)
+                self._clock_daq_task = my_clock_daq_task
+        except:
+            self.log.exception('Error while setting up clock.')
+            return -1
         return 0
-
-    def _start_analog_output(self):
-        """ Starts or restarts the analog output.
-
-        @return int: error code (0:OK, -1:error)
-        """
-        try:
-            # If an analog task is already running, kill that one first
-            if self._scanner_ao_task is not None:
-                # stop the analog output task
-                daq.DAQmxStopTask(self._scanner_ao_task)
-
-                # delete the configuration of the analog output
-                daq.DAQmxClearTask(self._scanner_ao_task)
-
-                # set the task handle to None as a safety
-                self._scanner_ao_task = None
-
-            # initialize ao channels / task for scanner, should always be active.
-            # Define at first the type of the variable as a Task:
-            self._scanner_ao_task = daq.TaskHandle()
-
-            # create the actual analog output task on the hardware device. Via
-            # byref you pass the pointer of the object to the TaskCreation function:
-            daq.DAQmxCreateTask('ScannerAnalogOutput', daq.byref(self._scanner_ao_task))
-
-            # Assign and configure the created task to an analog output voltage channel.
-            daq.DAQmxCreateAOVoltageChan(
-                # The AO voltage operation function is assigned to this task.
-                self._scanner_ao_task,
-                # use (all) sanncer ao_channels for the output
-                self._scanner_ao_channels,
-                # assign a name for that task
-                'Analog Control',
-                # minimum possible voltage
-                self._voltage_range[0],
-                # maximum possible voltage
-                self._voltage_range[1],
-                # units is Volt
-                daq.DAQmx_Val_Volts,
-                # empty for future use
-                '')
-        except:
-            return -1
-        return 0
-
-    def _stop_analog_output(self):
-        """ Stops the analog output.
-
-        @return int: error code (0:OK, -1:error)
-        """
-        if self._scanner_ao_task is None:
-            return -1
-        retval = 0
-        try:
-            # stop the analog output task
-            daq.DAQmxStopTask(self._scanner_ao_task)
-        except:
-            self.log.exception('Error stopping analog output.')
-            retval = -1
-        try:
-            daq.DAQmxSetSampTimingType(self._scanner_ao_task, daq.DAQmx_Val_OnDemand)
-        except:
-            self.log.exception('Error changing analog output mode.')
-            retval = -1
-        return retval
-
 
     def set_up_scanner_clock(self, clock_frequency=None, clock_channel=None):
         """ Configures the hardware clock of the NiDAQ card to give the timing.
@@ -265,9 +616,88 @@ class Attocube(Base):
             clock_frequency=clock_frequency,
             clock_channel=clock_channel,
             scanner=True)
+            
+    def _start_digital_output(self):
+        """ Starts or restarts the analog output.
 
-    def set_up_scanner(self, counter_channel=None, photon_source=None,
-                       clock_channel=None, scanner_ao_channels=None):
+        @return int: error code (0:OK, -1:error)
+        """
+        try:
+            # If an analog task is already running, kill that one first
+            if self._scanner_do_task is not None:
+                # stop the analog output task
+                daq.DAQmxStopTask(self._scanner_do_task)
+
+                # delete the configuration of the analog output
+                daq.DAQmxClearTask(self._scanner_do_task)
+
+                # set the task handle to None as a safety
+                self._scanner_do_task = None
+
+            # initialize ao channels / task for scanner, should always be active.
+            # Define at first the type of the variable as a Task:
+            self._scanner_do_task = daq.TaskHandle()
+
+            # create the actual analog output task on the hardware device. Via
+            # byref you pass the pointer of the object to the TaskCreation function:
+            daq.DAQmxCreateTask('ScannerDO', daq.byref(self._scanner_do_task))
+            self.log.warning('test')
+            
+            ChannelAB = [350,0]         
+            
+            for n, counter in enumerate(self._scanner_do_channels):
+                # Assign and configure the created task to an analog output voltage channel.
+                #daq.DAQmxCreateCOPulseChanTime(
+                daq.DAQmxCreateCOPulseChanTicks(
+                    # The AO voltage operation function is assigned to this task.
+                    self._scanner_do_task,
+                    # use (all) scanner ao_channels for the output
+                    counter,
+                    # assign a name for that channel
+                    'Scanner DO Channel {0}'.format(n),
+                    #TERMINAL
+                    '/Dev1/100MHzTimebase',
+                    #Units
+                    #daq.DAQmx_Val_Seconds,
+                    #idle state
+                    daq.DAQmx_Val_Low,
+                    # delay
+                    ChannelAB[n], 10, 10
+                    #low time
+                    #60*1e-9,
+                    # high time
+                    #60*1e-9
+                    )
+                self.log.warning('{0}'.format(n))
+                self.log.warning(counter)
+        except:
+            self.log.exception('Error starting digital output task.')
+            return -1
+        return 0
+        
+    def _stop_digital_output(self):
+        """ Stops the analog output.
+
+        @return int: error code (0:OK, -1:error)
+        """
+        if self._scanner_do_task is None:
+            return -1
+        retval = 0
+        try:
+            # stop the analog output task
+            daq.DAQmxStopTask(self._scanner_do_task)
+        except:
+            self.log.exception('Error stopping digital output.')
+            retval = -1
+        #try:
+        #    daq.DAQmxSetSampTimingType(self._scanner_ao_task, daq.DAQmx_Val_OnDemand)
+        #except:
+        #    self.log.exception('Error changing analog output mode.')
+        #    retval = -1
+        return retval        
+
+    def set_up_scanner(self, counter_channels=None, sources=None,
+                       clock_channel=None, scanner_do_channels=None):
         """ Configures the actual scanner with a given clock.
 
         The scanner works pretty much like the counter. Here you connect a
@@ -290,26 +720,37 @@ class Attocube(Base):
             self.log.error('No clock running, call set_up_clock before starting the counter.')
             return -1
 
-        if counter_channel is not None:
-            self._scanner_counter_channel = counter_channel
-        if photon_source is not None:
-            self._photon_source = photon_source
+        if counter_channels is not None:
+            my_counter_channels = counter_channels
+        else:
+            my_counter_channels = self._scanner_counter_channels
+        if sources is not None:
+            my_photon_sources = sources
+        else:
+            my_photon_sources = self._photon_sources
 
         if clock_channel is not None:
             self._my_scanner_clock_channel = clock_channel
         else:
             self._my_scanner_clock_channel = self._scanner_clock_channel
+        self.log.warning('hej')
+        if scanner_do_channels is not None:
+            self._scanner_do_channels = scanner_do_channels
+            retval = self._start_digital_output()
+            
 
-        if scanner_ao_channels is not None:
-            self._scanner_ao_channels = scanner_ao_channels
-            retval = self._start_analog_output()
+        if len(my_photon_sources) < len(my_counter_channels):
+            self.log.error('You have given {0} sources but {1} counting channels.'
+                           'Please give an equal or greater number of sources.'
+                           ''.format(len(my_photon_sources), len(my_counter_channels)))
+            return -1
 
         try:
             # Set the Sample Timing Type. Task timing to use a sampling clock:
             # specify how the Data of the selected task is collected, i.e. set it
             # now to be sampled on demand for the analog output, i.e. when
             # demanded by software.
-            daq.DAQmxSetSampTimingType(self._scanner_ao_task, daq.DAQmx_Val_OnDemand)
+            daq.DAQmxSetSampTimingType(self._scanner_do_task, daq.DAQmx_Val_OnDemand)
 
             # create handle for task, this task will do the photon counting for the
             # scanner.
@@ -434,7 +875,7 @@ class Attocube(Base):
         # write the voltage instructions for the analog output to the hardware
         daq.DAQmxWriteAnalogF64(
             # write to this task
-            self._scanner_ao_task,
+            self._scanner_do_task,
             # length of the command (points)
             length,
             # start task immediately (True), or wait for software start (False)
@@ -451,50 +892,6 @@ class Attocube(Base):
             None)
         return self._AONwritten.value
 
-    def _scanner_position_to_volt(self, positions=None):
-        """ Converts a set of position pixels to acutal voltages.
-
-        @param float[][4] positions: array of 4-part tuples defining the pixels
-
-        @return float[][4]: array of 4-part tuples of corresponing voltages
-
-        The positions is actually a matrix like
-            [[x_values],[y_values],[z_values],[counts]]
-        where the count values will be overwritten by the scanning routine.
-
-        """
-
-        if not isinstance(positions, (frozenset, list, set, tuple, np.ndarray, )):
-            self.log.error('Given position list is no array type.')
-            return np.array([-1., -1., -1., -1.])
-
-        # Calculate the voltages from the positions, their ranges and stack
-        # them together:
-        volts = np.vstack((
-            (self._voltage_range[1]-self._voltage_range[0])
-            / (self._position_range[0][1] - self._position_range[0][0])
-            * (positions[0] - self._position_range[0][0])
-            + self._voltage_range[0],
-            (self._voltage_range[1] - self._voltage_range[0])
-            / (self._position_range[1][1] - self._position_range[1][0])
-            * (positions[1] - self._position_range[1][0])
-            + self._voltage_range[0],
-            (self._voltage_range[1] - self._voltage_range[0])
-            / (self._position_range[2][1] - self._position_range[2][0])
-            * (positions[2] - self._position_range[2][0])
-            + self._voltage_range[0],
-            (self._voltage_range[1] - self._voltage_range[0])
-            / (self._position_range[3][1] - self._position_range[3][0])
-            * (positions[3] - self._position_range[3][0])
-            + self._voltage_range[0]
-        ))
-
-        if volts.min() < self._voltage_range[0] or volts.max() > self._voltage_range[1]:
-            self.log.error(
-                'Voltages {} exceed the limit, the positions have to '
-                'be adjusted to stay in the given range.'.format((volts.min(), volts.max())))
-            return np.array([-1., -1., -1., -1.])
-        return volts
 
     def get_scanner_position(self):
         """ Get the current position of the scanner hardware.
@@ -530,7 +927,7 @@ class Attocube(Base):
                # changed is combined with obtaining the counts per voltage peak).
                daq.DAQmxCfgSampClkTiming(
                    # add to this task
-                   self._scanner_ao_task,
+                   self._scanner_do_task,
                    # use this channel as clock
                    self._my_scanner_clock_channel+'InternalOutput',
                    # Maximum expected clock frequency
@@ -615,7 +1012,7 @@ class Attocube(Base):
             # set task timing to use a sampling clock:
             # specify how the Data of the selected task is collected, i.e. set it
             # now to be sampled by a hardware (clock) signal.
-            daq.DAQmxSetSampTimingType(self._scanner_ao_task, daq.DAQmx_Val_SampClk)
+            daq.DAQmxSetSampTimingType(self._scanner_do_task, daq.DAQmx_Val_SampClk)
 
             self.set_up_line(np.shape(line_path)[1])
 
@@ -626,7 +1023,7 @@ class Attocube(Base):
                 start=False)
 
             # start the timed analog output task
-            daq.DAQmxStartTask(self._scanner_ao_task)
+            daq.DAQmxStartTask(self._scanner_do_task)
 
             daq.DAQmxStopTask(self._scanner_counter_daq_task)
             daq.DAQmxStopTask(self._scanner_clock_daq_task)
@@ -701,9 +1098,9 @@ class Attocube(Base):
 
         @return int: error code (0:OK, -1:error)
         """
-        a = self._stop_analog_output()
+        'a = self._stop_analog_output()'
         c = self.close_counter(scanner=True)
-        return -1 if a < 0 or c < 0 else 0
+        return -1 if c < 0 else 0
 
     def close_scanner_clock(self):
         """ Closes the clock and cleans up afterwards.
@@ -711,10 +1108,82 @@ class Attocube(Base):
         @return int: error code (0:OK, -1:error)
         """
         return self.close_clock(scanner=True)
+        
+    def close_clock(self, scanner=False):
+        """ Closes the clock and cleans up afterwards.
+
+        @param bool scanner: specifies if the counter- or scanner- function
+                             should be used to close the device.
+                                True = scanner
+                                False = counter
+
+        @return int: error code (0:OK, -1:error)
+        """
+        if scanner:
+            my_task = self._scanner_clock_daq_task
+        else:
+            my_task = self._clock_daq_task
+        try:
+            # Stop the clock task:
+            daq.DAQmxStopTask(my_task)
+
+            # After stopping delete all the configuration of the clock:
+            daq.DAQmxClearTask(my_task)
+
+            # Set the task handle to None as a safety
+            if scanner:
+                self._scanner_clock_daq_task = None
+            else:
+                self._clock_daq_task = None
+        except:
+            self.log.exception('Could not close clock.')
+            return -1
+        return 0
+        
+    def close_counter(self, scanner=False):
+        """ Closes the counter or scanner and cleans up afterwards.
+
+        @param bool scanner: specifies if the counter- or scanner- function
+                             will be excecuted to close the device.
+                                True = scanner
+                                False = counter
+
+        @return int: error code (0:OK, -1:error)
+        """
+        error = 0
+        if scanner:
+            for i, task in enumerate(self._scanner_counter_daq_tasks):
+                try:
+                    # stop the counter task
+                    daq.DAQmxStopTask(task)
+                    # after stopping delete all the configuration of the counter
+                    daq.DAQmxClearTask(task)
+                except:
+                    self.log.exception('Could not close scanner counter.')
+                    error = -1
+            self._scanner_counter_daq_tasks = []
+        else:
+            for i, task in enumerate(self._counter_daq_tasks):
+                try:
+                    # stop the counter task
+                    daq.DAQmxStopTask(task)
+                    # after stopping delete all the configuration of the counter
+                    daq.DAQmxClearTask(task)
+                    # set the task handle to None as a safety
+                except:
+                    self.log.exception('Could not close counter.')
+                    error = -1
+            self._counter_daq_tasks = []
+        return error
 
     # ================ End ConfocalScannerInterface Commands ===================
 
 
-    def test(self):
-        self.log.status('test')
+    def test(self,num = 5):
+        daq.DAQmxCfgImplicitTiming(self._scanner_do_task, daq.DAQmx_Val_FiniteSamps, num)
+        #daq.DAQmxCfgImplicitTiming(self._scanner_do_task, daq.DAQmx_Val_ContSamps, 1000)
+        daq.DAQmxStartTask(self._scanner_do_task)
+        daq.DAQmxWaitUntilTaskDone(self._scanner_do_task,10.00)
+        daq.DAQmxStopTask(self._scanner_do_task)
+        #self.log.status('test')
 
