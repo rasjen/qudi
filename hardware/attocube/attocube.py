@@ -36,8 +36,8 @@ from interface.odmr_counter_interface import ODMRCounterInterface
 from interface.confocal_scanner_interface import ConfocalScannerInterface
 
 
-#class Attocube(Base, ConfocalScannerInterface):
-class Attocube(Base):
+class Attocube(Base, ConfocalScannerInterface):
+#class Attocube(Base):
    
 
     _modtype = 'Attocube'
@@ -45,7 +45,8 @@ class Attocube(Base):
 
     # connectors
     _in = {'fitlogic': 'FitLogic'}
-    _out = {'confocalscanner': 'ConfocalScannerInterface',
+    _out = {'counter': 'SlowCounterInterface',
+            'confocalscanner': 'ConfocalScannerInterface',
             }
 
     def on_activate(self, e=None):
@@ -98,7 +99,7 @@ class Attocube(Base):
         
         
         self._scanner_do_channels.append(config['scanner_do_channels'])
-        self._scanner_do_channels.append(config['scanner_do_channels2'])
+        #self._scanner_do_channels.append(config['scanner_do_channels2'])
         # handle all the parameters given by the config
         if 'scanner_x_do' in config.keys():
             self._scanner_do_channels.append(config['scanner_x_do'])
@@ -372,12 +373,7 @@ class Attocube(Base):
      
         self.close_scanner_clock()
         self._stop_digital_output()
-        try:
-            daq.DAQmxClearTask('ScannerClock')
-            daq.DAQmxClearTask('ScannerDO')
-        except:
-            self.log.warning('no scanner clock')
-        
+      
         retval = 0
         chanlist = [
             self._odmr_trigger_channel,
@@ -418,6 +414,7 @@ class Attocube(Base):
                               and upper limit. The unit of the scan range is
                               micrometer.
         """
+        self._position_range = [[0,100],[0,100],[0,100],[0,100]]
         return self._position_range
 
     def set_position_range(self, myrange=None):
@@ -633,22 +630,22 @@ class Attocube(Base):
 
                 # set the task handle to None as a safety
                 self._scanner_do_task = None
-
+            
             # initialize ao channels / task for scanner, should always be active.
             # Define at first the type of the variable as a Task:
             self._scanner_do_task = daq.TaskHandle()
 
             # create the actual analog output task on the hardware device. Via
             # byref you pass the pointer of the object to the TaskCreation function:
-            daq.DAQmxCreateTask('ScannerDO', daq.byref(self._scanner_do_task))
-            self.log.warning('test')
+            self.log.info('test1')            
+            daq.DAQmxCreateTask('ScannerDigO', daq.byref(self._scanner_do_task))
             
-            ChannelAB = [350,0]         
+            #ChannelAB = [0,0]         
             
             for n, counter in enumerate(self._scanner_do_channels):
                 # Assign and configure the created task to an analog output voltage channel.
                 #daq.DAQmxCreateCOPulseChanTime(
-                daq.DAQmxCreateCOPulseChanTicks(
+                daq.DAQmxCreateDOChan(
                     # The AO voltage operation function is assigned to this task.
                     self._scanner_do_task,
                     # use (all) scanner ao_channels for the output
@@ -656,20 +653,20 @@ class Attocube(Base):
                     # assign a name for that channel
                     'Scanner DO Channel {0}'.format(n),
                     #TERMINAL
-                    '/Dev1/100MHzTimebase',
+                    daq.DAQmx_Val_ChanForAllLines
                     #Units
                     #daq.DAQmx_Val_Seconds,
                     #idle state
-                    daq.DAQmx_Val_Low,
+                    #daq.DAQmx_Val_Low,
                     # delay
-                    ChannelAB[n], 10, 10
+                    #ChannelAB[n], 20, 20
                     #low time
                     #60*1e-9,
                     # high time
                     #60*1e-9
                     )
-                self.log.warning('{0}'.format(n))
-                self.log.warning(counter)
+            
+            
         except:
             self.log.exception('Error starting digital output task.')
             return -1
@@ -686,6 +683,7 @@ class Attocube(Base):
         try:
             # stop the analog output task
             daq.DAQmxStopTask(self._scanner_do_task)
+            daq.DAQmxClearTask(self._scanner_do_task)
         except:
             self.log.exception('Error stopping digital output.')
             retval = -1
@@ -733,7 +731,7 @@ class Attocube(Base):
             self._my_scanner_clock_channel = clock_channel
         else:
             self._my_scanner_clock_channel = self._scanner_clock_channel
-        self.log.warning('hej')
+        
         if scanner_do_channels is not None:
             self._scanner_do_channels = scanner_do_channels
             retval = self._start_digital_output()
@@ -744,7 +742,8 @@ class Attocube(Base):
                            'Please give an equal or greater number of sources.'
                            ''.format(len(my_photon_sources), len(my_counter_channels)))
             return -1
-
+        self._start_digital_output()
+        self.log.warning('hej')
         try:
             # Set the Sample Timing Type. Task timing to use a sampling clock:
             # specify how the Data of the selected task is collected, i.e. set it
@@ -752,62 +751,64 @@ class Attocube(Base):
             # demanded by software.
             daq.DAQmxSetSampTimingType(self._scanner_do_task, daq.DAQmx_Val_OnDemand)
 
-            # create handle for task, this task will do the photon counting for the
-            # scanner.
-            self._scanner_counter_daq_task = daq.TaskHandle()
+            for i, ch in enumerate(my_counter_channels):
+                # create handle for task, this task will do the photon counting for the
+                # scanner.
+                task = daq.TaskHandle()
 
-            # actually create the scanner counting task
-            daq.DAQmxCreateTask('ScannerCounter', daq.byref(self._scanner_counter_daq_task))
+                # actually create the scanner counting task
+                daq.DAQmxCreateTask('ScannerCounter{0}'.format(i), daq.byref(task))
 
-            # Create a Counter Input which samples with Semi Perides the Channel.
-            # set up semi period width measurement in photon ticks, i.e. the width
-            # of each pulse (high and low) generated by pulse_out_task is measured
-            # in photon ticks.
-            #   (this task creates a channel to measure the time between state
-            #    transitions of a digital signal and adds the channel to the task
-            #    you choose)
-            daq.DAQmxCreateCISemiPeriodChan(
-                # The task to which to add the channels
-                self._scanner_counter_daq_task,
-                # use this counter channel
-                self._scanner_counter_channel,
-                # name to assing to it
-                'Scanner Counter',
-                # expected minimum value
-                0,
-                # Expected maximum count value
-                self._max_counts/self._scanner_clock_frequency,
-                # units of width measurement, here Timebase photon ticks
-                daq.DAQmx_Val_Ticks,
-                '')
+                # Create a Counter Input which samples with Semi Perides the Channel.
+                # set up semi period width measurement in photon ticks, i.e. the width
+                # of each pulse (high and low) generated by pulse_out_task is measured
+                # in photon ticks.
+                #   (this task creates a channel to measure the time between state
+                #    transitions of a digital signal and adds the channel to the task
+                #    you choose)
+                daq.DAQmxCreateCISemiPeriodChan(
+                    # The task to which to add the channels
+                    task,
+                    # use this counter channel
+                    ch,
+                    # name to assign to it
+                    'Scanner Counter Channel {0}'.format(i),
+                    # expected minimum value
+                    0,
+                    # Expected maximum count value
+                    self._max_counts / self._scanner_clock_frequency,
+                    # units of width measurement, here Timebase photon ticks
+                    daq.DAQmx_Val_Ticks,
+                    '')
 
-            # Set the Counter Input to a Semi Period input Terminal.
-            # Connect the pulses from the scanner clock to the scanner counter
-            daq.DAQmxSetCISemiPeriodTerm(
-                # The task to which to add the counter channel.
-                self._scanner_counter_daq_task,
-                # use this counter channel
-                self._scanner_counter_channel,
-                # assign a Terminal Name
-                self._my_scanner_clock_channel+'InternalOutput')
+                # Set the Counter Input to a Semi Period input Terminal.
+                # Connect the pulses from the scanner clock to the scanner counter
+                daq.DAQmxSetCISemiPeriodTerm(
+                    # The task to which to add the counter channel.
+                    task,
+                    # use this counter channel
+                    ch,
+                    # assign a Terminal Name
+                    self._my_scanner_clock_channel + 'InternalOutput')
 
-            # Set a CounterInput Control Timebase Source.
-            # Specify the terminal of the timebase which is used for the counter:
-            # Define the source of ticks for the counter as self._photon_source for
-            # the Scanner Task.
-            daq.DAQmxSetCICtrTimebaseSrc(
-                # define to which task to# connect this function
-                self._scanner_counter_daq_task,
-                # counter channel to ouput the# counting results
-                self._scanner_counter_channel,
-                # which channel to count
-                self._photon_source)
+                # Set a CounterInput Control Timebase Source.
+                # Specify the terminal of the timebase which is used for the counter:
+                # Define the source of ticks for the counter as self._photon_source for
+                # the Scanner Task.
+                daq.DAQmxSetCICtrTimebaseSrc(
+                    # define to which task to# connect this function
+                    task,
+                    # counter channel to output the# counting results
+                    ch,
+                    # which channel to count
+                    my_photon_sources[i])
+                self._scanner_counter_daq_tasks.append(task)
         except:
             self.log.exception('Error while setting up scanner.')
             retval = -1
 
         return retval
-
+        
     def scanner_set_position(self, x=None, y=None, z=None, a=None):
         """Move stage to x, y, z, a (where a is the fourth voltage channel).
 
@@ -819,7 +820,7 @@ class Attocube(Base):
 
         @return int: error code (0:OK, -1:error)
         """
-
+        self._current_position = [0,0,0,0]
         if self.getState() == 'locked':
             self.log.error('Another scan_line is already running, close this one first.')
             return -1
@@ -858,7 +859,7 @@ class Attocube(Base):
             return -1
         return 0
 
-    def _write_scanner_ao(self, voltages, length=1, start=False):
+    def _write_scanner_ao(self, length=100, start=False):
         """Writes a set of voltages to the analog outputs.
 
         @param float[][4] voltages: array of 4-part tuples defining the voltage
@@ -871,9 +872,14 @@ class Attocube(Base):
         # The error code of this variable can be asked with .value to check
         # whether all channels have been written successfully.
         self._AONwritten = daq.int32()
-
+        daq.DAQmxCfgOutputBuffer(self._scanner_do_task,length)
+        data = np.array((daq.uInt8 * length)())
+        for i in range(length):
+            data[i] = i%2
+        
+        self.log.info(data)
         # write the voltage instructions for the analog output to the hardware
-        daq.DAQmxWriteAnalogF64(
+        daq.DAQmxWriteDigitalLines(
             # write to this task
             self._scanner_do_task,
             # length of the command (points)
@@ -885,11 +891,13 @@ class Attocube(Base):
             # Specify how the samples are arranged: each pixel is grouped by channel number
             daq.DAQmx_Val_GroupByChannel,
             # the voltages to be written
-            voltages,
+            data,
             # The actual number of samples per channel successfully written to the buffer
-            daq.byref(self._AONwritten),
-            # Reserved for future use. Pass NULL(here None) to this parameter
+            #daq.byref(self._AONwritten),
+            None,
             None)
+            
+            
         return self._AONwritten.value
 
 
@@ -910,80 +918,82 @@ class Attocube(Base):
 
         @return int: error code (0:OK, -1:error)
         """
-        if self._scanner_counter_daq_task is None:
+        if len(self._scanner_counter_daq_tasks) < 1:
             self.log.error('No counter is running, cannot scan a line without one.')
             return -1
 
         self._line_length = length
 
         try:
-           # Just a formal check whether length is not a too huge number
-           if length < np.inf:
+            # Just a formal check whether length is not a too huge number
+            if length < np.inf:
 
-               # Configure the Sample Clock Timing.
-               # Set up the timing of the scanner counting while the voltages are
-               # being scanned (i.e. that you go through each voltage, which
-               # corresponds to a position. How fast the voltages are being
-               # changed is combined with obtaining the counts per voltage peak).
-               daq.DAQmxCfgSampClkTiming(
-                   # add to this task
-                   self._scanner_do_task,
-                   # use this channel as clock
-                   self._my_scanner_clock_channel+'InternalOutput',
-                   # Maximum expected clock frequency
-                   self._scanner_clock_frequency,
-                   # Generate sample on falling edge
-                   daq.DAQmx_Val_Falling,
-                   # generate finite number of samples
-                   daq.DAQmx_Val_FiniteSamps,
-                   # number of samples to generate
-                   self._line_length)
+                # Configure the Sample Clock Timing.
+                # Set up the timing of the scanner counting while the voltages are
+                # being scanned (i.e. that you go through each voltage, which
+                # corresponds to a position. How fast the voltages are being
+                # changed is combined with obtaining the counts per voltage peak).
+                daq.DAQmxCfgSampClkTiming(
+                    # add to this task
+                    self._scanner_do_task,
+                    # use this channel as clock
+                    self._my_scanner_clock_channel + 'InternalOutput',
+                    # Maximum expected clock frequency
+                    self._scanner_clock_frequency,
+                    # Generate sample on falling edge
+                    daq.DAQmx_Val_Falling,
+                    # generate finite number of samples
+                    daq.DAQmx_Val_FiniteSamps,
+                    # number of samples to generate
+                    self._line_length)
 
-           # Configure Implicit Timing for the clock.
-           # Set timing for scanner clock task to the number of pixel.
-           daq.DAQmxCfgImplicitTiming(
-               # define task
-               self._scanner_clock_daq_task,
-               # only a limited number of# counts
-               daq.DAQmx_Val_FiniteSamps,
-               # count twice for each voltage +1 for safety
-               self._line_length + 1)
+            # Configure Implicit Timing for the clock.
+            # Set timing for scanner clock task to the number of pixel.
+            daq.DAQmxCfgImplicitTiming(
+                # define task
+                self._scanner_clock_daq_task,
+                # only a limited number of# counts
+                daq.DAQmx_Val_FiniteSamps,
+                # count twice for each voltage +1 for safety
+                self._line_length + 1)
 
-           # Configure Implicit Timing for the scanner counting task.
-           # Set timing for scanner count task to the number of pixel.
-           daq.DAQmxCfgImplicitTiming(
-               # define task
-               self._scanner_counter_daq_task,
-               # only a limited number of counts
-               daq.DAQmx_Val_FiniteSamps,
-               # count twice for each voltage +1 for safety
-               2 * self._line_length + 1)
+            for i, task in enumerate(self._scanner_counter_daq_tasks):
+                # Configure Implicit Timing for the scanner counting task.
+                # Set timing for scanner count task to the number of pixel.
+                daq.DAQmxCfgImplicitTiming(
+                    # define task
+                    task,
+                    # only a limited number of counts
+                    daq.DAQmx_Val_FiniteSamps,
+                    # count twice for each voltage +1 for safety
+                    2 * self._line_length + 1)
+                
+                # Set the Read point Relative To an operation.
+                # Specifies the point in the buffer at which to begin a read operation,
+                # here we read samples from beginning of acquisition and do not overwrite
+                daq.DAQmxSetReadRelativeTo(
+                    # define to which task to connect this function
+                    task,
+                    # Start reading samples relative to the last sample returned
+                    # by the previous read
+                    daq.DAQmx_Val_CurrReadPos)
 
-           # Set the Read point Relative To an operation.
-           # Specifies the point in the buffer at which to begin a read operation,
-           # here we read samples from beginning of acquisition and do not overwrite
-           daq.DAQmxSetReadRelativeTo(
-               # define to which task to connect this function
-               self._scanner_counter_daq_task,
-               # Start reading samples relative to the last sample returned by the previous read
-               daq.DAQmx_Val_CurrReadPos)
+                # Set the Read Offset.
+                # Specifies an offset in samples per channel at which to begin a read
+                # operation. This offset is relative to the location you specify with
+                # RelativeTo. Here we do not read the first sample.
+                daq.DAQmxSetReadOffset(
+                    # connect to this task
+                    task,
+                    # Offset after which to read
+                    1)
 
-           # Set the Read Offset.
-           # Specifies an offset in samples per channel at which to begin a read
-           # operation. This offset is relative to the location you specify with
-           # RelativeTo. Here we do not read the first sample.
-           daq.DAQmxSetReadOffset(
-               # connect to this taks
-               self._scanner_counter_daq_task,
-               # Offset after which to read
-               1)
-
-           # Set Read OverWrite Mode.
-           # Specifies whether to overwrite samples in the buffer that you have
-           # not yet read. Unread data in buffer will be overwritten:
-           daq.DAQmxSetReadOverWrite(
-               self._scanner_counter_daq_task,
-               daq.DAQmx_Val_DoNotOverwriteUnreadSamps)
+                # Set Read OverWrite Mode.
+                # Specifies whether to overwrite samples in the buffer that you have
+                # not yet read. Unread data in buffer will be overwritten:
+                daq.DAQmxSetReadOverWrite(
+                    task,
+                    daq.DAQmx_Val_DoNotOverwriteUnreadSamps)
         except:
             self.log.exception('Error while setting up scanner to scan a line.')
             return -1
@@ -1001,7 +1011,7 @@ class Attocube(Base):
         like the following:
             [ [1,2,3,4,5],[1,1,1,1,],[-2,-2,-2,-2],[0,0,0,0]]
         """
-        if self._scanner_counter_daq_task is None:
+        if self._scanner_counter_daq_tasks is None:
             self.log.error('No counter is running, cannot scan a line without one.')
             return np.array([-1.])
 
@@ -1018,25 +1028,29 @@ class Attocube(Base):
 
             # write the positions to the analog output
             written_voltages = self._write_scanner_ao(
-                voltages=self._scanner_position_to_volt(line_path),
                 length=self._line_length,
                 start=False)
 
             # start the timed analog output task
             daq.DAQmxStartTask(self._scanner_do_task)
 
-            daq.DAQmxStopTask(self._scanner_counter_daq_task)
+            for i, task in enumerate(self._scanner_counter_daq_tasks):
+                daq.DAQmxStopTask(task)
+
             daq.DAQmxStopTask(self._scanner_clock_daq_task)
 
             # start the scanner counting task that acquires counts synchroneously
-            daq.DAQmxStartTask(self._scanner_counter_daq_task)
+            for i, task in enumerate(self._scanner_counter_daq_tasks):
+                daq.DAQmxStartTask(task)
+
             daq.DAQmxStartTask(self._scanner_clock_daq_task)
 
-            # wait for the scanner counter to finish
-            daq.DAQmxWaitUntilTaskDone(
-                # define task
-                    self._scanner_counter_daq_task,
-                # Maximum timeout for the counter times the positions. Unit is seconds.
+            for i, task in enumerate(self._scanner_counter_daq_tasks):
+                # wait for the scanner counter to finish
+                daq.DAQmxWaitUntilTaskDone(
+                    # define task
+                    task,
+                    # Maximum timeout for the counter times the positions. Unit is seconds.
                     self._RWTimeout * 2 * self._line_length)
 
             # wait for the scanner clock to finish
@@ -1047,51 +1061,57 @@ class Attocube(Base):
                 self._RWTimeout * 2 * self._line_length)
 
             # count data will be written here
-            self._scan_data = np.empty((2*self._line_length,), dtype=np.uint32)
+            self._scan_data = np.empty(
+                (len(self.get_scanner_count_channels()), 2 * self._line_length),
+                dtype=np.uint32)
 
             # number of samples which were read will be stored here
             n_read_samples = daq.int32()
+            for i, task in enumerate(self._scanner_counter_daq_tasks):
+                # actually read the counted photons
+                daq.DAQmxReadCounterU32(
+                    # read from this task
+                    task,
+                    # read number of double the # number of samples
+                    2 * self._line_length,
+                    # maximal timeout for the read# process
+                    self._RWTimeout,
+                    # write into this array
+                    self._scan_data[i],
+                    # length of array to write into
+                    2 * self._line_length,
+                    # number of samples which were actually read
+                    daq.byref(n_read_samples),
+                    # Reserved for future use. Pass NULL(here None) to this parameter.
+                    None)
 
-            # actually read the counted photons
-            daq.DAQmxReadCounterU32(
-                # read from this task
-                self._scanner_counter_daq_task,
-                # read number of double the # number of samples
-                2 * self._line_length,
-                # maximal timeout for the read# process
-                self._RWTimeout,
-                # write into this array
-                self._scan_data,
-                # length of array to write into
-                2 * self._line_length,
-                # number of samples which were actually read
-                daq.byref(n_read_samples),
-                # Reserved for future use. Pass NULL(here None) to this parameter.
-                None)
+                # stop the counter task
+                daq.DAQmxStopTask(task)
 
-            # stop the counter task
-            daq.DAQmxStopTask(self._scanner_counter_daq_task)
+            # stop the clock task
             daq.DAQmxStopTask(self._scanner_clock_daq_task)
 
             # stop the analog output task
-            self._stop_analog_output()
+            self._stop_digital_output()
 
             # create a new array for the final data (this time of the length
             # number of samples):
-            self._real_data = np.empty((self._line_length,), dtype=np.uint32)
+            self._real_data = np.empty(
+                (len(self.get_scanner_count_channels()), self._line_length),
+                dtype=np.uint32)
 
-            # add upp adjoint pixels to also get the counts from the low time of
+            # add up adjoint pixels to also get the counts from the low time of
             # the clock:
-            self._real_data = self._scan_data[::2]
-            self._real_data += self._scan_data[1::2]
+            self._real_data = self._scan_data[:, ::2]
+            self._real_data += self._scan_data[:, 1::2]
 
             # update the scanner position instance variable
-            self._current_position = list(line_path[:,-1])
+            #self._current_position = list(line_path[:, -1])
         except:
             self.log.exception('Error while scanning line.')
-            return np.array([-1.])
-
-        return self._real_data*(self._scanner_clock_frequency)
+            return np.array([[-1.]])
+        # return values is a rate of counts/s
+        return (self._real_data * self._scanner_clock_frequency).transpose()
 
     def close_scanner(self):
         """ Closes the scanner and cleans up afterwards.
@@ -1177,7 +1197,8 @@ class Attocube(Base):
         return error
 
     # ================ End ConfocalScannerInterface Commands ===================
-
+    def set_voltage_range(self, myrange=None):
+        pass
 
     def test(self,num = 5):
         daq.DAQmxCfgImplicitTiming(self._scanner_do_task, daq.DAQmx_Val_FiniteSamps, num)
@@ -1185,5 +1206,5 @@ class Attocube(Base):
         daq.DAQmxStartTask(self._scanner_do_task)
         daq.DAQmxWaitUntilTaskDone(self._scanner_do_task,10.00)
         daq.DAQmxStopTask(self._scanner_do_task)
-        #self.log.status('test')
+        self.log.info('test')
 
