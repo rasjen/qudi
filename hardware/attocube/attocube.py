@@ -194,7 +194,8 @@ class Attocube(Base, ConfocalScannerInterface):
         # then directly write the position to the hardware
         try:
             for i,ch in enumerate(self.get_scanner_axes()):
-                self.anc.setTargetPosition(self.AxisNo[ch],), start=True)
+                print(i)
+        #self.anc.setTargetPosition(self.AxisNo[ch],), start=True)
         except:
             return -1
         return 0
