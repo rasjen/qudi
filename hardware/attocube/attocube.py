@@ -34,8 +34,8 @@ from core.base import Base
 from interface.confocal_scanner_interface import ConfocalScannerInterface
 
 
-class Attocube(Base, ConfocalScannerInterface):
-#class Attocube(Base):
+#class Attocube(Base, ConfocalScannerInterf):
+class Attocube(Base):
    
 
     _modtype = 'Attocube'
