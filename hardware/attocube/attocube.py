@@ -205,7 +205,7 @@ class Attocube(Base, ConfocalScannerInterface):
 
         @return float[]: current position in (x, y, z, a).
         """
-        self.anc.
+
         return self._current_position
 
 
