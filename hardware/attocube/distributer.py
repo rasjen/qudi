@@ -47,7 +47,7 @@ class Distributer(Base,ConfocalScannerInterfaceAtto):
 
         @return int: error code (0:OK, -1:error)
         """
-        Attocube.set_position_range(self)
+        Attocube.get_position_range(self)
 
 
     def get_scanner_axes(self):
@@ -160,8 +160,12 @@ class Distributer(Base,ConfocalScannerInterfaceAtto):
         pass
 
     def single_step(self, axis='x', direction='forward'):
-        """ Closes the clock and cleans up afterwards.
+        '''
 
-        @return int: error code (0:OK, -1:error)
-        """
+        :param axis:
+        :param direction:
+        :return:
+        '''
+        Attocube.enable_outputs(self)
         Attocube.single_step(self, axis, direction)
+        Attocube.disable_outputs(self)
