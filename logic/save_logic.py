@@ -34,8 +34,8 @@ from core.util import units
 # Use the PDF backend to attach metadata
 from matplotlib.backends.backend_pdf import PdfPages
 # Use Pillow (active fork from PIL) to attach metadata to PNG files
-from PIL import Image
-from PIL import PngImagePlugin
+#from PIL import Image
+#from PIL import PngImagePlugin
 
 class DailyLogHandler(logging.FileHandler):
     """
@@ -549,8 +549,8 @@ class SaveLogic(GenericLogic):
             plotfig.savefig(fig_fname_image, bbox_inches='tight', pad_inches=0.05)
 
             # Use Pillow (an fork for PIL) to attach metadata to the PNG
-            png_image = Image.open(fig_fname_image)
-            png_metadata = PngImagePlugin.PngInfo()
+            #png_image = Image.open(fig_fname_image)
+            #png_metadata = PngImagePlugin.PngInfo()
 
             # PIL can only handle Strings, so let's convert our times
             metadata['CreationDate'] = metadata['CreationDate'].strftime('%Y%m%d-%H%M-%S')
@@ -562,10 +562,10 @@ class SaveLogic(GenericLogic):
                     metadata[x] = str(metadata[x])
 
                 # add the metadata to the picture
-                png_metadata.add_text(x, metadata[x])
+                #png_metadata.add_text(x, metadata[x])
 
             # save the picture again, this time including the metadata
-            png_image.save(fig_fname_image, "png", pnginfo=png_metadata)
+            #png_image.save(fig_fname_image, "png")
             #----------------------------------------------------------------------------------
 
 

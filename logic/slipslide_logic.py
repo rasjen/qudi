@@ -1246,4 +1246,4 @@ class ConfocalLogic(GenericLogic):
 ############################# ATTOCUBE ###################################
 
     def single_step(self):
-        self._scanning_device.
+        self._scanning_device.single_step()

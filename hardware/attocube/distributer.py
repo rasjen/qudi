@@ -1,5 +1,5 @@
 from hardware.attocube.attocube import Attocube
-from hardware.attocube.ni_card_digital import NIcard
+from hardware.attocube.nicard_digital import NIcard
 from interface.clock_n_counter_interface import ConfocalScannerInterfaceAtto
 from core.base import Base
 
