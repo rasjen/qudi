@@ -18,8 +18,8 @@ class Distributer(Base,ConfocalScannerInterfaceAtto):
 
 
     def on_deactivate(self, e):
-        Attocube.on_deactivate()
-        NIcard.on_deactivate()
+        Attocube.on_deactivate(self)
+        NIcard.on_deactivate(self)
         pass
 
     def reset_hardware(self):
@@ -28,8 +28,8 @@ class Distributer(Base,ConfocalScannerInterfaceAtto):
 
         @return int: error code (0:OK, -1:error)
         """
-        Attocube.reset_hardware()
-        NIcard.reset_hardware()
+        Attocube.reset_hardware(self)
+        NIcard.reset_hardware(self)
 
     def get_position_range(self):
         """ Returns the physical range of the scanner.
@@ -37,7 +37,7 @@ class Distributer(Base,ConfocalScannerInterfaceAtto):
         @return float [4][2]: array of 4 ranges with an array containing lower
                               and upper limit
         """
-        Attocube.get_position_range()
+        Attocube.get_position_range(self)
 
     def set_position_range(self, myrange=None):
         """ Sets the physical range of the scanner.
@@ -47,7 +47,7 @@ class Distributer(Base,ConfocalScannerInterfaceAtto):
 
         @return int: error code (0:OK, -1:error)
         """
-        Attocube.set_position_range()
+        Attocube.set_position_range(self)
 
 
     def get_scanner_axes(self):
@@ -63,7 +63,7 @@ class Distributer(Base,ConfocalScannerInterfaceAtto):
 
           On error, return an empty list.
         """
-        Attocube.get_scanner_axes()
+        Attocube.get_scanner_axes(self)
 
 
     def get_scanner_count_channels(self):
