@@ -30,10 +30,10 @@ import ctypes, math, time
 import PyDAQmx as daq
 
 from core.base import Base
-from interface.clock_n_counter_interface import ClockNCounterInterface
+from interface.clock_n_counter_interface import ConfocalScannerInterfaceAtto
 
 
-class NIcard(Base, ClockNCounterInterface):
+class NIcard(Base, ConfocalScannerInterfaceAtto):
     # class Attocube(Base):
 
 
@@ -343,19 +343,17 @@ class NIcard(Base, ClockNCounterInterface):
                          explanation can be found in method activation.
         """
         self.reset_hardware()
-        # self.anc.disconnect()
+
         pass
 
     # ================ ConfocalScannerInterface Commands =======================
+
     def reset_hardware(self):
         """ Resets the NI hardware, so the connection is lost and other
             programs can access it.
 
         @return int: error code (0:OK, -1:error)
         """
-        self.anc.disconnect()
-        self.anc.discover()
-        self.anc.device = self.anc.connect()
 
         '''  NI card '''
 
@@ -394,76 +392,23 @@ class NIcard(Base, ClockNCounterInterface):
                 retval = -1
         return retval
 
-    def get_position_range(self):
-        """ Returns the physical range of the scanner.
-
-        @return float [4][2]: array of 4 ranges with an array containing lower
-                              and upper limit. The unit of the scan range is
-                              micrometer.
-        """
-        self._position_range = [[0, 100], [0, 100], [0, 100], [0, 100]]
-        return self._position_range
-
-    def set_position_range(self, myrange=None):
-        """ Sets the physical range of the scanner.
-
-        @param float [4][2] myrange: array of 4 ranges with an array containing
-                                     lower and upper limit. The unit of the
-                                     scan range is micrometer.
-
-        @return int: error code (0:OK, -1:error)
-        """
-        if myrange is None:
-            myrange = [[0, 1], [0, 1], [0, 1], [0, 1]]
-
-        if not isinstance(myrange, (frozenset, list, set, tuple, np.ndarray,)):
-            self.log.error('Given range is no array type.')
-            return -1
-
-        if len(myrange) != 4:
-            self.log.error(
-                'Given range should have dimension 4, but has {0:d} instead.'
-                ''.format(len(myrange)))
-            return -1
-
-        for pos in myrange:
-            if len(pos) != 2:
-                self.log.error(
-                    'Given range limit {1:d} should have dimension 2, but has {0:d} instead.'
-                    ''.format(len(pos), pos))
-                return -1
-            if pos[0] > pos[1]:
-                self.log.error(
-                    'Given range limit {0:d} has the wrong order.'.format(pos))
-                return -1
-
-        self._position_range = myrange
-        return 0
-
-    def get_scanner_axes(self):
-        """ Find out how many axes the scanning device is using for confocal and their names.
-
-        @return list(str): list of axis names
-
-        Example:
-          For 3D confocal microscopy in cartesian coordinates, ['x', 'y', 'z'] is a sensible value.
-          For 2D, ['x', 'y'] would be typical.
-          You could build a turntable microscope with ['r', 'phi', 'z'].
-          Most callers of this function will only care about the number of axes, though.
-
-          On error, return an empty list.
-        """
-        try:
-            for i in range(3):
-                if not self.anc.getAxisStatus(i)[0] == 1:
-                    break
-            return ['x', 'y', 'z']
-        except:
-            return -1
-
     def get_scanner_count_channels(self):
         """ Return list of counter channels """
         return self._scanner_counter_channels
+
+    def get_constraints(self):
+        """ Get hardware limits of NI device.
+
+        @return SlowCounterConstraints: constraints class for slow counter
+
+        FIXME: ask hardware for limits when module is loaded
+        """
+        constraints = SlowCounterConstraints()
+        constraints.max_detectors = 4
+        constraints.min_count_frequency = 1e-3
+        constraints.max_count_frequency = 10e9
+        constraints.counting_mode = [CountingMode.CONTINUOUS]
+        return constraints
 
     def set_up_clock(self, clock_frequency=None, clock_channel=None, scanner=False, idle=False):
         """ Configures the hardware clock of the NiDAQ card to give the timing.
@@ -794,57 +739,7 @@ class NIcard(Base, ClockNCounterInterface):
 
         return retval
 
-    def scanner_set_position(self, x=None, y=None, z=None, a=None):
-        """Move stage to x, y, z, a (where a is the fourth voltage channel).
-
-        #FIXME: No volts
-        @param float x: postion in x-direction (volts)
-        @param float y: postion in y-direction (volts)
-        @param float z: postion in z-direction (volts)
-        @param float a: postion in a-direction (volts)
-
-        @return int: error code (0:OK, -1:error)
-        """
-        self._current_position = [0, 0, 0, 0]
-        if self.getState() == 'locked':
-            self.log.error('Another scan_line is already running, close this one first.')
-            return -1
-
-        if x is not None:
-            if not (self._position_range[0][0] <= x <= self._position_range[0][1]):
-                self.log.error('You want to set x out of range: {0:f}.'.format(x))
-                return -1
-            self._current_position[0] = np.float(x)
-
-        if y is not None:
-            if not (self._position_range[1][0] <= y <= self._position_range[1][1]):
-                self.log.error('You want to set y out of range: {0:f}.'.format(y))
-                return -1
-            self._current_position[1] = np.float(y)
-
-        if z is not None:
-            if not (self._position_range[2][0] <= z <= self._position_range[2][1]):
-                self.log.error('You want to set z out of range: {0:f}.'.format(z))
-                return -1
-            self._current_position[2] = np.float(z)
-
-        if a is not None:
-            if not (self._position_range[3][0] <= a <= self._position_range[3][1]):
-                self.log.error('You want to set a out of range: {0:f}.'.format(a))
-                return -1
-            self._current_position[3] = np.float(a)
-
-        # the position has to be a vstack
-        my_position = np.vstack(self._current_position)
-
-        # then directly write the position to the hardware
-        try:
-            self._write_scanner_ao(voltages=self._scanner_position_to_volt(my_position), start=True)
-        except:
-            return -1
-        return 0
-
-    def _write_scanner_ao(self, length=100, start=False):
+    def _write_scanner_do(self, length=100, start=False):
         """Writes a set of voltages to the analog outputs.
 
         @param float[][4] voltages: array of 4-part tuples defining the voltage
@@ -884,12 +779,6 @@ class NIcard(Base, ClockNCounterInterface):
 
         return self._AONwritten.value
 
-    def get_scanner_position(self):
-        """ Get the current position of the scanner hardware.
-
-        @return float[]: current position in (x, y, z, a).
-        """
-        return self._current_position
 
     def set_up_line(self, length=100):
         """ Sets up the analog output for scanning a line.
@@ -1009,7 +898,7 @@ class NIcard(Base, ClockNCounterInterface):
             self.set_up_line(np.shape(line_path)[1])
 
             # write the positions to the analog output
-            written_voltages = self._write_scanner_ao(
+            written_voltages = self._write_scanner_do(
                 length=self._line_length,
                 start=False)
 
@@ -1095,15 +984,6 @@ class NIcard(Base, ClockNCounterInterface):
         # return values is a rate of counts/s
         return (self._real_data * self._scanner_clock_frequency).transpose()
 
-    def close_scanner(self):
-        """ Closes the scanner and cleans up afterwards.
-
-        @return int: error code (0:OK, -1:error)
-        """
-        'a = self._stop_analog_output()'
-        c = self.close_counter(scanner=True)
-        return -1 if c < 0 else 0
-
     def close_scanner_clock(self):
         """ Closes the clock and cleans up afterwards.
 
@@ -1179,8 +1059,7 @@ class NIcard(Base, ClockNCounterInterface):
         return error
 
     # ================ End ConfocalScannerInterface Commands ===================
-    def set_voltage_range(self, myrange=None):
-        pass
+
 
     def test(self, num=5):
         daq.DAQmxCfgImplicitTiming(self._scanner_do_task, daq.DAQmx_Val_FiniteSamps, num)

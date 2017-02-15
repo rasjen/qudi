@@ -30,7 +30,7 @@ from core.base import Base
 from interface.confocal_scanner_interface import ConfocalScannerInterface
 
 
-#class Attocube(Base, ConfocalScannerInterf):
+#class Attocube(Base, ConfocalScannerInterfrt):
 class Attocube(Base):
    
 
@@ -57,8 +57,7 @@ class Attocube(Base):
 
         self.anc = Positioner()
         self.axisNo = {'y': 0, 'x': 1, 'z': 2}
-        for i,label in enumerate(self.get_scanner_axes()):
-            self.anc.setAxisOutput(self.axisNo[label], 1, True)
+
 
     def on_deactivate(self, e=None):
         """ Shut down the NI card.
@@ -79,6 +78,21 @@ class Attocube(Base):
         self.anc.discover()
         self.anc.device = self.anc.connect()
 
+    def enable_outputs(self):
+        '''
+        Enables output to stages
+        :return:
+        '''
+        for i, label in enumerate(self.get_scanner_axes()):
+            self.anc.setAxisOutput(self.axisNo[label], 1, True)
+
+    def disable_outputs(self):
+        '''
+        disables output to stages
+        :return:
+        '''
+        for i, label in enumerate(self.get_scanner_axes()):
+            self.anc.setAxisOutput(self.axisNo[label], 0, True)
 
     def get_position_range(self):
         """ Returns the physical range of the scanner.
@@ -216,13 +230,74 @@ class Attocube(Base):
         except:
             self.log.error('input should be x,y or z in string format')
         if direction == 'forward':
-            d = True
+            dir = True
         elif direction == 'backward':
-            d = False
+            dir = False
+        else:
+            self.log.error('direction must be forward or backward')
 
-        self.anc.startSingleStep(axes,backward = d)
+        self.anc.startSingleStep(axes, backward = dir)
 
-    def set_frequency(self,axis, freq):
-        self.anc.setFrequency(axis,freq)
+    def set_frequency(self, axis, freq):
+        '''
+
+        :param axis: 'x', 'y' 'z'
+        :param freq: Frequency in Hz, internal resolution is 1 Hz
+        :return:
+        '''
+
+        axes = self.axisNo[axis]
+        self.anc.setFrequency(axes, freq)
+
+    def set_amplitude(self, axis, amp):
+        '''
+
+        :param axis: 'x', 'y' 'z'
+        :param amp: Amplitude in V, internal resolution is 1 mV
+        :return:
+        '''
+
+        axes = self.axisNo[axis]
+        self.anc.setAmplitude(axes, amp)
+
+    def set_dcvoltage(self, axis, voltage):
+        '''
+
+        :param axis: 'x', 'y' 'z'
+        :param voltage: DC output voltage [V], internal resolution is 1 mV
+        :return:
+        '''
+
+        axes = self.axisNo[axis]
+        self.anc.setDcVoltage(axes, voltage)
+
+    def get_frequency(self, axis, freq):
+        '''
+
+        :param axis: 'x', 'y' 'z'
+        :return: Frequency in Hz
+        '''
+
+        axes = self.axisNo[axis]
+        return self.anc.getFrequency(axes, freq)
+
+    def get_amplitude(self, axis, amp):
+        '''
+
+        :param axis: 'x', 'y' 'z'
+        :return: Amplitude V
+        '''
+
+        axes = self.axisNo[axis]
+        return self.anc.getAmplitude(axes)
+
+    def enable_trigger_input(self):
+        '''
+        Enables trigger mode for all axis
+        :return:
+        '''
+        for i, label in enumerate(self.get_scanner_axes()):
+            self.anc.configureExtTrigger(self, self.axisNo[label], 2)
+
 
 
