@@ -21,13 +21,9 @@ top-level directory of this distribution and at <https://github.com/Ulm-IQO/qudi
 """
 
 import numpy as np
-import re
-
-#from hardware.attocube.pyanc350v4 import ANC350v4lib as ANC
 from hardware.attocube.pyanc350v4 import Positioner
 import ctypes, math, time
 
-import PyDAQmx as daq
 
 
 from core.base import Base
@@ -43,8 +39,9 @@ class Attocube(Base):
 
     # connectors
     _in = {'fitlogic': 'FitLogic'}
-    _out = {'counter': 'SlowCounterInterface',
-            'confocalscanner': 'ConfocalScannerInterface',
+    _out = {
+            'scanner': 'ScannerInterface',
+            'confocalscanner': 'Confocalscanner'
             }
 
     def on_activate(self, e=None):
@@ -60,6 +57,7 @@ class Attocube(Base):
 
         self.anc = Positioner()
         self.axisNo = {'y': 0, 'x': 1, 'z': 2}
+        self.anc.setTargetRange()
 
     def on_deactivate(self, e=None):
         """ Shut down the NI card.
@@ -148,7 +146,7 @@ class Attocube(Base):
         except:
             return -1
 
-    def scanner_set_position(self, x=None, y=None, z=None, a=None):
+    def scanner_set_position(self, x=None, y=None, z=None):
         """Move stage to x, y, z, a (where a is the fourth voltage channel).
 
         #FIXME: No volts
@@ -159,7 +157,7 @@ class Attocube(Base):
 
         @return int: error code (0:OK, -1:error)
         """
-        self._current_position = [0,0,0,0]
+        self._current_position = [0,0,0]
         if self.getState() == 'locked':
             self.log.error('Another scan_line is already running, close this one first.')
             return -1
@@ -182,19 +180,14 @@ class Attocube(Base):
                 return -1
             self._current_position[2] = np.float(z)
 
-        if a is not None:
-            if not(self._position_range[3][0] <= a <= self._position_range[3][1]):
-                self.log.error('You want to set a out of range: {0:f}.'.format(a))
-                return -1
-            self._current_position[3] = np.float(a)
 
         # the position has to be a vstack
         my_position = np.vstack(self._current_position)
 
         # then directly write the position to the hardware
         try:
-            for i,ch in enumerate(self.get_scanner_axes()):
-                print(i)
+            for i, label in enumerate(self.get_scanner_axes()):
+                self._current_position[i] = self.anc.setTargetPosition(self.axisNo[label],self._current_position[i])
         #self.anc.setTargetPosition(self.AxisNo[ch],), start=True)
         except:
             return -1
@@ -205,7 +198,30 @@ class Attocube(Base):
 
         @return float[]: current position in (x, y, z, a).
         """
-
+        self._current_position = [0, 0, 0]
+        for i,label in enumerate(self.get_scanner_axes()):
+            self._current_position[i] = self.anc.getPosition(self.axisNo[label])
         return self._current_position
+
+    def single_step(self, axis, direction):
+        """
+
+        :param str axis: 'x', 'y' 'z'
+        :param str direction: 'forward' or 'backward'
+        :return:
+        """
+        try:
+            axes = self.axisNo[axis]
+        except:
+            self.log.error('input should be x,y or z in string format')
+        if direction == 'forward':
+            d = True
+        elif direction == 'backward':
+            d = False
+
+        self.anc.startSingleStep(axes,backward = d)
+
+    def set_frequency(self,axis, freq):
+        self.anc.setFrequency(axis,freq)
 
 

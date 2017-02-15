@@ -24,12 +24,12 @@ import abc
 from core.util.interfaces import InterfaceMetaclass
 
 
-class ConfocalScannerInterface(metaclass=InterfaceMetaclass):
+class ScannerInterface(metaclass=InterfaceMetaclass):
     """ This is the Interface class to define the controls for the simple
     microwave hardware.
     """
 
-    _modtype = 'ConfocalScannerInterface'
+    _modtype = 'ScannerInterface'
     _modclass = 'interface'
 
     @abc.abstractmethod
@@ -62,16 +62,6 @@ class ConfocalScannerInterface(metaclass=InterfaceMetaclass):
         pass
 
     @abc.abstractmethod
-    def set_voltage_range(self, myrange=None):
-        """ Sets the voltage range of the NI Card.
-
-        @param float [2] myrange: array containing lower and upper limit
-
-        @return int: error code (0:OK, -1:error)
-        """
-        pass
-
-    @abc.abstractmethod
     def get_scanner_axes(self):
         """ Find out how many axes the scanning device is using for confocal and their names.
  
@@ -87,48 +77,6 @@ class ConfocalScannerInterface(metaclass=InterfaceMetaclass):
         """
         pass
 
-    @abc.abstractmethod
-    def get_scanner_count_channels(self):
-        """ Returns the list of channels that are recorded while scanning an image.
-
-        @return list(str): channel names
-
-        Most methods calling this might just care about the number of channels.
-        """
-        pass
-
-    @abc.abstractmethod
-    def set_up_scanner_clock(self, clock_frequency=None, clock_channel=None):
-        """ Configures the hardware clock of the NiDAQ card to give the timing.
-
-        @param float clock_frequency: if defined, this sets the frequency of the
-                                      clock
-        @param str clock_channel: if defined, this is the physical channel of
-                                  the clock
-
-        @return int: error code (0:OK, -1:error)
-        """
-        pass
-
-    @abc.abstractmethod
-    def set_up_scanner(self,
-                       counter_channels=None,
-                       sources=None,
-                       clock_channel=None,
-                       scanner_ao_channels=None):
-        """ Configures the actual scanner with a given clock.
-
-        @param str counter_channels: if defined, these are the physical conting devices
-        @param str sources: if defined, these are the physical channels where
-                                  the photons are to count from
-        @param str clock_channel: if defined, this specifies the clock for the
-                                  counter
-        @param str scanner_ao_channels: if defined, this specifies the analoque
-                                        output channels
-
-        @return int: error code (0:OK, -1:error)
-        """
-        pass
 
     @abc.abstractmethod
     def scanner_set_position(self, x=None, y=None, z=None, a=None):
@@ -151,25 +99,6 @@ class ConfocalScannerInterface(metaclass=InterfaceMetaclass):
         """
         pass
 
-    @abc.abstractmethod
-    def set_up_line(self, length=100):
-        """ Sets up the analoque output for scanning a line.
-
-        @param int length: length of the line in pixel
-
-        @return int: error code (0:OK, -1:error)
-        """
-        pass
-
-    @abc.abstractmethod
-    def scan_line(self, line_path=None):
-        """ Scans a line and returns the counts on that line.
-
-        @param float[k][n] line_path: array k of n-part tuples defining the pixel positions
-
-        @return float[k][m]: the photon counts per second for k pixels with m channels
-        """
-        pass
 
     @abc.abstractmethod
     def close_scanner(self):
@@ -179,11 +108,4 @@ class ConfocalScannerInterface(metaclass=InterfaceMetaclass):
         """
         pass
 
-    @abc.abstractmethod
-    def close_scanner_clock(self, power=0):
-        """ Closes the clock and cleans up afterwards.
-
-        @return int: error code (0:OK, -1:error)
-        """
-        pass
 

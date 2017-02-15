@@ -30,14 +30,14 @@ import ctypes, math, time
 import PyDAQmx as daq
 
 from core.base import Base
-from interface.confocal_scanner_interface import ConfocalScannerInterface
+from interface.clock_n_counter_interface import ClockNCounterInterface
 
 
-class Attocube(Base, ConfocalScannerInterface):
+class NIcard(Base, ClockNCounterInterface):
     # class Attocube(Base):
 
 
-    _modtype = 'Attocube'
+    _modtype = 'Nicard'
     _modclass = 'hardware'
 
     # connectors
@@ -56,10 +56,6 @@ class Attocube(Base, ConfocalScannerInterface):
                          of the state which should be reached after the event
                          had happened.
         """
-
-        self.anc = Positioner()
-
-        self.axisNo = {0: 'y', 1: 'x', 2: 'z'}
 
         ''' NI card '''
         # the tasks used on that hardware device:

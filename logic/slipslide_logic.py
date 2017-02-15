@@ -160,7 +160,8 @@ class ScanLogic(GenericLogic):
 
     # declare connectors
     _in = {
-        'confocalscanner1': 'ConfocalScannerInterface'
+        'scanner1': 'ScannerInterface',
+        'counter1': 'ClockNCounterInterface'
         }
     _out = {'scannerlogic': 'ConfocalLogic'}
 
@@ -201,7 +202,8 @@ class ScanLogic(GenericLogic):
 
         @param e: error code
         """
-        self._scanning_device = self.get_in_connector('confocalscanner1')
+        self._scanning_device = self.get_in_connector('scanner1')
+        self._counter_device = self.get_in_connector('counter1')
         #self._save_logic = self.get_in_connector('savelogic')
 
         #default values for clock frequency and slowness
@@ -541,7 +543,7 @@ class ScanLogic(GenericLogic):
         """ Get lis of counting channels from scanning device.
           @return list(str): names of counter channels
         """
-        return self._scanning_device.get_scanner_count_channels()
+        return self._counter_device.get_scanner_count_channels()
 
     def _scan_line(self):
         """scanning an image xy
@@ -863,6 +865,9 @@ class ScanLogic(GenericLogic):
         self.signal_draw_figure_completed.emit()
         return fig
 
+
+    def step(self,axis,direction):
+        self._scanning_device.step(axis,direction)
 
 
 
