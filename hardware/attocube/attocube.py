@@ -32,17 +32,6 @@ from interface.confocal_scanner_interface import ConfocalScannerInterface
 
 #class Attocube(Base, ConfocalScannerInterfrt):
 class Attocube(Base):
-   
-
-    _modtype = 'Attocube'
-    _modclass = 'hardware'
-
-    # connectors
-    _in = {'fitlogic': 'FitLogic'}
-    _out = {
-            'scanner': 'ScannerInterface',
-            'confocalscanner': 'Confocalscanner'
-            }
 
     def on_activate(self, e=None):
         """

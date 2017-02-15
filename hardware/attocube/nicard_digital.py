@@ -33,18 +33,11 @@ from core.base import Base
 from interface.clock_n_counter_interface import ConfocalScannerInterfaceAtto
 
 
-class NIcard(Base, ConfocalScannerInterfaceAtto):
-    # class Attocube(Base):
-
+class NIcard(Base):
 
     _modtype = 'Nicard'
     _modclass = 'hardware'
 
-    # connectors
-    _in = {'fitlogic': 'FitLogic'}
-    _out = {'counter': 'SlowCounterInterface',
-            'confocalscanner': 'ConfocalScannerInterface',
-            }
 
     def on_activate(self, e=None):
         """
