@@ -37,7 +37,7 @@ class Distributer(Base,ConfocalScannerInterfaceAtto):
         @return float [4][2]: array of 4 ranges with an array containing lower
                               and upper limit
         """
-        Attocube.get_position_range(self)
+        return Attocube.get_position_range(self)
 
     def set_position_range(self, myrange=None):
         """ Sets the physical range of the scanner.
@@ -63,7 +63,7 @@ class Distributer(Base,ConfocalScannerInterfaceAtto):
 
           On error, return an empty list.
         """
-        Attocube.get_scanner_axes(self)
+        return Attocube.get_scanner_axes(self)
 
 
     def get_scanner_count_channels(self):
