@@ -57,7 +57,6 @@ class Attocube(Base):
 
         self.anc = Positioner()
         self.axisNo = {'y': 0, 'x': 1, 'z': 2}
-        self.anc.setTargetRange()
 
     def on_deactivate(self, e=None):
         """ Shut down the NI card.
