@@ -169,7 +169,7 @@ class MagnetLogic(GenericLogic):
 
         self._gc_logic = self.get_in_connector('gatedcounterlogic')
         self._ta_logic = self.get_in_connector('traceanalysis')
-        self._odmr_logic = self.get_in_connector('odmrlogic')
+        #self._odmr_logic = self.get_in_connector('odmrlogic')
 
         self._seq_gen_logic = self.get_in_connector('sequencegeneratorlogic')
 
@@ -517,6 +517,8 @@ class MagnetLogic(GenericLogic):
         self._statusVariables['nuclear_2d_idle_time'] =  self.nuclear_2d_idle_time
         self._statusVariables['nuclear_2d_reps_within_ssr'] =  self.nuclear_2d_reps_within_ssr
         self._statusVariables['nuclear_2d_num_ssr'] =  self.nuclear_2d_num_ssr
+
+        return 0
 
     def get_hardware_constraints(self):
         """ Retrieve the hardware constraints.
@@ -2116,7 +2118,7 @@ class MagnetLogic(GenericLogic):
 
         self._save_logic.save_data(save_dict, filepath,
                                    filelabel=filelabel3, timestamp=timestamp,
-                                   as_text=True)
+                                   as_text=True, precision=':.6e')
         keys = self._2d_intended_fields[0].keys()
         intended_fields = OrderedDict()
         for key in keys:

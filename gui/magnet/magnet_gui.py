@@ -247,7 +247,12 @@ class MagnetGui(GUIBase):
         self._mw.magnet_settings_Action.triggered.connect(self.open_magnet_settings)
         self._mw.default_view_Action.triggered.connect(self.set_default_view_main_window)
 
-        self.update_pos()
+        curr_pos = self.update_pos()
+        # update the values also of the absolute movement display:
+        for axis_label in curr_pos:
+            dspinbox_move_abs_ref = self.get_ref_move_abs_ScienDSpinBox(axis_label)
+            dspinbox_move_abs_ref.setValue(curr_pos[axis_label])
+
         self._magnet_logic.sigPosChanged.connect(self.update_pos)
 
         # Connect alignment GUI elements:
@@ -326,6 +331,7 @@ class MagnetGui(GUIBase):
 
 
 
+
         # add the configured crosshair to the magnet Widget
         self._mw.alignment_2d_GraphicsView.addItem(self.hline_magnet)
         self._mw.alignment_2d_GraphicsView.addItem(self.vline_magnet)
@@ -393,6 +399,7 @@ class MagnetGui(GUIBase):
         self._mw.align_2d_axis0_name_ComboBox.currentIndexChanged.connect(self.align_2d_axis0_name_changed)
         self._mw.align_2d_axis0_range_DSpinBox.setValue(self._magnet_logic.align_2d_axis0_range)
         self._mw.align_2d_axis0_range_DSpinBox.valueChanged.connect(self.align_2d_axis0_range_changed)
+        self._mw.align_2d_axis0_range_DSpinBox.valueChanged.connect(self.update_roi_from_range)
         self._mw.align_2d_axis0_step_DSpinBox.setValue(self._magnet_logic.align_2d_axis0_step)
         self._mw.align_2d_axis0_step_DSpinBox.valueChanged.connect(self.align_2d_axis0_step_changed)
         self._mw.align_2d_axis0_vel_DSpinBox.setValue(self._magnet_logic.align_2d_axis0_vel)
@@ -403,6 +410,7 @@ class MagnetGui(GUIBase):
         self._mw.align_2d_axis1_name_ComboBox.currentIndexChanged.connect(self.align_2d_axis1_name_changed)
         self._mw.align_2d_axis1_range_DSpinBox.setValue(self._magnet_logic.align_2d_axis1_range)
         self._mw.align_2d_axis1_range_DSpinBox.valueChanged.connect(self.align_2d_axis1_range_changed)
+        self._mw.align_2d_axes1_range_DSpinBox.valueChanged.connect(self.update_roi_from_range)
         self._mw.align_2d_axis1_step_DSpinBox.setValue(self._magnet_logic.align_2d_axis1_step)
         self._mw.align_2d_axis1_step_DSpinBox.valueChanged.connect(self.align_2d_axis1_step_changed)
         self._mw.align_2d_axis1_vel_DSpinBox.setValue(self._magnet_logic.align_2d_axis1_vel)
@@ -478,6 +486,8 @@ class MagnetGui(GUIBase):
 
         self._magnet_logic.sigOptPosFreqChanged.connect(self.update_optimize_pos_freq)
         self._magnet_logic.sigFluoIntTimeChanged.connect(self.update_fluorescence_integration_time)
+
+
         return 0
 
 
@@ -502,6 +512,8 @@ class MagnetGui(GUIBase):
 
         self.keep_former_magnet_settings()
 
+
+
     def trig_wrapper_normal_mode(self):
         if not self._ms.normal_mode_checkBox.isChecked() and not self._ms.z_mode_checkBox.isChecked():
             self._ms.z_mode_checkBox.toggle()
@@ -513,6 +525,8 @@ class MagnetGui(GUIBase):
             self._ms.normal_mode_checkBox.toggle()
         elif self._ms.normal_mode_checkBox.isChecked() and self._ms.z_mode_checkBox.isChecked():
             self._ms.normal_mode_checkBox.toggle()
+
+
 
 
     def on_deactivate(self, e=None):
@@ -1207,8 +1221,10 @@ class MagnetGui(GUIBase):
             dspinbox_pos_ref.setValue(curr_pos[axis_label])
 
             # update the values also of the absolute movement display:
-            dspinbox_move_abs_ref = self.get_ref_move_abs_ScienDSpinBox(axis_label)
-            dspinbox_move_abs_ref.setValue(curr_pos[axis_label])
+            #dspinbox_move_abs_ref = self.get_ref_move_abs_ScienDSpinBox(axis_label)
+            #dspinbox_move_abs_ref.setValue(curr_pos[axis_label])
+
+        return curr_pos
 
 
     def run_stop_2d_alignment(self, is_checked):
@@ -1578,7 +1594,7 @@ class MagnetGui(GUIBase):
             axis1_name = 'axis1'
 
         self._mw.pos_label.setText('({0}, {1})'.format(axis0_name, axis1_name))
-        self._mw.pos_show.setText('({0:.3f}, {1:.3f})'.format(x_pos, y_pos))
+        self._mw.pos_show.setText('({0:.6f}, {1:.6f})'.format(x_pos, y_pos))
         # I only need to update my label here.
         # which I would like to create in the QtDesigner
 
@@ -1591,17 +1607,13 @@ class MagnetGui(GUIBase):
         axis1_name = self._mw.align_2d_axis1_name_ComboBox.currentText()
         self.log.debug('get the axis0_name: {0}'.format(axis0_name))
         self.log.debug('get the axis0_name: {0}'.format(axis1_name))
-        axis0_value = self.get_ref_curr_pos_ScienDSpinBox(axis0_name).value()
-        axis1_value = self.get_ref_curr_pos_ScienDSpinBox(axis1_name).value()
+        axis0_value = self.get_ref_move_abs_ScienDSpinBox(axis0_name).value()
+        axis1_value = self.get_ref_move_abs_ScienDSpinBox(axis1_name).value()
 
-        self.roi_magnet.setPos(axis0_value, axis1_value)
-        self._mw.pos_show.setText('({0:.3f}, {1:.3f})'.format(axis0_value, axis1_value))
-        width_x = self.roi_magnet.size()[0]
-        width_y = self.roi_magnet.size()[1]
-        self.log.debug('x, y from boxes:{0},{1}'.format(axis0_value, axis1_value))
-        x_r = axis0_value - width_x / 2.0
-        y_r = axis1_value - width_y / 2.0
-        self.roi_magnet.setPos(x_r, y_r)
+        center_x = axis0_value + 0.5 * self.roi_magnet.size()[0]
+        center_y = axis1_value + 0.5 * self.roi_magnet.size()[1]
+        self.roi_magnet.setPos([center_x, center_y])
+
         return 0
 
 
@@ -1618,6 +1630,17 @@ class MagnetGui(GUIBase):
             dspinbox.setValue(dict[axis_label])
             dspinbox.blockSignals(False)
         return dict
+
+    def update_roi_from_range(self):
+        """
+        User changed scan range and therefore the rectangular should be adjusted
+        @return:
+        """
+        # first get the size of axis0 and axis1 range
+        x_range = self._mw.align_2d_axes0_range_DSpinBox.value()
+        y_range = self._mw.align_2d_axes0_range_DSpinBox.value()
+        self.roi_magnet.setSize([x_range/100, y_range/100])
+
 
     def update_align_2d_axis0_name(self,axisname):
         """ The GUT is updated taking axisname into account. Thereby no signal is triggered!
