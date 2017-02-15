@@ -1,6 +1,6 @@
 from hardware.attocube.attocube import Attocube
 from hardware.attocube.nicard_digital import NIcard
-from interface.clock_n_counter_interface import ConfocalScannerInterfaceAtto
+from interface.confocal_scanner_atto_interface import ConfocalScannerInterfaceAtto
 from core.base import Base
 
 class Distributer(Base,ConfocalScannerInterfaceAtto):
@@ -9,7 +9,7 @@ class Distributer(Base,ConfocalScannerInterfaceAtto):
     _modclass = 'hardware'
 
     _out = {
-            'confocalscanner': 'ConfocalScannerInterface'
+            'confocalscanner': 'ConfocalScannerInterfaceAtto'
             }
 
     def on_activate(self, e):
@@ -73,7 +73,7 @@ class Distributer(Base,ConfocalScannerInterfaceAtto):
 
         Most methods calling this might just care about the number of channels.
         """
-        NIcard.get_scanner_count_channels()
+        NIcard.get_scanner_count_channels(self)
 
 
     def set_up_scanner_clock(self, clock_frequency=None, clock_channel=None):
@@ -159,9 +159,9 @@ class Distributer(Base,ConfocalScannerInterfaceAtto):
         """
         pass
 
-    def single_step(self, axis='x'):
+    def single_step(self, axis='x', direction='forward'):
         """ Closes the clock and cleans up afterwards.
 
         @return int: error code (0:OK, -1:error)
         """
-        pass
+        Attocube.single_step(self, axis, direction)

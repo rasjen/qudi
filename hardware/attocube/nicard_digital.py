@@ -30,7 +30,7 @@ import ctypes, math, time
 import PyDAQmx as daq
 
 from core.base import Base
-from interface.clock_n_counter_interface import ConfocalScannerInterfaceAtto
+from interface.confocal_scanner_atto_interface import ConfocalScannerInterfaceAtto
 
 
 class NIcard(Base):

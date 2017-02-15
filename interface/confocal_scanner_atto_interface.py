@@ -178,7 +178,7 @@ class ConfocalScannerInterfaceAtto(metaclass=InterfaceMetaclass):
         pass
 
     @abc.abstractmethod
-    def single_step(self, axis='x'):
+    def single_step(self, axis='x', direction='forward'):
         """ Closes the clock and cleans up afterwards.
 
         @return int: error code (0:OK, -1:error)
