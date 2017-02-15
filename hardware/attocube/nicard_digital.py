@@ -977,6 +977,15 @@ class NIcard(Base):
         # return values is a rate of counts/s
         return (self._real_data * self._scanner_clock_frequency).transpose()
 
+    def close_scanner(self):
+        """ Closes the scanner and cleans up afterwards.
+
+        @return int: error code (0:OK, -1:error)
+        """
+        a = self._stop_digital_output()
+        c = self.close_counter(scanner=True)
+        return -1 if a < 0 or c < 0 else 0
+
     def close_scanner_clock(self):
         """ Closes the clock and cleans up afterwards.
 

@@ -47,7 +47,7 @@ class Distributer(Base,ConfocalScannerInterfaceAtto):
 
         @return int: error code (0:OK, -1:error)
         """
-        Attocube.get_position_range(self)
+        Attocube.set_position_range(self)
 
 
     def get_scanner_axes(self):
@@ -86,7 +86,7 @@ class Distributer(Base,ConfocalScannerInterfaceAtto):
 
         @return int: error code (0:OK, -1:error)
         """
-        pass
+        NIcard.set_up_scanner_clock(self, clock_frequency=clock_frequency, clock_channel=clock_channel)
 
 
     def set_up_scanner(self,
@@ -106,7 +106,8 @@ class Distributer(Base,ConfocalScannerInterfaceAtto):
 
         @return int: error code (0:OK, -1:error)
         """
-        pass
+        Attocube.enable_trigger_input(self)
+        NIcard.set_up_scanner(counter_channels=counter_channels, sources= sources, clock_channel=clock_channel, scanner_do_channels=scanner_ao_channels)
 
     def scanner_set_position(self, x=None, y=None, z=None, a=None):
         """Move stage to x, y, z, a (where a is the fourth voltage channel).
@@ -118,14 +119,14 @@ class Distributer(Base,ConfocalScannerInterfaceAtto):
 
         @return int: error code (0:OK, -1:error)
         """
-        pass
+        Attocube.scanner_set_position(self, x=x, y=y, z=z)
 
     def get_scanner_position(self):
         """ Get the current position of the scanner hardware.
 
         @return float[n]: current position in (x, y, z, a).
         """
-        pass
+        return Attocube.get_scanner_position(self)
 
     def set_up_line(self, length=100):
         """ Sets up the analoque output for scanning a line.
@@ -134,7 +135,7 @@ class Distributer(Base,ConfocalScannerInterfaceAtto):
 
         @return int: error code (0:OK, -1:error)
         """
-        pass
+        NIcard.set_up_line(length=length)
 
     def scan_line(self, line_path=None):
         """ Scans a line and returns the counts on that line.
@@ -143,21 +144,21 @@ class Distributer(Base,ConfocalScannerInterfaceAtto):
 
         @return float[k][m]: the photon counts per second for k pixels with m channels
         """
-        pass
+        NIcard.scan_line(self, line_path=line_path)
 
     def close_scanner(self):
         """ Closes the scanner and cleans up afterwards.
 
         @return int: error code (0:OK, -1:error)
         """
-        pass
+        NIcard.close_scanner(self)
 
     def close_scanner_clock(self, power=0):
         """ Closes the clock and cleans up afterwards.
 
         @return int: error code (0:OK, -1:error)
         """
-        pass
+        NIcard.close_scanner_clock(self)
 
     def single_step(self, axis='x', direction='forward'):
         '''
