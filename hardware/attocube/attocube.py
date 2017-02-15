@@ -57,6 +57,8 @@ class Attocube(Base):
 
         self.anc = Positioner()
         self.axisNo = {'y': 0, 'x': 1, 'z': 2}
+        for i,label in enumerate(self.get_scanner_axes()):
+            self.anc.setAxisOutput(self.axisNo[label], 1, True)
 
     def on_deactivate(self, e=None):
         """ Shut down the NI card.
