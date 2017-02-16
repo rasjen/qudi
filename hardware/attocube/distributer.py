@@ -16,7 +16,6 @@ class Distributer(Base,ConfocalScannerInterfaceAtto):
         Attocube.on_activate(self)
         NIcard.on_activate(self)
 
-
     def on_deactivate(self, e):
         Attocube.on_deactivate(self)
         NIcard.on_deactivate(self)
@@ -107,7 +106,7 @@ class Distributer(Base,ConfocalScannerInterfaceAtto):
         @return int: error code (0:OK, -1:error)
         """
         Attocube.enable_trigger_input(self)
-        NIcard.set_up_scanner(counter_channels=counter_channels, sources= sources, clock_channel=clock_channel, scanner_do_channels=scanner_ao_channels)
+        NIcard.set_up_scanner(self, counter_channels=counter_channels, sources= sources, clock_channel=clock_channel, scanner_do_channels=scanner_ao_channels)
 
     def scanner_set_position(self, x=None, y=None, z=None, a=None):
         """Move stage to x, y, z, a (where a is the fourth voltage channel).
@@ -135,7 +134,7 @@ class Distributer(Base,ConfocalScannerInterfaceAtto):
 
         @return int: error code (0:OK, -1:error)
         """
-        NIcard.set_up_line(length=length)
+        NIcard.set_up_line(self, length=length)
 
     def scan_line(self, line_path=None):
         """ Scans a line and returns the counts on that line.
@@ -168,4 +167,8 @@ class Distributer(Base,ConfocalScannerInterfaceAtto):
         :return:
         '''
         Attocube.single_step(self, axis, direction)
+
+
+    def set_up_clock(self, clock_frequency=None, clock_channel=None, scanner=False, idle=False):
+        NIcard.set_up_clock(self, clock_frequency=clock_frequency, clock_channel=clock_channel, scanner=scanner, idle=idle)
 
