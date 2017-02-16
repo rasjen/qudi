@@ -167,6 +167,5 @@ class Distributer(Base,ConfocalScannerInterfaceAtto):
         :param direction:
         :return:
         '''
-        Attocube.enable_outputs(self)
         Attocube.single_step(self, axis, direction)
-        Attocube.disable_outputs(self)
+

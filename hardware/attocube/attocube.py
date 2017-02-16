@@ -209,6 +209,7 @@ class Attocube(Base):
 
     def single_step(self, axis, direction):
         """
+        Enables outputs and makes a single scan and then en
 
         :param str axis: 'x', 'y' 'z'
         :param str direction: 'forward' or 'backward'
@@ -225,7 +226,9 @@ class Attocube(Base):
         else:
             self.log.error('direction must be forward or backward')
 
-        self.anc.startSingleStep(axes, backward = dir)
+        self.enable_outputs()
+        self.anc.startSingleStep(axes, backward=dir)
+        self.disable_outputs()
 
     def set_frequency(self, axis, freq):
         '''
