@@ -744,7 +744,6 @@ class NIcard(Base):
         # Number of samples which were actually written, will be stored here.
         # The error code of this variable can be asked with .value to check
         # whether all channels have been written successfully.
-        self._AONwritten = daq.int32()
         daq.DAQmxCfgOutputBuffer(self._scanner_do_task, length)
         data = np.array((daq.uInt8 * length)())
         for i in range(length):
@@ -770,7 +769,7 @@ class NIcard(Base):
             None,
             None)
 
-        return self._AONwritten.value
+        return 0
 
 
     def set_up_line(self, length=100):
@@ -883,6 +882,7 @@ class NIcard(Base):
             self.log.error('Given line_path list is not array type.')
             return np.array([-1.])
         try:
+            self.log.info(self._scanner_do_task)
             # set task timing to use a sampling clock:
             # specify how the Data of the selected task is collected, i.e. set it
             # now to be sampled by a hardware (clock) signal.
@@ -891,7 +891,7 @@ class NIcard(Base):
             self.set_up_line(np.shape(line_path)[1])
 
             # write the positions to the analog output
-            written_voltages = self._write_scanner_do(
+            self._write_scanner_do(
                 length=self._line_length,
                 start=False)
 

@@ -85,7 +85,7 @@ class Distributer(Base,ConfocalScannerInterfaceAtto):
 
         @return int: error code (0:OK, -1:error)
         """
-        NIcard.set_up_scanner_clock(self, clock_frequency=clock_frequency, clock_channel=clock_channel)
+        return NIcard.set_up_scanner_clock(self, clock_frequency=clock_frequency, clock_channel=clock_channel)
 
 
     def set_up_scanner(self,
@@ -106,7 +106,7 @@ class Distributer(Base,ConfocalScannerInterfaceAtto):
         @return int: error code (0:OK, -1:error)
         """
         Attocube.enable_trigger_input(self)
-        NIcard.set_up_scanner(self, counter_channels=counter_channels, sources= sources, clock_channel=clock_channel, scanner_do_channels=scanner_ao_channels)
+        return NIcard.set_up_scanner(self, counter_channels=counter_channels, sources= sources, clock_channel=clock_channel, scanner_do_channels=scanner_ao_channels)
 
     def scanner_set_position(self, x=None, y=None, z=None, a=None):
         """Move stage to x, y, z, a (where a is the fourth voltage channel).
@@ -134,7 +134,7 @@ class Distributer(Base,ConfocalScannerInterfaceAtto):
 
         @return int: error code (0:OK, -1:error)
         """
-        NIcard.set_up_line(self, length=length)
+        return NIcard.set_up_line(self, length=length)
 
     def scan_line(self, line_path=None):
         """ Scans a line and returns the counts on that line.
@@ -143,21 +143,21 @@ class Distributer(Base,ConfocalScannerInterfaceAtto):
 
         @return float[k][m]: the photon counts per second for k pixels with m channels
         """
-        NIcard.scan_line(self, line_path=line_path)
+        return NIcard.scan_line(self, line_path=line_path)
 
     def close_scanner(self):
         """ Closes the scanner and cleans up afterwards.
 
         @return int: error code (0:OK, -1:error)
         """
-        NIcard.close_scanner(self)
+        return NIcard.close_scanner(self)
 
     def close_scanner_clock(self, power=0):
         """ Closes the clock and cleans up afterwards.
 
         @return int: error code (0:OK, -1:error)
         """
-        NIcard.close_scanner_clock(self)
+        return NIcard.close_scanner_clock(self)
 
     def single_step(self, axis='x', direction='forward'):
         '''
@@ -170,7 +170,7 @@ class Distributer(Base,ConfocalScannerInterfaceAtto):
 
 
     def set_up_clock(self, clock_frequency=None, clock_channel=None, scanner=False, idle=False):
-        NIcard.set_up_clock(self, clock_frequency=clock_frequency, clock_channel=clock_channel, scanner=scanner, idle=idle)
+        return NIcard.set_up_clock(self, clock_frequency=clock_frequency, clock_channel=clock_channel, scanner=scanner, idle=idle)
 
     def _start_digital_output(self):
         NIcard._start_digital_output(self)
@@ -179,7 +179,7 @@ class Distributer(Base,ConfocalScannerInterfaceAtto):
         NIcard._stop_digital_output(self)
 
     def _write_scanner_do(self, length=100, start=False):
-        NIcard._write_scanner_do(self, length=length, start=start):
+        NIcard._write_scanner_do(self, length=length, start=start)
 
     def close_clock(self, scanner=False):
         NIcard.close_clock(self, scanner=scanner)
@@ -189,6 +189,14 @@ class Distributer(Base,ConfocalScannerInterfaceAtto):
 
     def get_constraints(self):
         NIcard.get_constraints(self)
+
+    def enable_outputs(self):
+        Attocube.enable_outputs(self)
+
+    def disable_outputs(self):
+        Attocube.disable_outputs(self)
+
+
 
 
 
