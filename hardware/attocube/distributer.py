@@ -163,8 +163,8 @@ class Distributer(Base,ConfocalScannerInterfaceAtto):
     def single_step(self, axis='x', direction='forward'):
         '''
 
-        :param axis:
-        :param direction:
+        :param axis: 'x', 'y' 'z'
+        :param direction: 'forward' or 'backward'
         :return:
         '''
         Attocube.single_step(self, axis, direction)
