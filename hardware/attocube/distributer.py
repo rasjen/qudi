@@ -172,3 +172,26 @@ class Distributer(Base,ConfocalScannerInterfaceAtto):
     def set_up_clock(self, clock_frequency=None, clock_channel=None, scanner=False, idle=False):
         NIcard.set_up_clock(self, clock_frequency=clock_frequency, clock_channel=clock_channel, scanner=scanner, idle=idle)
 
+    def _start_digital_output(self):
+        NIcard._start_digital_output(self)
+
+    def _stop_digital_output(self):
+        NIcard._stop_digital_output(self)
+
+    def _write_scanner_do(self, length=100, start=False):
+        NIcard._write_scanner_do(self, length=length, start=start):
+
+    def close_clock(self, scanner=False):
+        NIcard.close_clock(self, scanner=scanner)
+
+    def close_counter(self, scanner=False):
+        NIcard.close_counter(self, scanner=scanner)
+
+    def get_constraints(self):
+        NIcard.get_constraints(self)
+
+
+
+
+
+
