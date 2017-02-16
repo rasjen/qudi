@@ -73,7 +73,7 @@ class Distributer(Base,ConfocalScannerInterfaceAtto):
 
         Most methods calling this might just care about the number of channels.
         """
-        NIcard.get_scanner_count_channels(self)
+        return NIcard.get_scanner_count_channels(self)
 
 
     def set_up_scanner_clock(self, clock_frequency=None, clock_channel=None):
