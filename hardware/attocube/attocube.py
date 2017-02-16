@@ -289,7 +289,7 @@ class Attocube(Base):
         :return:
         '''
         for i, label in enumerate(self.get_scanner_axes()):
-            self.anc.configureExtTrigger(self, self.axisNo[label], 2)
+            self.anc.configureExtTrigger(self.axisNo[label], 2)
 
 
 
