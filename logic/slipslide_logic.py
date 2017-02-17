@@ -1250,9 +1250,10 @@ class ConfocalLogic(GenericLogic):
         return 0
 
     def axis_output_status(self, axis, status='off'):
-        self._scanning_device.stage_output_status(axis=axis, status=status)
+        self._scanning_device.axis_output_status(axis=axis, status=status)
 
     def set_frequency(self, axis, freq):
+        self.log.info('test')
         self._scanning_device.set_frequency(axis=axis, freq=freq)
 
     def set_amplitude(self, axis, amp):
