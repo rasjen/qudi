@@ -179,7 +179,7 @@ class Distributer(Base,ConfocalScannerInterfaceAtto):
         NIcard._stop_digital_output(self)
 
     def _write_scanner_do(self, length=100, start=False):
-        NIcard._write_scanner_do(self, length=length, start=start):
+        NIcard._write_scanner_do(self, length=length, start=start)
 
     def close_clock(self, scanner=False):
         NIcard.close_clock(self, scanner=scanner)
