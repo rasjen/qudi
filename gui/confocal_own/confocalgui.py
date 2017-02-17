@@ -90,13 +90,29 @@ class ConfocalGui(GUIBase):
         
         self._mw = ConfocalMainWindow()
 
-        ###################################################################
-        #               Configuration of the 2D scan view                #
-        ###################################################################
-        # Label the axes 2D Scan View Widget which was defined
+        # All our gui elements are dockable, and so there should be no "central" widget.
+        # always use first channel on startup, can be changed afterwards
+        self.xy_channel = 0
+
+        # Get the image for the display from the logic. Transpose the received
+        # matrix to get the proper scan. The graphig widget displays vector-
+        # wise the lines and the lines are normally columns, but in our
+        # measurement we scan rows per row. That's why it has to be transposed.
+        arr01 = self._scanning_logic.xy_image[:, :, 3 + self.xy_channel].transpose()
+
+        # Load the images for xy in the display:
+        self.xy_image = pg.ImageItem(arr01)
+
+        # Add the display item to the xy ViewWidget, which was defined
         # in the UI file:
-        self._mw.xyScanView.setLabel('bottom', 'X position', units='m')
-        self._mw.xyScanView.setLabel('left', 'Y position', units='m')
+        # To use addItem method, the widget needs to be promoted with
+        # pyqtgraph class (can be done in qtDesigner with a rigth click
+        # on the widget)
+        self._mw.xyScanView.addItem(self.xy_image)
+
+        # Label the axes:
+        self._mw.xyScanView.setLabel('bottom', 'X position', units='μm')
+        self._mw.xyScanView.setLabel('left', 'Y position', units='μm')
 
         # Connections between GUI and logic fonctions
         self._mw.stepXBackwardPushButton.clicked.connect(self.stepXBackward)
