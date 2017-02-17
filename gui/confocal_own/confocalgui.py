@@ -68,13 +68,6 @@ class ConfocalGui(GUIBase):
         for key in config.keys():
             self.log.info('{0}: {1}'.format(key, config[key]))
 
-        ###################################################################
-        #               Configuration of the 2D scan view                #
-        ###################################################################
-        # Label the axes 2D Scan View Widget which was defined
-        # in the UI file:
-        # self._mw.xyScanView.setLabel('bottom', 'X position', units='m')
-        # self._mw.xyScanView.setLabel('left', 'Y position', units='m')
 
     def on_activate(self, e=None):
         """ Initializes all needed UI files and establishes the connectors.
@@ -96,6 +89,14 @@ class ConfocalGui(GUIBase):
         self._save_logic = self.get_in_connector('savelogic')
         
         self._mw = ConfocalMainWindow()
+
+        ###################################################################
+        #               Configuration of the 2D scan view                #
+        ###################################################################
+        # Label the axes 2D Scan View Widget which was defined
+        # in the UI file:
+        self._mw.xyScanView.setLabel('bottom', 'X position', units='m')
+        self._mw.xyScanView.setLabel('left', 'Y position', units='m')
 
         # Connections between GUI and logic fonctions
         self._mw.stepXBackwardPushButton.clicked.connect(self.stepXBackward)
