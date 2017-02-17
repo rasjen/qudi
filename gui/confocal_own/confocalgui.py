@@ -90,6 +90,10 @@ class ConfocalGui(GUIBase):
         self._save_logic = self.get_in_connector('savelogic')
         
         self._mw = ConfocalMainWindow()
+
+        # Connections between GUI and logic fonctions
+        self._mw.stepXPushButton.clicked.connect(self._scanning_logic.single_step(self, axis='x', direction='backward'))
+
                 
 
     def on_deactivate(self, e):
