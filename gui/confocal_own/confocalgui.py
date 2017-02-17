@@ -73,8 +73,8 @@ class ConfocalGui(GUIBase):
         ###################################################################
         # Label the axes 2D Scan View Widget which was defined
         # in the UI file:
-        self._mw.xyScanView.setLabel('bottom', 'X position', units='m')
-        self._mw.xyScanView.setLabel('left', 'Y position', units='m')
+        # self._mw.xyScanView.setLabel('bottom', 'X position', units='m')
+        # self._mw.xyScanView.setLabel('left', 'Y position', units='m')
 
     def on_activate(self, e=None):
         """ Initializes all needed UI files and establishes the connectors.
@@ -154,37 +154,37 @@ class ConfocalGui(GUIBase):
         self._scanning_logic.single_step(axis='z', direction='forward')
 
     def set_xAxisFrequency(self):
-        self._scanning_device.set_frequency(axis='x', freq=self._mw.xFrequencyDoubleSpinBox.value())
+        self._scanning_logic.set_frequency(axis='x', freq=self._mw.xFrequencyDoubleSpinBox.value())
 
     def set_yAxisFrequency(self):
-        self._scanning_device.set_frequency(axis='y', freq=self._mw.yFrequencyDoubleSpinBox.value())
+        self._scanning_logic.set_frequency(axis='y', freq=self._mw.yFrequencyDoubleSpinBox.value())
 
     def set_zAxisFrequency(self):
-        self._scanning_device.set_frequency(axis='z', freq=self._mw.zFrequencyDoubleSpinBox.value())
+        self._scanning_logic.set_frequency(axis='z', freq=self._mw.zFrequencyDoubleSpinBox.value())
 
     def set_xAxisAmplitude(self):
-        self._scanning_device.set_amplitude(axis='x', freq=self._mw.xAmplitudeDoubleSpinBox.value())
+        self._scanning_logic.set_amplitude(axis='x', amp=self._mw.xAmplitudeDoubleSpinBox.value())
 
     def set_yAxisAmplitude(self):
-        self._scanning_device.set_amplitude(axis='y', freq=self._mw.yAmplitudeDoubleSpinBox.value())
+        self._scanning_logic.set_amplitude(axis='y', amp=self._mw.yAmplitudeDoubleSpinBox.value())
 
     def set_zAxisAmplitude(self):
-        self._scanning_device.set_amplitude(axis='z', freq=self._mw.zAmplitudeDoubleSpinBox.value())
+        self._scanning_logic.set_amplitude(axis='z', amp=self._mw.zAmplitudeDoubleSpinBox.value())
 
     def xaxis_output_status(self):
-        if self._mw.xAxisCheckBox. isChecked():
-            self._scanning_device.stage_output_status(axis='x', status='on')
+        if self._mw.xAxisCheckBox.isChecked():
+            self._scanning_logic.axis_output_status(axis='x', status='on')
         else:
-            self._scanning_device.stage_output_status(axis='x', status='off')
+            self._scanning_logic.axis_output_status(axis='x', status='off')
 
     def yaxis_output_status(self):
-        if self._mw.xAxisCheckBox. isChecked():
-            self._scanning_device.stage_output_status(axis='y', status='on')
+        if self._mw.yAxisCheckBox.isChecked():
+            self._scanning_logic.axis_output_status(axis='y', status='on')
         else:
-            self._scanning_device.stage_output_status(axis='y', status='off')
+            self._scanning_logic.axis_output_status(axis='y', status='off')
 
     def zaxis_output_status(self):
-        if self._mw.zAxisCheckBox. isChecked():
-            self._scanning_device.stage_output_status(axis='z', status='on')
+        if self._mw.zAxisCheckBox.isChecked():
+            self._scanning_logic.axis_output_status(axis='z', status='on')
         else:
-            self._scanning_device.stage_output_status(axis='z', status='off')
+            self._scanning_logic.axis_output_status(axis='z', status='off')
