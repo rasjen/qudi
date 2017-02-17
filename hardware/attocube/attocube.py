@@ -227,6 +227,7 @@ class Attocube(Base):
             self.log.error('direction must be forward or backward')
 
         self.enable_outputs()
+        time.sleep(1)
         self.anc.startSingleStep(axes, backward=dir)
         self.disable_outputs()
 
