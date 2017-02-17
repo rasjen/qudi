@@ -67,6 +67,20 @@ class Attocube(Base):
         self.anc.discover()
         self.anc.device = self.anc.connect()
 
+    def axis_output_status(self, label, status):
+        '''
+
+        :param label: 'x','y','z'
+        :param status: 'on' or 'off'
+        :return:
+        '''
+        if status == 'off':
+            self.anc.setAxisOutput(self.axisNo[label], enable=0, autoDisable=True)
+        elif status == 'on':
+            self.anc.setAxisOutput(self.axisNo[label], enable=1, autoDisable=True)
+        else:
+            self.log.error('Did non change status of output')
+
     def enable_outputs(self):
         '''
         Enables output to stages
@@ -226,10 +240,7 @@ class Attocube(Base):
         else:
             self.log.error('direction must be forward or backward')
 
-        self.enable_outputs()
-        time.sleep(1)
         self.anc.startSingleStep(axes, backward=dir)
-        self.disable_outputs()
 
     def set_frequency(self, axis, freq):
         '''

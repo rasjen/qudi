@@ -196,8 +196,27 @@ class Distributer(Base,ConfocalScannerInterfaceAtto):
     def disable_outputs(self):
         Attocube.disable_outputs(self)
 
+    def axis_output_status(self, axis, status='off' ):
+        Attocube.stage_output_status(self, axis, status=status)
 
 
+    def set_frequency(self, axis, freq):
+        '''
+
+        :param axis: 'x', 'y' 'z'
+        :param freq: Frequency in Hz, internal resolution is 1 Hz
+        :return:
+        '''
+        Attocube.setFrequency(self,axis, freq)
+
+    def set_amplitude(self, axis, amp):
+        '''
+
+        :param axis: 'x', 'y' 'z'
+        :param amp: Amplitude in V, internal resolution is 1 mV
+        :return:
+        '''
+        Attocube.setAmplitude(self, axis, amp)
 
 
 

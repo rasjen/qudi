@@ -1248,3 +1248,12 @@ class ConfocalLogic(GenericLogic):
     def single_step(self, axis='x', direction='forward'):
         self._scanning_device.single_step(axis=axis, direction=direction)
         return 0
+
+    def axis_output_status(self, axis, status='off'):
+        self._scanning_device.stage_output_status(axis=axis, status=status)
+
+    def set_frequency(self, axis, freq):
+        self._scanning_device.set_frequency(axis=axis, freq=freq)
+
+    def set_amplitude(self, axis, amp):
+        self._scanning_device.set_amplitude(axis=axis, amp=amp)
