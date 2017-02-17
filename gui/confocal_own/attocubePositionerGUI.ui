@@ -258,9 +258,6 @@
       </layout>
       <zorder>xyScanView</zorder>
       <zorder>contrastView</zorder>
-      <zorder>xyScanView</zorder>
-      <zorder>xyScanView</zorder>
-      <zorder>contrastView</zorder>
       <zorder>startScanPushButton</zorder>
       <zorder>axisLabel</zorder>
       <zorder>xAxisLabel</zorder>
@@ -295,9 +292,16 @@
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="stepXPushButton">
+          <widget class="QPushButton" name="stepXBackwardPushButton">
            <property name="text">
-            <string>Step X</string>
+            <string>Step Backward </string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="stepXForwardPushButton">
+           <property name="text">
+            <string>Step Forward </string>
            </property>
           </widget>
          </item>
@@ -325,16 +329,23 @@
        <item row="1" column="0">
         <layout class="QHBoxLayout" name="horizontalLayout_2">
          <item>
-          <widget class="QLabel" name="xAxisLabel_3">
+          <widget class="QLabel" name="yAxisLabel_2">
            <property name="text">
             <string>Y</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="stepYPushButton">
+          <widget class="QPushButton" name="stepYBackwardPushButton">
            <property name="text">
-            <string>Step Y</string>
+            <string>Step Backward</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="stepYForwardPushButton">
+           <property name="text">
+            <string>Step Forward </string>
            </property>
           </widget>
          </item>

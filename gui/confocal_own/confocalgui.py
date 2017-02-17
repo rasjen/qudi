@@ -92,7 +92,10 @@ class ConfocalGui(GUIBase):
         self._mw = ConfocalMainWindow()
 
         # Connections between GUI and logic fonctions
-        self._mw.stepXPushButton.clicked.connect(self.test)
+        self._mw.stepXBackwardPushButton.clicked.connect(self.stepXBackward)
+        self._mw.stepXForwardPushButton.clicked.connect(self.stepXForward)
+        self._mw.stepYBackwardPushButton.clicked.connect(self.stepYBackward)
+        self._mw.stepYForwardPushButton.clicked.connect(self.stepYForward)
 
 
     def on_deactivate(self, e):
@@ -113,5 +116,15 @@ class ConfocalGui(GUIBase):
         self._mw.activateWindow()
         self._mw.raise_()
 
-    def test(self):
+    # Fonctions used for connectors
+    def stepXBackward(self):
         self._scanning_logic.single_step(axis='x', direction='backward')
+
+    def stepXForward(self):
+        self._scanning_logic.single_step(axis='x', direction='forward')
+
+    def stepYBackward(self):
+        self._scanning_logic.single_step(axis='y', direction='backward')
+
+    def stepYForward(self):
+        self._scanning_logic.single_step(axis='y', direction='forward')
