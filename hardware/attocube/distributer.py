@@ -173,22 +173,22 @@ class Distributer(Base,ConfocalScannerInterfaceAtto):
         return NIcard.set_up_clock(self, clock_frequency=clock_frequency, clock_channel=clock_channel, scanner=scanner, idle=idle)
 
     def _start_digital_output(self):
-        NIcard._start_digital_output(self)
+        return NIcard._start_digital_output(self)
 
     def _stop_digital_output(self):
-        NIcard._stop_digital_output(self)
+        return NIcard._stop_digital_output(self)
 
     def _write_scanner_do(self, length=100, start=False):
-        NIcard._write_scanner_do(self, length=length, start=start)
+        return NIcard._write_scanner_do(self, length=length, start=start)
 
     def close_clock(self, scanner=False):
-        NIcard.close_clock(self, scanner=scanner)
+        return NIcard.close_clock(self, scanner=scanner)
 
     def close_counter(self, scanner=False):
-        NIcard.close_counter(self, scanner=scanner)
+        return NIcard.close_counter(self, scanner=scanner)
 
     def get_constraints(self):
-        NIcard.get_constraints(self)
+        return NIcard.get_constraints(self)
 
     def enable_outputs(self):
         Attocube.enable_outputs(self)

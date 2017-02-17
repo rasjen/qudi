@@ -420,7 +420,7 @@ class NIcard(Base):
 
         @return int: error code (0:OK, -1:error)
         """
-
+        self.log.info('runs set up clock')
         if not scanner and self._clock_daq_task is not None:
             self.log.error('Another counter clock is already running, close this one first.')
             return -1
@@ -543,6 +543,7 @@ class NIcard(Base):
 
         @return int: error code (0:OK, -1:error)
         """
+        self.log.info('start digital output')
         try:
             # If an analog task is already running, kill that one first
             if self._scanner_do_task is not None:
@@ -561,7 +562,6 @@ class NIcard(Base):
 
             # create the actual analog output task on the hardware device. Via
             # byref you pass the pointer of the object to the TaskCreation function:
-            self.log.info('test1')
             daq.DAQmxCreateTask('ScannerDigO', daq.byref(self._scanner_do_task))
 
             # ChannelAB = [0,0]
@@ -601,27 +601,22 @@ class NIcard(Base):
 
         @return int: error code (0:OK, -1:error)
         """
+        self.log.info('runs stop digital output')
         if self._scanner_do_task is None:
             self.log.info(self._scanner_do_task)
-            self.log.info('test')
             return -1
         retval = 0
         try:
             # stop the analog output task
             daq.DAQmxStopTask(self._scanner_do_task)
-            daq.DAQmxClearTask(self._scanner_do_task)
-            self._scanner_do_task = None
-            self.log.info(self._scanner_do_task)
-            self.log.info('test3')
         except:
             self.log.exception('Error stopping digital output.')
             retval = -1
-        # try:
-        #    daq.DAQmxSetSampTimingType(self._scanner_ao_task, daq.DAQmx_Val_OnDemand)
-        # except:
-        #    self.log.exception('Error changing analog output mode.')
-        #    retval = -1
-        self.log.info('test4')
+        try:
+            daq.DAQmxSetSampTimingType(self._scanner_do_task, daq.DAQmx_Val_OnDemand)
+        except:
+            self.log.exception('Error changing analog output mode.')
+            retval = -1
         return retval
 
     def set_up_scanner(self, counter_channels=None, sources=None,
@@ -643,6 +638,7 @@ class NIcard(Base):
 
         @return int: error code (0:OK, -1:error)
         """
+        self.log.info('sets up scanner')
         retval = 0
         if self._scanner_clock_daq_task is None and clock_channel is None:
             self.log.error('No clock running, call set_up_clock before starting the counter.')
@@ -747,6 +743,7 @@ class NIcard(Base):
         @param bool start: write imediately (True)
                            or wait for start of task (False)
         """
+        self.log.info('runs write scanner do')
         # Number of samples which were actually written, will be stored here.
         # The error code of this variable can be asked with .value to check
         # whether all channels have been written successfully.
@@ -756,6 +753,7 @@ class NIcard(Base):
             data[i] = i % 2
 
         self.log.info(data)
+        self.log.info(len(data))
         # write the voltage instructions for the analog output to the hardware
         daq.DAQmxWriteDigitalLines(
             # write to this task
@@ -788,6 +786,7 @@ class NIcard(Base):
 
         @return int: error code (0:OK, -1:error)
         """
+        self.log.info('set up line')
         if len(self._scanner_counter_daq_tasks) < 1:
             self.log.error('No counter is running, cannot scan a line without one.')
             return -1
@@ -880,6 +879,7 @@ class NIcard(Base):
         like the following:
             [ [1,2,3,4,5],[1,1,1,1,],[-2,-2,-2,-2],[0,0,0,0]]
         """
+        self.log.info('runs scan line')
         if self._scanner_counter_daq_tasks is None:
             self.log.error('No counter is running, cannot scan a line without one.')
             return np.array([-1.])
