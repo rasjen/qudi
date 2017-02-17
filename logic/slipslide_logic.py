@@ -358,7 +358,6 @@ class ConfocalLogic(GenericLogic):
         self.signal_scan_lines_next.connect(self._scan_line, QtCore.Qt.QueuedConnection)
         self.signal_start_scanning.connect(self.start_scanner, QtCore.Qt.QueuedConnection)
         self.signal_continue_scanning.connect(self.continue_scanner, QtCore.Qt.QueuedConnection)
-        self.single_step(self, axis='x', direction='forward').connect(self.)
 
         self._change_position('activation')
 
@@ -1248,3 +1247,4 @@ class ConfocalLogic(GenericLogic):
 
     def single_step(self, axis='x', direction='forward'):
         self._scanning_device.single_step(axis=axis, direction=direction)
+        return 0

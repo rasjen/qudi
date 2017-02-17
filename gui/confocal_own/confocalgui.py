@@ -92,9 +92,8 @@ class ConfocalGui(GUIBase):
         self._mw = ConfocalMainWindow()
 
         # Connections between GUI and logic fonctions
-        self._mw.stepXPushButton.clicked.connect(self._scanning_logic.single_step(self, axis='x', direction='backward'))
+        self._mw.stepXPushButton.clicked.connect(self.test)
 
-                
 
     def on_deactivate(self, e):
         """ Reverse steps of activation
@@ -114,4 +113,5 @@ class ConfocalGui(GUIBase):
         self._mw.activateWindow()
         self._mw.raise_()
 
-    
+    def test(self):
+        self._scanning_logic.single_step(axis='x', direction='backward')
