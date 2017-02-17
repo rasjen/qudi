@@ -73,7 +73,7 @@
           <bool>true</bool>
          </property>
          <property name="suffix">
-          <string>c/s</string>
+          <string/>
          </property>
          <property name="minimum">
           <double>-1000000000.000000000000000</double>
@@ -189,7 +189,7 @@
           <bool>true</bool>
          </property>
          <property name="suffix">
-          <string>c/s</string>
+          <string/>
          </property>
          <property name="minimum">
           <double>-1000000000.000000000000000</double>
@@ -228,7 +228,7 @@
        <item row="3" column="4">
         <widget class="QRadioButton" name="manualRadioButton">
          <property name="text">
-          <string>Manual</string>
+          <string>Counter/s</string>
          </property>
          <property name="checked">
           <bool>false</bool>
