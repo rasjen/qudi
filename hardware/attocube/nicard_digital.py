@@ -602,12 +602,17 @@ class NIcard(Base):
         @return int: error code (0:OK, -1:error)
         """
         if self._scanner_do_task is None:
+            self.log.info(self._scanner_do_task)
+            self.log.info('test')
             return -1
         retval = 0
         try:
             # stop the analog output task
             daq.DAQmxStopTask(self._scanner_do_task)
             daq.DAQmxClearTask(self._scanner_do_task)
+            self._scanner_do_task = None
+            self.log.info(self._scanner_do_task)
+            self.log.info('test3')
         except:
             self.log.exception('Error stopping digital output.')
             retval = -1
@@ -616,6 +621,7 @@ class NIcard(Base):
         # except:
         #    self.log.exception('Error changing analog output mode.')
         #    retval = -1
+        self.log.info('test4')
         return retval
 
     def set_up_scanner(self, counter_channels=None, sources=None,
@@ -666,7 +672,7 @@ class NIcard(Base):
                            ''.format(len(my_photon_sources), len(my_counter_channels)))
             return -1
         self._start_digital_output()
-        self.log.warning('hej')
+
         try:
             # Set the Sample Timing Type. Task timing to use a sampling clock:
             # specify how the Data of the selected task is collected, i.e. set it
@@ -957,7 +963,7 @@ class NIcard(Base):
 
             # stop the analog output task
             self._stop_digital_output()
-
+            self.log.info('do i get to this point?')
             # create a new array for the final data (this time of the length
             # number of samples):
             self._real_data = np.empty(
