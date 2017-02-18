@@ -734,7 +734,7 @@ class NIcard(Base):
 
         return retval
 
-    def _write_scanner_do(self, length=100, start=False):
+    def _write_scanner_do(self, step_data, length=100, start=False):
         """Writes a set of voltages to the analog outputs.
 
         @param float[][4] voltages: array of 4-part tuples defining the voltage
@@ -748,12 +748,9 @@ class NIcard(Base):
         # The error code of this variable can be asked with .value to check
         # whether all channels have been written successfully.
         daq.DAQmxCfgOutputBuffer(self._scanner_do_task, length)
-        data = np.array((daq.uInt8 * length)())
-        for i in range(length):
-            data[i] = i % 2
 
-        self.log.info(data)
-        self.log.info(len(data))
+        self.log.info(step_data)
+        self.log.info(len(step_data))
         # write the voltage instructions for the analog output to the hardware
         daq.DAQmxWriteDigitalLines(
             # write to this task
@@ -767,7 +764,7 @@ class NIcard(Base):
             # Specify how the samples are arranged: each pixel is grouped by channel number
             daq.DAQmx_Val_GroupByChannel,
             # the voltages to be written
-            data,
+            step_data,
             # The actual number of samples per channel successfully written to the buffer
             # daq.byref(self._AONwritten),
             None,
@@ -775,6 +772,11 @@ class NIcard(Base):
 
         return 0
 
+    def _scanner_position_to_step(self,line_path):
+        step_data = np.array((daq.uInt8 * len(line_path)))
+        for i in range(len(line_path)):
+            step_data[i] = i % 2
+        return step_data
 
     def set_up_line(self, length=100):
         """ Sets up the analog output for scanning a line.
@@ -895,9 +897,9 @@ class NIcard(Base):
             daq.DAQmxSetSampTimingType(self._scanner_do_task, daq.DAQmx_Val_SampClk)
 
             self.set_up_line(np.shape(line_path)[1])
-
+            step_data = self._scanner_position_to_volt(line_path)
             # write the positions to the analog output
-            self._write_scanner_do(
+            self._write_scanner_do(step_data,
                 length=self._line_length,
                 start=False)
 
