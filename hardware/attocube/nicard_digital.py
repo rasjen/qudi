@@ -772,8 +772,9 @@ class NIcard(Base):
 
         return 0
 
-    def _scanner_position_to_step(self,line_path):
+    def _scanner_position_to_step(self, line_path):
         step_data = np.array((daq.uInt8 * len(line_path)))
+        self.log.info(step_data.shape, step_data.size)
         for i in range(len(line_path)):
             step_data[i] = i % 2
         return step_data
