@@ -772,9 +772,10 @@ class NIcard(Base):
         return 0
 
     def _scanner_position_to_step(self, line_path):
-        step_data = np.zeros(np.shape(line_path)[1], dtype=np.uint8)
+        step_data = np.zeros((np.shape(line_path)[1], 2), dtype=np.uint8)
         for i in range(np.shape(line_path)[1]):
-            step_data[i] = i % 2
+            step_data[i, 0] = i % 2
+            step_data[i, 1] = (i+1) % 2
         return step_data
 
     def set_up_line(self, length=100):
@@ -897,7 +898,7 @@ class NIcard(Base):
 
             self.set_up_line(np.shape(line_path)[1])
             step_data = self._scanner_position_to_step(line_path)
-            
+
             # write the positions to the analog output
             self._write_scanner_do(step_data=step_data,
                 length=self._line_length,
