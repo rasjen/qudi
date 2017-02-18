@@ -87,7 +87,7 @@
         </widget>
        </item>
        <item row="1" column="0" colspan="3">
-        <widget class="QGraphicsView" name="xyScanView"/>
+        <widget class="PlotWidget" name="xyScanView"/>
        </item>
        <item row="1" column="3" colspan="2">
         <widget class="QGraphicsView" name="contrastView"/>
@@ -117,7 +117,7 @@
           <bool>true</bool>
          </property>
          <property name="text">
-          <string>Amplitude</string>
+          <string>Amplitude (V)</string>
          </property>
          <property name="scaledContents">
           <bool>false</bool>
@@ -133,7 +133,7 @@
        <item row="2" column="2">
         <widget class="QLabel" name="frequencyLabel">
          <property name="text">
-          <string>Frequency</string>
+          <string>Frequency (Hz)</string>
          </property>
         </widget>
        </item>
@@ -210,10 +210,30 @@
         </widget>
        </item>
        <item row="3" column="1">
-        <widget class="QDoubleSpinBox" name="xAmplitudeDoubleSpinBox"/>
+        <widget class="QDoubleSpinBox" name="xAmplitudeDoubleSpinBox">
+         <property name="decimals">
+          <number>0</number>
+         </property>
+         <property name="minimum">
+          <double>1.000000000000000</double>
+         </property>
+         <property name="maximum">
+          <double>70.000000000000000</double>
+         </property>
+        </widget>
        </item>
        <item row="3" column="2">
-        <widget class="QDoubleSpinBox" name="xFrequencyDoubleSpinBox"/>
+        <widget class="QDoubleSpinBox" name="xFrequencyDoubleSpinBox">
+         <property name="decimals">
+          <number>0</number>
+         </property>
+         <property name="minimum">
+          <double>1.000000000000000</double>
+         </property>
+         <property name="maximum">
+          <double>2000.000000000000000</double>
+         </property>
+        </widget>
        </item>
        <item row="3" column="3">
         <widget class="QRadioButton" name="peercentiesRadioButton">
@@ -243,10 +263,30 @@
         </widget>
        </item>
        <item row="4" column="1">
-        <widget class="QDoubleSpinBox" name="yAmplitudeDoubleSpinBox"/>
+        <widget class="QDoubleSpinBox" name="yAmplitudeDoubleSpinBox">
+         <property name="decimals">
+          <number>0</number>
+         </property>
+         <property name="minimum">
+          <double>1.000000000000000</double>
+         </property>
+         <property name="maximum">
+          <double>70.000000000000000</double>
+         </property>
+        </widget>
        </item>
        <item row="4" column="2">
-        <widget class="QDoubleSpinBox" name="yFrequencyDoubleSpinBox"/>
+        <widget class="QDoubleSpinBox" name="yFrequencyDoubleSpinBox">
+         <property name="decimals">
+          <number>0</number>
+         </property>
+         <property name="minimum">
+          <double>1.000000000000000</double>
+         </property>
+         <property name="maximum">
+          <double>2000.000000000000000</double>
+         </property>
+        </widget>
        </item>
        <item row="5" column="0">
         <widget class="QLabel" name="zAxisLabel">
@@ -256,10 +296,30 @@
         </widget>
        </item>
        <item row="5" column="1">
-        <widget class="QDoubleSpinBox" name="zAmplitudeDoubleSpinBox"/>
+        <widget class="QDoubleSpinBox" name="zAmplitudeDoubleSpinBox">
+         <property name="decimals">
+          <number>0</number>
+         </property>
+         <property name="minimum">
+          <double>1.000000000000000</double>
+         </property>
+         <property name="maximum">
+          <double>70.000000000000000</double>
+         </property>
+        </widget>
        </item>
        <item row="5" column="2">
-        <widget class="QDoubleSpinBox" name="zFrequencyDoubleSpinBox"/>
+        <widget class="QDoubleSpinBox" name="zFrequencyDoubleSpinBox">
+         <property name="decimals">
+          <number>0</number>
+         </property>
+         <property name="minimum">
+          <double>1.000000000000000</double>
+         </property>
+         <property name="maximum">
+          <double>2000.000000000000000</double>
+         </property>
+        </widget>
        </item>
        <item row="6" column="0" colspan="3">
         <widget class="QPushButton" name="startScanPushButton">
@@ -450,6 +510,13 @@
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>PlotWidget</class>
+   <extends>QGraphicsView</extends>
+   <header>pyqtgraph</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>
