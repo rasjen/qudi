@@ -773,6 +773,13 @@ class NIcard(Base):
 
     def _scanner_position_to_step(self, line_path):
         step_data = np.zeros((np.shape(line_path)[1], 2), dtype=np.uint8)
+
+        step_size = 1 #micron determined by voltage and freq of motors
+        x_values = line_path[0]
+        y_values = line_path[1]
+
+        np.diff(x_values)
+
         for i in range(np.shape(line_path)[1]):
             step_data[i, 0] = i % 2
             step_data[i, 1] = (i+1) % 2
@@ -1038,7 +1045,7 @@ class NIcard(Base):
 
         # then directly write the position to the hardware
         try:
-            self._write_scanner_do(self, step_data=self._scanner_position_to_step(my_position), length=100, start=True)
+            self._write_scanner_do(self, step_data=self._scanner_position_to_step(my_position), length=0, start=True)
         except:
             return -1
         return 0
