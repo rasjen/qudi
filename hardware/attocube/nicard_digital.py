@@ -749,7 +749,6 @@ class NIcard(Base):
         # whether all channels have been written successfully.
         daq.DAQmxCfgOutputBuffer(self._scanner_do_task, length)
 
-        self.log.info(step_data)
         # write the voltage instructions for the analog output to the hardware
         daq.DAQmxWriteDigitalLines(
             # write to this task
@@ -778,45 +777,46 @@ class NIcard(Base):
         :param line_path: [[x values][y values][z values]]
         :return: binary step data array for writing to NI card in uint8 type
         '''
-        step_data = np.zeros((2 * np.shape(line_path)[1], len(self._scanner_do_channels)), dtype=np.uint8)
+        step_data = np.zeros((2 * np.shape(line_path)[1], 4), dtype=np.uint8)
 
-        step_size = line_path[0][1]-line_path[0][0]  # micron determined by voltage and freq of motors
+        step_size = np.abs(np.round(line_path[0][1]-line_path[0][0], 2))  # micron determined by voltage and freq of motors
 
-        if len(self._scanner_do_channels) > 0:
-            x_values = [self._current_position[0]] + line_path[0]
-            index_x_forward = np.where(np.diff(x_values) == step_size)[0]
-            index_x_backward = np.where(np.diff(x_values) == -step_size)[0]
+        if np.shape(step_data)[0] > 1:
+            x_values = np.append([self._current_position[0]], line_path[0])
+            index_x_forward = np.where(np.round(np.diff(x_values), 2) == step_size)[0]
+            index_x_backward = np.where(np.round(np.diff(x_values), 2) == -step_size)[0]
 
-        if len(self._scanner_do_channels) > 2:
-            y_values = [self._current_position[1]] + line_path[1]
-            index_y_forward = np.where(np.diff(y_values) == step_size)[0]
-            index_y_backward = np.where(np.diff(y_values) == -step_size)[0]
+        if np.shape(step_data)[0] > 2:
+            y_values = np.append([self._current_position[1]], line_path[1])
+            index_y_forward = np.where(np.round(np.diff(y_values), 2) == step_size)[0]
+            self.log.info(index_y_forward[0:10])
+            index_y_backward = np.where(np.round(np.diff(y_values), 2) == -step_size)[0]
 
-        if len(self._scanner_do_channels) > 4:
-            z_values = [self._current_position[2]] + line_path[2]
-            index_z_forward = np.where(np.diff(z_values) == step_size)[0]
-            index_z_backward = np.where(np.diff(z_values) == -step_size)[0]
+        # if np.shape(step_data)[0] > 7:
+        #     z_values = np.append([self._current_position[2]], line_path[2])
+        #     index_z_forward = np.where(np.round(np.diff(z_values), 2) == step_size)[0]
+        #     index_z_backward = np.where(np.round(np.diff(z_values), 2) == -step_size)[0]
 
         # if not len(index_x_forward) + len(index_x_backward)+ len(index_y_forward) + len(index_y_backward) + \
         #         len(index_z_forward) + len(index_z_backward) +1 == np.shape(line_path)[1]:
         #     self.log.error('Number of steps does not match the number of points in image (moving multiple axis at same time) (different step size)')
 
-        if len(self._scanner_do_channels) > 0:
+        if np.shape(step_data)[0] > 1:
             # forward x motion
             step_data[2 * index_x_forward, 0] = 1
             # backward x motion
             step_data[2 * index_x_backward, 1] = 1
-        if len(self._scanner_do_channels) > 2:
+        if np.shape(step_data)[0] > 2:
             # forward y motion
             step_data[2 * index_y_forward, 2] = 1
             # backward y motion
             step_data[2 * index_y_backward, 3] = 1
-        if len(self._scanner_do_channels) > 4:
-            # forward z motion
-            step_data[2 * index_z_forward, 4] = 1
-            # backward z motion
-            step_data[2 * index_z_backward, 5] = 1
-
+        # if np.shape(step_data)[0] > 7:
+        #     # forward z motion
+        #     step_data[2 * index_z_forward, 4] = 1
+        #     # backward z motion
+        #     step_data[2 * index_z_backward, 5] = 1
+        #self.log.info()
         return step_data
 
     def set_up_line(self, length=100):
@@ -931,7 +931,6 @@ class NIcard(Base):
             self.log.error('Given line_path list is not array type.')
             return np.array([-1.])
         try:
-            self.log.info(self._scanner_do_task)
             # set task timing to use a sampling clock:
             # specify how the Data of the selected task is collected, i.e. set it
             # now to be sampled by a hardware (clock) signal.
