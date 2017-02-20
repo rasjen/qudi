@@ -164,7 +164,7 @@ class Attocube(Base):
         except:
             return -1
 
-    def scanner_set_position(self, x=None, y=None, z=None):
+    def scanner_set_position_abs(self, x=None, y=None, z=None):
         """Move stage to x, y, z, a (where a is the fourth voltage channel).
 
         #FIXME: No volts
@@ -211,7 +211,7 @@ class Attocube(Base):
             return -1
         return 0
 
-    def get_scanner_position(self):
+    def get_scanner_position_abs(self):
         """ Get the current position of the scanner hardware.
 
         @return float[]: current position in (x, y, z, a).

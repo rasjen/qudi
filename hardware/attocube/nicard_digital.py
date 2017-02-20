@@ -979,12 +979,69 @@ class NIcard(Base):
             self._real_data += self._scan_data[:, 1::2]
 
             # update the scanner position instance variable
-            # self._current_position = list(line_path[:, -1])
+            self._current_position = list(line_path[:, -1])
         except:
             self.log.exception('Error while scanning line.')
             return np.array([[-1.]])
         # return values is a rate of counts/s
         return (self._real_data * self._scanner_clock_frequency).transpose()
+
+    def get_scanner_position(self):
+        """ Get the current position of the scanner hardware.
+
+        @return float[]: current position in (x, y, z, a).
+        """
+        return self._current_position
+
+    def scanner_set_position(self, x=None, y=None, z=None, a=None):
+        """Move stage to x, y, z, a (where a is the fourth voltage channel).
+
+        #FIXME: No volts
+        @param float x: postion in x-direction (volts)
+        @param float y: postion in y-direction (volts)
+        @param float z: postion in z-direction (volts)
+        @param float a: postion in a-direction (volts)
+
+        @return int: error code (0:OK, -1:error)
+        """
+
+        if self.getState() == 'locked':
+            self.log.error('Another scan_line is already running, close this one first.')
+            return -1
+
+        if x is not None:
+            if not(self._position_range[0][0] <= x <= self._position_range[0][1]):
+                self.log.error('You want to set x out of range: {0:f}.'.format(x))
+                return -1
+            self._current_position[0] = np.float(x)
+
+        if y is not None:
+            if not(self._position_range[1][0] <= y <= self._position_range[1][1]):
+                self.log.error('You want to set y out of range: {0:f}.'.format(y))
+                return -1
+            self._current_position[1] = np.float(y)
+
+        if z is not None:
+            if not(self._position_range[2][0] <= z <= self._position_range[2][1]):
+                self.log.error('You want to set z out of range: {0:f}.'.format(z))
+                return -1
+            self._current_position[2] = np.float(z)
+
+        if a is not None:
+            if not(self._position_range[3][0] <= a <= self._position_range[3][1]):
+                self.log.error('You want to set a out of range: {0:f}.'.format(a))
+                return -1
+            self._current_position[3] = np.float(a)
+
+        # the position has to be a vstack
+        my_position = np.vstack(self._current_position)
+
+        # then directly write the position to the hardware
+        try:
+            self._write_scanner_do(self, step_data=self._scanner_position_to_step(my_position), length=100, start=True)
+        except:
+            return -1
+        return 0
 
     def close_scanner(self):
         """ Closes the scanner and cleans up afterwards.

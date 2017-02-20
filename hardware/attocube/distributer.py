@@ -108,7 +108,7 @@ class Distributer(Base,ConfocalScannerInterfaceAtto):
         Attocube.enable_trigger_input(self)
         return NIcard.set_up_scanner(self, counter_channels=counter_channels, sources= sources, clock_channel=clock_channel, scanner_do_channels=scanner_ao_channels)
 
-    def scanner_set_position(self, x=None, y=None, z=None, a=None):
+    def scanner_set_position_abs(self, x=None, y=None, z=None, a=None):
         """Move stage to x, y, z, a (where a is the fourth voltage channel).
 
         @param float x: postion in x-direction (volts)
@@ -118,14 +118,21 @@ class Distributer(Base,ConfocalScannerInterfaceAtto):
 
         @return int: error code (0:OK, -1:error)
         """
-        Attocube.scanner_set_position(self, x=x, y=y, z=z)
+        Attocube.scanner_set_position_abs(self, x=x, y=y, z=z)
 
     def get_scanner_position(self):
         """ Get the current position of the scanner hardware.
 
         @return float[n]: current position in (x, y, z, a).
         """
-        return Attocube.get_scanner_position(self)
+        return NIcard.get_scanner_position(self)
+
+    def get_scanner_position_abs(self):
+        """ Get the current position of the scanner hardware.
+
+        @return float[n]: current position in (x, y, z, a).
+        """
+        return Attocube.get_scanner_position_abs(self)
 
     def set_up_line(self, length=100):
         """ Sets up the analoque output for scanning a line.
