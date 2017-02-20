@@ -903,7 +903,8 @@ class ConfocalLogic(GenericLogic):
                     self.signal_depth_image_updated.emit()
                 else:
                     # For testing
-                    line_counts =np.linspace(1,40,len(line_counts))
+                    line_counts =np.zeros_like(line_counts)
+                    line_counts[3:10]=1
                     if self._scan_counter % 2 == 0:
                         self.xy_image[self._scan_counter, :, 3:3 + s_ch] = line_counts
                     else:

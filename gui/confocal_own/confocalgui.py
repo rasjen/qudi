@@ -118,8 +118,8 @@ class ConfocalGui(GUIBase):
         sc = sc - 1 if sc >= 1 else sc
         data = self._scanning_logic.xy_image[sc, :, 0:4:3]
 
-        self.scan_line_plot = pg.PlotDataItem(data, pen=pg.mkPen(palette.c1))
-        self._mw.xyScanView.addItem(self.scan_line_plot)
+        #self.scan_line_plot = pg.PlotDataItem(data, pen=pg.mkPen(palette.c1))
+        #self._mw.xyScanView.addItem(self.scan_line_plot)
 
         # Label the axes:
         self._mw.xyScanView.setLabel('bottom', 'X position', units='μm')
@@ -156,7 +156,7 @@ class ConfocalGui(GUIBase):
         # Connect the emitted signal of an image change from the logic with
         # a refresh of the GUI picture:
         self._scanning_logic.signal_xy_image_updated.connect(self.refresh_xy_image)
-        self._scanning_logic.signal_xy_image_updated.connect(self.refresh_scan_line)
+        #self._scanning_logic.signal_xy_image_updated.connect(self.refresh_scan_line)
 
 
     def on_deactivate(self, e):
