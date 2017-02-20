@@ -734,7 +734,7 @@ class NIcard(Base):
 
         return retval
 
-    def _write_scanner_do(self, step_data, length=100, start=False):
+    def _write_scanner_do(self, step_data, length, start=False):
         """Writes a set of voltages to the analog outputs.
 
         @param float[][4] voltages: array of 4-part tuples defining the voltage
@@ -750,7 +750,6 @@ class NIcard(Base):
         daq.DAQmxCfgOutputBuffer(self._scanner_do_task, length)
 
         self.log.info(step_data)
-        self.log.info(len(step_data))
         # write the voltage instructions for the analog output to the hardware
         daq.DAQmxWriteDigitalLines(
             # write to this task
@@ -773,10 +772,10 @@ class NIcard(Base):
         return 0
 
     def _scanner_position_to_step(self, line_path):
-        step_data = np.array((daq.uInt8 * len(line_path)))
-        self.log.info(step_data.shape, step_data.size)
-        for i in range(len(line_path)):
-            step_data[i] = i % 2
+        step_data = np.zeros((np.shape(line_path)[1], 2), dtype=np.uint8)
+        for i in range(np.shape(line_path)[1]):
+            step_data[i, 0] = i % 2
+            step_data[i, 1] = (i+1) % 2
         return step_data
 
     def set_up_line(self, length=100):
@@ -898,9 +897,10 @@ class NIcard(Base):
             daq.DAQmxSetSampTimingType(self._scanner_do_task, daq.DAQmx_Val_SampClk)
 
             self.set_up_line(np.shape(line_path)[1])
-            step_data = self._scanner_position_to_volt(line_path)
+            step_data = self._scanner_position_to_step(line_path)
+
             # write the positions to the analog output
-            self._write_scanner_do(step_data,
+            self._write_scanner_do(step_data=step_data,
                 length=self._line_length,
                 start=False)
 

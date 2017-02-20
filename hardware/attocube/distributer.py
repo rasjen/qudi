@@ -185,8 +185,8 @@ class Distributer(Base,ConfocalScannerInterfaceAtto):
     def _stop_digital_output(self):
         return NIcard._stop_digital_output(self)
 
-    def _write_scanner_do(self, length=100, start=False):
-        return NIcard._write_scanner_do(self, length=length, start=start)
+    def _write_scanner_do(self, step_data=None ,length=100, start=False):
+        return NIcard._write_scanner_do(self, step_data=step_data, length=length, start=start)
 
     def close_clock(self, scanner=False):
         return NIcard.close_clock(self, scanner=scanner)
@@ -225,7 +225,6 @@ class Distributer(Base,ConfocalScannerInterfaceAtto):
         '''
         Attocube.set_amplitude(self, axis, amp)
 
-
-
-
+    def _scanner_position_to_step(self, line_path):
+         return NIcard._scanner_position_to_step(self, line_path=line_path)
 
