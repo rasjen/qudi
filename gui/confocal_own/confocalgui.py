@@ -30,11 +30,14 @@ import time
 import os
 
 from gui.guibase import GUIBase
+from gui.colordefs import QudiPalettePale as palette
+from gui.guiutils import ColorBar
+from gui.colordefs import ColorScaleInferno
 
 class ConfocalMainWindow(QtWidgets.QMainWindow):
 
     """ Create the Mainwindow based on the corresponding *.ui file. """
-        
+
     def __init__(self, **kwargs):
         # Get the path to the *.ui file
         this_dir = os.path.dirname(__file__)
@@ -87,7 +90,7 @@ class ConfocalGui(GUIBase):
         # Getting an access to all connectors:
         self._scanning_logic = self.get_in_connector('confocallogic1')
         self._save_logic = self.get_in_connector('savelogic')
-        
+
         self._mw = ConfocalMainWindow()
 
         # All our gui elements are dockable, and so there should be no "central" widget.
@@ -102,7 +105,6 @@ class ConfocalGui(GUIBase):
 
         # Load the images for xy in the display:
         self.xy_image = pg.ImageItem(arr01)
-
         # Add the display item to the xy ViewWidget, which was defined
         # in the UI file:
         # To use addItem method, the widget needs to be promoted with
@@ -110,9 +112,28 @@ class ConfocalGui(GUIBase):
         # on the widget)
         self._mw.xyScanView.addItem(self.xy_image)
 
+
+        # set up scan line plot
+        sc = self._scanning_logic._scan_counter
+        sc = sc - 1 if sc >= 1 else sc
+        data = self._scanning_logic.xy_image[sc, :, 0:4:3]
+
+        self.scan_line_plot = pg.PlotDataItem(data, pen=pg.mkPen(palette.c1))
+        self._mw.xyScanView.addItem(self.scan_line_plot)
+
         # Label the axes:
         self._mw.xyScanView.setLabel('bottom', 'X position', units='μm')
         self._mw.xyScanView.setLabel('left', 'Y position', units='μm')
+
+        self.my_colors = ColorScaleInferno()
+        self.xy_cb = ColorBar(self.my_colors.cmap_normed, width=100, cb_min=0, cb_max=100)
+        self.xy_image_orientation = np.array([0, 1, 2, -1], int)
+
+
+        self._mw.contrastView.addItem(self.xy_cb)
+        self._mw.contrastView.hideAxis('bottom')
+        self._mw.contrastView.setLabel('left', 'Fluorescence', units='c/s')
+        self._mw.contrastView.setMouseEnabled(x=False, y=False)
 
         # Connections between GUI and logic fonctions
         self._mw.stepXBackwardPushButton.clicked.connect(self.stepXBackward)
@@ -131,6 +152,11 @@ class ConfocalGui(GUIBase):
         self._mw.yAxisCheckBox.stateChanged.connect(self.yaxis_output_status)
         self._mw.zAxisCheckBox.stateChanged.connect(self.zaxis_output_status)
 
+        self._mw.startScanPushButton.clicked.connect(self.xy_scan_clicked)
+        # Connect the emitted signal of an image change from the logic with
+        # a refresh of the GUI picture:
+        self._scanning_logic.signal_xy_image_updated.connect(self.refresh_xy_image)
+        self._scanning_logic.signal_xy_image_updated.connect(self.refresh_scan_line)
 
 
     def on_deactivate(self, e):
@@ -205,3 +231,71 @@ class ConfocalGui(GUIBase):
             self._scanning_logic.axis_output_status(axis='z', status='on')
         else:
             self._scanning_logic.axis_output_status(axis='z', status='off')
+
+    def xy_scan_clicked(self):
+        """ Manages what happens if the xy scan is started. """
+        #self.disable_scan_actions()
+        self._scanning_logic.start_scanning(zscan=False,tag='gui')
+
+    def refresh_xy_image(self):
+        """ Update the current XY image from the logic.
+
+        Everytime the scanner is scanning a line in xy the
+        image is rebuild and updated in the GUI.
+        """
+        self.xy_image.getViewBox().updateAutoRange()
+
+        xy_image_data = np.rot90(
+            self._scanning_logic.xy_image[:, :, 3 + self.xy_channel].transpose(),
+            self.xy_image_orientation[0])
+
+        cb_range = self.get_xy_cb_range()
+
+        # Now update image with new color scale, and update colorbar
+        self.xy_image.setImage(image=xy_image_data, levels=(cb_range[0], cb_range[1]))
+        self.refresh_xy_colorbar()
+
+        # Unlock state widget if scan is finished
+        #if self._scanning_logic.getState() != 'locked':
+        #    self.enable_scan_actions()
+
+    def get_xy_cb_range(self):
+        """ Determines the cb_min and cb_max values for the xy scan image
+        """
+        # If "Manual" is checked, or the image data is empty (all zeros), then take manual cb range.
+        if self._mw.manualRadioButton.isChecked() or np.max(self.xy_image.image) == 0.0:
+            cb_min = self._mw.counterMinDoubleSpinBox.value()
+            cb_max = self._mw.counterMaxDoubleSpinBox.value()
+
+        # Otherwise, calculate cb range from percentiles.
+        else:
+            # Exclude any zeros (which are typically due to unfinished scan)
+            xy_image_nonzero = self.xy_image.image[np.nonzero(self.xy_image.image)]
+
+            # Read centile range
+            low_centile = self._mw.percentileMinDoubleSpinBox.value()
+            high_centile = self._mw.percentileMaxDoubleSpinBox.value()
+
+            cb_min = np.percentile(xy_image_nonzero, low_centile)
+            cb_max = np.percentile(xy_image_nonzero, high_centile)
+
+        cb_range = [cb_min, cb_max]
+
+        return cb_range
+
+    def refresh_xy_colorbar(self):
+        """ Adjust the xy colorbar.
+
+        Calls the refresh method from colorbar, which takes either the lowest
+        and higherst value in the image or predefined ranges. Note that you can
+        invert the colorbar if the lower border is bigger then the higher one.
+        """
+        cb_range = self.get_xy_cb_range()
+        self.xy_cb.refresh_colorbar(cb_range[0], cb_range[1])
+
+    def refresh_scan_line(self):
+        """ Get the previously scanned image line and display it in the scan line plot. """
+        sc = self._scanning_logic._scan_counter
+        sc = sc - 1 if sc >= 1 else sc
+        self.scan_line_plot.setData(self._scanning_logic.xy_image[sc, :, 0:4:3])
+
