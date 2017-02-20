@@ -76,7 +76,7 @@ class NIcard(Base):
         self._scanner_do_channels = []
         self._voltage_range = []
         self._position_range = []
-        self._current_position = []
+        self._current_position = [0, 0, 0]
         self._counter_channels = []
         self._scanner_counter_channels = []
         self._photon_sources = []
@@ -777,12 +777,18 @@ class NIcard(Base):
         step_size = 1 #micron determined by voltage and freq of motors
         x_values = line_path[0]
         y_values = line_path[1]
+        z_values = line_path[2]
 
-        np.diff(x_values)
-
+        index_x_forward = np.where(np.round(np.diff(x_values)) == 1)[0]
+        index_x_backward = np.where(np.round(np.diff(x_values)) == -1)[0]
+        self.log.info(index_x_forward)
+        #self.log.info(y_values)
+        #self.log.info(z_values)
         for i in range(np.shape(line_path)[1]):
-            step_data[i, 0] = i % 2
-            step_data[i, 1] = (i+1) % 2
+            # forward x motion
+            step_data[index_x_forward, 0] = 1
+            # backward x motion
+            step_data[index_x_backward, 1] = 1
         return step_data
 
     def set_up_line(self, length=100):

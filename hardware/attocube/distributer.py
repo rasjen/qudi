@@ -120,6 +120,18 @@ class Distributer(Base,ConfocalScannerInterfaceAtto):
         """
         Attocube.scanner_set_position_abs(self, x=x, y=y, z=z)
 
+    def scanner_set_position(self, x=None, y=None, z=None, a=None):
+        """Move stage to x, y, z, a (where a is the fourth voltage channel).
+
+        @param float x: postion in x-direction (volts)
+        @param float y: postion in y-direction (volts)
+        @param float z: postion in z-direction (volts)
+        @param float a: postion in a-direction (volts)
+
+        @return int: error code (0:OK, -1:error)
+        """
+        NIcard.scanner_set_position(self, x=x, y=y, z=z)
+
     def get_scanner_position(self):
         """ Get the current position of the scanner hardware.
 
