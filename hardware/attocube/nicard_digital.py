@@ -772,23 +772,51 @@ class NIcard(Base):
         return 0
 
     def _scanner_position_to_step(self, line_path):
-        step_data = np.zeros((np.shape(line_path)[1], 2), dtype=np.uint8)
+        '''
+        Translate the position in a trigger array for the NI card
 
-        step_size = 1 #micron determined by voltage and freq of motors
-        x_values = line_path[0]
-        y_values = line_path[1]
-        z_values = line_path[2]
+        :param line_path: [[x values][y values][z values]]
+        :return: binary step data array for writing to NI card in uint8 type
+        '''
+        step_data = np.zeros((2 * np.shape(line_path)[1], len(self._scanner_do_channels)), dtype=np.uint8)
 
-        index_x_forward = np.where(np.round(np.diff(x_values)) == 1)[0]
-        index_x_backward = np.where(np.round(np.diff(x_values)) == -1)[0]
-        self.log.info(index_x_forward)
-        #self.log.info(y_values)
-        #self.log.info(z_values)
-        for i in range(np.shape(line_path)[1]):
+        step_size = line_path[0][1]-line_path[0][0]  # micron determined by voltage and freq of motors
+
+        if len(self._scanner_do_channels) > 0:
+            x_values = [self._current_position[0]] + line_path[0]
+            index_x_forward = np.where(np.diff(x_values) == step_size)[0]
+            index_x_backward = np.where(np.diff(x_values) == -step_size)[0]
+
+        if len(self._scanner_do_channels) > 2:
+            y_values = [self._current_position[1]] + line_path[1]
+            index_y_forward = np.where(np.diff(y_values) == step_size)[0]
+            index_y_backward = np.where(np.diff(y_values) == -step_size)[0]
+
+        if len(self._scanner_do_channels) > 4:
+            z_values = [self._current_position[2]] + line_path[2]
+            index_z_forward = np.where(np.diff(z_values) == step_size)[0]
+            index_z_backward = np.where(np.diff(z_values) == -step_size)[0]
+
+        # if not len(index_x_forward) + len(index_x_backward)+ len(index_y_forward) + len(index_y_backward) + \
+        #         len(index_z_forward) + len(index_z_backward) +1 == np.shape(line_path)[1]:
+        #     self.log.error('Number of steps does not match the number of points in image (moving multiple axis at same time) (different step size)')
+
+        if len(self._scanner_do_channels) > 0:
             # forward x motion
-            step_data[index_x_forward, 0] = 1
+            step_data[2 * index_x_forward, 0] = 1
             # backward x motion
-            step_data[index_x_backward, 1] = 1
+            step_data[2 * index_x_backward, 1] = 1
+        if len(self._scanner_do_channels) > 2:
+            # forward y motion
+            step_data[2 * index_y_forward, 2] = 1
+            # backward y motion
+            step_data[2 * index_y_backward, 3] = 1
+        if len(self._scanner_do_channels) > 4:
+            # forward z motion
+            step_data[2 * index_z_forward, 4] = 1
+            # backward z motion
+            step_data[2 * index_z_backward, 5] = 1
+
         return step_data
 
     def set_up_line(self, length=100):

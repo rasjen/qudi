@@ -298,6 +298,10 @@ class ConfocalLogic(GenericLogic):
         self.depth_scan_dir_is_xz = True
         self.permanent_scan = False
 
+        # Types of scanning modes
+        scanning_modes = ['default', 'snake']
+        self.scan_mode = scanning_modes[1]
+
     def on_activate(self, e):
         """ Initialisation performed during activation of the module.
 
@@ -725,113 +729,205 @@ class ConfocalLogic(GenericLogic):
         n_ch = len(self.get_scanner_axes())
         s_ch = len(self.get_scanner_count_channels())
 
-        try:
-            if self._scan_counter == 0:
-                # make a line from the current cursor position to
-                # the starting position of the first scan line of the scan
-                rs = self.return_slowness
-                lsx = np.linspace(self._current_x, image[self._scan_counter, 0, 0], rs)
-                lsy = np.linspace(self._current_y, image[self._scan_counter, 0, 1], rs)
-                lsz = np.linspace(self._current_z, image[self._scan_counter, 0, 2], rs)
+        if self.scan_mode == 'default':
+            try:
+                if self._scan_counter == 0:
+                    # make a line from the current cursor position to
+                    # the starting position of the first scan line of the scan
+                    rs = self.return_slowness
+                    lsx = np.linspace(self._current_x, image[self._scan_counter, 0, 0], rs)
+                    lsy = np.linspace(self._current_y, image[self._scan_counter, 0, 1], rs)
+                    lsz = np.linspace(self._current_z, image[self._scan_counter, 0, 2], rs)
+                    if n_ch <= 3:
+                        start_line = np.vstack([lsx, lsy, lsz][0:n_ch])
+                    else:
+                        start_line = np.vstack(
+                            [lsx, lsy, lsz, np.ones(lsx.shape) * self._current_a])
+                    # move to the start position of the scan, counts are thrown away
+                    start_line_counts = self._scanning_device.scan_line(start_line)
+                    if np.any(start_line_counts == -1):
+                        self.stopRequested = True
+                        self.signal_scan_lines_next.emit()
+                        return
+
+                # adjust z of line in image to current z before building the line
+                if not self._zscan:
+                    z_shape = image[self._scan_counter, :, 2].shape
+                    image[self._scan_counter, :, 2] = self._current_z * np.ones(z_shape)
+
+                # make a line in the scan, _scan_counter says which one it is
+                lsx = image[self._scan_counter, :, 0]
+                lsy = image[self._scan_counter, :, 1]
+                lsz = image[self._scan_counter, :, 2]
                 if n_ch <= 3:
-                    start_line = np.vstack([lsx, lsy, lsz][0:n_ch])
+                    line = np.vstack([lsx, lsy, lsz][0:n_ch])
                 else:
-                    start_line = np.vstack(
+                    line = np.vstack(
                         [lsx, lsy, lsz, np.ones(lsx.shape) * self._current_a])
-                # move to the start position of the scan, counts are thrown away
-                start_line_counts = self._scanning_device.scan_line(start_line)
-                if np.any(start_line_counts == -1):
+
+                # scan the line in the scan
+                line_counts = self._scanning_device.scan_line(line)
+                if np.any(line_counts == -1):
                     self.stopRequested = True
                     self.signal_scan_lines_next.emit()
                     return
 
-            # adjust z of line in image to current z before building the line
-            if not self._zscan:
-                z_shape = image[self._scan_counter, :, 2].shape
-                image[self._scan_counter, :, 2] = self._current_z * np.ones(z_shape)
-
-            # make a line in the scan, _scan_counter says which one it is
-            lsx = image[self._scan_counter, :, 0]
-            lsy = image[self._scan_counter, :, 1]
-            lsz = image[self._scan_counter, :, 2]
-            if n_ch <= 3:
-                line = np.vstack([lsx, lsy, lsz][0:n_ch])
-            else:
-                line = np.vstack(
-                    [lsx, lsy, lsz, np.ones(lsx.shape) * self._current_a])
-
-            # scan the line in the scan
-            line_counts = self._scanning_device.scan_line(line)
-            if np.any(line_counts == -1):
-                self.stopRequested = True
-                self.signal_scan_lines_next.emit()
-                return
-
-            # make a line to go to the starting position of the next scan line
-            if self.depth_scan_dir_is_xz:
-                if n_ch <= 3:
-                    return_line = np.vstack([
-                                                self._return_XL,
-                                                image[self._scan_counter, 0, 1] * np.ones(self._return_XL.shape),
-                                                image[self._scan_counter, 0, 2] * np.ones(self._return_XL.shape)
-                                            ][0:n_ch])
-                else:
-                    return_line = np.vstack([
-                        self._return_XL,
-                        image[self._scan_counter, 0, 1] * np.ones(self._return_XL.shape),
-                        image[self._scan_counter, 0, 2] * np.ones(self._return_XL.shape),
-                        np.ones(self._return_XL.shape) * self._current_a
-                    ])
-            else:
-                if n_ch <= 3:
-                    return_line = np.vstack([
-                                                image[self._scan_counter, 0, 1] * np.ones(self._return_YL.shape),
-                                                self._return_YL,
-                                                image[self._scan_counter, 0, 2] * np.ones(self._return_YL.shape)
-                                            ][0:n_ch])
-                else:
-                    return_line = np.vstack([
-                        image[self._scan_counter, 0, 1] * np.ones(self._return_YL.shape),
-                        self._return_YL,
-                        image[self._scan_counter, 0, 2] * np.ones(self._return_YL.shape),
-                        np.ones(self._return_YL.shape) * self._current_a
-                    ])
-
-            # return the scanner to the start of next line, counts are thrown away
-            return_line_counts = self._scanning_device.scan_line(return_line)
-            if np.any(return_line_counts == -1):
-                self.stopRequested = True
-                self.signal_scan_lines_next.emit()
-                return
-
-            # update image with counts from the line we just scanned
-            if self._zscan:
+                # make a line to go to the starting position of the next scan line
                 if self.depth_scan_dir_is_xz:
-                    self.depth_image[self._scan_counter, :, 3:3 + s_ch] = line_counts
-                else:
-                    self.depth_image[self._scan_counter, :, 3:3 + s_ch] = line_counts
-                self.signal_depth_image_updated.emit()
-            else:
-                self.xy_image[self._scan_counter, :, 3:3 + s_ch] = line_counts
-                self.signal_xy_image_updated.emit()
-
-            # next line in scan
-            self._scan_counter += 1
-
-            # stop scanning when last line scan was performed and makes scan not continuable
-            if self._scan_counter >= np.size(self._image_vert_axis):
-                if not self.permanent_scan:
-                    self.stop_scanning()
-                    if self._zscan:
-                        self._zscan_continuable = False
+                    if n_ch <= 3:
+                        return_line = np.vstack([
+                                                    self._return_XL,
+                                                    image[self._scan_counter, 0, 1] * np.ones(self._return_XL.shape),
+                                                    image[self._scan_counter, 0, 2] * np.ones(self._return_XL.shape)
+                                                ][0:n_ch])
                     else:
-                        self._xyscan_continuable = False
+                        return_line = np.vstack([
+                            self._return_XL,
+                            image[self._scan_counter, 0, 1] * np.ones(self._return_XL.shape),
+                            image[self._scan_counter, 0, 2] * np.ones(self._return_XL.shape),
+                            np.ones(self._return_XL.shape) * self._current_a
+                        ])
                 else:
-                    self._scan_counter = 0
+                    if n_ch <= 3:
+                        return_line = np.vstack([
+                                                    image[self._scan_counter, 0, 1] * np.ones(self._return_YL.shape),
+                                                    self._return_YL,
+                                                    image[self._scan_counter, 0, 2] * np.ones(self._return_YL.shape)
+                                                ][0:n_ch])
+                    else:
+                        return_line = np.vstack([
+                            image[self._scan_counter, 0, 1] * np.ones(self._return_YL.shape),
+                            self._return_YL,
+                            image[self._scan_counter, 0, 2] * np.ones(self._return_YL.shape),
+                            np.ones(self._return_YL.shape) * self._current_a
+                        ])
 
-            self.signal_scan_lines_next.emit()
-        except:
-            self.log.exception('The scan went wrong, killing the scanner.')
+                # return the scanner to the start of next line, counts are thrown away
+                return_line_counts = self._scanning_device.scan_line(return_line)
+                if np.any(return_line_counts == -1):
+                    self.stopRequested = True
+                    self.signal_scan_lines_next.emit()
+                    return
+
+                # update image with counts from the line we just scanned
+                if self._zscan:
+                    if self.depth_scan_dir_is_xz:
+                        self.depth_image[self._scan_counter, :, 3:3 + s_ch] = line_counts
+                    else:
+                        self.depth_image[self._scan_counter, :, 3:3 + s_ch] = line_counts
+                    self.signal_depth_image_updated.emit()
+                else:
+                    self.xy_image[self._scan_counter, :, 3:3 + s_ch] = line_counts
+                    self.signal_xy_image_updated.emit()
+
+                # next line in scan
+                self._scan_counter += 1
+
+                # stop scanning when last line scan was performed and makes scan not continuable
+                if self._scan_counter >= np.size(self._image_vert_axis):
+                    if not self.permanent_scan:
+                        self.stop_scanning()
+                        if self._zscan:
+                            self._zscan_continuable = False
+                        else:
+                            self._xyscan_continuable = False
+                    else:
+                        self._scan_counter = 0
+
+                self.signal_scan_lines_next.emit()
+            except:
+                self.log.exception('The scan went wrong, killing the scanner.')
+                self.stop_scanning()
+                self.signal_scan_lines_next.emit()
+
+        ############################# SNAKE MODE ##########################################
+        elif self.scan_mode == 'snake':
+            try:
+                if self._scan_counter == 0:
+                    # make a line from the current cursor position to
+                    # the starting position of the first scan line of the scan
+                    lsx = np.linspace(self._current_x, image[self._scan_counter, 0, 0], self.xy_image.shape[0]/2)
+                    lsy = np.linspace(self._current_y, image[self._scan_counter, 0, 1], self.xy_image.shape[0]/2)
+                    lsz = np.linspace(self._current_z, image[self._scan_counter, 0, 2], self.xy_image.shape[0]/2)
+                    if n_ch <= 3:
+                        start_line = np.vstack([lsx, lsy, lsz][0:n_ch])
+                    else:
+                        start_line = np.vstack(
+                            [lsx, lsy, lsz, np.ones(lsx.shape) * self._current_a])
+                    # move to the start position of the scan, counts are thrown away
+                    start_line_counts = self._scanning_device.scan_line(start_line)
+                    if np.any(start_line_counts == -1):
+                        self.stopRequested = True
+                        self.signal_scan_lines_next.emit()
+                        return
+
+                # adjust z of line in image to current z before building the line
+                if not self._zscan:
+                    z_shape = image[self._scan_counter, :, 2].shape
+                    image[self._scan_counter, :, 2] = self._current_z * np.ones(z_shape)
+
+                # make a line in the scan, _scan_counter says which one it is
+                # forward for even number of lines and backwards for odd
+
+                if self._scan_counter % 2 == 0:
+                    lsx = image[self._scan_counter, :, 0]
+                    lsy = image[self._scan_counter, :, 1]
+                    lsz = image[self._scan_counter, :, 2]
+                elif self._scan_counter % 2 == 1:
+                    lsx = image[self._scan_counter, ::-1, 0]
+                    lsy = image[self._scan_counter, ::-1, 1]
+                    lsz = image[self._scan_counter, ::-1, 2]
+                else:
+                    self.log.info('testing forward and backward motion went wrong')
+
+                if n_ch <= 3:
+                    line = np.vstack([lsx, lsy, lsz][0:n_ch])
+                else:
+                    line = np.vstack(
+                        [lsx, lsy, lsz, np.ones(lsx.shape) * self._current_a])
+
+                # scan the line in the scan
+                line_counts = self._scanning_device.scan_line(line)
+                if np.any(line_counts == -1):
+                    self.stopRequested = True
+                    self.signal_scan_lines_next.emit()
+                    return
+
+
+                # update image with counts from the line we just scanned
+                if self._zscan:
+                    if self.depth_scan_dir_is_xz:
+                        self.depth_image[self._scan_counter, :, 3:3 + s_ch] = line_counts
+                    else:
+                        self.depth_image[self._scan_counter, :, 3:3 + s_ch] = line_counts
+                    self.signal_depth_image_updated.emit()
+                else:
+                    if self._scan_counter % 2 == 0:
+                        self.xy_image[self._scan_counter, :, 3:3 + s_ch] = line_counts
+                    else:
+                        self.xy_image[self._scan_counter, :, 3:3 + s_ch] = line_counts[::-1]
+                    self.signal_xy_image_updated.emit()
+
+                # next line in scan
+                self._scan_counter += 1
+
+                # stop scanning when last line scan was performed and makes scan not continuable
+                if self._scan_counter >= np.size(self._image_vert_axis):
+                    if not self.permanent_scan:
+                        self.stop_scanning()
+                        if self._zscan:
+                            self._zscan_continuable = False
+                        else:
+                            self._xyscan_continuable = False
+                    else:
+                        self._scan_counter = 0
+                self.signal_scan_lines_next.emit()
+            except:
+                self.log.exception('The scan went wrong, killing the scanner.')
+                self.stop_scanning()
+                self.signal_scan_lines_next.emit()
+        else:
+            self.log.exception('The scan mode is unknown, killing the scanner.')
             self.stop_scanning()
             self.signal_scan_lines_next.emit()
 
