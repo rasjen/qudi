@@ -1006,7 +1006,8 @@ class NIcard(Base):
 
             # add up adjoint pixels to also get the counts from the low time of
             # the clock:
-            self._real_data = self._scan_data[:, 1::4]
+            self._real_data = self._scan_data[:, ::4]
+            self._real_data += self._scan_data[:, 1::4]
             self._real_data += self._scan_data[:, 2::4]
             self._real_data += self._scan_data[:, 3::4]
 
