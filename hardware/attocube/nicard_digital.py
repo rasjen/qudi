@@ -566,14 +566,14 @@ class NIcard(Base):
 
             # ChannelAB = [0,0]
 
-            for n, counter in enumerate(self._scanner_do_channels):
+            for n, channel in enumerate(self._scanner_do_channels):
                 # Assign and configure the created task to an analog output voltage channel.
                 # daq.DAQmxCreateCOPulseChanTime(
                 daq.DAQmxCreateDOChan(
                     # The AO voltage operation function is assigned to this task.
                     self._scanner_do_task,
                     # use (all) scanner ao_channels for the output
-                    counter,
+                    channel,
                     # assign a name for that channel
                     'Scanner DO Channel {0}'.format(n),
                     # TERMINAL
@@ -627,13 +627,13 @@ class NIcard(Base):
         created clock with a counting task. That can be seen as a gated
         counting, where the counts where sampled by the underlying clock.
 
-        @param string counter_channel: optional, if defined, this is the
+        @param string counter_channels: optional, if defined, this is the
                                        physical channel of the counter
-        @param string photon_source: optional, if defined, this is the physical
+        @param string sources: optional, if defined, this is the physical
                                      channel where the photons are to count from
         @param string clock_channel: optional, if defined, this specifies the
                                      clock for the counter
-        @param string scanner_ao_channels: optional, if defined, this specifies
+        @param string scanner_do_channels: optional, if defined, this specifies
                                            the analog output channels
 
         @return int: error code (0:OK, -1:error)

@@ -114,9 +114,9 @@ class ConfocalGui(GUIBase):
 
 
         # set up scan line plot
-        sc = self._scanning_logic._scan_counter
-        sc = sc - 1 if sc >= 1 else sc
-        data = self._scanning_logic.xy_image[sc, :, 0:4:3]
+        #sc = self._scanning_logic._scan_counter
+        #sc = sc - 1 if sc >= 1 else sc
+        #data = self._scanning_logic.xy_image[sc, :, 0:4:3]
 
         #self.scan_line_plot = pg.PlotDataItem(data, pen=pg.mkPen(palette.c1))
         #self._mw.xyScanView.addItem(self.scan_line_plot)
