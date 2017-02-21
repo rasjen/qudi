@@ -913,7 +913,7 @@ class ConfocalLogic(GenericLogic):
 
                 # next line in scan
                 self._scan_counter += 1
-
+                self.log.info(self._scan_counter)
                 # stop scanning when last line scan was performed and makes scan not continuable
                 if self._scan_counter >= np.size(self._image_vert_axis):
                     if not self.permanent_scan:

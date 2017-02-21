@@ -420,7 +420,6 @@ class NIcard(Base):
 
         @return int: error code (0:OK, -1:error)
         """
-        self.log.info('runs set up clock')
         if not scanner and self._clock_daq_task is not None:
             self.log.error('Another counter clock is already running, close this one first.')
             return -1
@@ -543,7 +542,6 @@ class NIcard(Base):
 
         @return int: error code (0:OK, -1:error)
         """
-        self.log.info('start digital output')
         try:
             # If an analog task is already running, kill that one first
             if self._scanner_do_task is not None:
@@ -601,9 +599,7 @@ class NIcard(Base):
 
         @return int: error code (0:OK, -1:error)
         """
-        self.log.info('runs stop digital output')
         if self._scanner_do_task is None:
-            self.log.info(self._scanner_do_task)
             return -1
         retval = 0
         try:
@@ -638,7 +634,6 @@ class NIcard(Base):
 
         @return int: error code (0:OK, -1:error)
         """
-        self.log.info('sets up scanner')
         retval = 0
         if self._scanner_clock_daq_task is None and clock_channel is None:
             self.log.error('No clock running, call set_up_clock before starting the counter.')
@@ -743,7 +738,6 @@ class NIcard(Base):
         @param bool start: write imediately (True)
                            or wait for start of task (False)
         """
-        self.log.info('runs write scanner do')
         # Number of samples which were actually written, will be stored here.
         # The error code of this variable can be asked with .value to check
         # whether all channels have been written successfully.
@@ -789,7 +783,6 @@ class NIcard(Base):
         if np.shape(step_data)[0] > 2:
             y_values = np.append([self._current_position[1]], line_path[1])
             index_y_forward = np.where(np.round(np.diff(y_values), 2) == step_size)[0]
-            self.log.info(index_y_forward[0:10])
             index_y_backward = np.where(np.round(np.diff(y_values), 2) == -step_size)[0]
 
         # if np.shape(step_data)[0] > 7:
@@ -829,7 +822,6 @@ class NIcard(Base):
 
         @return int: error code (0:OK, -1:error)
         """
-        self.log.info('set up line')
         if len(self._scanner_counter_daq_tasks) < 1:
             self.log.error('No counter is running, cannot scan a line without one.')
             return -1
@@ -922,7 +914,6 @@ class NIcard(Base):
         like the following:
             [ [1,2,3,4,5],[1,1,1,1,],[-2,-2,-2,-2],[0,0,0,0]]
         """
-        self.log.info('runs scan line')
         if self._scanner_counter_daq_tasks is None:
             self.log.error('No counter is running, cannot scan a line without one.')
             return np.array([-1.])
@@ -1006,7 +997,7 @@ class NIcard(Base):
 
             # stop the analog output task
             self._stop_digital_output()
-            self.log.info('do i get to this point?')
+
             # create a new array for the final data (this time of the length
             # number of samples):
             self._real_data = np.empty(
