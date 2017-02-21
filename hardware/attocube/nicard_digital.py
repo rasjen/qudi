@@ -441,7 +441,7 @@ class NIcard(Base):
 
         # use the correct clock in this method
         if scanner:
-            my_clock_frequency = self._scanner_clock_frequency * 2
+            my_clock_frequency = self._scanner_clock_frequency * 4
         else:
             my_clock_frequency = self._clock_frequency
 
@@ -790,18 +790,18 @@ class NIcard(Base):
         #     index_z_forward = np.where(np.round(np.diff(z_values), 2) == step_size)[0]
         #     index_z_backward = np.where(np.round(np.diff(z_values), 2) == -step_size)[0]
 
-        # if not len(index_x_forward) + len(index_x_backward)+ len(index_y_forward) + len(index_y_backward) + \
-        #         len(index_z_forward) + len(index_z_backward) +1 == np.shape(line_path)[1]:
-        #     self.log.error('Number of steps does not match the number of points in image (moving multiple axis at same time) (different step size)')
+        if not len(index_x_forward) + len(index_x_backward)+ len(index_y_forward) + len(index_y_backward) == np.shape(line_path)[1]:
+            self.log.error('Number of steps does not match the number of points in image (moving multiple axis at same time) (different step size)')
+            self.log.error(len(index_x_forward)+len(index_y_forward))
 
         if np.shape(step_data)[0] > 1:
             # forward x motion
             step_data[2 * index_x_forward, 0] = 1
             # backward x motion
-            step_data[2 * index_x_backward, 1] = 1
+            step_data[2 * index_x_backward, 0] = 1
         if np.shape(step_data)[0] > 2:
             # forward y motion
-            step_data[2 * index_y_forward, 2] = 1
+            step_data[2 * index_y_forward, 1] = 1
             # backward y motion
             step_data[2 * index_y_backward, 3] = 1
         # if np.shape(step_data)[0] > 7:
@@ -848,7 +848,7 @@ class NIcard(Base):
                     # generate finite number of samples
                     daq.DAQmx_Val_FiniteSamps,
                     # number of samples to generate
-                    self._line_length)
+                    2 * self._line_length)
 
             # Configure Implicit Timing for the clock.
             # Set timing for scanner clock task to the number of pixel.
@@ -858,7 +858,7 @@ class NIcard(Base):
                 # only a limited number of# counts
                 daq.DAQmx_Val_FiniteSamps,
                 # count twice for each voltage +1 for safety
-                self._line_length + 1)
+                2 * self._line_length + 1)
 
             for i, task in enumerate(self._scanner_counter_daq_tasks):
                 # Configure Implicit Timing for the scanner counting task.
@@ -869,7 +869,7 @@ class NIcard(Base):
                     # only a limited number of counts
                     daq.DAQmx_Val_FiniteSamps,
                     # count twice for each voltage +1 for safety
-                    2 * self._line_length + 1)
+                    4 * self._line_length + 1)
 
                 # Set the Read point Relative To an operation.
                 # Specifies the point in the buffer at which to begin a read operation,
@@ -932,7 +932,7 @@ class NIcard(Base):
 
             # write the positions to the analog output
             self._write_scanner_do(step_data=step_data,
-                length=self._line_length,
+                length=2*self._line_length,
                 start=False)
 
             # start the timed analog output task
@@ -955,18 +955,18 @@ class NIcard(Base):
                     # define task
                     task,
                     # Maximum timeout for the counter times the positions. Unit is seconds.
-                    self._RWTimeout * 2 * self._line_length)
+                    self._RWTimeout * 4 * self._line_length)
 
             # wait for the scanner clock to finish
             daq.DAQmxWaitUntilTaskDone(
                 # define task
                 self._scanner_clock_daq_task,
                 # maximal timeout for the counter times the positions
-                self._RWTimeout * 2 * self._line_length)
+                self._RWTimeout * 4 * self._line_length)
 
             # count data will be written here
             self._scan_data = np.empty(
-                (len(self.get_scanner_count_channels()), 2 * self._line_length),
+                (len(self.get_scanner_count_channels()), 4 * self._line_length),
                 dtype=np.uint32)
 
             # number of samples which were read will be stored here
@@ -977,13 +977,13 @@ class NIcard(Base):
                     # read from this task
                     task,
                     # read number of double the # number of samples
-                    2 * self._line_length,
+                    4 * self._line_length,
                     # maximal timeout for the read# process
                     self._RWTimeout,
                     # write into this array
                     self._scan_data[i],
                     # length of array to write into
-                    2 * self._line_length,
+                    4 * self._line_length,
                     # number of samples which were actually read
                     daq.byref(n_read_samples),
                     # Reserved for future use. Pass NULL(here None) to this parameter.
@@ -1006,8 +1006,9 @@ class NIcard(Base):
 
             # add up adjoint pixels to also get the counts from the low time of
             # the clock:
-            self._real_data = self._scan_data[:, ::2]
-            self._real_data += self._scan_data[:, 1::2]
+            self._real_data = self._scan_data[:, 1::4]
+            self._real_data += self._scan_data[:, 2::4]
+            self._real_data += self._scan_data[:, 3::4]
 
             # update the scanner position instance variable
             self._current_position = list(line_path[:, -1])
