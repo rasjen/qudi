@@ -162,6 +162,9 @@ class Attocube(Base):
                     break
             return ['y', 'x', 'z']
         except:
+            self.log.error(
+            'Axis status is wrong'
+            )
             return -1
 
     def scanner_set_position_abs(self, x=None, y=None, z=None):
@@ -175,7 +178,7 @@ class Attocube(Base):
 
         @return int: error code (0:OK, -1:error)
         """
-        self._current_position = [0,0,0]
+        self._current_position_abs = [0,0,0]
         if self.getState() == 'locked':
             self.log.error('Another scan_line is already running, close this one first.')
             return -1
@@ -184,28 +187,28 @@ class Attocube(Base):
             if not(self._position_range[0][0] <= x <= self._position_range[0][1]):
                 self.log.error('You want to set x out of range: {0:f}.'.format(x))
                 return -1
-            self._current_position[0] = np.float(x)
+            self._current_position_abs[0] = np.float(x)
 
         if y is not None:
             if not(self._position_range[1][0] <= y <= self._position_range[1][1]):
                 self.log.error('You want to set y out of range: {0:f}.'.format(y))
                 return -1
-            self._current_position[1] = np.float(y)
+            self._current_position_abs[1] = np.float(y)
 
         if z is not None:
             if not(self._position_range[2][0] <= z <= self._position_range[2][1]):
                 self.log.error('You want to set z out of range: {0:f}.'.format(z))
                 return -1
-            self._current_position[2] = np.float(z)
+            self._current_position_abs[2] = np.float(z)
 
 
         # the position has to be a vstack
-        my_position = np.vstack(self._current_position)
+        my_position = np.vstack(self._current_position_abs)
 
         # then directly write the position to the hardware
         try:
             for i, label in enumerate(self.get_scanner_axes()):
-                self._current_position[i] = self.anc.setTargetPosition(self.axisNo[label],self._current_position[i])
+                self._current_position_abs[i] = self.anc.setTargetPosition(self.axisNo[label], self._current_position_abs[i])
         #self.anc.setTargetPosition(self.AxisNo[ch],), start=True)
         except:
             return -1
@@ -216,10 +219,10 @@ class Attocube(Base):
 
         @return float[]: current position in (x, y, z, a).
         """
-        self._current_position = [0, 0, 0]
-        for i,label in enumerate(self.get_scanner_axes()):
-            self._current_position[i] = self.anc.getPosition(self.axisNo[label])
-        return self._current_position
+        self._current_position_abs = [0, 0, 0]
+        for i, label in enumerate(self.get_scanner_axes()):
+            self._current_position_abs[i] = self.anc.getPosition(self.axisNo[label])
+        return self._current_position_abs
 
     def single_step(self, axis, direction):
         """
@@ -303,5 +306,29 @@ class Attocube(Base):
         for i, label in enumerate(self.get_scanner_axes()):
             self.anc.configureExtTrigger(self.axisNo[label], 2)
 
+
+
+    def set_target_position(self, axis, position):
+        '''
+
+        @param axis:
+        @param position:
+        @return:
+        '''
+        self.anc.setTargetPosition(self.axisNo[axis], position)
+
+    def set_target_range(self, axis, range):
+        '''
+
+        @param axis:
+        @param range:
+        @return:
+        '''
+        self.anc.setTargetRange(self.axisNo[axis], range)
+
+
+    def auto_move(self,axis,enable):
+
+        self.anc.startAutoMove(self.axisNo[axis],enable=enable,relative=0)
 
 

@@ -128,6 +128,7 @@ class ConfocalGui(GUIBase):
         self.my_colors = ColorScaleInferno()
         self.xy_cb = ColorBar(self.my_colors.cmap_normed, width=100, cb_min=0, cb_max=100)
         self.xy_image_orientation = np.array([0, 1, 2, -1], int)
+        self.xy_image.setLookupTable(self.my_colors.lut)
 
 
         self._mw.contrastView.addItem(self.xy_cb)

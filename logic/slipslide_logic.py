@@ -301,7 +301,7 @@ class ConfocalLogic(GenericLogic):
         # Types of scanning modes
         scanning_modes = ['default', 'snake']
         self.scan_mode = scanning_modes[1]
-
+        self.position = []
     def on_activate(self, e):
         """ Initialisation performed during activation of the module.
 
@@ -320,7 +320,7 @@ class ConfocalLogic(GenericLogic):
             self.return_slowness = self._statusVariables['return_slowness']
         else:
             self.return_slowness = 50
-
+        self._clock_frequency = 100
         # Reads in the maximal scanning range. The unit of that scan range is micrometer!
         self.x_range = self._scanning_device.get_position_range()[0]
         self.y_range = self._scanning_device.get_position_range()[1]
@@ -564,8 +564,8 @@ class ConfocalLogic(GenericLogic):
             self.unlock()
             return -1
 
-        clock_status = self._scanning_device.set_up_scanner_clock(
-            clock_frequency=self._clock_frequency)
+
+        clock_status = self._scanning_device.set_up_counter()
 
         if clock_status < 0:
             self._scanning_device.unlock()
@@ -576,14 +576,50 @@ class ConfocalLogic(GenericLogic):
         scanner_status = self._scanning_device.set_up_scanner()
 
         if scanner_status < 0:
-            self._scanning_device.close_scanner_clock()
-            self._scanning_device.unlock()
-            self.unlock()
-            self.set_position('scanner')
-            return -1
+             self._scanning_device.close_scanner_clock()
+             self._scanning_device.unlock()
+             self.unlock()
+             self.set_position('scanner')
+             return -1
+
 
         self.signal_scan_lines_next.emit()
+
         return 0
+
+      # def start_scanner(self):
+    #     """Setting up the scanner device and starts the scanning procedure
+    #
+    #     @return int: error code (0:OK, -1:error)
+    #     """
+    #     self.lock()
+    #
+    #     self._scanning_device.lock()
+    #     if self.initialize_image() < 0:
+    #         self._scanning_device.unlock()
+    #         self.unlock()
+    #         return -1
+    #
+    #     clock_status = self._scanning_device.set_up_scanner_clock(
+    #         clock_frequency=self._clock_frequency)
+    #
+    #     if clock_status < 0:
+    #         self._scanning_device.unlock()
+    #         self.unlock()
+    #         self.set_position('scanner')
+    #         return -1
+    #
+    #     scanner_status = self._scanning_device.set_up_scanner()
+    #
+    #     if scanner_status < 0:
+    #         self._scanning_device.close_scanner_clock()
+    #         self._scanning_device.unlock()
+    #         self.unlock()
+    #         self.set_position('scanner')
+    #         return -1
+    #
+    #     self.signal_scan_lines_next.emit()
+    #     return 0
 
     def continue_scanner(self):
         """Continue the scanning procedure
@@ -624,7 +660,7 @@ class ConfocalLogic(GenericLogic):
         except Exception as e:
             self.log.exception('Could not close the scanner.')
         try:
-            self._scanning_device.close_scanner_clock()
+            self._scanning_device.close_counter()
         except Exception as e:
             self.log.exception('Could not close the scanner clock.')
         try:
@@ -633,6 +669,26 @@ class ConfocalLogic(GenericLogic):
             self.log.exception('Could not unlock scanning device.')
 
         return 0
+       #
+       # def kill_scanner(self):
+       #  """Closing the scanner device.
+       #
+       #  @return int: error code (0:OK, -1:error)
+       #  """
+       #  try:
+       #      self._scanning_device.close_scanner()
+       #  except Exception as e:
+       #      self.log.exception('Could not close the scanner.')
+       #  try:
+       #      self._scanning_device.close_scanner_clock()
+       #  except Exception as e:
+       #      self.log.exception('Could not close the scanner clock.')
+       #  try:
+       #      self._scanning_device.unlock()
+       #  except Exception as e:
+       #      self.log.exception('Could not unlock scanning device.')
+       #
+       #  return 0
 
     def set_position(self, tag, x=None, y=None, z=None, a=None):
         """Forwarding the desired new position from the GUI to the scanning device.
@@ -704,6 +760,8 @@ class ConfocalLogic(GenericLogic):
 
         """
         # stops scanning
+
+        self.position.append(self._scanning_device.get_scanner_position_abs())
         if self.stopRequested:
             with self.threadlock:
                 self.kill_scanner()
@@ -843,6 +901,7 @@ class ConfocalLogic(GenericLogic):
         ############################# SNAKE MODE ##########################################
         elif self.scan_mode == 'snake':
             try:
+
                 if self._scan_counter == 0:
                     # make a line from the current cursor position to
                     # the starting position of the first scan line of the scan
@@ -903,12 +962,15 @@ class ConfocalLogic(GenericLogic):
                     self.signal_depth_image_updated.emit()
                 else:
                     # For testing
-                    line_counts =np.zeros_like(line_counts)
-                    line_counts[3:10]=1
+                    #line_counts = np.ones_like(line_counts)
+                    #line_counts[1] = 5
+                    #line_counts[0::2] = 10
                     if self._scan_counter % 2 == 0:
                         self.xy_image[self._scan_counter, :, 3:3 + s_ch] = line_counts
                     else:
                         self.xy_image[self._scan_counter, :, 3:3 + s_ch] = line_counts[::-1]
+
+
                     self.signal_xy_image_updated.emit()
 
                 # next line in scan
@@ -918,6 +980,7 @@ class ConfocalLogic(GenericLogic):
                 if self._scan_counter >= np.size(self._image_vert_axis):
                     if not self.permanent_scan:
                         self.stop_scanning()
+                        self._scanning_device.disable_outputs()
                         if self._zscan:
                             self._zscan_continuable = False
                         else:
@@ -933,6 +996,8 @@ class ConfocalLogic(GenericLogic):
             self.log.exception('The scan mode is unknown, killing the scanner.')
             self.stop_scanning()
             self.signal_scan_lines_next.emit()
+
+
 
     def save_xy_data(self, colorscale_range=None, percentile_range=None):
         """ Save the current confocal xy data to file.

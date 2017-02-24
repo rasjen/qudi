@@ -28,15 +28,19 @@ from hardware.attocube.pyanc350v4 import Positioner
 import ctypes, math, time
 
 import PyDAQmx as daq
-
+from interface.slow_counter_interface import SlowCounterConstraints
+from interface.slow_counter_interface import CountingMode
 from core.base import Base
-from interface.confocal_scanner_atto_interface import ConfocalScannerInterfaceAtto
+
 
 
 class NIcard(Base):
 
     _modtype = 'Nicard'
     _modclass = 'hardware'
+
+    _out = {'counter': 'SlowCounterInterface'
+            }
 
 
     def on_activate(self, e=None):
@@ -76,7 +80,7 @@ class NIcard(Base):
         self._scanner_do_channels = []
         self._voltage_range = []
         self._position_range = []
-        self._current_position = [0, 0, 0]
+        self._current_position = [50, 50, 50]
         self._counter_channels = []
         self._scanner_counter_channels = []
         self._photon_sources = []
@@ -350,8 +354,8 @@ class NIcard(Base):
 
         '''  NI card '''
 
-        self.close_scanner_clock()
-        self._stop_digital_output()
+        #self.close_scanner_clock()
+        #self._stop_digital_output()
 
         retval = 0
         chanlist = [
@@ -771,9 +775,10 @@ class NIcard(Base):
         :param line_path: [[x values][y values][z values]]
         :return: binary step data array for writing to NI card in uint8 type
         '''
+
         step_data = np.zeros((2 * np.shape(line_path)[1], 4), dtype=np.uint8)
 
-        step_size = np.abs(np.round(line_path[0][1]-line_path[0][0], 2))  # micron determined by voltage and freq of motors
+        step_size = np.abs(np.round(line_path[0][1]-line_path[0][0], 2))# micron determined by voltage and freq of motors
 
         if np.shape(step_data)[0] > 1:
             x_values = np.append([self._current_position[0]], line_path[0])
@@ -782,26 +787,26 @@ class NIcard(Base):
 
         if np.shape(step_data)[0] > 2:
             y_values = np.append([self._current_position[1]], line_path[1])
+
             index_y_forward = np.where(np.round(np.diff(y_values), 2) == step_size)[0]
             index_y_backward = np.where(np.round(np.diff(y_values), 2) == -step_size)[0]
-
         # if np.shape(step_data)[0] > 7:
         #     z_values = np.append([self._current_position[2]], line_path[2])
         #     index_z_forward = np.where(np.round(np.diff(z_values), 2) == step_size)[0]
         #     index_z_backward = np.where(np.round(np.diff(z_values), 2) == -step_size)[0]
 
-        if not len(index_x_forward) + len(index_x_backward)+ len(index_y_forward) + len(index_y_backward) == np.shape(line_path)[1]:
-            self.log.error('Number of steps does not match the number of points in image (moving multiple axis at same time) (different step size)')
-            self.log.error(len(index_x_forward)+len(index_y_forward))
+        # if not len(index_x_forward) + len(index_x_backward)+ len(index_y_forward) + len(index_y_backward) == np.shape(line_path)[1]:
+        #     self.log.error('Number of steps does not match the number of points in image (moving multiple axis at same time) (different step size)')
+        #     self.log.error(len(index_x_forward)+len(index_y_forward))
 
         if np.shape(step_data)[0] > 1:
             # forward x motion
             step_data[2 * index_x_forward, 0] = 1
             # backward x motion
-            step_data[2 * index_x_backward, 0] = 1
+            step_data[2 * index_x_backward, 1] = 1
         if np.shape(step_data)[0] > 2:
             # forward y motion
-            step_data[2 * index_y_forward, 1] = 1
+            step_data[2 * index_y_forward, 2] = 1
             # backward y motion
             step_data[2 * index_y_backward, 3] = 1
         # if np.shape(step_data)[0] > 7:
@@ -809,7 +814,7 @@ class NIcard(Base):
         #     step_data[2 * index_z_forward, 4] = 1
         #     # backward z motion
         #     step_data[2 * index_z_backward, 5] = 1
-        #self.log.info()
+
         return step_data
 
     def set_up_line(self, length=100):
@@ -1012,6 +1017,7 @@ class NIcard(Base):
 
             # update the scanner position instance variable
             self._current_position = list(line_path[:, -1])
+
         except:
             self.log.exception('Error while scanning line.')
             return np.array([[-1.]])
@@ -1161,11 +1167,220 @@ class NIcard(Base):
     # ================ End ConfocalScannerInterface Commands ===================
 
 
-    def test(self, num=5):
-        daq.DAQmxCfgImplicitTiming(self._scanner_do_task, daq.DAQmx_Val_FiniteSamps, num)
-        # daq.DAQmxCfgImplicitTiming(self._scanner_do_task, daq.DAQmx_Val_ContSamps, 1000)
-        daq.DAQmxStartTask(self._scanner_do_task)
-        daq.DAQmxWaitUntilTaskDone(self._scanner_do_task, 10.00)
-        daq.DAQmxStopTask(self._scanner_do_task)
-        self.log.info('test')
+   # =================== SlowCounterInterface Commands ========================
 
+    def set_up_counter(self,
+                       counter_channels=None,
+                       sources=None,
+                       clock_channel=None,
+                       counter_buffer=None):
+        """ Configures the actual counter with a given clock.
+
+        @param list(str) counter_channels: optional, physical channel of the counter
+        @param list(str) sources: optional, physical channel where the photons
+                                  are to count from
+        @param str clock_channel: optional, specifies the clock channel for the
+                                  counter
+        @param int counter_buffer: optional, a buffer of specified integer
+                                   length, where in each bin the count numbers
+                                   are saved.
+
+        @return int: error code (0:OK, -1:error)
+        """
+
+        if self._clock_daq_task is None and clock_channel is None:
+            self.log.error('No clock running, call set_up_clock before starting the counter.')
+            return -1
+        if len(self._counter_daq_tasks) > 0:
+            self.log.error('Another counter is already running, close this one first.')
+            return -1
+
+        if counter_channels is not None:
+            my_counter_channels = counter_channels
+        else:
+            my_counter_channels = self.get_counter_channels()
+
+        if sources is not None:
+            my_photon_sources = sources
+        else:
+            my_photon_sources = self._photon_sources
+
+        if clock_channel is not None:
+            my_clock_channel = clock_channel
+        else:
+            my_clock_channel = self._clock_channel
+
+        if len(my_photon_sources) < len(my_counter_channels):
+            self.log.error('You have given {0} sources but {1} counting channels.'
+                           'Please give an equal or greater number of sources.'
+                           ''.format(len(my_photon_sources), len(my_counter_channels)))
+            return -1
+
+        try:
+            for i, ch in enumerate(my_counter_channels):
+                # This task will count photons with binning defined by the clock_channel
+                task = daq.TaskHandle()  # Initialize a Task
+                # Create task for the counter
+                daq.DAQmxCreateTask('Counter{0}'.format(i), daq.byref(task))
+                # Create a Counter Input which samples with Semi-Periodes the Channel.
+                # set up semi period width measurement in photon ticks, i.e. the width
+                # of each pulse (high and low) generated by pulse_out_task is measured
+                # in photon ticks.
+                #   (this task creates a channel to measure the time between state
+                #    transitions of a digital signal and adds the channel to the task
+                #    you choose)
+                daq.DAQmxCreateCISemiPeriodChan(
+                    # define to which task to connect this function
+                    task,
+                    # use this counter channel
+                    ch,
+                    # name to assign to it
+                    'Counter Channel {0}'.format(i),
+                    # expected minimum count value
+                    0,
+                    # Expected maximum count value
+                    self._max_counts / 2 / self._clock_frequency,
+                    # units of width measurement, here photon ticks
+                    daq.DAQmx_Val_Ticks,
+                    # empty extra argument
+                    '')
+
+                # Set the Counter Input to a Semi Period input Terminal.
+                # Connect the pulses from the counter clock to the counter channel
+                daq.DAQmxSetCISemiPeriodTerm(
+                        # The task to which to add the counter channel.
+                        task,
+                        # use this counter channel
+                        ch,
+                        # assign a named Terminal
+                        my_clock_channel + 'InternalOutput')
+
+                # Set a Counter Input Control Timebase Source.
+                # Specify the terminal of the timebase which is used for the counter:
+                # Define the source of ticks for the counter as self._photon_source for
+                # the Scanner Task.
+                daq.DAQmxSetCICtrTimebaseSrc(
+                    # define to which task to connect this function
+                    task,
+                    # counter channel
+                    ch,
+                    # counter channel to output the counting results
+                    my_photon_sources[i])
+
+                # Configure Implicit Timing.
+                # Set timing to continuous, i.e. set only the number of samples to
+                # acquire or generate without specifying timing:
+                daq.DAQmxCfgImplicitTiming(
+                    # define to which task to connect this function
+                    task,
+                    # Sample Mode: Acquire or generate samples until you stop the task.
+                    daq.DAQmx_Val_ContSamps,
+                    # buffer length which stores  temporarily the number of generated samples
+                    1000)
+
+                # Set the Read point Relative To an operation.
+                # Specifies the point in the buffer at which to begin a read operation.
+                # Here we read most recent recorded samples:
+                daq.DAQmxSetReadRelativeTo(
+                    # define to which task to connect this function
+                    task,
+                    # Start reading samples relative to the last sample returned by the previously.
+                    daq.DAQmx_Val_CurrReadPos)
+
+                # Set the Read Offset.
+                # Specifies an offset in samples per channel at which to begin a read
+                # operation. This offset is relative to the location you specify with
+                # RelativeTo. Here we set the Offset to 0 for multiple samples:
+                daq.DAQmxSetReadOffset(task, 0)
+
+                # Set Read OverWrite Mode.
+                # Specifies whether to overwrite samples in the buffer that you have
+                # not yet read. Unread data in buffer will be overwritten:
+                daq.DAQmxSetReadOverWrite(
+                    task,
+                    daq.DAQmx_Val_DoNotOverwriteUnreadSamps)
+                # add task to counter task list
+                self._counter_daq_tasks.append(task)
+        except:
+            self.log.exception('Error while setting up counting task.')
+            return -1
+
+        try:
+            for i, task in enumerate(self._counter_daq_tasks):
+                # Actually start the preconfigured counter task
+                daq.DAQmxStartTask(task)
+        except:
+            self.log.exception('Error while starting Counter')
+            try:
+                self.close_counter()
+            except:
+                self.log.exception('Could not close counter after error')
+            return -1
+        return 0
+
+    def get_counter_channels(self):
+        """ Returns the list of counter channel names.
+
+        @return tuple(str): channel names
+
+        Most methods calling this might just care about the number of channels, though.
+        """
+        return self._counter_channels
+
+    def get_counter(self, samples=None):
+        """ Returns the current counts per second of the counter.
+
+        @param int samples: if defined, number of samples to read in one go.
+                            How many samples are read per readout cycle. The
+                            readout frequency was defined in the counter setup.
+                            That sets also the length of the readout array.
+
+        @return float [samples]: array with entries as photon counts per second
+        """
+        if len(self._counter_daq_tasks) < 1:
+            self.log.error(
+                'No counter running, call set_up_counter before reading it.')
+            # in case of error return a lot of -1
+            return np.ones((len(self.get_counter_channels()), samples), dtype=np.uint32) * -1
+
+        if samples is None:
+            samples = int(self._samples_number)
+        else:
+            samples = int(samples)
+        try:
+            # count data will be written here in the NumPy array of length samples
+            count_data = np.empty((len(self._counter_daq_tasks), samples), dtype=np.uint32)
+
+            # number of samples which were actually read, will be stored here
+            n_read_samples = daq.int32()
+            for i, task in enumerate(self._counter_daq_tasks):
+                # read the counter value: This function is blocking and waits for the
+                # counts to be all filled:
+                daq.DAQmxReadCounterU32(
+                    # read from this task
+                    task,
+                    # number of samples to read
+                    samples,
+                    # maximal timeout for the read process
+                    self._RWTimeout,
+                    # write the readout into this array
+                    count_data[i],
+                    # length of array to write into
+                    samples,
+                    # number of samples which were read
+                    daq.byref(n_read_samples),
+                    # Reserved for future use. Pass NULL (here None) to this parameter
+                    None)
+        except:
+            self.log.exception(
+                'Getting samples from counter failed.')
+            # in case of error return a lot of -1
+            return np.ones((len(self.get_counter_channels()), samples), dtype=np.uint32) * -1
+        # normalize to counts per second and return data
+        return count_data * self._clock_frequency
+
+
+
+
+
+    # ================ End SlowCounterInterface Commands =======================

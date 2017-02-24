@@ -3,6 +3,9 @@ from hardware.attocube.nicard_digital import NIcard
 from interface.confocal_scanner_atto_interface import ConfocalScannerInterfaceAtto
 from core.base import Base
 
+import numpy as np
+import time
+
 class Distributer(Base,ConfocalScannerInterfaceAtto):
 
     _modtype = 'distributer'
@@ -105,8 +108,14 @@ class Distributer(Base,ConfocalScannerInterfaceAtto):
 
         @return int: error code (0:OK, -1:error)
         """
-        Attocube.enable_trigger_input(self)
-        return NIcard.set_up_scanner(self, counter_channels=counter_channels, sources= sources, clock_channel=clock_channel, scanner_do_channels=scanner_ao_channels)
+        try:
+            Attocube.enable_trigger_input(self)
+            [self.y_start, self.x_start, z] = Attocube.get_scanner_position_abs(self)
+            Attocube.enable_outputs(self)
+            return 0
+        except:
+            return -1
+        #return NIcard.set_up_scanner(self, counter_channels=counter_channels, sources= sources, clock_channel=clock_channel, scanner_do_channels=scanner_ao_channels)
 
     def scanner_set_position_abs(self, x=None, y=None, z=None, a=None):
         """Move stage to x, y, z, a (where a is the fourth voltage channel).
@@ -162,21 +171,77 @@ class Distributer(Base,ConfocalScannerInterfaceAtto):
 
         @return float[k][m]: the photon counts per second for k pixels with m channels
         """
-        return NIcard.scan_line(self, line_path=line_path)
+
+
+        Attocube.set_target_range(self,'x', 0.5e-6)
+        Attocube.set_target_range(self,'y', 0.5e-6)
+
+        self._counting_samples = 10
+
+        [y, x, z]= Attocube.get_scanner_position_abs(self)
+        x_pos=np.round(np.array(line_path[0])*1e-6+self.x_start,6)
+        y_pos=np.round(np.array(line_path[1])*1e-6+self.y_start,6)
+        line_counts = np.zeros_like([line_path[0],])
+
+
+        rawdata = np.zeros(
+            (len(self.get_channels()), self._counting_samples))
+
+
+        for i in range(len(x_pos)):
+            if i ==0 :
+                rawdata = NIcard.get_counter(self, samples= self._counting_samples)
+            else:
+                if x_pos[i] != x_pos[i-1]:
+                    Attocube.set_target_position(self,'x',x_pos[i])
+                    Attocube.auto_move(self,'x',1)
+
+                if y_pos[i] != y_pos[i-1]:
+                    Attocube.set_target_position(self,'y',y_pos[i])
+                    Attocube.auto_move(self,'y',1)
+                    #print('y',y_pos[i]*1e6)
+
+                try:
+                    rawdata = NIcard.get_counter(self, samples= self._counting_samples)
+                except:
+                    self.log.error('No counter running')
+                    return -1
+            line_counts[0,i] = rawdata.sum()
+        #print(line_counts)
+        print(np.round(x_pos[0]*1e6,1),np.round(x_pos[-1]*1e6,1))
+        print(np.round(y_pos[0]*1e6,1),np.round(y_pos[-1]*1e6,1))
+
+        return line_counts.transpose()
+
+     # def scan_line(self, line_path=None):
+     #    """ Scans a line and returns the counts on that line.
+     #
+     #    @param float[k][n] line_path: array k of n-part tuples defining the pixel positions
+     #
+     #    @return float[k][m]: the photon counts per second for k pixels with m channels
+     #    """
+     #
+     #    return NIcard.scan_line(self,line_path=line_path)
 
     def close_scanner(self):
         """ Closes the scanner and cleans up afterwards.
 
         @return int: error code (0:OK, -1:error)
         """
-        return NIcard.close_scanner(self)
+        try:
+            Attocube.disable_outputs(self)
+            Attocube.auto_move(self, 'x', enable=0)
+            Attocube.auto_move(self, 'y', enable=0)
+            return 0
+        except:
+            return -1
 
     def close_scanner_clock(self, power=0):
-        """ Closes the clock and cleans up afterwards.
+         """ Closes the clock and cleans up afterwards.
 
-        @return int: error code (0:OK, -1:error)
-        """
-        return NIcard.close_scanner_clock(self)
+         @return int: error code (0:OK, -1:error)
+         """
+         return NIcard.close_scanner_clock(self)
 
     def single_step(self, axis='x', direction='forward'):
         '''
@@ -240,3 +305,30 @@ class Distributer(Base,ConfocalScannerInterfaceAtto):
     def _scanner_position_to_step(self, line_path):
          return NIcard._scanner_position_to_step(self, line_path=line_path)
 
+
+    def get_channels(self):
+        """ Shortcut for hardware get_counter_channels.
+
+            @return list(str): return list of active counter channel names
+        """
+        return NIcard.get_counter_channels(self)
+
+
+    def get_counter_channels(self):
+        """ Returns the list of counter channel names.
+
+        @return tuple(str): channel names
+
+        Most methods calling this might just care about the number of channels, though.
+        """
+        return self._counter_channels
+
+    def set_up_counter(self):
+        try:
+            self.count_frequency = 100
+            self._count_length = 10
+            NIcard.set_up_clock(self, clock_frequency=self.count_frequency)
+            NIcard.set_up_counter(self, counter_buffer=self._count_length)
+            return 0
+        except:
+            return -1
