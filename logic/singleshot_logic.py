@@ -40,20 +40,19 @@ class SingleShotLogic(GenericLogic):
     _modtype = 'logic'
 
     # declare connectors
-    _in = {'savelogic': 'SaveLogic',
-           'fitlogic': 'FitLogic',
-           'fastcounter': 'FastCounterInterface',
-           'pulseextractionlogic': 'PulseExtractionLogic',
-           'pulsedmeasurementlogic': 'PulsedMeasurementLogic',
-           'traceanalysislogic1': 'TraceAnalysisLogic',
-           'pulsegenerator': 'PulserInterface',
-           'scannerlogic': 'ScannerLogic',
-           'optimizerlogic': 'OptimizerLogic',
-           'pulsedmasterlogic': 'PulsedMasterLogic',
-           'odmrlogic': 'ODMRLogic'
-            }
-
-    _out = {'singleshotlogic1': 'SingleShotLogic'}
+    _connectors = {
+        'savelogic': 'SaveLogic',
+        'fitlogic': 'FitLogic',
+        'fastcounter': 'FastCounterInterface',
+        'pulseextractionlogic': 'PulseExtractionLogic',
+        'pulsedmeasurementlogic': 'PulsedMeasurementLogic',
+        'traceanalysislogic1': 'TraceAnalysisLogic',
+        'pulsegenerator': 'PulserInterface',
+        'scannerlogic': 'ScannerLogic',
+        'optimizerlogic': 'OptimizerLogic',
+        'pulsedmasterlogic': 'PulsedMasterLogic',
+        'odmrlogic': 'ODMRLogic'
+    }
 
     # add possible signals here
     sigHistogramUpdated = QtCore.Signal()
@@ -92,17 +91,17 @@ class SingleShotLogic(GenericLogic):
                          had happened.
         """
 
-        self._fast_counter_device = self.get_in_connector('fastcounter')
-        self._pulse_generator_device = self.get_in_connector('pulsegenerator')
-        self._save_logic = self.get_in_connector('savelogic')
-        self._fit_logic = self.get_in_connector('fitlogic')
-        self._traceanalysis_logic = self.get_in_connector('traceanalysislogic1')
-        self._pe_logic = self.get_in_connector('pulseextractionlogic')
-        self._pm_logic = self.get_in_connector('pulsedmeasurementlogic')
-        self._odmr_logic = self.get_in_connector('odmrlogic')
-        self._pulsed_master_logic = self.get_in_connector('pulsedmasterlogic')
-        self._confocal_logic = self.get_in_connector('scannerlogic')
-        self._optimizer_logic = self.get_in_connector('optimizerlogic')
+        self._fast_counter_device = self.get_connector('fastcounter')
+        self._pulse_generator_device = self.get_connector('pulsegenerator')
+        self._save_logic = self.get_connector('savelogic')
+        self._fit_logic = self.get_connector('fitlogic')
+        self._traceanalysis_logic = self.get_connector('traceanalysislogic1')
+        self._pe_logic = self.get_connector('pulseextractionlogic')
+        self._pm_logic = self.get_connector('pulsedmeasurementlogic')
+        self._odmr_logic = self.get_connector('odmrlogic')
+        self._pulsed_master_logic = self.get_connector('pulsedmasterlogic')
+        self._confocal_logic = self.get_connector('scannerlogic')
+        self._optimizer_logic = self.get_connector('optimizerlogic')
 
         self.hist_data = None
         self.trace = None
@@ -333,7 +332,7 @@ class SingleShotLogic(GenericLogic):
     # =========================================================================
 
     # TODO make more general for other devices
-    def do_singleshot(self, mw_dict={}, refocus=True, laser_wfm='LaserOn', singleshot_wfm='SSR_normalise_2MW',
+    def do_singleshot(self, mw_dict=None, refocus=True, laser_wfm='LaserOn', singleshot_wfm='SSR_normalise_2MW',
                       normalized=True):
         """
         For additional microwave usage this assumes an external signal generator. Could be also done with an
@@ -389,8 +388,7 @@ class SingleShotLogic(GenericLogic):
     # TODO include focusing on a single peak here
     # TODO refocus replaced through refocus frequency
     def do_pulsed_odmr(self, measurement_time, controlled_vals_start, controlled_vals_incr, num_of_lasers,
-                       sequence_length_s, laser_trigger_delay=7e-7, refocus=True, pulsedODMR_wfm='PulsedODMR',
-                       save_tag=''):
+                       sequence_length_s, refocus=True, pulsedODMR_wfm='PulsedODMR', save_tag=''):
         """
         A function to do pulsed odmr. Important as exact transition frequencies are important.
         @param measurement_time:
@@ -398,7 +396,6 @@ class SingleShotLogic(GenericLogic):
         @param controlled_vals_incr:
         @param num_of_lasers:
         @param sequence_length_s:
-        @param laser_trigger_delay:
         @param refocus:
         @param pulsedODMR_wfm:
         @param save_tag:
@@ -417,8 +414,7 @@ class SingleShotLogic(GenericLogic):
                                                                         num_of_lasers,
                                                                         sequence_length_s,
                                                                         laser_ignore_list,
-                                                                        alternating,
-                                                                        laser_trigger_delay)
+                                                                        alternating)
         self._pm_logic._initialize_plots()
 
         self._pulse_generator_device.load_asset(pulsedODMR_wfm)
@@ -482,7 +478,7 @@ class SingleShotLogic(GenericLogic):
         np.save(meta_path,meta_data_dict)
         for key in meta_data_dict:
             meta_data_dict[key] = [meta_data_dict[key]]
-        self._save_logic.save_data(meta_data_dict, filepath, filelabel='meta_data')
+        self._save_logic.save_data(meta_data_dict, filepath=filepath, filelabel='meta_data')
 
 
         return

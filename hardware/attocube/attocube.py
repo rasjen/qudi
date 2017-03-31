@@ -104,7 +104,7 @@ class Attocube(Base):
                               and upper limit. The unit of the scan range is
                               micrometer.
         """
-        self._position_range = [[0,100],[0,100],[0,100],[0,100]]
+        self._position_range = [[0,5000],[0,5000],[0,5000],[0,5000]]
         return self._position_range
 
     def set_position_range(self, myrange=None):
@@ -117,7 +117,7 @@ class Attocube(Base):
         @return int: error code (0:OK, -1:error)
         """
         if myrange is None:
-            myrange = [[0, 1], [0, 1], [0, 1], [0, 1]]
+            myrange = [[0, 5000], [0, 5000], [0, 5000], [0, 1]]
 
         if not isinstance( myrange, (frozenset, list, set, tuple, np.ndarray, ) ):
             self.log.error('Given range is no array type.')
@@ -201,15 +201,10 @@ class Attocube(Base):
                 return -1
             self._current_position_abs[2] = np.float(z)
 
-
-        # the position has to be a vstack
-        my_position = np.vstack(self._current_position_abs)
-
-        # then directly write the position to the hardware
         try:
             for i, label in enumerate(self.get_scanner_axes()):
-                self._current_position_abs[i] = self.anc.setTargetPosition(self.axisNo[label], self._current_position_abs[i])
-        #self.anc.setTargetPosition(self.AxisNo[ch],), start=True)
+                self._current_position_abs[i] = self.set_target_position(self.axisNo[label], self._current_position_abs[i])
+                self.auto_move(label, 1)
         except:
             return -1
         return 0
@@ -328,6 +323,12 @@ class Attocube(Base):
 
 
     def auto_move(self,axis,enable):
+        '''
+
+        :param axis: 'x','y','z'
+        :param enable: 1 for move and 0 for stop
+        :return:
+        '''
 
         self.anc.startAutoMove(self.axisNo[axis],enable=enable,relative=0)
 
