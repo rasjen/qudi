@@ -11,7 +11,7 @@ class Distributer(Base,ConfocalScannerInterfaceAtto):
     _modtype = 'distributer'
     _modclass = 'hardware'
 
-    _out = {
+    _connectors = {
             'confocalscanner': 'ConfocalScannerInterfaceAtto'
             }
 
