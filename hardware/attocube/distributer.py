@@ -110,7 +110,7 @@ class Distributer(Base,ConfocalScannerInterfaceAtto):
         """
         try:
             Attocube.enable_trigger_input(self)
-            [self.y_start, self.x_start, z] = Attocube.get_scanner_position_abs(self)
+            [self.y_start, self.x_start, self.z] = Attocube.get_scanner_position_abs(self)
             Attocube.enable_outputs(self)
             return 0
         except:
@@ -139,7 +139,13 @@ class Distributer(Base,ConfocalScannerInterfaceAtto):
 
         @return int: error code (0:OK, -1:error)
         """
-        NIcard.scanner_set_position(self, x=x, y=y, z=z)
+        try:
+            x_abs = self.x_start + x
+            y_abs = self.y_start + y
+            z_abs = self.z_start + z
+            self.scanner_set_position_abs(self, x=x_abs, y=y_abs, z=z_abs)
+        except:
+            self.log.error('can not make go to this position since ')
 
     def get_scanner_position(self):
         """ Get the current position of the scanner hardware.
