@@ -153,7 +153,11 @@ class ConfocalGui(GUIBase):
         self._mw.yAxisCheckBox.stateChanged.connect(self.yaxis_output_status)
         self._mw.zAxisCheckBox.stateChanged.connect(self.zaxis_output_status)
 
+        self._mw.xy_res_InputWidget.editingFinished.connect(self.change_xy_resolution)
+        self._mw.integrationtime.editingFinished.connect(self.change_integration_time)
+
         self._mw.startScanPushButton.clicked.connect(self.xy_scan_clicked)
+        self._mw.KillScanPushButton.clicked.connect(self.kill_scan_clicked)
         # Connect the emitted signal of an image change from the logic with
         # a refresh of the GUI picture:
         self._scanning_logic.signal_xy_image_updated.connect(self.refresh_xy_image)
@@ -238,6 +242,11 @@ class ConfocalGui(GUIBase):
         #self.disable_scan_actions()
         self._scanning_logic.start_scanning(zscan=False,tag='gui')
 
+    def kill_scan_clicked(self):
+        """ Manages what happens if the xy scan is started. """
+        #self.disable_scan_actions()
+        self._scanning_logic.kill_scanner()
+
     def refresh_xy_image(self):
         """ Update the current XY image from the logic.
 
@@ -300,3 +309,10 @@ class ConfocalGui(GUIBase):
         sc = sc - 1 if sc >= 1 else sc
         self.scan_line_plot.setData(self._scanning_logic.xy_image[sc, :, 0:4:3])
 
+    def change_integration_time(self):
+        pass
+    
+    def change_xy_resolution(self):
+        """ Update the xy resolution in the logic according to the GUI.
+        """
+        self._scanning_logic.xy_resolution = self._mw.xy_res_InputWidget.value()
