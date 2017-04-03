@@ -18,11 +18,11 @@ class Distributer(Base,ConfocalScannerInterfaceAtto):
     def on_activate(self, e):
         Attocube.on_activate(self)
         NIcard.on_activate(self)
+        [self.x_start, self.y_start, self.z_start] = Attocube.get_scanner_position_abs(self)
 
     def on_deactivate(self, e):
         Attocube.on_deactivate(self)
         NIcard.on_deactivate(self)
-        pass
 
     def reset_hardware(self):
         """ Resets the hardware, so the connection is lost and other programs
@@ -110,14 +110,14 @@ class Distributer(Base,ConfocalScannerInterfaceAtto):
         """
         try:
             Attocube.enable_trigger_input(self)
-            [self.y_start, self.x_start, self.z] = Attocube.get_scanner_position_abs(self)
+            [self.x_start, self.y_start, self.z_start] = Attocube.get_scanner_position_abs(self)
             Attocube.enable_outputs(self)
             return 0
         except:
             return -1
         #return NIcard.set_up_scanner(self, counter_channels=counter_channels, sources= sources, clock_channel=clock_channel, scanner_do_channels=scanner_ao_channels)
 
-    def scanner_set_position_abs(self, x=None, y=None, z=None, a=None):
+    def scanner_set_position_abs(self, x=None, y=None, z=None):
         """Move stage to x, y, z, a (where a is the fourth voltage channel).
 
         @param float x: postion in x-direction (volts)
@@ -127,7 +127,7 @@ class Distributer(Base,ConfocalScannerInterfaceAtto):
 
         @return int: error code (0:OK, -1:error)
         """
-        Attocube.scanner_set_position_abs(self, x=x, y=y, z=z)
+        return Attocube.scanner_set_position_abs(self, x=x, y=y, z=z)
 
     def scanner_set_position(self, x=None, y=None, z=None, a=None):
         """Move stage to x, y, z, a (where a is the fourth voltage channel).
@@ -140,10 +140,11 @@ class Distributer(Base,ConfocalScannerInterfaceAtto):
         @return int: error code (0:OK, -1:error)
         """
         try:
-            x_abs = self.x_start + x
-            y_abs = self.y_start + y
-            z_abs = self.z_start + z
-            self.scanner_set_position_abs(self, x=x_abs, y=y_abs, z=z_abs)
+            x_abs = self.x_start + (x * 1e-6)
+            y_abs = self.y_start + (y * 1e-6)
+            z_abs = self.z_start# + (z * 1e-6)
+            return self.scanner_set_position_abs(x=x_abs, y=y_abs, z=z_abs)
+            print('hej6')
         except:
             self.log.error('can not make go to this position since ')
 
@@ -179,19 +180,18 @@ class Distributer(Base,ConfocalScannerInterfaceAtto):
         """
 
 
-        Attocube.set_target_range(self,'x', 0.5e-6)
-        Attocube.set_target_range(self,'y', 0.5e-6)
+        Attocube.set_target_range(self,'x', 0.4e-6)
+        Attocube.set_target_range(self,'y', 0.4e-6)
 
-        self._counting_samples = 10
+        self._counting_samples = 1
 
-        [y, x, z]= Attocube.get_scanner_position_abs(self)
-        x_pos=np.round(np.array(line_path[0])*1e-6+self.x_start,6)
-        y_pos=np.round(np.array(line_path[1])*1e-6+self.y_start,6)
+        [x, y, z] = Attocube.get_scanner_position_abs(self)
+        x_pos = np.round(np.array(line_path[0])*1e-6+self.x_start,6)
+        y_pos = np.round(np.array(line_path[1])*1e-6+self.y_start,6)
         line_counts = np.zeros_like([line_path[0],])
 
 
-        rawdata = np.zeros(
-            (len(self.get_channels()), self._counting_samples))
+        rawdata = np.zeros( (len(self.get_channels()), self._counting_samples))
 
 
         for i in range(len(x_pos)):
@@ -205,7 +205,6 @@ class Distributer(Base,ConfocalScannerInterfaceAtto):
                 if y_pos[i] != y_pos[i-1]:
                     Attocube.set_target_position(self,'y',y_pos[i])
                     Attocube.auto_move(self,'y',1)
-                    #print('y',y_pos[i]*1e6)
 
                 try:
                     rawdata = NIcard.get_counter(self, samples= self._counting_samples)
@@ -213,7 +212,7 @@ class Distributer(Base,ConfocalScannerInterfaceAtto):
                     self.log.error('No counter running')
                     return -1
             line_counts[0,i] = rawdata.sum()
-        #print(line_counts)
+
         print(np.round(x_pos[0]*1e6,1),np.round(x_pos[-1]*1e6,1))
         print(np.round(y_pos[0]*1e6,1),np.round(y_pos[-1]*1e6,1))
 

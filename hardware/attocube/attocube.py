@@ -160,7 +160,7 @@ class Attocube(Base):
             for i in range(3):
                 if not self.anc.getAxisStatus(i)[0] == 1:
                     break
-            return ['y', 'x', 'z']
+            return ['x', 'y', 'z']
         except:
             self.log.error(
             'Axis status is wrong'
@@ -178,7 +178,6 @@ class Attocube(Base):
 
         @return int: error code (0:OK, -1:error)
         """
-        self._current_position_abs = [0,0,0]
         if self.getState() == 'locked':
             self.log.error('Another scan_line is already running, close this one first.')
             return -1
@@ -200,11 +199,12 @@ class Attocube(Base):
                 self.log.error('You want to set z out of range: {0:f}.'.format(z))
                 return -1
             self._current_position_abs[2] = np.float(z)
-
+        print(self._current_position_abs)
         try:
             for i, label in enumerate(self.get_scanner_axes()):
-                self._current_position_abs[i] = self.set_target_position(self.axisNo[label], self._current_position_abs[i])
+                self.set_target_position(self.axisNo[label], self._current_position_abs[i])
                 self.auto_move(label, 1)
+                print(i)
         except:
             return -1
         return 0
@@ -214,10 +214,15 @@ class Attocube(Base):
 
         @return float[]: current position in (x, y, z, a).
         """
-        self._current_position_abs = [0, 0, 0]
-        for i, label in enumerate(self.get_scanner_axes()):
-            self._current_position_abs[i] = self.anc.getPosition(self.axisNo[label])
-        return self._current_position_abs
+        try:
+            current_position_abs = np.array([0.0, 0.0, 0.0])
+            for i, label in enumerate(self.get_scanner_axes()):
+                current_position_abs[i] = self.anc.getPosition(self.axisNo[label])
+
+            self._current_position_abs = current_position_abs
+            return current_position_abs
+        except:
+            self.log.error('Could not get current absolute position')
 
     def single_step(self, axis, direction):
         """
