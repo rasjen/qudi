@@ -243,7 +243,7 @@ class ConfocalGui(GUIBase):
         self._scanning_logic.start_scanning(zscan=False,tag='gui')
 
     def kill_scan_clicked(self):
-        """ Manages what happens if the xy scan is started. """
+        """ Manages what happens if the xy scan is killed. """
         #self.disable_scan_actions()
         self._scanning_logic.kill_scanner()
 

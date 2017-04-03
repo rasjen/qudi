@@ -75,7 +75,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QDoubleSpinBox" name="doubleSpinBox_3">
+          <widget class="QDoubleSpinBox" name="xy_res_InputWidget">
            <property name="decimals">
             <number>0</number>
            </property>

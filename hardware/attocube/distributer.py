@@ -236,8 +236,6 @@ class Distributer(Base,ConfocalScannerInterfaceAtto):
         """
         try:
             Attocube.disable_outputs(self)
-            Attocube.auto_move(self, 'x', enable=0)
-            Attocube.auto_move(self, 'y', enable=0)
             return 0
         except:
             return -1
