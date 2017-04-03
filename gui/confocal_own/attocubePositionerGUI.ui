@@ -21,6 +21,36 @@
        <string>Automatic Scan </string>
       </property>
       <layout class="QGridLayout" name="gridLayout">
+       <item row="9" column="2">
+        <layout class="QVBoxLayout" name="verticalLayout_4">
+         <item>
+          <widget class="QLabel" name="label">
+           <property name="text">
+            <string>Integration time (ms)</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QDoubleSpinBox" name="integrationtime">
+           <property name="suffix">
+            <string extracomment="ms"/>
+           </property>
+           <property name="decimals">
+            <number>0</number>
+           </property>
+           <property name="minimum">
+            <double>50.000000000000000</double>
+           </property>
+           <property name="maximum">
+            <double>1000000.000000000000000</double>
+           </property>
+           <property name="value">
+            <double>1000.000000000000000</double>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
        <item row="9" column="0">
         <widget class="QLabel" name="label_2">
          <property name="text">
@@ -317,7 +347,7 @@
           <double>1000000000.000000000000000</double>
          </property>
          <property name="value">
-          <double>100000.000000000000000</double>
+          <double>10000.000000000000000</double>
          </property>
         </widget>
        </item>
@@ -365,35 +395,12 @@
          </property>
         </widget>
        </item>
-       <item row="9" column="2">
-        <layout class="QVBoxLayout" name="verticalLayout_4">
-         <item>
-          <widget class="QLabel" name="label">
-           <property name="text">
-            <string>Integration time (ms)</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QDoubleSpinBox" name="integrationtime">
-           <property name="suffix">
-            <string extracomment="ms"/>
-           </property>
-           <property name="decimals">
-            <number>0</number>
-           </property>
-           <property name="minimum">
-            <double>50.000000000000000</double>
-           </property>
-           <property name="maximum">
-            <double>1000000.000000000000000</double>
-           </property>
-           <property name="value">
-            <double>1000.000000000000000</double>
-           </property>
-          </widget>
-         </item>
-        </layout>
+       <item row="8" column="0" colspan="3">
+        <widget class="QPushButton" name="KillScanPushButton">
+         <property name="text">
+          <string>Kill Scan</string>
+         </property>
+        </widget>
        </item>
       </layout>
       <zorder>xyScanView</zorder>
@@ -421,6 +428,7 @@
       <zorder>verticalLayoutWidget</zorder>
       <zorder>verticalLayoutWidget_2</zorder>
       <zorder>label_2</zorder>
+      <zorder>KillScanPushButton</zorder>
      </widget>
     </item>
     <item row="1" column="1">
