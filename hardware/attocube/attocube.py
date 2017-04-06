@@ -104,7 +104,7 @@ class Attocube(Base):
                               and upper limit. The unit of the scan range is
                               micrometer.
         """
-        self._position_range = [[0,5000],[0,5000],[0,5000],[0,5000]]
+        self._position_range = [[0,5000e-6],[0,5000e-6],[0,5000e-6],[0,0]]
         return self._position_range
 
     def set_position_range(self, myrange=None):
@@ -117,7 +117,7 @@ class Attocube(Base):
         @return int: error code (0:OK, -1:error)
         """
         if myrange is None:
-            myrange = [[0, 5000], [0, 5000], [0, 5000], [0, 1]]
+            myrange = [[0, 5000e-6], [0, 5000e-6], [0, 5000e-6], [0, 0]]
 
         if not isinstance( myrange, (frozenset, list, set, tuple, np.ndarray, ) ):
             self.log.error('Given range is no array type.')
@@ -199,7 +199,7 @@ class Attocube(Base):
                 self.log.error('You want to set z out of range: {0:f}.'.format(z))
                 return -1
             self._current_position_abs[2] = np.float(z)
-        print(self._current_position_abs)
+        print(self._current_position_abs*1e6)
         try:
             for i, label in enumerate(self.get_scanner_axes()):
                 self.set_target_position(self.axisNo[label], self._current_position_abs[i])
@@ -278,7 +278,7 @@ class Attocube(Base):
         axes = self.axisNo[axis]
         self.anc.setDcVoltage(axes, voltage)
 
-    def get_frequency(self, axis, freq):
+    def get_frequency(self, axis):
         '''
 
         :param axis: 'x', 'y' 'z'
@@ -286,9 +286,9 @@ class Attocube(Base):
         '''
 
         axes = self.axisNo[axis]
-        return self.anc.getFrequency(axes, freq)
+        return self.anc.getFrequency(axes)
 
-    def get_amplitude(self, axis, amp):
+    def get_amplitude(self, axis):
         '''
 
         :param axis: 'x', 'y' 'z'
@@ -337,4 +337,12 @@ class Attocube(Base):
 
         self.anc.startAutoMove(self.axisNo[axis],enable=enable,relative=0)
 
+    def getAxisStatus_target(self, axis):
+        '''
+
+        @return:
+        '''
+        connected, enabled, moving, target, eotFwd, eotBwd, error = self.anc.getAxisStatus(self.axisNo[axis])
+
+        return target
 

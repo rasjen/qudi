@@ -154,8 +154,9 @@ class ConfocalGui(GUIBase):
         self._mw.yAxisCheckBox.stateChanged.connect(self.yaxis_output_status)
         self._mw.zAxisCheckBox.stateChanged.connect(self.zaxis_output_status)
 
+
         self._mw.xy_res_InputWidget.editingFinished.connect(self.change_xy_resolution)
-        self._mw.integrationtime.editingFinished.connect(self.change_integration_time)
+        self._mw.integrationtime.editingFinished.connect(self.set_integration_time)
         self._mw.image_range_InputWidget.editingFinished.connect(self.change_image_range)
 
         # Connect the buttons and inputs for the xy colorbar
@@ -177,9 +178,17 @@ class ConfocalGui(GUIBase):
 
         self._scanning_logic.sigImageXYInitialized.connect(self.adjust_xy_window)
         # Take the default values from logic:
-        self._mw.integrationtime.setValue(self._scanning_logic._scanning_device._samples_number_default)
         self._mw.image_range_InputWidget.setValue(self._scanning_logic.xy_resolution)
         self._mw.xy_res_InputWidget.setValue(self._scanning_logic.xy_resolution)
+
+        self._mw.xAmplitudeDoubleSpinBox.setValue(self.get_xAxisAmplitude())
+        self._mw.yAmplitudeDoubleSpinBox.setValue(self.get_yAxisAmplitude())
+        self._mw.zAmplitudeDoubleSpinBox.setValue(self.get_zAxisAmplitude())
+        self._mw.xFrequencyDoubleSpinBox.setValue(self.get_xAxisFrequency())
+        self._mw.yFrequencyDoubleSpinBox.setValue(self.get_yAxisFrequency())
+        self._mw.zFrequencyDoubleSpinBox.setValue(self.get_zAxisFrequency())
+
+        self._mw.integrationtime.setValue(self.get_integration_time())
 
     def on_deactivate(self, e):
         """ Reverse steps of activation
@@ -235,6 +244,25 @@ class ConfocalGui(GUIBase):
 
     def set_zAxisAmplitude(self):
         self._scanning_logic.set_amplitude(axis='z', amp=self._mw.zAmplitudeDoubleSpinBox.value())
+
+
+    def get_xAxisFrequency(self):
+        return self._scanning_logic.get_frequency(axis='x')
+
+    def get_yAxisFrequency(self):
+        return self._scanning_logic.get_frequency(axis='y')
+
+    def get_zAxisFrequency(self):
+        return self._scanning_logic.get_frequency(axis='z')
+
+    def get_xAxisAmplitude(self):
+        return self._scanning_logic.get_amplitude(axis='x')
+
+    def get_yAxisAmplitude(self):
+        return self._scanning_logic.get_amplitude(axis='y')
+
+    def get_zAxisAmplitude(self):
+        return self._scanning_logic.get_amplitude(axis='z')
 
     def xaxis_output_status(self):
         if self._mw.xAxisCheckBox.isChecked():
@@ -325,9 +353,6 @@ class ConfocalGui(GUIBase):
         sc = self._scanning_logic._scan_counter
         sc = sc - 1 if sc >= 1 else sc
         self.scan_line_plot.setData(self._scanning_logic.xy_image[sc, :, 0:4:3])
-
-    def change_integration_time(self):
-        pass
     
     def change_xy_resolution(self):
         """ Update the xy resolution in the logic according to the GUI.
@@ -336,8 +361,8 @@ class ConfocalGui(GUIBase):
 
     def change_image_range(self):
         """ Adjust the image range for x in the logic. """
-        self._scanning_logic.image_x_range = [0, self._mw.image_range_InputWidget.value()*1e-6]
-        self._scanning_logic.image_y_range = [0, self._mw.image_range_InputWidget.value()*1e-6]
+        self._scanning_logic.image_x_range = [0, self._mw.image_range_InputWidget.value()]
+        self._scanning_logic.image_y_range = [0, self._mw.image_range_InputWidget.value()]
 
     def reset_xy_imagerange(self):
         """ Reset the imagerange if autorange was pressed.
@@ -414,3 +439,9 @@ class ConfocalGui(GUIBase):
         """Redraw xy colour bar and scan image."""
         self.refresh_xy_colorbar()
         self.refresh_xy_image()
+
+    def get_integration_time(self):
+        return self._scanning_logic.get_integration_time()
+
+    def set_integration_time(self):
+        self._scanning_logic.set_integration_time(time=self._mw.integrationtime.value())

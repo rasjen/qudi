@@ -20,6 +20,13 @@ class Distributer(Base,ConfocalScannerInterfaceAtto):
         NIcard.on_activate(self)
         [self.x_start, self.y_start, self.z_start] = Attocube.get_scanner_position_abs(self)
 
+        self.integration_time = 100 #ms
+        self.log.warning('integration time is set to 100 ms')
+
+        config = self.getConfiguration()
+
+        self._clock_frequency = config['clock_frequency']
+
     def on_deactivate(self, e):
         Attocube.on_deactivate(self)
         NIcard.on_deactivate(self)
@@ -144,7 +151,6 @@ class Distributer(Base,ConfocalScannerInterfaceAtto):
             y_abs = self.y_start + (y * 1e-6)
             z_abs = self.z_start# + (z * 1e-6)
             return self.scanner_set_position_abs(x=x_abs, y=y_abs, z=z_abs)
-            print('hej6')
         except:
             self.log.error('can not make go to this position since ')
 
@@ -179,17 +185,16 @@ class Distributer(Base,ConfocalScannerInterfaceAtto):
         @return float[k][m]: the photon counts per second for k pixels with m channels
         """
 
+        Attocube.set_target_range(self,'x', 200e-9)
+        Attocube.set_target_range(self,'y', 200e-9)
 
-        Attocube.set_target_range(self,'x', 0.4e-6)
-        Attocube.set_target_range(self,'y', 0.4e-6)
-
-        self._counting_samples = 1
-
+        self._counting_samples = int(self.integration_time/1000 * self._clock_frequency) #integration time is in ms
+        print(self._counting_samples)
         [x, y, z] = Attocube.get_scanner_position_abs(self)
-        x_pos = np.round(np.array(line_path[0])+self.x_start,6)
-        y_pos = np.round(np.array(line_path[1])+self.y_start,6)
+        x_pos = np.round(np.array(line_path[0]*1e-6)+self.x_start,6)
+        y_pos = np.round(np.array(line_path[1]*1e-6)+self.y_start,6)
         line_counts = np.zeros_like([line_path[0],])
-        print(line_path)
+
 
         rawdata = np.zeros( (len(self.get_channels()), self._counting_samples))
 
@@ -206,12 +211,21 @@ class Distributer(Base,ConfocalScannerInterfaceAtto):
                     Attocube.set_target_position(self,'y',y_pos[i])
                     Attocube.auto_move(self,'y',1)
 
+
                 try:
-                    rawdata = NIcard.get_counter(self, samples= self._counting_samples)
+                    while True:
+                        if Attocube.getAxisStatus_target(self,'y') & Attocube.getAxisStatus_target(self,'x'):
+                            #print(Attocube.getAxisStatus_target(self,'y') & Attocube.getAxisStatus_target(self,'x'))
+                            print('wait until taget is reached')
+                            break
+                    #Attocube.auto_move(self,'y',0)
+                    #Attocube.auto_move(self,'x',0)
+
+                    rawdata = NIcard.get_counter(self, samples=self._counting_samples)
                 except:
                     self.log.error('No counter running')
                     return -1
-            line_counts[0,i] = rawdata.sum()
+            line_counts[0,i] = rawdata.sum() / self._counting_samples
 
         print(np.round(x_pos[0]*1e6,1),np.round(x_pos[-1]*1e6,1))
         print(np.round(y_pos[0]*1e6,1),np.round(y_pos[-1]*1e6,1))
@@ -328,10 +342,27 @@ class Distributer(Base,ConfocalScannerInterfaceAtto):
 
     def set_up_counter(self):
         try:
-            self.count_frequency = 100
-            self._count_length = 10
-            NIcard.set_up_clock(self, clock_frequency=self.count_frequency)
-            NIcard.set_up_counter(self, counter_buffer=self._count_length)
+            NIcard.set_up_clock(self)
+            NIcard.set_up_counter(self)
             return 0
         except:
             return -1
+
+
+    def get_frequency(self, axis):
+        '''
+
+        :param axis: 'x', 'y' 'z'
+        :param freq: Frequency in Hz, internal resolution is 1 Hz
+        :return:
+        '''
+        return Attocube.get_frequency(self, axis)
+
+    def get_amplitude(self, axis):
+        '''
+
+        :param axis: 'x', 'y' 'z'
+        :param amp: Amplitude in V, internal resolution is 1 mV
+        :return:
+        '''
+        return Attocube.get_amplitude(self, axis)

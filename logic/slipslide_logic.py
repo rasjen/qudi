@@ -65,9 +65,9 @@ class ConfocalHistoryEntry(QtCore.QObject):
         self.z_range = confocal._scanning_device.get_position_range()[2]
 
         # Sets the current position to the center of the maximal scanning range
-        self.current_x = (self.x_range[0] + self.x_range[1]) / 2
-        self.current_y = (self.y_range[0] + self.y_range[1]) / 2
-        self.current_z = (self.z_range[0] + self.z_range[1]) / 2
+        self.current_x = 0.0#(self.x_range[0] + self.x_range[1]) / 2
+        self.current_y = 0.0#(self.y_range[0] + self.y_range[1]) / 2
+        self.current_z = 0.0#(self.z_range[0] + self.z_range[1]) / 2
         self.current_a = 0.0
 
         # Sets the size of the image to the maximal scanning range
@@ -320,7 +320,6 @@ class ConfocalLogic(GenericLogic):
             self.return_slowness = self._statusVariables['return_slowness']
         else:
             self.return_slowness = 50
-        self._clock_frequency = 100
         # Reads in the maximal scanning range. The unit of that scan range is micrometer!
         self.x_range = self._scanning_device.get_position_range()[0]
         self.y_range = self._scanning_device.get_position_range()[1]
@@ -663,7 +662,7 @@ class ConfocalLogic(GenericLogic):
         except Exception as e:
             self.log.exception('Could not close the scanner.')
         try:
-            self._scanning_device.close_counter()
+            self._scanning_device.close_counter(scanner=True)
         except Exception as e:
             self.log.exception('Could not close the scanner clock.')
         try:
@@ -1422,8 +1421,19 @@ class ConfocalLogic(GenericLogic):
         self._scanning_device.axis_output_status(axis=axis, status=status)
 
     def set_frequency(self, axis, freq):
-        self.log.info('test')
         self._scanning_device.set_frequency(axis=axis, freq=freq)
+
+    def get_frequency(self, axis):
+        return self._scanning_device.get_frequency(axis=axis)
 
     def set_amplitude(self, axis, amp):
         self._scanning_device.set_amplitude(axis=axis, amp=amp)
+
+    def get_amplitude(self, axis):
+        return self._scanning_device.get_amplitude(axis=axis)
+
+    def set_integration_time(self, time):
+        self._scanning_device.integration_time = time
+
+    def get_integration_time(self):
+        return self._scanning_device.integration_time
