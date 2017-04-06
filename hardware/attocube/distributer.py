@@ -186,10 +186,10 @@ class Distributer(Base,ConfocalScannerInterfaceAtto):
         self._counting_samples = 1
 
         [x, y, z] = Attocube.get_scanner_position_abs(self)
-        x_pos = np.round(np.array(line_path[0])*1e-6+self.x_start,6)
-        y_pos = np.round(np.array(line_path[1])*1e-6+self.y_start,6)
+        x_pos = np.round(np.array(line_path[0])+self.x_start,6)
+        y_pos = np.round(np.array(line_path[1])+self.y_start,6)
         line_counts = np.zeros_like([line_path[0],])
-
+        print(line_path)
 
         rawdata = np.zeros( (len(self.get_channels()), self._counting_samples))
 

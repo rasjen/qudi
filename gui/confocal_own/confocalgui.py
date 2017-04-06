@@ -158,6 +158,15 @@ class ConfocalGui(GUIBase):
         self._mw.integrationtime.editingFinished.connect(self.change_integration_time)
         self._mw.image_range_InputWidget.editingFinished.connect(self.change_image_range)
 
+        # Connect the buttons and inputs for the xy colorbar
+        self._mw.manualRadioButton.clicked.connect(self.update_xy_cb_range)
+        self._mw.peercentiesRadioButton.clicked.connect(self.update_xy_cb_range)
+
+        self._mw.counterMinDoubleSpinBox.valueChanged.connect(self.shortcut_to_xy_cb_manual)
+        self._mw.counterMaxDoubleSpinBox.valueChanged.connect(self.shortcut_to_xy_cb_manual)
+        self._mw.percentileMinDoubleSpinBox.valueChanged.connect(self.shortcut_to_xy_cb_centiles)
+        self._mw.percentileMaxDoubleSpinBox.valueChanged.connect(self.shortcut_to_xy_cb_centiles)
+
         self._mw.startScanPushButton.clicked.connect(self.xy_scan_clicked)
         self._mw.KillScanPushButton.clicked.connect(self.kill_scan_clicked)
         # Connect the emitted signal of an image change from the logic with
@@ -168,6 +177,8 @@ class ConfocalGui(GUIBase):
 
         self._scanning_logic.sigImageXYInitialized.connect(self.adjust_xy_window)
         # Take the default values from logic:
+        self._mw.integrationtime.setValue(self._scanning_logic._scanning_device._samples_number_default)
+        self._mw.image_range_InputWidget.setValue(self._scanning_logic.xy_resolution)
         self._mw.xy_res_InputWidget.setValue(self._scanning_logic.xy_resolution)
 
     def on_deactivate(self, e):
@@ -388,3 +399,18 @@ class ConfocalGui(GUIBase):
 
         xy_viewbox.updateAutoRange()
         xy_viewbox.updateViewRange()
+
+    def shortcut_to_xy_cb_manual(self):
+        """Someone edited the absolute counts range for the xy colour bar, better update."""
+        self._mw.manualRadioButton.setChecked(True)
+        self.update_xy_cb_range()
+
+    def shortcut_to_xy_cb_centiles(self):
+        """Someone edited the centiles range for the xy colour bar, better update."""
+        self._mw.peercentiesRadioButton.setChecked(True)
+        self.update_xy_cb_range()
+
+    def update_xy_cb_range(self):
+        """Redraw xy colour bar and scan image."""
+        self.refresh_xy_colorbar()
+        self.refresh_xy_image()

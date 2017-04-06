@@ -301,6 +301,7 @@ class ConfocalLogic(GenericLogic):
         scanning_modes = ['default', 'snake']
         self.scan_mode = scanning_modes[1]
         self.position = []
+        self.kill_mode = False
     def on_activate(self, e):
         """ Initialisation performed during activation of the module.
 
@@ -646,6 +647,9 @@ class ConfocalLogic(GenericLogic):
             self.set_position('scanner')
             return -1
 
+        if self.kill_mode is True:
+            return -1
+
         self.signal_scan_lines_next.emit()
         return 0
 
@@ -666,6 +670,8 @@ class ConfocalLogic(GenericLogic):
             self._scanning_device.unlock()
         except Exception as e:
             self.log.exception('Could not unlock scanning device.')
+
+        self.kill_mode = True
 
         return 0
        #
