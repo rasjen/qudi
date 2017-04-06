@@ -121,6 +121,7 @@ class ConfocalGui(GUIBase):
         #self.scan_line_plot = pg.PlotDataItem(data, pen=pg.mkPen(palette.c1))
         #self._mw.xyScanView.addItem(self.scan_line_plot)
 
+        self.fixed_aspect_ratio_xy = True
         # Label the axes:
         self._mw.xyScanView.setLabel('bottom', 'X position', units='μm')
         self._mw.xyScanView.setLabel('left', 'Y position', units='μm')
@@ -155,14 +156,19 @@ class ConfocalGui(GUIBase):
 
         self._mw.xy_res_InputWidget.editingFinished.connect(self.change_xy_resolution)
         self._mw.integrationtime.editingFinished.connect(self.change_integration_time)
+        self._mw.image_range_InputWidget.editingFinished.connect(self.change_image_range)
 
         self._mw.startScanPushButton.clicked.connect(self.xy_scan_clicked)
         self._mw.KillScanPushButton.clicked.connect(self.kill_scan_clicked)
         # Connect the emitted signal of an image change from the logic with
         # a refresh of the GUI picture:
         self._scanning_logic.signal_xy_image_updated.connect(self.refresh_xy_image)
+
         #self._scanning_logic.signal_xy_image_updated.connect(self.refresh_scan_line)
 
+        self._scanning_logic.sigImageXYInitialized.connect(self.adjust_xy_window)
+        # Take the default values from logic:
+        self._mw.xy_res_InputWidget.setValue(self._scanning_logic.xy_resolution)
 
     def on_deactivate(self, e):
         """ Reverse steps of activation
@@ -316,3 +322,69 @@ class ConfocalGui(GUIBase):
         """ Update the xy resolution in the logic according to the GUI.
         """
         self._scanning_logic.xy_resolution = self._mw.xy_res_InputWidget.value()
+
+    def change_image_range(self):
+        """ Adjust the image range for x in the logic. """
+        self._scanning_logic.image_x_range = [0, self._mw.image_range_InputWidget.value()*1e-6]
+        self._scanning_logic.image_y_range = [0, self._mw.image_range_InputWidget.value()*1e-6]
+
+    def reset_xy_imagerange(self):
+        """ Reset the imagerange if autorange was pressed.
+
+        Take the image range values directly from the scanned image and set
+        them as the current image ranges.
+        """
+        # extract the range directly from the image:
+        xMin = self._scanning_logic.xy_image[0, 0, 0]
+        yMin = self._scanning_logic.xy_image[0, 0, 1]
+        xMax = self._scanning_logic.xy_image[-1, -1, 0]
+        yMax = self._scanning_logic.xy_image[-1, -1, 1]
+
+        self._mw.x_min_InputWidget.setValue(xMin)
+        self._mw.x_max_InputWidget.setValue(xMax)
+        self.change_x_image_range()
+
+        self._mw.y_min_InputWidget.setValue(yMin)
+        self._mw.y_max_InputWidget.setValue(yMax)
+        self.change_y_image_range()
+
+    def adjust_xy_window(self):
+        """ Fit the visible window in the xy scan to full view.
+
+        Be careful in using that method, since it uses the input values for
+        the ranges to adjust x and y. Make sure that in the process of the depth scan
+        no method is calling adjust_depth_window, otherwise it will adjust for you
+        a window which does not correspond to the scan!
+        """
+        # It is extremly crucial that before adjusting the window view and
+        # limits, to make an update of the current image. Otherwise the
+        # adjustment will just be made for the previous image.
+        self.refresh_xy_image()
+        xy_viewbox = self.xy_image.getViewBox()
+
+        xMin = self._scanning_logic.image_x_range[0]
+        xMax = self._scanning_logic.image_x_range[1]
+        yMin = self._scanning_logic.image_y_range[0]
+        yMax = self._scanning_logic.image_y_range[1]
+
+        if self.fixed_aspect_ratio_xy:
+            # Reset the limit settings so that the method 'setAspectLocked'
+            # works properly. It has to be done in a manual way since no method
+            # exists yet to reset the set limits:
+            xy_viewbox.state['limits']['xLimits'] = [None, None]
+            xy_viewbox.state['limits']['yLimits'] = [None, None]
+            xy_viewbox.state['limits']['xRange'] = [None, None]
+            xy_viewbox.state['limits']['yRange'] = [None, None]
+
+            xy_viewbox.setAspectLocked(lock=True, ratio=1.0)
+            xy_viewbox.updateViewRange()
+        else:
+            xy_viewbox.setLimits(xMin=xMin - (xMax - xMin) * self.image_x_padding,
+                                 xMax=xMax + (xMax - xMin) * self.image_x_padding,
+                                 yMin=yMin - (yMax - yMin) * self.image_y_padding,
+                                 yMax=yMax + (yMax - yMin) * self.image_y_padding)
+
+        self.xy_image.setRect(QtCore.QRectF(xMin, yMin, xMax - xMin, yMax - yMin))
+
+        xy_viewbox.updateAutoRange()
+        xy_viewbox.updateViewRange()

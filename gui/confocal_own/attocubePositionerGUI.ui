@@ -15,195 +15,204 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout_3">
+    <item row="1" column="1">
+     <widget class="QGroupBox" name="groupBox_3">
+      <property name="title">
+       <string>Manual Scan</string>
+      </property>
+      <layout class="QGridLayout" name="gridLayout_2">
+       <item row="0" column="0" rowspan="2" colspan="2">
+        <widget class="QLabel" name="xAxisLabel_2">
+         <property name="text">
+          <string>X</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="2" rowspan="2">
+        <widget class="QPushButton" name="stepXBackwardPushButton">
+         <property name="text">
+          <string>Step Backward </string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="3" rowspan="2">
+        <widget class="QPushButton" name="stepXForwardPushButton">
+         <property name="text">
+          <string>Step Forward </string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="1">
+        <widget class="QCheckBox" name="yAxisCheckBox">
+         <property name="text">
+          <string>Output</string>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="3" rowspan="2">
+        <widget class="QPushButton" name="stepZForwardPushButton">
+         <property name="text">
+          <string>Step Forward </string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="4">
+        <widget class="QScrollBar" name="yAxisScrollBar">
+         <property name="maximum">
+          <number>100</number>
+         </property>
+         <property name="pageStep">
+          <number>1</number>
+         </property>
+         <property name="value">
+          <number>50</number>
+         </property>
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QCheckBox" name="xAxisCheckBox">
+         <property name="text">
+          <string>Output</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="2" rowspan="2">
+        <widget class="QPushButton" name="stepYBackwardPushButton">
+         <property name="text">
+          <string>Step Backward</string>
+         </property>
+        </widget>
+       </item>
+       <item row="5" column="4">
+        <widget class="QScrollBar" name="zAxisScrollBar">
+         <property name="maximum">
+          <number>100</number>
+         </property>
+         <property name="pageStep">
+          <number>1</number>
+         </property>
+         <property name="value">
+          <number>50</number>
+         </property>
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="4">
+        <widget class="QScrollBar" name="xAxisScrollBar">
+         <property name="autoFillBackground">
+          <bool>false</bool>
+         </property>
+         <property name="maximum">
+          <number>100</number>
+         </property>
+         <property name="pageStep">
+          <number>1</number>
+         </property>
+         <property name="value">
+          <number>50</number>
+         </property>
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="0" rowspan="2" colspan="2">
+        <widget class="QLabel" name="zAxisLabel_2">
+         <property name="text">
+          <string>Z</string>
+         </property>
+        </widget>
+       </item>
+       <item row="5" column="1">
+        <widget class="QCheckBox" name="zAxisCheckBox">
+         <property name="text">
+          <string>Output</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="0" rowspan="2" colspan="2">
+        <widget class="QLabel" name="yAxisLabel_2">
+         <property name="text">
+          <string>Y</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="3" rowspan="2">
+        <widget class="QPushButton" name="stepYForwardPushButton">
+         <property name="text">
+          <string>Step Forward </string>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="2" rowspan="2">
+        <widget class="QPushButton" name="stepZBackwardPushButton">
+         <property name="text">
+          <string>Step Backward</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
     <item row="0" column="1">
      <widget class="QGroupBox" name="automayicScanGroupBox">
       <property name="title">
        <string>Automatic Scan </string>
       </property>
       <layout class="QGridLayout" name="gridLayout">
-       <item row="9" column="2">
-        <layout class="QVBoxLayout" name="verticalLayout_4">
-         <item>
-          <widget class="QLabel" name="label">
-           <property name="text">
-            <string>Integration time (ms)</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QDoubleSpinBox" name="integrationtime">
-           <property name="suffix">
-            <string extracomment="ms"/>
-           </property>
-           <property name="decimals">
-            <number>0</number>
-           </property>
-           <property name="minimum">
-            <double>50.000000000000000</double>
-           </property>
-           <property name="maximum">
-            <double>1000000.000000000000000</double>
-           </property>
-           <property name="value">
-            <double>1000.000000000000000</double>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
-       <item row="9" column="0">
-        <widget class="QLabel" name="label_2">
-         <property name="text">
-          <string/>
+       <item row="2" column="3">
+        <widget class="QDoubleSpinBox" name="percentileMinDoubleSpinBox">
+         <property name="maximumSize">
+          <size>
+           <width>100</width>
+           <height>16777215</height>
+          </size>
          </property>
-        </widget>
-       </item>
-       <item row="3" column="0">
-        <widget class="QLabel" name="xAxisLabel">
-         <property name="text">
-          <string>X</string>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
          </property>
-        </widget>
-       </item>
-       <item row="9" column="1">
-        <layout class="QVBoxLayout" name="verticalLayout_3">
-         <item>
-          <widget class="QLabel" name="label_3">
-           <property name="text">
-            <string>Resolution (# of point per line)</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QDoubleSpinBox" name="xy_res_InputWidget">
-           <property name="decimals">
-            <number>0</number>
-           </property>
-           <property name="minimum">
-            <double>1.000000000000000</double>
-           </property>
-           <property name="maximum">
-            <double>5000.000000000000000</double>
-           </property>
-           <property name="value">
-            <double>100.000000000000000</double>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
-       <item row="6" column="3">
-        <widget class="QDoubleSpinBox" name="doubleSpinBox"/>
-       </item>
-       <item row="5" column="2">
-        <widget class="QDoubleSpinBox" name="yFrequencyDoubleSpinBox">
-         <property name="decimals">
-          <number>0</number>
+         <property name="suffix">
+          <string>%</string>
          </property>
          <property name="minimum">
-          <double>1.000000000000000</double>
+          <double>0.000000000000000</double>
          </property>
          <property name="maximum">
-          <double>2000.000000000000000</double>
+          <double>100.000000000000000</double>
+         </property>
+         <property name="value">
+          <double>0.000000000000000</double>
          </property>
         </widget>
        </item>
-       <item row="6" column="0">
-        <widget class="QLabel" name="zAxisLabel">
-         <property name="text">
-          <string>Z</string>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="1">
-        <widget class="QDoubleSpinBox" name="xAmplitudeDoubleSpinBox">
-         <property name="decimals">
-          <number>0</number>
-         </property>
-         <property name="minimum">
-          <double>1.000000000000000</double>
-         </property>
-         <property name="maximum">
-          <double>70.000000000000000</double>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="3">
-        <widget class="QRadioButton" name="peercentiesRadioButton">
-         <property name="text">
-          <string>Percentiles</string>
-         </property>
-         <property name="checked">
-          <bool>false</bool>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="4">
-        <widget class="QRadioButton" name="manualRadioButton">
-         <property name="text">
-          <string>Counter/s</string>
-         </property>
-         <property name="checked">
+       <item row="2" column="1">
+        <widget class="QLabel" name="amplitudeLabel">
+         <property name="enabled">
           <bool>true</bool>
          </property>
-        </widget>
-       </item>
-       <item row="6" column="1">
-        <widget class="QDoubleSpinBox" name="zAmplitudeDoubleSpinBox">
-         <property name="decimals">
-          <number>0</number>
-         </property>
-         <property name="minimum">
-          <double>1.000000000000000</double>
-         </property>
-         <property name="maximum">
-          <double>70.000000000000000</double>
-         </property>
-        </widget>
-       </item>
-       <item row="5" column="1">
-        <widget class="QDoubleSpinBox" name="yAmplitudeDoubleSpinBox">
-         <property name="decimals">
-          <number>0</number>
-         </property>
-         <property name="minimum">
-          <double>1.000000000000000</double>
-         </property>
-         <property name="maximum">
-          <double>70.000000000000000</double>
-         </property>
-        </widget>
-       </item>
-       <item row="7" column="0" colspan="3">
-        <widget class="QPushButton" name="startScanPushButton">
          <property name="text">
-          <string>Start XY Scan</string>
+          <string>Amplitude (V)</string>
+         </property>
+         <property name="scaledContents">
+          <bool>false</bool>
+         </property>
+         <property name="margin">
+          <number>0</number>
+         </property>
+         <property name="indent">
+          <number>0</number>
          </property>
         </widget>
        </item>
-       <item row="6" column="2">
-        <widget class="QDoubleSpinBox" name="zFrequencyDoubleSpinBox">
-         <property name="decimals">
-          <number>0</number>
-         </property>
-         <property name="minimum">
-          <double>1.000000000000000</double>
-         </property>
-         <property name="maximum">
-          <double>2000.000000000000000</double>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="2">
-        <widget class="QDoubleSpinBox" name="xFrequencyDoubleSpinBox">
-         <property name="decimals">
-          <number>0</number>
-         </property>
-         <property name="minimum">
-          <double>1.000000000000000</double>
-         </property>
-         <property name="maximum">
-          <double>2000.000000000000000</double>
+       <item row="5" column="0">
+        <widget class="QLabel" name="yAxisLabel">
+         <property name="text">
+          <string>Y</string>
          </property>
         </widget>
        </item>
@@ -247,67 +256,10 @@
          </property>
         </widget>
        </item>
-       <item row="5" column="0">
-        <widget class="QLabel" name="yAxisLabel">
-         <property name="text">
-          <string>Y</string>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="3">
-        <widget class="QDoubleSpinBox" name="percentileMinDoubleSpinBox">
-         <property name="maximumSize">
-          <size>
-           <width>100</width>
-           <height>16777215</height>
-          </size>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-         </property>
-         <property name="suffix">
-          <string>%</string>
-         </property>
-         <property name="minimum">
-          <double>0.000000000000000</double>
-         </property>
-         <property name="maximum">
-          <double>100.000000000000000</double>
-         </property>
-         <property name="value">
-          <double>0.000000000000000</double>
-         </property>
-        </widget>
-       </item>
        <item row="2" column="2">
         <widget class="QLabel" name="frequencyLabel">
          <property name="text">
           <string>Frequency (Hz)</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="3">
-        <widget class="QDoubleSpinBox" name="percentileMaxDoubleSpinBox">
-         <property name="maximumSize">
-          <size>
-           <width>100</width>
-           <height>16777215</height>
-          </size>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-         </property>
-         <property name="suffix">
-          <string>%</string>
-         </property>
-         <property name="minimum">
-          <double>0.000000000000000</double>
-         </property>
-         <property name="maximum">
-          <double>100.000000000000000</double>
-         </property>
-         <property name="value">
-          <double>100.000000000000000</double>
          </property>
         </widget>
        </item>
@@ -354,9 +306,6 @@
        <item row="1" column="0" colspan="3">
         <widget class="PlotWidget" name="xyScanView"/>
        </item>
-       <item row="1" column="3" colspan="2">
-        <widget class="PlotWidget" name="contrastView"/>
-       </item>
        <item row="2" column="0">
         <widget class="QLabel" name="axisLabel">
          <property name="enabled">
@@ -376,22 +325,28 @@
          </property>
         </widget>
        </item>
-       <item row="2" column="1">
-        <widget class="QLabel" name="amplitudeLabel">
-         <property name="enabled">
-          <bool>true</bool>
+       <item row="0" column="3">
+        <widget class="QDoubleSpinBox" name="percentileMaxDoubleSpinBox">
+         <property name="maximumSize">
+          <size>
+           <width>100</width>
+           <height>16777215</height>
+          </size>
          </property>
-         <property name="text">
-          <string>Amplitude (V)</string>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
          </property>
-         <property name="scaledContents">
-          <bool>false</bool>
+         <property name="suffix">
+          <string>%</string>
          </property>
-         <property name="margin">
-          <number>0</number>
+         <property name="minimum">
+          <double>0.000000000000000</double>
          </property>
-         <property name="indent">
-          <number>0</number>
+         <property name="maximum">
+          <double>100.000000000000000</double>
+         </property>
+         <property name="value">
+          <double>100.000000000000000</double>
          </property>
         </widget>
        </item>
@@ -401,6 +356,206 @@
           <string>Kill Scan</string>
          </property>
         </widget>
+       </item>
+       <item row="10" column="0">
+        <layout class="QVBoxLayout" name="verticalLayout">
+         <item>
+          <widget class="QLabel" name="label_2">
+           <property name="text">
+            <string>Range (micron)</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QDoubleSpinBox" name="image_range_InputWidget">
+           <property name="maximum">
+            <double>1000.000000000000000</double>
+           </property>
+           <property name="value">
+            <double>100.000000000000000</double>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item row="3" column="1">
+        <widget class="QDoubleSpinBox" name="xAmplitudeDoubleSpinBox">
+         <property name="decimals">
+          <number>0</number>
+         </property>
+         <property name="minimum">
+          <double>1.000000000000000</double>
+         </property>
+         <property name="maximum">
+          <double>70.000000000000000</double>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="3">
+        <widget class="QRadioButton" name="peercentiesRadioButton">
+         <property name="text">
+          <string>Percentiles</string>
+         </property>
+         <property name="checked">
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="6" column="2">
+        <widget class="QDoubleSpinBox" name="zFrequencyDoubleSpinBox">
+         <property name="decimals">
+          <number>0</number>
+         </property>
+         <property name="minimum">
+          <double>1.000000000000000</double>
+         </property>
+         <property name="maximum">
+          <double>2000.000000000000000</double>
+         </property>
+        </widget>
+       </item>
+       <item row="10" column="1">
+        <layout class="QVBoxLayout" name="verticalLayout_3">
+         <item>
+          <widget class="QLabel" name="label_3">
+           <property name="text">
+            <string>Resolution (# of point per line)</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QDoubleSpinBox" name="xy_res_InputWidget">
+           <property name="decimals">
+            <number>0</number>
+           </property>
+           <property name="minimum">
+            <double>1.000000000000000</double>
+           </property>
+           <property name="maximum">
+            <double>5000.000000000000000</double>
+           </property>
+           <property name="value">
+            <double>100.000000000000000</double>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item row="5" column="2">
+        <widget class="QDoubleSpinBox" name="yFrequencyDoubleSpinBox">
+         <property name="decimals">
+          <number>0</number>
+         </property>
+         <property name="minimum">
+          <double>1.000000000000000</double>
+         </property>
+         <property name="maximum">
+          <double>2000.000000000000000</double>
+         </property>
+        </widget>
+       </item>
+       <item row="7" column="0" colspan="3">
+        <widget class="QPushButton" name="startScanPushButton">
+         <property name="text">
+          <string>Start XY Scan</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="4">
+        <widget class="QRadioButton" name="manualRadioButton">
+         <property name="text">
+          <string>Counter/s</string>
+         </property>
+         <property name="checked">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="5" column="1">
+        <widget class="QDoubleSpinBox" name="yAmplitudeDoubleSpinBox">
+         <property name="decimals">
+          <number>0</number>
+         </property>
+         <property name="minimum">
+          <double>1.000000000000000</double>
+         </property>
+         <property name="maximum">
+          <double>70.000000000000000</double>
+         </property>
+        </widget>
+       </item>
+       <item row="6" column="0">
+        <widget class="QLabel" name="zAxisLabel">
+         <property name="text">
+          <string>Z</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="2">
+        <widget class="QDoubleSpinBox" name="xFrequencyDoubleSpinBox">
+         <property name="decimals">
+          <number>0</number>
+         </property>
+         <property name="minimum">
+          <double>1.000000000000000</double>
+         </property>
+         <property name="maximum">
+          <double>2000.000000000000000</double>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="0">
+        <widget class="QLabel" name="xAxisLabel">
+         <property name="text">
+          <string>X</string>
+         </property>
+        </widget>
+       </item>
+       <item row="6" column="1">
+        <widget class="QDoubleSpinBox" name="zAmplitudeDoubleSpinBox">
+         <property name="decimals">
+          <number>0</number>
+         </property>
+         <property name="minimum">
+          <double>1.000000000000000</double>
+         </property>
+         <property name="maximum">
+          <double>70.000000000000000</double>
+         </property>
+        </widget>
+       </item>
+       <item row="10" column="2">
+        <layout class="QVBoxLayout" name="verticalLayout_4">
+         <item>
+          <widget class="QLabel" name="label">
+           <property name="text">
+            <string>Integration time (ms)</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QDoubleSpinBox" name="integrationtime">
+           <property name="suffix">
+            <string extracomment="ms"/>
+           </property>
+           <property name="decimals">
+            <number>0</number>
+           </property>
+           <property name="minimum">
+            <double>50.000000000000000</double>
+           </property>
+           <property name="maximum">
+            <double>1000000.000000000000000</double>
+           </property>
+           <property name="value">
+            <double>1000.000000000000000</double>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item row="1" column="3" colspan="2">
+        <widget class="PlotWidget" name="contrastView"/>
        </item>
       </layout>
       <zorder>xyScanView</zorder>
@@ -424,155 +579,7 @@
       <zorder>zFrequencyDoubleSpinBox</zorder>
       <zorder>zAxisLabel</zorder>
       <zorder>zAmplitudeDoubleSpinBox</zorder>
-      <zorder>doubleSpinBox</zorder>
-      <zorder>verticalLayoutWidget</zorder>
-      <zorder>verticalLayoutWidget_2</zorder>
-      <zorder>label_2</zorder>
       <zorder>KillScanPushButton</zorder>
-     </widget>
-    </item>
-    <item row="1" column="1">
-     <widget class="QGroupBox" name="groupBox_3">
-      <property name="title">
-       <string>Manual Scan</string>
-      </property>
-      <layout class="QGridLayout" name="gridLayout_2">
-       <item row="0" column="0" rowspan="2" colspan="2">
-        <widget class="QLabel" name="xAxisLabel_2">
-         <property name="text">
-          <string>X</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="2" rowspan="2">
-        <widget class="QPushButton" name="stepXBackwardPushButton">
-         <property name="text">
-          <string>Step Backward </string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="3" rowspan="2">
-        <widget class="QPushButton" name="stepXForwardPushButton">
-         <property name="text">
-          <string>Step Forward </string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="1">
-        <widget class="QCheckBox" name="xAxisCheckBox">
-         <property name="text">
-          <string>Output</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="4">
-        <widget class="QScrollBar" name="xAxisScrollBar">
-         <property name="autoFillBackground">
-          <bool>false</bool>
-         </property>
-         <property name="maximum">
-          <number>100</number>
-         </property>
-         <property name="pageStep">
-          <number>1</number>
-         </property>
-         <property name="value">
-          <number>50</number>
-         </property>
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="0" rowspan="2" colspan="2">
-        <widget class="QLabel" name="yAxisLabel_2">
-         <property name="text">
-          <string>Y</string>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="2" rowspan="2">
-        <widget class="QPushButton" name="stepYBackwardPushButton">
-         <property name="text">
-          <string>Step Backward</string>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="3" rowspan="2">
-        <widget class="QPushButton" name="stepYForwardPushButton">
-         <property name="text">
-          <string>Step Forward </string>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="1">
-        <widget class="QCheckBox" name="yAxisCheckBox">
-         <property name="text">
-          <string>Output</string>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="4">
-        <widget class="QScrollBar" name="yAxisScrollBar">
-         <property name="maximum">
-          <number>100</number>
-         </property>
-         <property name="pageStep">
-          <number>1</number>
-         </property>
-         <property name="value">
-          <number>50</number>
-         </property>
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-        </widget>
-       </item>
-       <item row="4" column="0" rowspan="2" colspan="2">
-        <widget class="QLabel" name="zAxisLabel_2">
-         <property name="text">
-          <string>Z</string>
-         </property>
-        </widget>
-       </item>
-       <item row="4" column="2" rowspan="2">
-        <widget class="QPushButton" name="stepZBackwardPushButton">
-         <property name="text">
-          <string>Step Backward</string>
-         </property>
-        </widget>
-       </item>
-       <item row="4" column="3" rowspan="2">
-        <widget class="QPushButton" name="stepZForwardPushButton">
-         <property name="text">
-          <string>Step Forward </string>
-         </property>
-        </widget>
-       </item>
-       <item row="5" column="1">
-        <widget class="QCheckBox" name="zAxisCheckBox">
-         <property name="text">
-          <string>Output</string>
-         </property>
-        </widget>
-       </item>
-       <item row="5" column="4">
-        <widget class="QScrollBar" name="zAxisScrollBar">
-         <property name="maximum">
-          <number>100</number>
-         </property>
-         <property name="pageStep">
-          <number>1</number>
-         </property>
-         <property name="value">
-          <number>50</number>
-         </property>
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-        </widget>
-       </item>
-      </layout>
      </widget>
     </item>
    </layout>
@@ -583,7 +590,7 @@
      <x>0</x>
      <y>0</y>
      <width>923</width>
-     <height>21</height>
+     <height>31</height>
     </rect>
    </property>
   </widget>
