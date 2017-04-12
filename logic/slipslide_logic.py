@@ -1442,4 +1442,8 @@ class ConfocalLogic(GenericLogic):
     def set_xy_fine_state(self, state):
         self._scanning_device._XY_fine_scan = state
 
+    def set_stepscan(self, state):
+        self._scanning_device._set_stepscan = state
+
+
 

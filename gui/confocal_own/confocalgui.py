@@ -190,6 +190,7 @@ class ConfocalGui(GUIBase):
 
         self._mw.integrationtime.setValue(self.get_integration_time())
         self._mw.XY_fine_checkbox.stateChanged.connect(self.xy_fine)
+        self._mw.stepscan_checkBox.stateChanged.connect(self.stepper)
 
     def on_deactivate(self, e):
         """ Reverse steps of activation
@@ -452,3 +453,9 @@ class ConfocalGui(GUIBase):
             self._scanning_logic.set_xy_fine_state(True)
         else:
             self._scanning_logic.set_xy_fine_state(False)
+
+    def stepper(self):
+        if self._mw.stepscan_checkBox.isChecked():
+            self._scanning_logic.set_stepscan(True)
+        else:
+            self._scanning_logic.set_stepscan(False)
