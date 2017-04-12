@@ -211,6 +211,12 @@ class Distributer(Base,ConfocalScannerInterfaceAtto):
         else:
             for i in range(len(x_pos)):
                 if i==0:
+                    Attocube.set_target_position(self,'x',x_pos[i])
+                    Attocube.set_target_position(self,'y',y_pos[i])
+                    Attocube.auto_move(self,'x',1)
+                    Attocube.auto_move(self,'y',1)
+
+                
                     rawdata = NIcard.get_counter(self, samples= self._counting_samples)
                 else:
                     if x_pos[i] != x_pos[i-1]:
@@ -222,12 +228,10 @@ class Distributer(Base,ConfocalScannerInterfaceAtto):
                     Attocube.auto_move(self,'y',1)
                     try:
                         while True:
-                            print(i,i,i,i,i)
                             if Attocube.getAxisStatus_target(self,'y') & Attocube.getAxisStatus_target(self,'x'):
                                 #print('wait until taget is reached')
                                 break
-                        #Attocube.auto_move(self,'y',0)
-                        #Attocube.auto_move(self,'x',0)
+
 
                         rawdata = NIcard.get_counter(self, samples=self._counting_samples)
                     except:
@@ -235,7 +239,7 @@ class Distributer(Base,ConfocalScannerInterfaceAtto):
                         return -1
                 line_counts[0,i] = rawdata.sum() / self._counting_samples
 
-            print(np.round(x_pos[0]*1e6, 1), np.round(x_pos[-1]*1e6, 1))
+            #print(np.round(x_pos[0]*1e6, 1), np.round(x_pos[-1]*1e6, 1))
             print(np.round(y_pos[0]*1e6, 1), np.round(y_pos[-1]*1e6, 1))
 
         return line_counts.transpose()
