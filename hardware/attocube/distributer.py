@@ -201,28 +201,22 @@ class Distributer(Base,ConfocalScannerInterfaceAtto):
 
         if self._XY_fine_scan:
             for i in range(len(x_pos)):
-                try:
-                    Attocube.set_fine_position(self, 'x', line_path[0][i])
-                    Attocube.set_fine_position(self, 'y', line_path[1][i])
-                    rawdata = NIcard.get_counter(self, samples=self._counting_samples)
-                    line_counts[0, i] = rawdata.sum() / self._counting_samples
-                except:
-                    return -1
+                print(i)
+                Attocube.set_fine_position(self, 'x', line_path[0][i])
+                Attocube.set_fine_position(self, 'y', line_path[1][i])
+                rawdata = NIcard.get_counter(self, samples=self._counting_samples)
+                line_counts[0, i] = rawdata.sum() / self._counting_samples
+
 
         else:
             for i in range(len(x_pos)):
-                print(i)
-                if i ==0:
+                if i==0:
                     rawdata = NIcard.get_counter(self, samples= self._counting_samples)
                 else:
-                    print(i,i)
                     if x_pos[i] != x_pos[i-1]:
                         Attocube.set_target_position(self,'x',x_pos[i])
-
-                        print(i,i,i)
                     if y_pos[i] != y_pos[i-1]:
                         Attocube.set_target_position(self,'y',y_pos[i])
-                        print(i,i,i,i)
 
                     Attocube.auto_move(self,'x',1)
                     Attocube.auto_move(self,'y',1)
@@ -380,3 +374,11 @@ class Distributer(Base,ConfocalScannerInterfaceAtto):
         :return:
         '''
         return Attocube.get_amplitude(self, axis)
+
+    def position_to_voltage(self, pos):
+        '''
+
+        :param pos:
+        :return:
+        '''
+        return Attocube.position_to_voltage(self,pos=pos)

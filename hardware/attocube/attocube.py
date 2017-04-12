@@ -354,23 +354,25 @@ class Attocube(Base):
         :return: 
         '''
         voltage = self.position_to_voltage(pos)
+        print('voltage = {}'.format(voltage))
         if voltage > 100 or voltage < 0:
             return -1
         else:
             self.anc.setDcVoltage(self.axisNo[axis], voltage)
             return 0
 
-    def position_to_voltage(self,pos):
+    def position_to_voltage(self, pos):
         '''
         
         :param pos: 
         :return: 
         '''
+        print('position = {}'.format(pos))
         if pos > 5 or pos < 0:
             # out of range
             return 0
-        a = 100 / 5 # 5 my per 100 V
+        a = 60 / 5 # 5 my per 70 V
         voltage = a * pos
-        return voltage
+        return int(voltage)
 
 

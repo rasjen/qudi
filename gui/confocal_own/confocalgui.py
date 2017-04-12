@@ -178,7 +178,7 @@ class ConfocalGui(GUIBase):
 
         self._scanning_logic.sigImageXYInitialized.connect(self.adjust_xy_window)
         # Take the default values from logic:
-        self._mw.image_range_InputWidget.setValue(self._scanning_logic.xy_resolution)
+        self._mw.image_range_InputWidget.setValue(self._scanning_logic.image_x_range[1])
         self._mw.xy_res_InputWidget.setValue(self._scanning_logic.xy_resolution)
 
         self._mw.xAmplitudeDoubleSpinBox.setValue(self.get_xAxisAmplitude())
