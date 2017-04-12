@@ -26,6 +26,7 @@ class Distributer(Base,ConfocalScannerInterfaceAtto):
         config = self.getConfiguration()
 
         self._clock_frequency = config['clock_frequency']
+        self._XY_fine_scan = False
 
     def on_deactivate(self, e):
         Attocube.on_deactivate(self)
@@ -198,40 +199,50 @@ class Distributer(Base,ConfocalScannerInterfaceAtto):
 
         rawdata = np.zeros( (len(self.get_channels()), self._counting_samples))
 
-
-        for i in range(len(x_pos)):
-            print(i)
-            if i ==0 :
-                rawdata = NIcard.get_counter(self, samples= self._counting_samples)
-            else:
-                print(i,i)
-                if x_pos[i] != x_pos[i-1]:
-                    Attocube.set_target_position(self,'x',x_pos[i])
-
-                    print(i,i,i)
-                if y_pos[i] != y_pos[i-1]:
-                    Attocube.set_target_position(self,'y',y_pos[i])
-                    print(i,i,i,i)
-
-                Attocube.auto_move(self,'x',1)
-                Attocube.auto_move(self,'y',1)
+        if self._XY_fine_scan:
+            for i in range(len(x_pos)):
                 try:
-                    while True:
-                        print(i,i,i,i,i)
-                        if Attocube.getAxisStatus_target(self,'y') & Attocube.getAxisStatus_target(self,'x'):
-                            #print('wait until taget is reached')
-                            break
-                    #Attocube.auto_move(self,'y',0)
-                    #Attocube.auto_move(self,'x',0)
-
+                    Attocube.set_fine_position(self, 'x', line_path[0][i])
+                    Attocube.set_fine_position(self, 'y', line_path[1][i])
                     rawdata = NIcard.get_counter(self, samples=self._counting_samples)
+                    line_counts[0, i] = rawdata.sum() / self._counting_samples
                 except:
-                    self.log.error('No counter running')
                     return -1
-            line_counts[0,i] = rawdata.sum() / self._counting_samples
 
-        print(np.round(x_pos[0]*1e6, 1), np.round(x_pos[-1]*1e6, 1))
-        print(np.round(y_pos[0]*1e6, 1), np.round(y_pos[-1]*1e6, 1))
+        else:
+            for i in range(len(x_pos)):
+                print(i)
+                if i ==0:
+                    rawdata = NIcard.get_counter(self, samples= self._counting_samples)
+                else:
+                    print(i,i)
+                    if x_pos[i] != x_pos[i-1]:
+                        Attocube.set_target_position(self,'x',x_pos[i])
+
+                        print(i,i,i)
+                    if y_pos[i] != y_pos[i-1]:
+                        Attocube.set_target_position(self,'y',y_pos[i])
+                        print(i,i,i,i)
+
+                    Attocube.auto_move(self,'x',1)
+                    Attocube.auto_move(self,'y',1)
+                    try:
+                        while True:
+                            print(i,i,i,i,i)
+                            if Attocube.getAxisStatus_target(self,'y') & Attocube.getAxisStatus_target(self,'x'):
+                                #print('wait until taget is reached')
+                                break
+                        #Attocube.auto_move(self,'y',0)
+                        #Attocube.auto_move(self,'x',0)
+
+                        rawdata = NIcard.get_counter(self, samples=self._counting_samples)
+                    except:
+                        self.log.error('No counter running')
+                        return -1
+                line_counts[0,i] = rawdata.sum() / self._counting_samples
+
+            print(np.round(x_pos[0]*1e6, 1), np.round(x_pos[-1]*1e6, 1))
+            print(np.round(y_pos[0]*1e6, 1), np.round(y_pos[-1]*1e6, 1))
 
         return line_counts.transpose()
 

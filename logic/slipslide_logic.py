@@ -302,6 +302,10 @@ class ConfocalLogic(GenericLogic):
         self.scan_mode = scanning_modes[1]
         self.position = []
         self.kill_mode = False
+        self.xy_fine = False
+
+
+
     def on_activate(self, e):
         """ Initialisation performed during activation of the module.
 
@@ -472,7 +476,7 @@ class ConfocalLogic(GenericLogic):
                 '({0:.3f},{1:.3f}).'.format(x1, x2))
             return -1
 
-        if self._zscan:
+        elif self._zscan:
             # creates an array of evenly spaced numbers over the interval
             # x1, x2 and the spacing is equal to xy_resolution
             self._X = np.linspace(x1, x2, self.xy_resolution)
@@ -536,6 +540,7 @@ class ConfocalLogic(GenericLogic):
                 self._return_YL = np.linspace(self._YL[-1], self._YL[0], self.return_slowness)
                 self._return_AL = np.zeros(self._return_YL.shape)
             self.sigImageDepthInitialized.emit()
+
         else:
             self._image_vert_axis = self._Y
             # creats an image where each pixel will be [x,y,z,counts]
@@ -1433,3 +1438,8 @@ class ConfocalLogic(GenericLogic):
 
     def get_integration_time(self):
         return self._scanning_device.integration_time
+
+    def set_xy_fine_state(self, state):
+        self._scanning_device._XY_fine_scan = state
+
+

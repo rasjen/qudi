@@ -189,6 +189,7 @@ class ConfocalGui(GUIBase):
         self._mw.zFrequencyDoubleSpinBox.setValue(self.get_zAxisFrequency())
 
         self._mw.integrationtime.setValue(self.get_integration_time())
+        self._mw.XY_fine_checkbox.stateChanged.connect(self.xy_fine)
 
     def on_deactivate(self, e):
         """ Reverse steps of activation
@@ -445,3 +446,9 @@ class ConfocalGui(GUIBase):
 
     def set_integration_time(self):
         self._scanning_logic.set_integration_time(time=self._mw.integrationtime.value())
+
+    def xy_fine(self):
+        if self._mw.XY_fine_checkbox.isChecked():
+            self._scanning_logic.set_xy_fine_state(True)
+        else:
+            self._scanning_logic.set_xy_fine_state(False)
