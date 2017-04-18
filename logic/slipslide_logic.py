@@ -568,8 +568,8 @@ class ConfocalLogic(GenericLogic):
             self.unlock()
             return -1
 
-
-        clock_status = self._scanning_device.set_up_counter()
+        clock_status = self._scanning_device.set_up_scanner_clock(
+            clock_frequency=self._clock_frequency)
 
         if clock_status < 0:
             self._scanning_device.unlock()
@@ -667,7 +667,7 @@ class ConfocalLogic(GenericLogic):
         except Exception as e:
             self.log.exception('Could not close the scanner.')
         try:
-            self._scanning_device.close_counter(scanner=True)
+            self._scanning_device.close_scanner_clock()
         except Exception as e:
             self.log.exception('Could not close the scanner clock.')
         try:
@@ -911,7 +911,7 @@ class ConfocalLogic(GenericLogic):
         elif self.scan_mode == 'snake':
             try:
 
-                if self._scan_counter == 0:
+                if self._scan_counter == -1:
                     # make a line from the current cursor position to
                     # the starting position of the first scan line of the scan
                     lsx = np.linspace(self._current_x, image[self._scan_counter, 0, 0], self.xy_image.shape[0]/2)

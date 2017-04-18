@@ -536,6 +536,7 @@ class NIcard(Base):
         # The clock for the scanner is created on the same principle as it is
         # for the counter. Just to keep consistency, this function is a wrapper
         # around the set_up_clock.
+
         return self.set_up_clock(
             clock_frequency=clock_frequency,
             clock_channel=clock_channel,
@@ -1088,7 +1089,8 @@ class NIcard(Base):
         @return int: error code (0:OK, -1:error)
         """
         a = self._stop_digital_output()
-        c = self.close_counter(scanner=True)
+        c = self.close_counter()
+        self.close_clock()
         return -1 if a < 0 or c < 0 else 0
 
     def close_scanner_clock(self):
@@ -1188,7 +1190,6 @@ class NIcard(Base):
 
         @return int: error code (0:OK, -1:error)
         """
-
         if self._clock_daq_task is None and clock_channel is None:
             self.log.error('No clock running, call set_up_clock before starting the counter.')
             return -1

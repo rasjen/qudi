@@ -28,6 +28,7 @@ class Distributer(Base,ConfocalScannerInterfaceAtto):
         self._clock_frequency = config['clock_frequency']
         self._XY_fine_scan = False
         self._set_stepscan = False
+        self.stop_scan = False
 
     def on_deactivate(self, e):
         Attocube.on_deactivate(self)
@@ -121,6 +122,7 @@ class Distributer(Base,ConfocalScannerInterfaceAtto):
             Attocube.enable_trigger_input(self)
             [self.x_start, self.y_start, self.z_start] = Attocube.get_scanner_position_abs(self)
             Attocube.enable_outputs(self)
+            self.set_up_counter()
             return 0
         except:
             return -1
@@ -186,15 +188,15 @@ class Distributer(Base,ConfocalScannerInterfaceAtto):
 
         @return float[k][m]: the photon counts per second for k pixels with m channels
         """
-
-        Attocube.set_target_range(self,'x', 1000e-9)
-        Attocube.set_target_range(self,'y', 1000e-9)
+        if self.stop_scan == True:
+            return -1
+        Attocube.set_target_range(self,'x', 500e-9)
+        Attocube.set_target_range(self,'y', 500e-9)
 
         self._counting_samples = int(self.integration_time/1000 * self._clock_frequency) #integration time is in ms
-        print(self._counting_samples)
         [x, y, z] = Attocube.get_scanner_position_abs(self)
-        x_pos = np.round(np.array(line_path[0]*1e-6)+self.x_start,6)
-        y_pos = np.round(np.array(line_path[1]*1e-6)+self.y_start,6)
+        x_pos = np.round(np.array(line_path[0]*1e-6)+self.x_start, 6)
+        y_pos = np.round(np.array(line_path[1]*1e-6)+self.y_start, 6)
         line_counts = np.zeros_like([line_path[0],])
 
 
@@ -225,9 +227,12 @@ class Distributer(Base,ConfocalScannerInterfaceAtto):
 
             Attocube.single_step(self, 'y', 'forward')
 
-
-
         else:
+            Attocube.set_amplitude(self, 'x', 10)
+            Attocube.set_amplitude(self, 'y', 10)
+            Attocube.set_frequency(self, 'x', 100)
+            Attocube.set_frequency(self, 'y', 100)
+
             for i in range(len(x_pos)):
                 if i==0:
                     Attocube.set_target_position(self,'x',x_pos[i])
@@ -280,6 +285,8 @@ class Distributer(Base,ConfocalScannerInterfaceAtto):
         """
         try:
             Attocube.disable_outputs(self)
+            NIcard.close_scanner(self)
+            self.stop_scan = True
             return 0
         except:
             return -1

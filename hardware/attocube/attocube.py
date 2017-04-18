@@ -199,12 +199,10 @@ class Attocube(Base):
                 self.log.error('You want to set z out of range: {0:f}.'.format(z))
                 return -1
             self._current_position_abs[2] = np.float(z)
-        print(self._current_position_abs*1e6)
         try:
             for i, label in enumerate(self.get_scanner_axes()):
                 self.set_target_position(self.axisNo[label], self._current_position_abs[i])
                 self.auto_move(label, 1)
-                print(i)
         except:
             return -1
         return 0

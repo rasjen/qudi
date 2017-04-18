@@ -32,7 +32,7 @@ import os
 from gui.guibase import GUIBase
 from gui.colordefs import QudiPalettePale as palette
 from gui.guiutils import ColorBar
-from gui.colordefs import ColorScaleInferno
+from gui.colordefs import ColorScaleViridis, ColorScaleInferno
 
 class ConfocalMainWindow(QtWidgets.QMainWindow):
 
@@ -126,7 +126,7 @@ class ConfocalGui(GUIBase):
         self._mw.xyScanView.setLabel('bottom', 'X position', units='μm')
         self._mw.xyScanView.setLabel('left', 'Y position', units='μm')
 
-        self.my_colors = ColorScaleInferno()
+        self.my_colors = ColorScaleViridis()
         self.xy_cb = ColorBar(self.my_colors.cmap_normed, width=100, cb_min=0, cb_max=100)
         self.xy_image_orientation = np.array([0, 1, 2, -1], int)
         self.xy_image.setLookupTable(self.my_colors.lut)
