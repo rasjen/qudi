@@ -27,6 +27,7 @@ class Distributer(Base,ConfocalScannerInterfaceAtto):
 
         self._clock_frequency = config['clock_frequency']
         self._XY_fine_scan = False
+        self._set_stepscan = False
 
     def on_deactivate(self, e):
         Attocube.on_deactivate(self)
@@ -201,11 +202,29 @@ class Distributer(Base,ConfocalScannerInterfaceAtto):
 
         if self._XY_fine_scan:
             for i in range(len(x_pos)):
-                print(i)
                 Attocube.set_fine_position(self, 'x', line_path[0][i])
                 Attocube.set_fine_position(self, 'y', line_path[1][i])
                 rawdata = NIcard.get_counter(self, samples=self._counting_samples)
                 line_counts[0, i] = rawdata.sum() / self._counting_samples
+
+
+        elif self._set_stepscan:
+            for i in range(len(x_pos)):
+
+                if i == 0:
+                    rawdata = NIcard.get_counter(self, samples=self._counting_samples)
+                elif x_pos[i] > x_pos[i - 1]:
+                    Attocube.single_step(self, 'x', 'forward')
+                    rawdata = NIcard.get_counter(self, samples=self._counting_samples)
+                else:
+                    Attocube.single_step(self, 'x', 'backward')
+                    rawdata = NIcard.get_counter(self, samples=self._counting_samples)
+
+
+                line_counts[0, i] = rawdata.sum() / self._counting_samples
+
+            Attocube.single_step(self, 'y', 'forward')
+
 
 
         else:
