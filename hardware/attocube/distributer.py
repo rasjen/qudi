@@ -415,3 +415,21 @@ class Distributer(Base,ConfocalScannerInterfaceAtto):
         :return:
         '''
         return Attocube.position_to_voltage(self,pos=pos)
+
+    def set_target_position(self,axis,position):
+        '''
+
+        @param axis:
+        @param position:
+        @return:
+        '''
+        Attocube.set_target_position(self, axis=axis, position=position)
+
+    def auto_move(self, label, enable):
+        '''
+
+        @param label:
+        @param enable:
+        @return:
+        '''
+        Attocube.auto_move(self,axis=label,enable=enable)

@@ -201,9 +201,10 @@ class Attocube(Base):
             self._current_position_abs[2] = np.float(z)
         try:
             for i, label in enumerate(self.get_scanner_axes()):
-                self.set_target_position(self.axisNo[label], self._current_position_abs[i])
+                self.set_target_position(axis=label, position=self._current_position_abs[i])
                 self.auto_move(label, 1)
         except:
+            self.log.error('did not move')
             return -1
         return 0
 
@@ -303,7 +304,6 @@ class Attocube(Base):
         '''
         for i, label in enumerate(self.get_scanner_axes()):
             self.anc.configureExtTrigger(self.axisNo[label], 2)
-
 
 
     def set_target_position(self, axis, position):

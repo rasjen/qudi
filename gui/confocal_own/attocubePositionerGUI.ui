@@ -639,7 +639,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="set_position_pushButton">
+          <widget class="QPushButton" name="setposition_pushButton">
            <property name="text">
             <string>Set Position</string>
            </property>
@@ -675,9 +675,7 @@
       <zorder>xpositionSpinBox</zorder>
       <zorder>zpositionSpinBox</zorder>
       <zorder>ypositionSpinBox</zorder>
-      <zorder></zorder>
       <zorder>label_4</zorder>
-      <zorder>verticalLayoutWidget</zorder>
      </widget>
     </item>
    </layout>

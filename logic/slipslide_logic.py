@@ -366,7 +366,7 @@ class ConfocalLogic(GenericLogic):
         self.signal_start_scanning.connect(self.start_scanner, QtCore.Qt.QueuedConnection)
         self.signal_continue_scanning.connect(self.continue_scanner, QtCore.Qt.QueuedConnection)
 
-        self._change_position('activation')
+        #self._change_position('activation')
 
     def on_deactivate(self, e):
         """ Reverse steps of activation
@@ -1444,6 +1444,12 @@ class ConfocalLogic(GenericLogic):
 
     def set_stepscan(self, state):
         self._scanning_device._set_stepscan = state
+
+    def get_position_abs(self):
+        return self._scanning_device.get_scanner_position_abs()
+
+    def set_position_abs(self, x, y, z):
+        self._scanning_device.scanner_set_position_abs(x, y, z)
 
 
 

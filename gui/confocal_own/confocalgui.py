@@ -228,9 +228,15 @@ class ConfocalGui(GUIBase):
         self._mw.yFrequencyDoubleSpinBox.setValue(self.get_yAxisFrequency())
         self._mw.zFrequencyDoubleSpinBox.setValue(self.get_zAxisFrequency())
 
+        self._mw.getposition_pushButton.clicked.connect(self.update_position_abs)
+        self._mw.setposition_pushButton.clicked.connect(self.set_position_abs)
+
+
         self._mw.integrationtime.setValue(self.get_integration_time())
         self._mw.XY_fine_checkbox.stateChanged.connect(self.xy_fine)
         self._mw.stepscan_checkBox.stateChanged.connect(self.stepper)
+
+        self.update_position_abs()
 
     def on_deactivate(self, e):
         """ Reverse steps of activation
@@ -499,3 +505,16 @@ class ConfocalGui(GUIBase):
             self._scanning_logic.set_stepscan(True)
         else:
             self._scanning_logic.set_stepscan(False)
+
+    def update_position_abs(self):
+        [x,y,z] = self._scanning_logic.get_position_abs()
+        self._mw.xpositionSpinBox.setValue(x*1e6)
+        self._mw.ypositionSpinBox.setValue(y*1e6)
+        self._mw.zpositionSpinBox.setValue(z*1e6)
+
+    def set_position_abs(self):
+        x = self._mw.xpositionSpinBox.value()*1e-6
+        y = self._mw.ypositionSpinBox.value()*1e-6
+        z = self._mw.zpositionSpinBox.value()*1e-6
+        self._scanning_logic.set_position_abs(x,y,z)
+
