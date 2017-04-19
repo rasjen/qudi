@@ -190,8 +190,8 @@ class Distributer(Base,ConfocalScannerInterfaceAtto):
         """
         if self.stop_scan == True:
             return -1
-        Attocube.set_target_range(self,'x', 500e-9)
-        Attocube.set_target_range(self,'y', 500e-9)
+        Attocube.set_target_range(self,'x', 1000e-9)
+        Attocube.set_target_range(self,'y', 1000e-9)
 
         self._counting_samples = int(self.integration_time/1000 * self._clock_frequency) #integration time is in ms
         [x, y, z] = Attocube.get_scanner_position_abs(self)
@@ -211,6 +211,11 @@ class Distributer(Base,ConfocalScannerInterfaceAtto):
 
 
         elif self._set_stepscan:
+            Attocube.set_amplitude(self, 'x', 30)
+            Attocube.set_amplitude(self, 'y', 30)
+            Attocube.set_frequency(self, 'x', 1000)
+            Attocube.set_frequency(self, 'y', 1000)
+
             for i in range(len(x_pos)):
 
                 if i == 0:
@@ -218,20 +223,18 @@ class Distributer(Base,ConfocalScannerInterfaceAtto):
                 elif x_pos[i] > x_pos[i - 1]:
                     Attocube.single_step(self, 'x', 'forward')
                     rawdata = NIcard.get_counter(self, samples=self._counting_samples)
+                    print('forward', x_pos[i] - x_pos[i - 1])
                 else:
                     Attocube.single_step(self, 'x', 'backward')
                     rawdata = NIcard.get_counter(self, samples=self._counting_samples)
-
+                    print('backward', x_pos[i] - x_pos[i - 1])
 
                 line_counts[0, i] = rawdata.sum() / self._counting_samples
 
             Attocube.single_step(self, 'y', 'forward')
 
         else:
-            Attocube.set_amplitude(self, 'x', 10)
-            Attocube.set_amplitude(self, 'y', 10)
-            Attocube.set_frequency(self, 'x', 100)
-            Attocube.set_frequency(self, 'y', 100)
+
 
             for i in range(len(x_pos)):
                 if i==0:

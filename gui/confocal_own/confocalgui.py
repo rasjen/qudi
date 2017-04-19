@@ -34,6 +34,32 @@ from gui.colordefs import QudiPalettePale as palette
 from gui.guiutils import ColorBar
 from gui.colordefs import ColorScaleViridis, ColorScaleInferno
 
+class CrossLine(pg.InfiniteLine):
+
+    """ Construct one line for the Crosshair in the plot.
+
+    @param float pos: optional parameter to set the position
+    @param float angle: optional parameter to set the angle of the line
+    @param dict pen: Configure the pen.
+
+    For additional options consider the documentation of pyqtgraph.InfiniteLine
+    """
+
+    def __init__(self, **args):
+        pg.InfiniteLine.__init__(self, **args)
+#        self.setPen(QtGui.QPen(QtGui.QColor(255, 0, 255),0.5))
+
+    def adjust(self, extroi):
+        """
+        Run this function to adjust the position of the Crosshair-Line
+
+        @param object extroi: external roi object from pyqtgraph
+        """
+        if self.angle == 0:
+            self.setValue(extroi.pos()[1] + extroi.size()[1] * 0.5)
+        if self.angle == 90:
+            self.setValue(extroi.pos()[0] + extroi.size()[0] * 0.5)
+
 class ConfocalMainWindow(QtWidgets.QMainWindow):
 
     """ Create the Mainwindow based on the corresponding *.ui file. """
@@ -112,6 +138,20 @@ class ConfocalGui(GUIBase):
         # on the widget)
         self._mw.xyScanView.addItem(self.xy_image)
 
+        ini_pos_x_crosshair = len(arr01) / 2
+        ini_pos_y_crosshair = len(arr01) / 2
+
+        # create horizontal and vertical line as a crosshair in xy image:
+        self.hline_xy = CrossLine(pos=len(arr01) * 0.5,
+                                  angle=0, pen={'color': palette.green, 'width': 1})
+        self.vline_xy = CrossLine(pos=len(arr01) * 0.5,
+                                  angle=90, pen={'color': palette.green, 'width': 1})
+
+
+
+        # add the configured crosshair to the xy Widget
+        #self._mw.xyScanView.addItem(self.hline_xy)
+        #self._mw.xyScanView.addItem(self.vline_xy)
 
         # set up scan line plot
         #sc = self._scanning_logic._scan_counter

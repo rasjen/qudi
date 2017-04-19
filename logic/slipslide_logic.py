@@ -942,9 +942,9 @@ class ConfocalLogic(GenericLogic):
                     lsy = image[self._scan_counter, :, 1]
                     lsz = image[self._scan_counter, :, 2]
                 elif self._scan_counter % 2 == 1:
-                    lsx = image[self._scan_counter, :, 0]
-                    lsy = image[self._scan_counter, :, 1]
-                    lsz = image[self._scan_counter, :, 2]
+                    lsx = image[self._scan_counter, ::-1, 0]
+                    lsy = image[self._scan_counter, ::-1, 1]
+                    lsz = image[self._scan_counter, ::-1, 2]
                 else:
                     self.log.info('testing forward and backward motion went wrong')
 
@@ -973,7 +973,7 @@ class ConfocalLogic(GenericLogic):
                     if self._scan_counter % 2 == 0:
                         self.xy_image[self._scan_counter, :, 3:3 + s_ch] = line_counts
                     else:
-                        self.xy_image[self._scan_counter, :, 3:3 + s_ch] = line_counts#[::-1]
+                        self.xy_image[self._scan_counter, :, 3:3 + s_ch] = line_counts[::-1]
 
 
                     self.signal_xy_image_updated.emit()
