@@ -190,17 +190,22 @@ class Distributer(Base,ConfocalScannerInterfaceAtto):
         """
         if self.stop_scan == True:
             return -1
-        Attocube.set_target_range(self,'x', 1000e-9)
-        Attocube.set_target_range(self,'y', 1000e-9)
+        Attocube.set_target_range(self,'x', 500e-9)
+        Attocube.set_target_range(self,'y', 500e-9)
 
         self._counting_samples = int(self.integration_time/1000 * self._clock_frequency) #integration time is in ms
         [x, y, z] = Attocube.get_scanner_position_abs(self)
-        x_pos = np.round(np.array(line_path[0]*1e-6)+self.x_start, 6)
-        y_pos = np.round(np.array(line_path[1]*1e-6)+self.y_start, 6)
+        x_pos = np.round(np.array(line_path[0]*1e-6)+self.x_start, 7)
+        y_pos = np.round(np.array(line_path[1]*1e-6)+self.y_start, 7)
+        #y_pos = np.round(np.zeros_like(line_path[1])+self.y_start, 7)
+
         line_counts = np.zeros_like([line_path[0],])
 
 
         rawdata = np.zeros( (len(self.get_channels()), self._counting_samples))
+
+
+
 
         if self._XY_fine_scan:
             for i in range(len(x_pos)):
@@ -243,7 +248,10 @@ class Distributer(Base,ConfocalScannerInterfaceAtto):
                     Attocube.auto_move(self,'x',1)
                     Attocube.auto_move(self,'y',1)
 
-                
+                    while True:
+                        if Attocube.getAxisStatus_target(self,'x'):
+                            break
+
                     rawdata = NIcard.get_counter(self, samples= self._counting_samples)
                 else:
                     if x_pos[i] != x_pos[i-1]:
