@@ -91,3 +91,4 @@ config/rasmus_setup/app_status/status-ScanLogic_logic_sliplslidelogic-000010.npz
 config/rasmus_setup/app_status/status-ScanLogic_logic_sliplslidelogic.cfg
 tools/.ipynb_checkpoints/Attocube step test-checkpoint.ipynb
 config/rasmus_setup/app_status/status-ConfocalLogic_logic_scannerlogic-000011.npz
+*.npz

@@ -27,6 +27,7 @@ from qtpy import uic
 import pyqtgraph as pg
 import numpy as np
 import time
+import datetime
 import os
 
 from gui.guibase import GUIBase
@@ -237,6 +238,10 @@ class ConfocalGui(GUIBase):
         self._mw.stepscan_checkBox.stateChanged.connect(self.stepper)
 
         self.update_position_abs()
+
+        self._mw.savexy_pushButton(self.save_xy)
+
+
 
     def on_deactivate(self, e):
         """ Reverse steps of activation
@@ -517,4 +522,17 @@ class ConfocalGui(GUIBase):
         y = self._mw.ypositionSpinBox.value()*1e-6
         z = self._mw.zpositionSpinBox.value()*1e-6
         self._scanning_logic.set_position_abs(x,y,z)
+
+    def save_xy(self):
+
+        path = ''
+        timestamp = datetime.datetime.now()
+        filelabel = self._mw.savelabel.toPlainText()
+        filename = timestamp.strftime('%Y%m%d-%H%M-%S' + '_' + filelabel + '.txt')
+
+        xy_image_data = np.rot90(
+            self._scanning_logic.xy_image[:, :, :].transpose(),
+            self.xy_image_orientation[0])
+
+        np.savetxt(filename, xy_image_data)
 
