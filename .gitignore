@@ -92,3 +92,24 @@ config/rasmus_setup/app_status/status-ScanLogic_logic_sliplslidelogic.cfg
 tools/.ipynb_checkpoints/Attocube step test-checkpoint.ipynb
 config/rasmus_setup/app_status/status-ConfocalLogic_logic_scannerlogic-000011.npz
 *.npz
+20170426-1356-49_test.txt
+20170426-141012_test.txt
+20170426-220800_Membrane.txt
+20170427-055334_Membrane.txt
+20170427-142323_coparaison.txt
+20170428-091637_.txt
+20170428-150103_focused.txt
+20170428-181614_diamondStructureVisible.txt
+Plotting xy.py
+config/rasmus_setup/app_status/status-CounterLogic_logic_counterlogic.cfg
+config/rasmus_setup/app_status/status-CounterLogic_logic_gatedcounterlogic.cfg
+config/rasmus_setup/app_status/status-ODMRLogic_logic_odmrlogic.cfg
+config/rasmus_setup/app_status/status-PIDLogic_logic_pidlogic.cfg
+config/rasmus_setup/app_status/status-PulseAnalysisLogic_logic_pulseanalysislogic.cfg
+config/rasmus_setup/app_status/status-PulseExtractionLogic_logic_pulseextractionlogic.cfg
+config/rasmus_setup/app_status/status-PulsedMasterLogic_logic_pulsedmasterlogic.cfg
+config/rasmus_setup/app_status/status-PulsedMeasurementLogic_logic_pulsedmeasurementlogic.cfg
+config/rasmus_setup/app_status/status-SequenceGeneratorLogic_logic_sequencegeneratorlogic.cfg
+config/rasmus_setup/app_status/status-SoftPIDController_logic_softpid.cfg
+config/rasmus_setup/app_status/status-TaskGui_gui_taskrunner.cfg
+scan1.npy
