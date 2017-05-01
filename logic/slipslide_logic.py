@@ -306,7 +306,7 @@ class ConfocalLogic(GenericLogic):
 
 
 
-    def on_activate(self, e):
+    def on_activate(self):
         """ Initialisation performed during activation of the module.
 
         @param e: error code
@@ -324,6 +324,7 @@ class ConfocalLogic(GenericLogic):
             self.return_slowness = self._statusVariables['return_slowness']
         else:
             self.return_slowness = 50
+
         # Reads in the maximal scanning range. The unit of that scan range is micrometer!
         self.x_range = self._scanning_device.get_position_range()[0]
         self.y_range = self._scanning_device.get_position_range()[1]
@@ -332,21 +333,21 @@ class ConfocalLogic(GenericLogic):
         # restore here ...
         self.history = []
         if 'max_history_length' in self._statusVariables:
-            self.max_history_length = self._statusVariables['max_history_length']
-            for i in reversed(range(1, self.max_history_length)):
-                try:
-                    new_history_item = ConfocalHistoryEntry(self)
-                    new_history_item.deserialize(
-                        self._statusVariables['history_{0}'.format(i)])
-                    self.history.append(new_history_item)
-                except KeyError:
-                    pass
-                except OldConfigFileError:
-                    self.log.warning(
-                        'Old style config file detected. History {0} ignored.'.format(i))
-                except:
-                    self.log.warning(
-                        'Restoring history {0} failed.'.format(i))
+                self.max_history_length = self._statusVariables['max_history_length']
+                for i in reversed(range(1, self.max_history_length)):
+                    try:
+                        new_history_item = ConfocalHistoryEntry(self)
+                        new_history_item.deserialize(
+                            self._statusVariables['history_{0}'.format(i)])
+                        self.history.append(new_history_item)
+                    except KeyError:
+                        pass
+                    except OldConfigFileError:
+                        self.log.warning(
+                            'Old style config file detected. History {0} ignored.'.format(i))
+                    except:
+                        self.log.warning(
+                                'Restoring history {0} failed.'.format(i))
         else:
             self.max_history_length = 10
         try:
@@ -368,10 +369,8 @@ class ConfocalLogic(GenericLogic):
 
         #self._change_position('activation')
 
-    def on_deactivate(self, e):
+    def on_deactivate(self):
         """ Reverse steps of activation
-
-        @param e: error code
 
         @return int: error code (0:OK, -1:error)
         """
@@ -407,7 +406,7 @@ class ConfocalLogic(GenericLogic):
         @return int: error code (0:OK, -1:error)
         """
         self._clock_frequency = int(clock_frequency)
-        # checks if scanner is still running
+        #checks if scanner is still running
         if self.getState() == 'locked':
             return -1
         else:
@@ -1018,10 +1017,8 @@ class ConfocalLogic(GenericLogic):
 
         @param: list percentile_range (optional) The percentile range [min, max] of the color scale
         """
-        save_time = datetime.now()
-
-        filepath = self._save_logic.get_path_for_module(module_name='Confocal')
-
+        filepath = self._save_logic.get_path_for_module('Confocal')
+        timestamp = datetime.datetime.now()
         # Prepare the metadata parameters (common to both saved files):
         parameters = OrderedDict()
 
@@ -1072,17 +1069,14 @@ class ConfocalLogic(GenericLogic):
                        'of entries where the Signal is in counts/s:'] = self.xy_image[:, :, 3 + n]
 
             filelabel = 'confocal_xy_image_{0}'.format(ch.replace('/', ''))
-            self._save_logic.save_data(
-                image_data,
-                filepath,
-                parameters=parameters,
-                filelabel=filelabel,
-                as_text=True,
-                timestamp=save_time,
-                precision=':.3e',
-                plotfig=figs[ch]
-            )
-            plt.close(figs[ch])
+            self._save_logic.save_data(image_data,
+                                       filepath=filepath,
+                                       timestamp=timestamp,
+                                       parameters=parameters,
+                                       filelabel=filelabel,
+                                       fmt='%.6e',
+                                       delimiter='\t',
+                                       plotfig=figs[ch])
 
         # prepare the full raw data in an OrderedDict:
         data = OrderedDict()
@@ -1095,18 +1089,17 @@ class ConfocalLogic(GenericLogic):
 
         # Save the raw data to file
         filelabel = 'confocal_xy_data'
-        self._save_logic.save_data(
-            data,
-            filepath,
-            parameters=parameters,
-            filelabel=filelabel,
-            as_text=True,
-            precision=':.3e',
-            timestamp=save_time
-        )
+        self._save_logic.save_data(data,
+                                   filepath=filepath,
+                                   timestamp=timestamp,
+                                   parameters=parameters,
+                                   filelabel=filelabel,
+                                   fmt='%.6e',
+                                   delimiter='\t')
 
-        self.log.debug('Confocal Image saved to:\n{0}'.format(filepath))
+        self.log.debug('Confocal Image saved.')
         self.signal_xy_data_saved.emit()
+        return
 
     def save_depth_data(self, colorscale_range=None, percentile_range=None):
         """ Save the current confocal depth data to file.
@@ -1116,10 +1109,8 @@ class ConfocalLogic(GenericLogic):
 
         The second file saves the full raw data with x, y, z, and counts at every pixel.
         """
-        save_time = datetime.now()
-
-        filepath = self._save_logic.get_path_for_module(module_name='Confocal')
-
+        filepath = self._save_logic.get_path_for_module('Confocal')
+        timestamp = datetime.datetime.now()
         # Prepare the metadata parameters (common to both saved files):
         parameters = OrderedDict()
 
@@ -1155,17 +1146,13 @@ class ConfocalLogic(GenericLogic):
             self.image_z_range[1]
         ]
 
-        figs = {
-            ch: self.draw_figure(
-                data=self.depth_image[:, :, 3 + n],
-                image_extent=image_extent,
-                scan_axis=axes,
-                cbar_range=colorscale_range,
-                percentile_range=percentile_range,
-                crosshair_pos=crosshair_pos
-            )
-            for n, ch in enumerate(self.get_scanner_count_channels())
-            }
+        figs = {ch: self.draw_figure(data=self.depth_image[:, :, 3 + n],
+                                     image_extent=image_extent,
+                                     scan_axis=axes,
+                                     cbar_range=colorscale_range,
+                                     percentile_range=percentile_range,
+                                     crosshair_pos=crosshair_pos)
+                for n, ch in enumerate(self.get_scanner_count_channels())}
 
         # Save the image data and figure
         for n, ch in enumerate(self.get_scanner_count_channels()):
@@ -1177,17 +1164,14 @@ class ConfocalLogic(GenericLogic):
                        'of entries where the Signal is in counts/s:'] = self.depth_image[:, :, 3 + n]
 
             filelabel = 'confocal_depth_image_{0}'.format(ch.replace('/', ''))
-            self._save_logic.save_data(
-                image_data,
-                filepath,
-                parameters=parameters,
-                filelabel=filelabel,
-                as_text=True,
-                timestamp=save_time,
-                precision=':.3e',
-                plotfig=figs[ch]
-            )
-            plt.close(figs[ch])
+            self._save_logic.save_data(image_data,
+                                       filepath=filepath,
+                                       timestamp=timestamp,
+                                       parameters=parameters,
+                                       filelabel=filelabel,
+                                       fmt='%.6e',
+                                       delimiter='\t',
+                                       plotfig=figs[ch])
 
         # prepare the full raw data in an OrderedDict:
         data = OrderedDict()
@@ -1200,21 +1184,19 @@ class ConfocalLogic(GenericLogic):
 
         # Save the raw data to file
         filelabel = 'confocal_depth_data'
-        self._save_logic.save_data(
-            data,
-            filepath,
-            parameters=parameters,
-            filelabel=filelabel,
-            as_text=True,
-            precision=':.3e',
-            timestamp=save_time
-        )
+        self._save_logic.save_data(data,
+                                   filepath=filepath,
+                                   timestamp=timestamp,
+                                   parameters=parameters,
+                                   filelabel=filelabel,
+                                   fmt='%.6e',
+                                   delimiter='\t')
 
-        self.log.debug('Confocal Image saved to:\n{0}'.format(filepath))
+        self.log.debug('Confocal Image saved.')
         self.signal_depth_data_saved.emit()
+        return
 
-    def draw_figure(self, data, image_extent, scan_axis=None, cbar_range=None, percentile_range=None,
-                    crosshair_pos=None):
+    def draw_figure(self, data, image_extent, scan_axis=None, cbar_range=None, percentile_range=None,  crosshair_pos=None):
         """ Create a 2-D color map figure of the scan image.
 
         @param: array data: The NxM array of count values from a scan with NxM pixels.
@@ -1253,6 +1235,7 @@ class ConfocalLogic(GenericLogic):
 
         c_prefix = prefix[prefix_count]
 
+
         # Scale axes values using SI prefix
         axes_prefix = ['', 'm', r'$\mathrm{\mu}$', 'n']
         x_prefix_count = 0
@@ -1279,7 +1262,7 @@ class ConfocalLogic(GenericLogic):
 
         # Create image plot
         cfimage = ax.imshow(image_data,
-                            cmap=plt.get_cmap('inferno'),  # reference the right place in qd
+                            cmap=plt.get_cmap('inferno'), # reference the right place in qd
                             origin="lower",
                             vmin=draw_cb_range[0],
                             vmax=draw_cb_range[1],
@@ -1307,19 +1290,19 @@ class ConfocalLogic(GenericLogic):
                 ax.transAxes,
                 ax.transData)
 
-            ax.annotate('', xy=(crosshair_pos[0] * np.power(1000, x_prefix_count), 0),
-                        xytext=(crosshair_pos[0] * np.power(1000, x_prefix_count), -0.01), xycoords=trans_xmark,
+            ax.annotate('', xy=(crosshair_pos[0]*np.power(1000,x_prefix_count), 0),
+                        xytext=(crosshair_pos[0]*np.power(1000,x_prefix_count), -0.01), xycoords=trans_xmark,
                         arrowprops=dict(facecolor='#17becf', shrink=0.05),
                         )
 
-            ax.annotate('', xy=(0, crosshair_pos[1] * np.power(1000, y_prefix_count)),
-                        xytext=(-0.01, crosshair_pos[1] * np.power(1000, y_prefix_count)), xycoords=trans_ymark,
+            ax.annotate('', xy=(0, crosshair_pos[1]*np.power(1000,y_prefix_count)),
+                        xytext=(-0.01, crosshair_pos[1]*np.power(1000,y_prefix_count)), xycoords=trans_ymark,
                         arrowprops=dict(facecolor='#17becf', shrink=0.05),
                         )
             print(crosshair_pos, x_prefix_count, y_prefix_count)
 
         # Draw the colorbar
-        cbar = plt.colorbar(cfimage, shrink=0.8)  # , fraction=0.046, pad=0.08, shrink=0.75)
+        cbar = plt.colorbar(cfimage, shrink=0.8)#, fraction=0.046, pad=0.08, shrink=0.75)
         cbar.set_label('Fluorescence (' + c_prefix + 'c/s)')
 
         # remove ticks from colorbar for cleaner image
@@ -1382,12 +1365,18 @@ class ConfocalLogic(GenericLogic):
 
     @QtCore.Slot(bool)
     def set_tilt_correction(self, enabled):
+        """ Set tilt correction in tilt interfuse.
+
+            @param bool enabled: whether we want to use tilt correction
+        """
         self._scanning_device.tiltcorrection = enabled
         self._scanning_device.tilt_reference_x = self._scanning_device.get_scanner_position()[0]
         self._scanning_device.tilt_reference_y = self._scanning_device.get_scanner_position()[1]
         self.signal_tilt_correction_active.emit(enabled)
 
     def history_forward(self):
+        """ Move forward in confocal image history.
+        """
         if self.history_index < len(self.history) - 1:
             self.history_index += 1
             self.history[self.history_index].restore(self)
@@ -1400,6 +1389,8 @@ class ConfocalLogic(GenericLogic):
             self.signal_history_event.emit()
 
     def history_back(self):
+        """ Move backwards in confocal image history.
+        """
         if self.history_index > 0:
             self.history_index -= 1
             self.history[self.history_index].restore(self)
