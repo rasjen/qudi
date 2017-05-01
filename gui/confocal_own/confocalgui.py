@@ -99,17 +99,8 @@ class ConfocalGui(GUIBase):
             self.log.info('{0}: {1}'.format(key, config[key]))
 
 
-    def on_activate(self, e=None):
+    def on_activate(self):
         """ Initializes all needed UI files and establishes the connectors.
-
-        @param object e: Fysom.event object from Fysom class.
-                         An object created by the state machine module Fysom,
-                         which is connected to a specific event (have a look in
-                         the Base Class). This object contains the passed event,
-                         the state before the event happened and the destination
-                         of the state which should be reached after the event
-                         had happened.
-
         This method executes the all the inits for the differnt GUIs and passes
         the event argument from fysom to the methods.
         """
@@ -243,11 +234,8 @@ class ConfocalGui(GUIBase):
 
 
 
-    def on_deactivate(self, e):
+    def on_deactivate(self):
         """ Reverse steps of activation
-
-        @param object e: Fysom.event object from Fysom class. A more detailed
-                         explanation can be found in the method initUI.
 
         @return int: error code (0:OK, -1:error)
         """
@@ -352,7 +340,8 @@ class ConfocalGui(GUIBase):
     def kill_scan_clicked(self):
         """ Manages what happens if the xy scan is killed. """
         #self.disable_scan_actions()
-        self._scanning_logic.kill_scanner()
+        if self._scanning_logic.getState() == 'locked':
+            self._scanning_logic.stop_scanning()
 
     def refresh_xy_image(self):
         """ Update the current XY image from the logic.

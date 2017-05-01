@@ -810,6 +810,7 @@ class ConfocalLogic(GenericLogic):
                         start_line = np.vstack(
                             [lsx, lsy, lsz, np.ones(lsx.shape) * self._current_a])
                     # move to the start position of the scan, counts are thrown away
+
                     start_line_counts = self._scanning_device.scan_line(start_line)
                     if np.any(start_line_counts == -1):
                         self.stopRequested = True

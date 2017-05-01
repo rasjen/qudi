@@ -35,7 +35,7 @@ class AttocubeScannerInterfuse(Base, ConfocalScannerInterfaceAtto):
     _modtype = 'interfuse'
     # connectors
     _connectors = {
-        'confocalscanner': 'ConfocalScannerInterfaceAtto',
+        'confocalscanner1': 'ConfocalScannerInterfaceAtto',
         'counter1': 'SlowCounterInterface'
     }
 
@@ -69,7 +69,7 @@ class AttocubeScannerInterfuse(Base, ConfocalScannerInterfaceAtto):
         """ Initialisation performed during activation of the module.
         """
 
-        self._atto_scanner_hw = self.get_connector('confocalscanner')
+        self._atto_scanner_hw = self.get_connector('confocalscanner1')
         self._counter = self.get_connector('counter1')
 
 
@@ -92,6 +92,7 @@ class AttocubeScannerInterfuse(Base, ConfocalScannerInterfaceAtto):
 
         @return float [4][2]: array of 4 ranges with an array containing lower and upper limit
         """
+
         return self._atto_scanner_hw.get_position_range()
 
     def set_position_range(self, myrange=None):
@@ -133,7 +134,7 @@ class AttocubeScannerInterfuse(Base, ConfocalScannerInterfaceAtto):
         @return int: error code (0:OK, -1:error)
         """
 
-        return self._counter.set_up_scanner_clock(self, clock_frequency=clock_frequency, clock_channel=clock_channel)
+        return self._counter.set_up_clock(clock_frequency=clock_frequency, clock_channel=clock_channel)
 
     def set_up_scanner(self, counter_channel = None, photon_source = None, clock_channel = None, scanner_ao_channels = None):
         """ Configures the actual scanner with a given clock.
@@ -149,8 +150,8 @@ class AttocubeScannerInterfuse(Base, ConfocalScannerInterfaceAtto):
         """
         try:
             #self._atto_scanner_hw.enable_trigger_input(self)
-            [self.x_start, self.y_start, self.z_start] = self._atto_scanner_hw.get_scanner_position_abs(self)
-            self._atto_scanner_hw.enable_outputs(self)
+            [self.x_start, self.y_start, self.z_start] = self._atto_scanner_hw.get_scanner_position_abs()
+            self._atto_scanner_hw.enable_outputs()
             self._counter.set_up_counter()
             return 0
         except:
@@ -167,7 +168,7 @@ class AttocubeScannerInterfuse(Base, ConfocalScannerInterfaceAtto):
         :return:
         '''
 
-        return self._counter.get_scanner_count_channels()
+        return self._counter.get_counter_channels()
 
     def scanner_set_position(self, x=None, y=None, z=None):
         """Move stage to x, y, z, a (where a is the fourth voltage channel).
@@ -210,11 +211,9 @@ class AttocubeScannerInterfuse(Base, ConfocalScannerInterfaceAtto):
         @return float[]: the photon counts per second
         """
 
-        if self.getState() == 'locked':
-            self.log.error('A scan_line is already running, close this one first.')
-            return -1
-
-        self.lock()
+        # if len(self._scanner_counter_daq_tasks) < 1:
+        #     self.log.error('No counter is running, cannot scan a line without one.')
+        #     return np.array([[-1.]])
 
         if not isinstance( line_path, (frozenset, list, set, tuple, np.ndarray, ) ):
             self.log.error('Given voltage list is no array type.')
@@ -223,8 +222,8 @@ class AttocubeScannerInterfuse(Base, ConfocalScannerInterfaceAtto):
         if self.stop_scan == True:
             return -1
 
-        self._atto_scanner_hw.set_target_range(self,'x', 500e-9)
-        self._atto_scanner_hw.set_target_range(self,'y', 500e-9)
+        self._atto_scanner_hw.set_target_range('x', 500e-9)
+        self._atto_scanner_hw.set_target_range('y', 500e-9)
 
         self._counting_samples = int(self.integration_time/1000 * self._clock_frequency) #integration time is in ms
         x_pos = np.round(np.array(line_path[0]*1e-6)+self.x_start, 7)
@@ -235,34 +234,34 @@ class AttocubeScannerInterfuse(Base, ConfocalScannerInterfaceAtto):
 
         if self._XY_fine_scan:
             for i in range(len(x_pos)):
-                self._atto_scanner_hw.set_fine_position(self, 'x', line_path[0][i])
-                self._atto_scanner_hw.set_fine_position(self, 'y', line_path[1][i])
-                rawdata = self._counter.get_counter(self, samples=self._counting_samples)
+                self._atto_scanner_hw.set_fine_position('x', line_path[0][i])
+                self._atto_scanner_hw.set_fine_position('y', line_path[1][i])
+                rawdata = self._counter.get_counter(samples=self._counting_samples)
                 line_counts[0, i] = rawdata.sum() / self._counting_samples
 
 
         elif self._set_stepscan:
-            self._atto_scanner_hw.set_amplitude(self, 'x', 30)
-            self._atto_scanner_hw.set_amplitude(self, 'y', 30)
-            self._atto_scanner_hw.set_frequency(self, 'x', 1000)
-            self._atto_scanner_hw.set_frequency(self, 'y', 1000)
+            self._atto_scanner_hw.set_amplitude('x', 30)
+            self._atto_scanner_hw.set_amplitude('y', 30)
+            self._atto_scanner_hw.set_frequency('x', 1000)
+            self._atto_scanner_hw.set_frequency('y', 1000)
 
             for i in range(len(x_pos)):
 
                 if i == 0:
-                    rawdata = self._counter.get_counter(self, samples=self._counting_samples)
+                    rawdata = self._counter.get_counter(samples=self._counting_samples)
                 elif x_pos[i] > x_pos[i - 1]:
-                    self._atto_scanner_hw.single_step(self, 'x', 'forward')
-                    rawdata = self._counter.get_counter(self, samples=self._counting_samples)
+                    self._atto_scanner_hw.single_step('x', 'forward')
+                    rawdata = self._counter.get_counter(samples=self._counting_samples)
                     print('forward', x_pos[i] - x_pos[i - 1])
                 else:
-                    self._atto_scanner_hw.single_step(self, 'x', 'backward')
-                    rawdata = self._counter.get_counter(self, samples=self._counting_samples)
+                    self._atto_scanner_hw.single_step('x', 'backward')
+                    rawdata = self._counter.get_counter(samples=self._counting_samples)
                     print('backward', x_pos[i] - x_pos[i - 1])
 
                 line_counts[0, i] = rawdata.sum() / self._counting_samples
 
-            self._atto_scanner_hw.single_step(self, 'y', 'forward')
+            self._atto_scanner_hw.single_step('y', 'forward')
 
         else:
 
@@ -270,36 +269,36 @@ class AttocubeScannerInterfuse(Base, ConfocalScannerInterfaceAtto):
             for i in range(len(x_pos)):
                 if i==0:
 
-                    self._atto_scanner_hw.set_target_position(self,'x',x_pos[i])
-                    self._atto_scanner_hw.set_target_position(self,'y',y_pos[i])
+                    self._atto_scanner_hw.set_target_position('x',x_pos[i])
+                    self._atto_scanner_hw.set_target_position('y',y_pos[i])
 
-                    self._atto_scanner_hw.auto_move(self,'x',1)
-                    self._atto_scanner_hw.auto_move(self,'y',1)
+                    self._atto_scanner_hw.auto_move('x',1)
+                    self._atto_scanner_hw.auto_move('y',1)
 
 
                     while True:
-                        if self._atto_scanner_hw.getAxisStatus_target(self,'x'):
+                        if self._atto_scanner_hw.getAxisStatus_target('x'):
                             break
 
-                    rawdata = self._counter.get_counter(self, samples= self._counting_samples)
+                    rawdata = self._counter.get_counter( samples= self._counting_samples)
                 else:
                     if x_pos[i] != x_pos[i-1]:
-                        self._atto_scanner_hw.set_target_position(self,'x',x_pos[i])
+                        self._atto_scanner_hw.set_target_position('x',x_pos[i])
                     if y_pos[i] != y_pos[i-1]:
-                        self._atto_scanner_hw.set_target_position(self,'y',y_pos[i])
+                        self._atto_scanner_hw.set_target_position('y',y_pos[i])
 
 
-                    self._atto_scanner_hw.auto_move(self,'x',1)
-                    self._atto_scanner_hw.auto_move(self,'y',1)
+                    self._atto_scanner_hw.auto_move('x',1)
+                    self._atto_scanner_hw.auto_move('y',1)
 
                     try:
                         while True:
-                            if self._atto_scanner_hw.getAxisStatus_target(self,'y') & self._atto_scanner_hw.getAxisStatus_target(self,'x'):
+                            if self._atto_scanner_hw.getAxisStatus_target('y') & self._atto_scanner_hw.getAxisStatus_target('x'):
                                 #print('wait until taget is reached')
                                 break
 
 
-                        rawdata = self._counter.get_counter(self, samples=self._counting_samples)
+                        rawdata = self._counter.get_counter(samples=self._counting_samples)
                     except:
                         self.log.error('No counter running')
                         return -1
@@ -322,7 +321,7 @@ class AttocubeScannerInterfuse(Base, ConfocalScannerInterfaceAtto):
 
         @return int: error code (0:OK, -1:error)
         """
-        self._counter.close_scanner_clock()
+        self._counter.close_clock()
         return 0
 
     def single_step(self, axis='x', direction='forward'):
@@ -332,10 +331,10 @@ class AttocubeScannerInterfuse(Base, ConfocalScannerInterfaceAtto):
         :param direction: 'forward' or 'backward'
         :return:
         '''
-        self._atto_scanner_hw.single_step(self, axis, direction)
+        self._atto_scanner_hw.single_step(axis, direction)
 
     def axis_output_status(self, axis, status='off'):
-        self._atto_scanner_hw.axis_output_status(self, axis, status=status)
+        self._atto_scanner_hw.axis_output_status(axis, status=status)
 
     def set_frequency(self, axis, freq):
         '''
@@ -344,7 +343,7 @@ class AttocubeScannerInterfuse(Base, ConfocalScannerInterfaceAtto):
         :param freq: Frequency in Hz, internal resolution is 1 Hz
         :return:
         '''
-        self._atto_scanner_hw.set_frequency(self, axis, freq)
+        self._atto_scanner_hw.set_frequency(axis, freq)
 
     def set_amplitude(self, axis, amp):
         '''
@@ -353,7 +352,7 @@ class AttocubeScannerInterfuse(Base, ConfocalScannerInterfaceAtto):
         :param amp: Amplitude in V, internal resolution is 1 mV
         :return:
         '''
-        self._atto_scanner_hw.set_amplitude(self, axis, amp)
+        self._atto_scanner_hw.set_amplitude(axis, amp)
 
     def get_frequency(self, axis):
         '''
@@ -362,7 +361,7 @@ class AttocubeScannerInterfuse(Base, ConfocalScannerInterfaceAtto):
         :param freq: Frequency in Hz, internal resolution is 1 Hz
         :return:
         '''
-        return self._atto_scanner_hw.get_frequency(self, axis)
+        return self._atto_scanner_hw.get_frequency(axis)
 
     def get_amplitude(self, axis):
         '''
@@ -371,6 +370,12 @@ class AttocubeScannerInterfuse(Base, ConfocalScannerInterfaceAtto):
         :param amp: Amplitude in V, internal resolution is 1 mV
         :return:
         '''
-        return self._atto_scanner_hw.get_amplitude(self, axis)
+        return self._atto_scanner_hw.get_amplitude(axis)
+
+    def get_scanner_position_abs(self):
+        return [500,500,500]
+
+    def set_scanner_position_abs(self):
+        pass
 
 
