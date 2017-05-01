@@ -33,16 +33,13 @@ from interface.confocal_scanner_interface import ConfocalScannerInterface
 #class Attocube(Base, ConfocalScannerInterfrt):
 class Attocube(Base):
 
-    def on_activate(self, e=None):
-        """
-        @param object e: Event class object from Fysom.
-                         An object created by the state machine module Fysom,
-                         which is connected to a specific event (have a look in
-                         the Base Class). This object contains the passed event,
-                         the state before the event happened and the destination
-                         of the state which should be reached after the event
-                         had happened.
-        """
+    _modtype = 'AttocubeScanner'
+    _modclass = 'hardware'
+
+    _out = {'Scanner': 'SlowCounterInterface'
+            }
+
+    def on_activate(self):
 
         self.anc = Positioner()
         self.axisNo = {'y': 0, 'x': 1, 'z': 2}

@@ -43,7 +43,7 @@ class NIcard(Base):
             }
 
 
-    def on_activate(self, e=None):
+    def on_activate(self):
         """
         @param object e: Event class object from Fysom.
                          An object created by the state machine module Fysom,
@@ -1390,8 +1390,41 @@ class NIcard(Base):
         # normalize to counts per second and return data
         return count_data * self._clock_frequency
 
+    def close_counter(self, scanner=False):
+        """ Closes the counter or scanner and cleans up afterwards.
 
+        @param bool scanner: specifies if the counter- or scanner- function
+                             will be excecuted to close the device.
+                                True = scanner
+                                False = counter
 
+        @return int: error code (0:OK, -1:error)
+        """
+        error = 0
+        if scanner:
+            for i, task in enumerate(self._scanner_counter_daq_tasks):
+                try:
+                    # stop the counter task
+                    daq.DAQmxStopTask(task)
+                    # after stopping delete all the configuration of the counter
+                    daq.DAQmxClearTask(task)
+                except:
+                    self.log.exception('Could not close scanner counter.')
+                    error = -1
+            self._scanner_counter_daq_tasks = []
+        else:
+            for i, task in enumerate(self._counter_daq_tasks):
+                try:
+                    # stop the counter task
+                    daq.DAQmxStopTask(task)
+                    # after stopping delete all the configuration of the counter
+                    daq.DAQmxClearTask(task)
+                    # set the task handle to None as a safety
+                except:
+                    self.log.exception('Could not close counter.')
+                    error = -1
+            self._counter_daq_tasks = []
+        return error
 
 
     # ================ End SlowCounterInterface Commands =======================

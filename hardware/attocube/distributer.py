@@ -154,7 +154,7 @@ class Distributer(Base,ConfocalScannerInterfaceAtto):
         try:
             x_abs = self.x_start + (x * 1e-6)
             y_abs = self.y_start + (y * 1e-6)
-            z_abs = self.z_start# + (z * 1e-6)
+            z_abs = self.z_start + (z * 1e-6)
             return self.scanner_set_position_abs(x=x_abs, y=y_abs, z=z_abs)
         except:
             self.log.error('can not make go to this position since ')
