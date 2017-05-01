@@ -373,9 +373,9 @@ class AttocubeScannerInterfuse(Base, ConfocalScannerInterfaceAtto):
         return self._atto_scanner_hw.get_amplitude(axis)
 
     def get_scanner_position_abs(self):
-        return [500,500,500]
+        return self._atto_scanner_hw.get_scanner_position_abs()
 
-    def set_scanner_position_abs(self):
-        pass
+    def set_scanner_position_abs(self,x,y,z):
+        return self._atto_scanner_hw.scanner_set_position_abs(x,y,z)
 
 

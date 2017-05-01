@@ -985,7 +985,6 @@ class ConfocalLogic(GenericLogic):
                 if self._scan_counter >= np.size(self._image_vert_axis):
                     if not self.permanent_scan:
                         self.stop_scanning()
-                        self._scanning_device.disable_outputs()
                         if self._zscan:
                             self._zscan_continuable = False
                         else:
@@ -1441,7 +1440,7 @@ class ConfocalLogic(GenericLogic):
         return self._scanning_device.get_scanner_position_abs()
 
     def set_position_abs(self, x, y, z):
-        self._scanning_device.scanner_set_position_abs(x, y, z)
+        self._scanning_device.set_scanner_position_abs(x, y, z)
 
 
 
