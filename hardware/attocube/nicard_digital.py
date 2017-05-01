@@ -171,6 +171,11 @@ class NIcard(Base):
                 'No parameter "scanner_clock_channel" configured.\n'
                 'Assign to that parameter an appropriate channel from your NI Card!')
 
+        if 'pixel_clock_channel' in config.keys():
+            self._pixel_clock_channel = config['pixel_clock_channel']
+        else:
+            self._pixel_clock_channel = None
+
         if 'clock_frequency' in config.keys():
             self._clock_frequency = config['clock_frequency']
         else:
@@ -219,11 +224,11 @@ class NIcard(Base):
                                            float(config['x_range'][1])]
             else:
                 self.log.warning(
-                    'Configuration ({}) of x_range incorrect, taking [0,100] instead.'
+                    'Configuration ({}) of x_range incorrect, taking [0,100e-6] instead.'
                     ''.format(config['x_range']))
         else:
             if len(self._position_range) > 0:
-                self.log.warning('No x_range configured taking [0,100] instead.')
+                self.log.warning('No x_range configured taking [0,100e-6] instead.')
 
         if 'y_range' in config.keys() and len(self._position_range) > 1:
             if float(config['y_range'][0]) < float(config['y_range'][1]):
@@ -231,11 +236,11 @@ class NIcard(Base):
                                            float(config['y_range'][1])]
             else:
                 self.log.warning(
-                    'Configuration ({}) of y_range incorrect, taking [0,100] instead.'
+                    'Configuration ({}) of y_range incorrect, taking [0,100e-6] instead.'
                     ''.format(config['y_range']))
         else:
             if len(self._position_range) > 1:
-                self.log.warning('No y_range configured taking [0,100] instead.')
+                self.log.warning('No y_range configured taking [0,100e-6] instead.')
 
         if 'z_range' in config.keys() and len(self._position_range) > 2:
             if float(config['z_range'][0]) < float(config['z_range'][1]):
@@ -243,11 +248,11 @@ class NIcard(Base):
                                            float(config['z_range'][1])]
             else:
                 self.log.warning(
-                    'Configuration ({}) of z_range incorrect, taking [0,100] instead.'
+                    'Configuration ({}) of z_range incorrect, taking [0,100e-6] instead.'
                     ''.format(config['z_range']))
         else:
             if len(self._position_range) > 2:
-                self.log.warning('No z_range configured taking [0,100] instead.')
+                self.log.warning('No z_range configured taking [0,100e-6] instead.')
 
         if 'a_range' in config.keys() and len(self._position_range) > 3:
             if float(config['a_range'][0]) < float(config['a_range'][1]):
@@ -255,11 +260,11 @@ class NIcard(Base):
                                            float(config['a_range'][1])]
             else:
                 self.log.warning(
-                    'Configuration ({}) of a_range incorrect, taking [0,100] instead.'
+                    'Configuration ({}) of a_range incorrect, taking [0,100e-6] instead.'
                     ''.format(config['a_range']))
         else:
             if len(self._position_range) > 3:
-                self.log.warning('No a_range configured taking [0,100] instead.')
+                self.log.warning('No a_range configured taking [0,100e-6] instead.')
 
                 #        if 'voltage_range' in config.keys():
                 #            if float(config['voltage_range'][0]) < float(config['voltage_range'][1]):
@@ -333,11 +338,8 @@ class NIcard(Base):
                 #            self.log.error('Failed to start analog output.')
                 #            raise Exception('Failed to start NI Card module due to analog output failure.')
 
-    def on_deactivate(self, e=None):
+    def on_deactivate(self):
         """ Shut down the NI card.
-
-        @param object e: Event class object from Fysom. A more detailed
-                         explanation can be found in method activation.
         """
         self.reset_hardware()
 
@@ -424,6 +426,7 @@ class NIcard(Base):
 
         @return int: error code (0:OK, -1:error)
         """
+
         if not scanner and self._clock_daq_task is not None:
             self.log.error('Another counter clock is already running, close this one first.')
             return -1
@@ -948,6 +951,12 @@ class NIcard(Base):
                 daq.DAQmxStopTask(task)
 
             daq.DAQmxStopTask(self._scanner_clock_daq_task)
+
+            if pixel_clock and self._pixel_clock_channel is not None:
+                daq.DAQmxConnectTerms(
+                    self._scanner_clock_channel + 'InternalOutput',
+                    self._pixel_clock_channel,
+                    daq.DAQmx_Val_DoNotInvertPolarity)
 
             # start the scanner counting task that acquires counts synchroneously
             for i, task in enumerate(self._scanner_counter_daq_tasks):
