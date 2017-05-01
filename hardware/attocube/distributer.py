@@ -2,6 +2,7 @@ from hardware.attocube.attocube import Attocube
 from hardware.attocube.nicard_digital import NIcard
 from interface.confocal_scanner_atto_interface import ConfocalScannerInterfaceAtto
 from core.base import Base
+from time import sleep
 
 import numpy as np
 import time
@@ -243,15 +244,19 @@ class Distributer(Base,ConfocalScannerInterfaceAtto):
 
             for i in range(len(x_pos)):
                 if i==0:
+
                     Attocube.set_target_position(self,'x',x_pos[i])
                     Attocube.set_target_position(self,'y',y_pos[i])
+                    #Attocube.enable_outputs(self)
                     Attocube.auto_move(self,'x',1)
                     Attocube.auto_move(self,'y',1)
+
 
                     while True:
                         if Attocube.getAxisStatus_target(self,'x'):
                             break
 
+                    sleep(self.integration_time/1000)
                     rawdata = NIcard.get_counter(self, samples= self._counting_samples)
                 else:
                     if x_pos[i] != x_pos[i-1]:
@@ -259,8 +264,10 @@ class Distributer(Base,ConfocalScannerInterfaceAtto):
                     if y_pos[i] != y_pos[i-1]:
                         Attocube.set_target_position(self,'y',y_pos[i])
 
+
                     Attocube.auto_move(self,'x',1)
                     Attocube.auto_move(self,'y',1)
+
                     try:
                         while True:
                             if Attocube.getAxisStatus_target(self,'y') & Attocube.getAxisStatus_target(self,'x'):

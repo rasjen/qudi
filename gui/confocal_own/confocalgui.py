@@ -239,7 +239,7 @@ class ConfocalGui(GUIBase):
 
         self.update_position_abs()
 
-        self._mw.savexy_pushButton(self.save_xy)
+        self._mw.savexy_pushButton.clicked.connect(self.save_xy)
 
 
 
@@ -338,6 +338,15 @@ class ConfocalGui(GUIBase):
     def xy_scan_clicked(self):
         """ Manages what happens if the xy scan is started. """
         #self.disable_scan_actions()
+
+        [x, y, z] = self._scanning_logic.get_position_abs()
+        self.startpositions = [x, y, z]
+
+        self.startresolution = self._mw.xy_res_InputWidget.value()
+        self.startintegrationtime = self._mw.integrationtime.value()
+        self.startrange = self._mw.image_range_InputWidget.value()
+
+
         self._scanning_logic.start_scanning(zscan=False,tag='gui')
 
     def kill_scan_clicked(self):
@@ -521,18 +530,24 @@ class ConfocalGui(GUIBase):
         x = self._mw.xpositionSpinBox.value()*1e-6
         y = self._mw.ypositionSpinBox.value()*1e-6
         z = self._mw.zpositionSpinBox.value()*1e-6
-        self._scanning_logic.set_position_abs(x,y,z)
+        self._scanning_logic.set_position_abs(x, y, z)
 
     def save_xy(self):
 
         path = ''
         timestamp = datetime.datetime.now()
-        filelabel = self._mw.savelabel.toPlainText()
-        filename = timestamp.strftime('%Y%m%d-%H%M-%S' + '_' + filelabel + '.txt')
+        filelabel = self._mw.savelabel.text()
+        filename = timestamp.strftime('%Y%m%d-%H%M%S' + '_' + filelabel + '.txt')
 
         xy_image_data = np.rot90(
-            self._scanning_logic.xy_image[:, :, :].transpose(),
+            self._scanning_logic.xy_image[:, :, 3 + self.xy_channel].transpose(),
             self.xy_image_orientation[0])
 
-        np.savetxt(filename, xy_image_data)
+        header1 = 'start position (x,y,z : {} \n'.format(self.startpositions)
+        header2 = 'range {} \n'.format(self.startrange)
+        header3 = 'resolution {} \n'.format(self.startresolution)
+        header4 = 'integration time {} \n'.format(self.startintegrationtime)
+
+        header = header1+header2+header3+header4
+        np.savetxt(filename, xy_image_data, header=header)
 
