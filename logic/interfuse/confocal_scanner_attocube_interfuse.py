@@ -134,8 +134,6 @@ class AttocubeScannerInterfuse(Base, ConfocalScannerInterfaceAtto):
         @return int: error code (0:OK, -1:error)
         """
         try:
-            [self.x_start, self.y_start, self.z_start] = self._atto_scanner_hw.get_scanner_position_abs()
-            self.current_position_abs = [self.x_start, self.y_start, self.z_start]
             self._atto_scanner_hw.enable_outputs()
             self._counter.set_up_counter()
             return 0
@@ -165,17 +163,8 @@ class AttocubeScannerInterfuse(Base, ConfocalScannerInterfaceAtto):
 
         @return int: error code (0:OK, -1:error)
         """
-        if self.current_position_abs is None:
-            self.log.warning('Make new scan! before dragging the crosshair')
-
-            [self.x_start, self.y_start, self.z_start] = self._atto_scanner_hw.get_scanner_position_abs()
-            self.current_position_abs = [self.x_start, self.y_start, self.z_start]
-
         try:
-            x_abs = self.x_start + (x * 1e-6)
-            y_abs = self.y_start + (y * 1e-6)
-            z_abs = self.z_start + (z * 1e-6)
-            return self._atto_scanner_hw.scanner_set_position_abs(x=x_abs, y=y_abs, z=z_abs)
+            return self._atto_scanner_hw.scanner_set_position_abs(x=x, y=y, z=z)
         except:
             self.log.error('can not go to this position since ')
 
@@ -184,10 +173,7 @@ class AttocubeScannerInterfuse(Base, ConfocalScannerInterfaceAtto):
 
         @return float[]: current position in (x, y, z, a).
         """
-        [x_abs, y_abs, z_abs] =self._atto_scanner_hw.get_scanner_position_abs()
-        x = (x_abs - self.x_start) * 1e6
-        y = (y_abs - self.y_start) * 1e6
-        z = (z_abs - self.z_start) * 1e6
+        [x, y, z] =self._atto_scanner_hw.get_scanner_position_abs()
 
         self.current_position = [x,y,z]
 
@@ -217,8 +203,8 @@ class AttocubeScannerInterfuse(Base, ConfocalScannerInterfaceAtto):
         self._atto_scanner_hw.set_target_range('y', 500e-9)
 
         self._counting_samples = int(self.integration_time/1000 * self._clock_frequency) #integration time is in ms
-        x_pos = np.round(np.array(line_path[0]*1e-6)+self.x_start, 7)
-        y_pos = np.round(np.array(line_path[1]*1e-6)+self.y_start, 7)
+        x_pos = np.round(np.array(line_path[0]), 7)
+        y_pos = np.round(np.array(line_path[1]), 7)
 
         line_counts = np.zeros_like([line_path[0],])
 

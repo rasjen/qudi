@@ -740,7 +740,7 @@ class ConfocalLogic(GenericLogic):
         for i, ch in enumerate(self.get_scanner_axes()):
             pos_dict[ch_array[i]] = pos_array[i]
 
-        self._scanning_device.scanner_set_position(**pos_dict)
+        self._scanning_device.scanner_set_position(x=self._current_x,y=self._current_y,z=self._current_z)
         return 0
 
     def get_position(self):
@@ -1441,7 +1441,7 @@ class ConfocalLogic(GenericLogic):
 
     def set_position_abs(self, x, y, z):
         self._scanning_device.set_scanner_position_abs(x, y, z)
-        self.signial_position_changed.emit()
+        self.signal_position_changed.emit()
 
 
 
