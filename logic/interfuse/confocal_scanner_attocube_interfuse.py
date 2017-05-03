@@ -62,7 +62,7 @@ class AttocubeScannerInterfuse(Base, ConfocalScannerInterfaceAtto):
         self._XY_fine_scan = False
         self._set_stepscan = False
         self.stop_scan = False
-        self.current_position_abs = None
+        self.current_position = None
 
     def on_activate(self):
         """ Initialisation performed during activation of the module.
@@ -164,7 +164,10 @@ class AttocubeScannerInterfuse(Base, ConfocalScannerInterfaceAtto):
         @return int: error code (0:OK, -1:error)
         """
         try:
-            return self._atto_scanner_hw.scanner_set_position_abs(x=x, y=y, z=z)
+            print('x=',x)
+            print('z=', z)
+            print('y=', y)
+            return self._atto_scanner_hw.set_scanner_position(x=x, y=y, z=z)
         except:
             self.log.error('can not go to this position since ')
 
@@ -173,7 +176,7 @@ class AttocubeScannerInterfuse(Base, ConfocalScannerInterfaceAtto):
 
         @return float[]: current position in (x, y, z, a).
         """
-        [x, y, z] =self._atto_scanner_hw.get_scanner_position_abs()
+        [x, y, z] =self._atto_scanner_hw.get_scanner_position()
 
         self.current_position = [x,y,z]
 
@@ -348,9 +351,6 @@ class AttocubeScannerInterfuse(Base, ConfocalScannerInterfaceAtto):
         :return:
         '''
         return self._atto_scanner_hw.get_amplitude(axis)
-
-    def get_scanner_position_abs(self):
-        return self._atto_scanner_hw.get_scanner_position_abs()
 
 
 

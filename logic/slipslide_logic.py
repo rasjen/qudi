@@ -590,40 +590,6 @@ class ConfocalLogic(GenericLogic):
 
         return 0
 
-      # def start_scanner(self):
-    #     """Setting up the scanner device and starts the scanning procedure
-    #
-    #     @return int: error code (0:OK, -1:error)
-    #     """
-    #     self.lock()
-    #
-    #     self._scanning_device.lock()
-    #     if self.initialize_image() < 0:
-    #         self._scanning_device.unlock()
-    #         self.unlock()
-    #         return -1
-    #
-    #     clock_status = self._scanning_device.set_up_scanner_clock(
-    #         clock_frequency=self._clock_frequency)
-    #
-    #     if clock_status < 0:
-    #         self._scanning_device.unlock()
-    #         self.unlock()
-    #         self.set_position('scanner')
-    #         return -1
-    #
-    #     scanner_status = self._scanning_device.set_up_scanner()
-    #
-    #     if scanner_status < 0:
-    #         self._scanning_device.close_scanner_clock()
-    #         self._scanning_device.unlock()
-    #         self.unlock()
-    #         self.set_position('scanner')
-    #         return -1
-    #
-    #     self.signal_scan_lines_next.emit()
-    #     return 0
-
     def continue_scanner(self):
         """Continue the scanning procedure
 
@@ -677,26 +643,6 @@ class ConfocalLogic(GenericLogic):
         self.kill_mode = True
 
         return 0
-       #
-       # def kill_scanner(self):
-       #  """Closing the scanner device.
-       #
-       #  @return int: error code (0:OK, -1:error)
-       #  """
-       #  try:
-       #      self._scanning_device.close_scanner()
-       #  except Exception as e:
-       #      self.log.exception('Could not close the scanner.')
-       #  try:
-       #      self._scanning_device.close_scanner_clock()
-       #  except Exception as e:
-       #      self.log.exception('Could not close the scanner clock.')
-       #  try:
-       #      self._scanning_device.unlock()
-       #  except Exception as e:
-       #      self.log.exception('Could not unlock scanning device.')
-       #
-       #  return 0
 
     def set_position(self, tag, x=None, y=None, z=None, a=None):
         """Forwarding the desired new position from the GUI to the scanning device.
@@ -736,7 +682,7 @@ class ConfocalLogic(GenericLogic):
         ch_array = ['x', 'y', 'z']
         pos_array = [self._current_x, self._current_y, self._current_z]
         pos_dict = {}
-        print(z)
+
         for i, ch in enumerate(self.get_scanner_axes()):
             pos_dict[ch_array[i]] = pos_array[i]
 
@@ -1436,12 +1382,8 @@ class ConfocalLogic(GenericLogic):
     def set_stepscan(self, state):
         self._scanning_device._set_stepscan = state
 
-    def get_position_abs(self):
-        return self._scanning_device.get_scanner_position_abs()
 
-    def set_position_abs(self, x, y, z):
-        self._scanning_device.set_scanner_position(x, y, z)
-        self.signal_position_changed.emit()
+
 
 
 

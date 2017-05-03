@@ -101,7 +101,7 @@ class Attocube(Base):
                               and upper limit. The unit of the scan range is
                               micrometer.
         """
-        self._position_range = [[0,5000e-6],[0,5000e-6],[0,5000e-6],[0,0]]
+        self._position_range = [[0,5000e-6],[0,5000e-6],[0,5000e-6]]
         return self._position_range
 
     def set_position_range(self, myrange=None):
@@ -114,7 +114,7 @@ class Attocube(Base):
         @return int: error code (0:OK, -1:error)
         """
         if myrange is None:
-            myrange = [[0, 5000e-6], [0, 5000e-6], [0, 5000e-6], [0, 0]]
+            myrange = [[0, 5000e-6], [0, 5000e-6], [0, 5000e-6]]
 
         if not isinstance( myrange, (frozenset, list, set, tuple, np.ndarray, ) ):
             self.log.error('Given range is no array type.')
@@ -164,7 +164,7 @@ class Attocube(Base):
             )
             return -1
 
-    def scanner_set_position_abs(self, x=None, y=None, z=None):
+    def scanner_set_position(self, x=None, y=None, z=None):
         """Move stage to x, y, z, a (where a is the fourth voltage channel).
 
         #FIXME: No volts
@@ -205,7 +205,7 @@ class Attocube(Base):
             return -1
         return 0
 
-    def get_scanner_position_abs(self):
+    def get_scanner_position(self):
         """ Get the current position of the scanner hardware.
 
         @return float[]: current position in (x, y, z, a).

@@ -364,7 +364,7 @@ class ConfocalGui(GUIBase):
         # Connect the emitted signal of an image change from the logic with
         # a refresh of the GUI picture:
         self._scanning_logic.signal_xy_image_updated.connect(self.refresh_xy_image)
-        self._scanning_logic.signal_position_changed.connect(self.update_position_abs)
+        self._scanning_logic.signal_position_changed.connect(self.update_position)
         self._scanning_logic.signal_change_position.connect(self.update_crosshair_position_from_logic)
         #self._scanning_logic.signal_xy_image_updated.connect(self.refresh_scan_line)
         self._scanning_logic.sigImageXYInitialized.connect(self.adjust_xy_window)
@@ -376,14 +376,14 @@ class ConfocalGui(GUIBase):
         self._mw.yFrequencyDoubleSpinBox.setValue(self.get_yAxisFrequency())
         self._mw.zFrequencyDoubleSpinBox.setValue(self.get_zAxisFrequency())
 
-        self._mw.getposition_pushButton.clicked.connect(self.update_position_abs)
-        self._mw.setposition_pushButton.clicked.connect(self.set_position_abs)
+        self._mw.getposition_pushButton.clicked.connect(self.update_position)
+        self._mw.setposition_pushButton.clicked.connect(self.set_position)
 
         self._mw.integrationtime.setValue(self.get_integration_time())
         self._mw.XY_fine_checkbox.stateChanged.connect(self.xy_fine)
         self._mw.stepscan_checkBox.stateChanged.connect(self.stepper)
 
-        self.update_position_abs()
+        self.update_position()
         self.adjust_xy_window()
         self._mw.savexy_pushButton.clicked.connect(self.save_xy)
 
@@ -482,7 +482,7 @@ class ConfocalGui(GUIBase):
         """ Manages what happens if the xy scan is started. """
         #self.disable_scan_actions()
 
-        [x, y, z] = self._scanning_logic.get_position_abs()
+        [x, y, z] = self._scanning_logic.get_position()
         self.startpositions = [x, y, z]
 
         self.startresolution = self._mw.xy_res_InputWidget.value()
@@ -664,17 +664,17 @@ class ConfocalGui(GUIBase):
         else:
             self._scanning_logic.set_stepscan(False)
 
-    def update_position_abs(self):
-        [x,y,z] = self._scanning_logic.get_position_abs()
+    def update_position(self):
+        [x,y,z] = self._scanning_logic.get_position()
         self._mw.xpositionSpinBox.setValue(x*1e6)
         self._mw.ypositionSpinBox.setValue(y*1e6)
         self._mw.zpositionSpinBox.setValue(z*1e6)
 
-    def set_position_abs(self):
+    def set_position(self):
         x = self._mw.xpositionSpinBox.value()*1e-6
         y = self._mw.ypositionSpinBox.value()*1e-6
         z = self._mw.zpositionSpinBox.value()*1e-6
-        self._scanning_logic.set_position_abs(x, y, z)
+        self._scanning_logic.set_position('gui',x, y, z)
 
     def save_xy(self):
 
