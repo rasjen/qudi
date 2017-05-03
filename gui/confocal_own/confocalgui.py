@@ -100,6 +100,7 @@ class CrossROI(pg.ROI):
         else:
             self.sigMachineRegionUpdate.emit(roi)
 
+
 class CrossLine(pg.InfiniteLine):
 
     """ Construct one line for the Crosshair in the plot.
@@ -126,9 +127,12 @@ class CrossLine(pg.InfiniteLine):
         if self.angle == 90:
             self.setValue(extroi.pos()[0] + extroi.size()[0] * 0.5)
 
+
 class ConfocalMainWindow(QtWidgets.QMainWindow):
 
     """ Create the Mainwindow based on the corresponding *.ui file. """
+
+    sigPressKeyBoard = QtCore.Signal(QtCore.QEvent)
 
     def __init__(self, **kwargs):
         # Get the path to the *.ui file
@@ -140,6 +144,38 @@ class ConfocalMainWindow(QtWidgets.QMainWindow):
         uic.loadUi(ui_file, self)
         self.show()
 
+    def keyPressEvent(self, event):
+        """Pass the keyboard press event from the main window further. """
+        self.sigPressKeyBoard.emit(event)
+
+
+class ConfocalSettingDialog(QtWidgets.QDialog):
+
+    """ Create the SettingsDialog window, based on the corresponding *.ui file."""
+
+    def __init__(self):
+        # Get the path to the *.ui file
+        this_dir = os.path.dirname(__file__)
+        ui_file = os.path.join(this_dir, 'ui_cf_settings.ui')
+
+        # Load it
+        super(ConfocalSettingDialog, self).__init__()
+        uic.loadUi(ui_file, self)
+
+
+class OptimizerSettingDialog(QtWidgets.QDialog):
+    """ User configurable settings for the optimizer embedded in cofocal gui"""
+
+    def __init__(self):
+        # Get the path to the *.ui file
+        this_dir = os.path.dirname(__file__)
+        ui_file = os.path.join(this_dir, 'ui_optim_settings.ui')
+
+        # Load it
+        super(OptimizerSettingDialog, self).__init__()
+        uic.loadUi(ui_file, self)
+
+
 class ConfocalGui(GUIBase):
 
     """ Main Confocal Class for xy and depth scans.
@@ -149,8 +185,8 @@ class ConfocalGui(GUIBase):
 
     # declare connectors
     _connectors = {'confocallogic1': 'ConfocalLogic',
-                   'savelogic': 'SaveLogic',
-                   'optimizerlogic1': 'OptimizerLogic'
+           'savelogic': 'SaveLogic',
+           'optimizerlogic1': 'OptimizerLogic'
            }
 
     sigStartOptimizer = QtCore.Signal(list, str)
@@ -167,6 +203,7 @@ class ConfocalGui(GUIBase):
 
     def on_activate(self):
         """ Initializes all needed UI files and establishes the connectors.
+
         This method executes the all the inits for the differnt GUIs and passes
         the event argument from fysom to the methods.
         """
@@ -292,6 +329,7 @@ class ConfocalGui(GUIBase):
         self._mw.y_max_InputWidget.setValue(self._scanning_logic.image_y_range[1])
         self._mw.z_min_InputWidget.setValue(self._scanning_logic.image_z_range[0])
         self._mw.z_max_InputWidget.setValue(self._scanning_logic.image_z_range[1])
+
 
         # set the maximal ranges for the imagerange from the logic:
         self._mw.x_min_InputWidget.setRange(self._scanning_logic.x_range[0], self._scanning_logic.x_range[1])
