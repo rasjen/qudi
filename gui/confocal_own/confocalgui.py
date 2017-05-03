@@ -35,6 +35,71 @@ from gui.colordefs import QudiPalettePale as palette
 from gui.guiutils import ColorBar
 from gui.colordefs import ColorScaleViridis, ColorScaleInferno
 
+class CrossROI(pg.ROI):
+
+    """ Create a Region of interest, which is a zoomable rectangular.
+
+    @param float pos: optional parameter to set the position
+    @param float size: optional parameter to set the size of the roi
+
+    Have a look at:
+    http://www.pyqtgraph.org/documentation/graphicsItems/roi.html
+    """
+    sigUserRegionUpdate = QtCore.Signal(object)
+    sigMachineRegionUpdate = QtCore.Signal(object)
+
+    def __init__(self, pos, size, **args):
+        """Create a ROI with a central handle."""
+        self.userDrag = False
+        pg.ROI.__init__(self, pos, size, **args)
+        # That is a relative position of the small box inside the region of
+        # interest, where 0 is the lowest value and 1 is the higherst:
+        center = [0.5, 0.5]
+        # Translate the center to the intersection point of the crosshair.
+        self.addTranslateHandle(center)
+
+        self.sigRegionChangeStarted.connect(self.startUserDrag)
+        self.sigRegionChangeFinished.connect(self.stopUserDrag)
+        self.sigRegionChanged.connect(self.regionUpdateInfo)
+
+    def setPos(self, pos, update=True, finish=False):
+        """Sets the position of the ROI.
+
+        @param bool update: whether to update the display for this call of setPos
+        @param bool finish: whether to emit sigRegionChangeFinished
+
+        Changed finish from parent class implementation to not disrupt user dragging detection.
+        """
+        super().setPos(pos, update=update, finish=finish)
+
+    def setSize(self,size, update=True,finish=True):
+        """
+        Sets the size of the ROI
+        @param bool update: whether to update the display for this call of setPos
+        @param bool finish: whether to emit sigRegionChangeFinished
+        """
+        super().setSize(size,update=update,finish=finish)
+
+    def handleMoveStarted(self):
+        """ Handles should always be moved by user."""
+        super().handleMoveStarted()
+        self.userDrag = True
+
+    def startUserDrag(self, roi):
+        """ROI has started being dragged by user."""
+        self.userDrag = True
+
+    def stopUserDrag(self, roi):
+        """ROI has stopped being dragged by user"""
+        self.userDrag = False
+
+    def regionUpdateInfo(self, roi):
+        """When the region is being dragged by the user, emit the corresponding signal."""
+        if self.userDrag:
+            self.sigUserRegionUpdate.emit(roi)
+        else:
+            self.sigMachineRegionUpdate.emit(roi)
+
 class CrossLine(pg.InfiniteLine):
 
     """ Construct one line for the Crosshair in the plot.
@@ -84,7 +149,8 @@ class ConfocalGui(GUIBase):
 
     # declare connectors
     _connectors = {'confocallogic1': 'ConfocalLogic',
-           'savelogic': 'SaveLogic',
+                   'savelogic': 'SaveLogic',
+                   'optimizerlogic1': 'OptimizerLogic'
            }
 
     sigStartOptimizer = QtCore.Signal(list, str)
@@ -108,6 +174,7 @@ class ConfocalGui(GUIBase):
         # Getting an access to all connectors:
         self._scanning_logic = self.get_connector('confocallogic1')
         self._save_logic = self.get_connector('savelogic')
+        self._optimizer_logic = self.get_connector('optimizerlogic1')
 
         self._mw = ConfocalMainWindow()
 
@@ -133,6 +200,18 @@ class ConfocalGui(GUIBase):
         ini_pos_x_crosshair = len(arr01) / 2
         ini_pos_y_crosshair = len(arr01) / 2
 
+        # Create Region of Interest for xy image and add to xy Image Widget:
+        self.roi_xy = CrossROI(
+            [
+                ini_pos_x_crosshair - self._optimizer_logic.refocus_XY_size / 2,
+                ini_pos_y_crosshair - self._optimizer_logic.refocus_XY_size / 2
+            ],
+            [self._optimizer_logic.refocus_XY_size, self._optimizer_logic.refocus_XY_size],
+            pen={'color': "F0F", 'width': 1},
+            removable=True
+        )
+
+        self._mw.xyScanView.addItem(self.roi_xy)
         # create horizontal and vertical line as a crosshair in xy image:
         self.hline_xy = CrossLine(pos=len(arr01) * 0.5,
                                   angle=0, pen={'color': palette.green, 'width': 1})
@@ -142,9 +221,14 @@ class ConfocalGui(GUIBase):
 
 
         # add the configured crosshair to the xy Widget
-        #self._mw.xyScanView.addItem(self.hline_xy)
-        #self._mw.xyScanView.addItem(self.vline_xy)
+        self._mw.xyScanView.addItem(self.hline_xy)
+        self._mw.xyScanView.addItem(self.vline_xy)
 
+        # connect the change of a region with the adjustment of the crosshair:
+        self.roi_xy.sigRegionChanged.connect(self.hline_xy.adjust)
+        self.roi_xy.sigRegionChanged.connect(self.vline_xy.adjust)
+        self.roi_xy.sigUserRegionUpdate.connect(self.update_from_roi_xy)
+        self.roi_xy.sigRegionChangeFinished.connect(self.roi_xy_bounds_check)
         # set up scan line plot
         #sc = self._scanning_logic._scan_counter
         #sc = sc - 1 if sc >= 1 else sc
@@ -169,6 +253,81 @@ class ConfocalGui(GUIBase):
         self._mw.contrastView.setLabel('left', 'Fluorescence', units='c/s')
         self._mw.contrastView.setMouseEnabled(x=False, y=False)
 
+        self.slider_small_step = 1e-6  # initial value in meter
+        self.slider_big_step = 10e-6  # initial value in meter
+
+        # Setup the Sliders:
+        # Calculate the needed Range for the sliders. The image ranges comming
+        # from the Logic module must be in meters.
+        # 1 nanometer resolution per one change, units are meters
+        self.slider_res = 1e-6
+
+        # How many points are needed for that kind of resolution:
+        num_of_points_x = (self._scanning_logic.x_range[1] - self._scanning_logic.x_range[0]) / self.slider_res
+        num_of_points_y = (self._scanning_logic.y_range[1] - self._scanning_logic.y_range[0]) / self.slider_res
+        num_of_points_z = (self._scanning_logic.z_range[1] - self._scanning_logic.z_range[0]) / self.slider_res
+
+        # Set a Range for the sliders:
+        self._mw.x_SliderWidget.setRange(0, num_of_points_x)
+        self._mw.y_SliderWidget.setRange(0, num_of_points_y)
+        self._mw.z_SliderWidget.setRange(0, num_of_points_z)
+
+        # Just to be sure, set also the possible maximal values for the spin
+        # boxes of the current values:
+        self._mw.x_current_InputWidget.setRange(self._scanning_logic.x_range[0], self._scanning_logic.x_range[1])
+        self._mw.y_current_InputWidget.setRange(self._scanning_logic.y_range[0], self._scanning_logic.y_range[1])
+        self._mw.z_current_InputWidget.setRange(self._scanning_logic.z_range[0], self._scanning_logic.z_range[1])
+
+        # set minimal steps for the current value
+        self._mw.x_current_InputWidget.setOpts(minStep=1e-6)
+        self._mw.y_current_InputWidget.setOpts(minStep=1e-6)
+        self._mw.z_current_InputWidget.setOpts(minStep=1e-6)
+
+        # Predefine the maximal and minimal image range as the default values
+        # for the display of the range:
+        self._mw.x_min_InputWidget.setValue(self._scanning_logic.image_x_range[0])
+        self._mw.x_max_InputWidget.setValue(self._scanning_logic.image_x_range[1])
+        self._mw.y_min_InputWidget.setValue(self._scanning_logic.image_y_range[0])
+        self._mw.y_max_InputWidget.setValue(self._scanning_logic.image_y_range[1])
+        self._mw.z_min_InputWidget.setValue(self._scanning_logic.image_z_range[0])
+        self._mw.z_max_InputWidget.setValue(self._scanning_logic.image_z_range[1])
+
+        # set the maximal ranges for the imagerange from the logic:
+        self._mw.x_min_InputWidget.setRange(self._scanning_logic.x_range[0], self._scanning_logic.x_range[1])
+        self._mw.x_max_InputWidget.setRange(self._scanning_logic.x_range[0], self._scanning_logic.x_range[1])
+        self._mw.y_min_InputWidget.setRange(self._scanning_logic.y_range[0], self._scanning_logic.y_range[1])
+        self._mw.y_max_InputWidget.setRange(self._scanning_logic.y_range[0], self._scanning_logic.y_range[1])
+        self._mw.z_min_InputWidget.setRange(self._scanning_logic.z_range[0], self._scanning_logic.z_range[1])
+        self._mw.z_max_InputWidget.setRange(self._scanning_logic.z_range[0], self._scanning_logic.z_range[1])
+
+        # set the minimal step size
+        self._mw.x_min_InputWidget.setOpts(minStep=1e-6)
+        self._mw.x_max_InputWidget.setOpts(minStep=1e-6)
+        self._mw.y_min_InputWidget.setOpts(minStep=1e-6)
+        self._mw.y_max_InputWidget.setOpts(minStep=1e-6)
+        self._mw.z_min_InputWidget.setOpts(minStep=1e-6)
+        self._mw.z_max_InputWidget.setOpts(minStep=1e-6)
+
+        # Handle slider movements by user:
+        self._mw.x_SliderWidget.sliderMoved.connect(self.update_from_slider_x)
+        self._mw.y_SliderWidget.sliderMoved.connect(self.update_from_slider_y)
+        self._mw.z_SliderWidget.sliderMoved.connect(self.update_from_slider_z)
+
+        # Take the default values from logic:
+        self._mw.xy_res_InputWidget.setValue(self._scanning_logic.xy_resolution)
+
+        # Update the inputed/displayed numbers if the cursor has left the field:
+        self._mw.x_current_InputWidget.editingFinished.connect(self.update_from_input_x)
+        self._mw.y_current_InputWidget.editingFinished.connect(self.update_from_input_y)
+        self._mw.z_current_InputWidget.editingFinished.connect(self.update_from_input_z)
+
+        self._mw.x_min_InputWidget.editingFinished.connect(self.change_x_image_range)
+        self._mw.x_max_InputWidget.editingFinished.connect(self.change_x_image_range)
+        self._mw.y_min_InputWidget.editingFinished.connect(self.change_y_image_range)
+        self._mw.y_max_InputWidget.editingFinished.connect(self.change_y_image_range)
+        self._mw.z_min_InputWidget.editingFinished.connect(self.change_z_image_range)
+        self._mw.z_max_InputWidget.editingFinished.connect(self.change_z_image_range)
+
         # Connections between GUI and logic fonctions
         self._mw.stepXBackwardPushButton.clicked.connect(self.stepXBackward)
         self._mw.stepXForwardPushButton.clicked.connect(self.stepXForward)
@@ -189,7 +348,6 @@ class ConfocalGui(GUIBase):
 
         self._mw.xy_res_InputWidget.editingFinished.connect(self.change_xy_resolution)
         self._mw.integrationtime.editingFinished.connect(self.set_integration_time)
-        self._mw.image_range_InputWidget.editingFinished.connect(self.change_image_range)
 
         # Connect the buttons and inputs for the xy colorbar
         self._mw.manualRadioButton.clicked.connect(self.update_xy_cb_range)
@@ -205,13 +363,11 @@ class ConfocalGui(GUIBase):
         # Connect the emitted signal of an image change from the logic with
         # a refresh of the GUI picture:
         self._scanning_logic.signal_xy_image_updated.connect(self.refresh_xy_image)
+        self._scanning_logic.signal_position_changed.connect(self.update_position_abs)
 
         #self._scanning_logic.signal_xy_image_updated.connect(self.refresh_scan_line)
 
         self._scanning_logic.sigImageXYInitialized.connect(self.adjust_xy_window)
-        # Take the default values from logic:
-        self._mw.image_range_InputWidget.setValue(self._scanning_logic.image_x_range[1])
-        self._mw.xy_res_InputWidget.setValue(self._scanning_logic.xy_resolution)
 
         self._mw.xAmplitudeDoubleSpinBox.setValue(self.get_xAxisAmplitude())
         self._mw.yAmplitudeDoubleSpinBox.setValue(self.get_yAxisAmplitude())
@@ -223,13 +379,12 @@ class ConfocalGui(GUIBase):
         self._mw.getposition_pushButton.clicked.connect(self.update_position_abs)
         self._mw.setposition_pushButton.clicked.connect(self.set_position_abs)
 
-
         self._mw.integrationtime.setValue(self.get_integration_time())
         self._mw.XY_fine_checkbox.stateChanged.connect(self.xy_fine)
         self._mw.stepscan_checkBox.stateChanged.connect(self.stepper)
 
         self.update_position_abs()
-
+        self.adjust_xy_window()
         self._mw.savexy_pushButton.clicked.connect(self.save_xy)
 
 
@@ -332,7 +487,7 @@ class ConfocalGui(GUIBase):
 
         self.startresolution = self._mw.xy_res_InputWidget.value()
         self.startintegrationtime = self._mw.integrationtime.value()
-        self.startrange = self._mw.image_range_InputWidget.value()
+        self.startrange = self._mw.xy_res_InputWidget.value()
 
 
         self._scanning_logic.start_scanning(zscan=False,tag='gui')
@@ -540,3 +695,229 @@ class ConfocalGui(GUIBase):
         header = header1+header2+header3+header4
         np.savetxt(filename, xy_image_data, header=header)
 
+
+    def update_from_roi_xy(self, roi):
+        """The user manually moved the XY ROI, adjust all other GUI elements accordingly
+
+        @params object roi: PyQtGraph ROI object
+        """
+        x_pos = roi.pos()[0] + 0.5 * roi.size()[0]
+        y_pos = roi.pos()[1] + 0.5 * roi.size()[1]
+
+        if x_pos < self._scanning_logic.x_range[0]:
+            x_pos = self._scanning_logic.x_range[0]
+        elif x_pos > self._scanning_logic.x_range[1]:
+            x_pos = self._scanning_logic.x_range[1]
+
+        if y_pos < self._scanning_logic.y_range[0]:
+            y_pos = self._scanning_logic.y_range[0]
+        elif y_pos > self._scanning_logic.y_range[1]:
+            y_pos = self._scanning_logic.y_range[1]
+
+        #self.update_roi_depth(x=x_pos)
+
+        self.update_slider_x(x_pos)
+        self.update_slider_y(y_pos)
+
+        self.update_input_x(x_pos)
+        self.update_input_y(y_pos)
+
+        self._scanning_logic.set_position('roixy', x=x_pos, y=y_pos)
+        self._optimizer_logic.set_position('roixy', x=x_pos, y=y_pos)
+
+    def roi_xy_bounds_check(self, roi):
+        """ Check if the focus cursor is oputside the allowed range after drag
+            and set its position to the limit
+        """
+        x_pos = roi.pos()[0] + 0.5 * roi.size()[0]
+        y_pos = roi.pos()[1] + 0.5 * roi.size()[1]
+
+        needs_reset = False
+
+        if x_pos < self._scanning_logic.image_x_range[0]:
+            x_pos = self._scanning_logic.image_x_range[0]
+            needs_reset = True
+        elif x_pos > self._scanning_logic.image_x_range[1]:
+            x_pos = self._scanning_logic.image_x_range[1]
+            needs_reset = True
+
+        if y_pos < self._scanning_logic.image_y_range[0]:
+            y_pos = self._scanning_logic.image_y_range[0]
+            needs_reset = True
+        elif y_pos > self._scanning_logic.image_y_range[1]:
+            y_pos = self._scanning_logic.image_y_range[1]
+            needs_reset = True
+
+        if needs_reset:
+            self.update_roi_xy(x_pos, y_pos)
+
+
+    def update_roi_xy(self, x=None, y=None):
+        """ Adjust the xy ROI position if the value has changed.
+
+        @param float x: real value of the current x position
+        @param float y: real value of the current y position
+
+        Since the origin of the region of interest (ROI) is not the crosshair
+        point but the lowest left point of the square, you have to shift the
+        origin according to that. Therefore the position of the ROI is not
+        the actual position!
+        """
+        roi_x_view = self.roi_xy.pos()[0]
+        roi_y_view = self.roi_xy.pos()[1]
+
+        if x is not None:
+            roi_x_view = x - self.roi_xy.size()[0] * 0.5
+        if y is not None:
+            roi_y_view = y - self.roi_xy.size()[1] * 0.5
+
+        self.roi_xy.setPos([roi_x_view, roi_y_view])
+
+    def update_from_key(self, x=None, y=None, z=None):
+        """The user pressed a key to move the crosshair, adjust all GUI elements.
+
+        @param float x: new x position in m
+        @param float y: new y position in m
+        @param float z: new z position in m
+        """
+        if x is not None:
+            self.update_roi_xy(x=x)
+            #self.update_roi_depth(x=x)
+            self.update_slider_x(x)
+            self.update_input_x(x)
+            self._scanning_logic.set_position('xinput', x=x)
+        if y is not None:
+            self.update_roi_xy(y=y)
+            self.update_slider_y(y)
+            self.update_input_y(y)
+            self._scanning_logic.set_position('yinput', y=y)
+        if z is not None:
+            #self.update_roi_depth(z=z)
+            self.update_slider_z(z)
+            self.update_input_z(z)
+            self._scanning_logic.set_position('zinput', z=z)
+
+    def update_from_input_x(self):
+        """ The user changed the number in the x position spin box, adjust all
+            other GUI elements."""
+        x_pos = self._mw.x_current_InputWidget.value()
+        self.update_roi_xy(x=x_pos)
+        #self.update_roi_depth(x=x_pos)
+        self.update_slider_x(x_pos)
+        self._scanning_logic.set_position('xinput', x=x_pos)
+        self._optimizer_logic.set_position('xinput', x=x_pos)
+
+    def update_from_input_y(self):
+        """ The user changed the number in the y position spin box, adjust all
+            other GUI elements."""
+        y_pos = self._mw.y_current_InputWidget.value()
+        self.update_roi_xy(y=y_pos)
+        self.update_slider_y(y_pos)
+        self._scanning_logic.set_position('yinput', y=y_pos)
+        self._optimizer_logic.set_position('yinput', y=y_pos)
+
+    def update_from_input_z(self):
+        """ The user changed the number in the z position spin box, adjust all
+           other GUI elements."""
+        z_pos = self._mw.z_current_InputWidget.value()
+        #self.update_roi_depth(z=z_pos)
+        self.update_slider_z(z_pos)
+        self._scanning_logic.set_position('zinput', z=z_pos)
+        self._optimizer_logic.set_position('zinput', z=z_pos)
+
+    def update_input_x(self, x_pos):
+        """ Update the displayed x-value.
+
+        @param float x_pos: the current value of the x position in m
+        """
+        # Convert x_pos to number of points for the slider:
+        self._mw.x_current_InputWidget.setValue(x_pos)
+
+    def update_input_y(self, y_pos):
+        """ Update the displayed y-value.
+
+        @param float y_pos: the current value of the y position in m
+        """
+        # Convert x_pos to number of points for the slider:
+        self._mw.y_current_InputWidget.setValue(y_pos)
+
+    def update_input_z(self, z_pos):
+        """ Update the displayed z-value.
+
+        @param float z_pos: the current value of the z position in m
+        """
+        # Convert x_pos to number of points for the slider:
+        self._mw.z_current_InputWidget.setValue(z_pos)
+
+    def update_from_slider_x(self, sliderValue):
+        """The user moved the x position slider, adjust the other GUI elements.
+
+        @params int sliderValue: slider postion, a quantized whole number
+        """
+        x_pos = self._scanning_logic.x_range[0] + sliderValue * self.slider_res
+        self.update_roi_xy(x=x_pos)
+        #self.update_roi_depth(x=x_pos)
+        self.update_input_x(x_pos)
+        self._scanning_logic.set_position('xslider', x=x_pos)
+        self._optimizer_logic.set_position('xslider', x=x_pos)
+
+    def update_from_slider_y(self, sliderValue):
+        """The user moved the y position slider, adjust the other GUI elements.
+
+        @params int sliderValue: slider postion, a quantized whole number
+        """
+        y_pos = self._scanning_logic.y_range[0] + sliderValue * self.slider_res
+        self.update_roi_xy(y=y_pos)
+        self.update_input_y(y_pos)
+        self._scanning_logic.set_position('yslider', y=y_pos)
+        self._optimizer_logic.set_position('yslider', y=y_pos)
+
+    def update_from_slider_z(self, sliderValue):
+        """The user moved the z position slider, adjust the other GUI elements.
+
+        @params int sliderValue: slider postion, a quantized whole number
+        """
+        z_pos = self._scanning_logic.z_range[0] + sliderValue * self.slider_res
+        #self.update_roi_depth(z=z_pos)
+        self.update_input_z(z_pos)
+        self._scanning_logic.set_position('zslider', z=z_pos)
+        self._optimizer_logic.set_position('zslider', z=z_pos)
+
+    def update_slider_x(self, x_pos):
+        """ Update the x slider when a change happens.
+
+        @param float x_pos: x position in m
+        """
+        self._mw.x_SliderWidget.setValue((x_pos - self._scanning_logic.x_range[0]) / self.slider_res)
+
+    def update_slider_y(self, y_pos):
+        """ Update the y slider when a change happens.
+
+        @param float y_pos: x yosition in m
+        """
+        self._mw.y_SliderWidget.setValue((y_pos - self._scanning_logic.y_range[0]) / self.slider_res)
+
+    def update_slider_z(self, z_pos):
+        """ Update the z slider when a change happens.
+
+        @param float z_pos: z position in m
+        """
+        self._mw.z_SliderWidget.setValue((z_pos - self._scanning_logic.z_range[0]) / self.slider_res)
+
+    def change_xy_resolution(self):
+        """ Update the xy resolution in the logic according to the GUI.
+        """
+        self._scanning_logic.xy_resolution = self._mw.xy_res_InputWidget.value()
+
+    def change_x_image_range(self):
+        """ Adjust the image range for x in the logic. """
+        self._scanning_logic.image_x_range = [self._mw.x_min_InputWidget.value(), self._mw.x_max_InputWidget.value()]
+
+    def change_y_image_range(self):
+        """ Adjust the image range for y in the logic.
+        """
+        self._scanning_logic.image_y_range = [self._mw.y_min_InputWidget.value(), self._mw.y_max_InputWidget.value()]
+
+    def change_z_image_range(self):
+        """ Adjust the image range for z in the logic. """
+        self._scanning_logic.image_z_range = [self._mw.z_min_InputWidget.value(), self._mw.z_max_InputWidget.value()]
