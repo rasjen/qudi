@@ -733,14 +733,14 @@ class ConfocalLogic(GenericLogic):
 
         @return int: error code (0:OK, -1:error)
         """
-        ch_array = ['x', 'y', 'z', 'a']
-        pos_array = [self._current_x, self._current_y, self._current_z, self._current_a]
+        ch_array = ['x', 'y', 'z']
+        pos_array = [self._current_x, self._current_y, self._current_z]
         pos_dict = {}
-
+        print(z)
         for i, ch in enumerate(self.get_scanner_axes()):
             pos_dict[ch_array[i]] = pos_array[i]
 
-        self._scanning_device.scanner_set_position(x=self._current_x,y=self._current_y,z=self._current_z)
+        self._scanning_device.set_scanner_position(x=self._current_x,y=self._current_y,z=self._current_z)
         return 0
 
     def get_position(self):
@@ -769,7 +769,7 @@ class ConfocalLogic(GenericLogic):
         """
         # stops scanning
 
-        self.position.append(self._scanning_device.get_scanner_position_abs())
+        self.position.append(self._scanning_device.get_scanner_position())
         if self.stopRequested:
             with self.threadlock:
                 self.kill_scanner()
@@ -1440,7 +1440,7 @@ class ConfocalLogic(GenericLogic):
         return self._scanning_device.get_scanner_position_abs()
 
     def set_position_abs(self, x, y, z):
-        self._scanning_device.set_scanner_position_abs(x, y, z)
+        self._scanning_device.set_scanner_position(x, y, z)
         self.signal_position_changed.emit()
 
 
