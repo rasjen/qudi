@@ -655,6 +655,12 @@
           <property name="accelerated">
            <bool>true</bool>
           </property>
+          <property name="maximum">
+           <number>5000</number>
+          </property>
+          <property name="value">
+           <number>100</number>
+          </property>
          </widget>
         </item>
         <item row="2" column="4">
@@ -697,6 +703,12 @@
           </property>
           <property name="accelerated">
            <bool>true</bool>
+          </property>
+          <property name="maximum">
+           <number>5000</number>
+          </property>
+          <property name="value">
+           <number>100</number>
           </property>
          </widget>
         </item>
@@ -741,6 +753,9 @@
           <property name="accelerated">
            <bool>true</bool>
           </property>
+          <property name="maximum">
+           <number>5000</number>
+          </property>
          </widget>
         </item>
         <item row="1" column="3">
@@ -783,6 +798,12 @@
           </property>
           <property name="accelerated">
            <bool>true</bool>
+          </property>
+          <property name="maximum">
+           <number>5000</number>
+          </property>
+          <property name="value">
+           <number>0</number>
           </property>
          </widget>
         </item>
@@ -827,6 +848,9 @@
           <property name="accelerated">
            <bool>true</bool>
           </property>
+          <property name="maximum">
+           <number>5000</number>
+          </property>
          </widget>
         </item>
         <item row="1" column="6">
@@ -869,6 +893,9 @@
           </property>
           <property name="accelerated">
            <bool>true</bool>
+          </property>
+          <property name="maximum">
+           <number>5000</number>
           </property>
          </widget>
         </item>
@@ -913,6 +940,9 @@
           <property name="accelerated">
            <bool>true</bool>
           </property>
+          <property name="maximum">
+           <number>5000</number>
+          </property>
          </widget>
         </item>
         <item row="3" column="6">
@@ -952,6 +982,9 @@
           </property>
           <property name="buttonSymbols">
            <enum>QAbstractSpinBox::NoButtons</enum>
+          </property>
+          <property name="maximum">
+           <number>5000</number>
           </property>
          </widget>
         </item>
@@ -995,6 +1028,9 @@
           </property>
           <property name="accelerated">
            <bool>true</bool>
+          </property>
+          <property name="maximum">
+           <number>5000</number>
           </property>
          </widget>
         </item>
