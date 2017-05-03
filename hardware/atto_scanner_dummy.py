@@ -200,7 +200,7 @@ class ConfocalScannerAtto(Base, ConfocalScannerInterfaceAtto):
         pass
 
 
-    def scanner_set_position(self, x=None, y=None, z=None):
+    def set_scanner_position(self, x=None, y=None, z=None):
         """Move stage to x, y, z, a (where a is the fourth voltage channel).
 
         @param float x: postion in x-direction (volts)
