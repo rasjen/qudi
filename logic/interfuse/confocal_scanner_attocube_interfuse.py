@@ -164,9 +164,6 @@ class AttocubeScannerInterfuse(Base, ConfocalScannerInterfaceAtto):
         @return int: error code (0:OK, -1:error)
         """
         try:
-            print('x=',x)
-            print('z=', z)
-            print('y=', y)
             return self._atto_scanner_hw.set_scanner_position(x=x, y=y, z=z)
         except:
             self.log.error('can not go to this position since ')
