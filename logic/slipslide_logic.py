@@ -661,6 +661,7 @@ class ConfocalLogic(GenericLogic):
             pos_dict[ch_array[i]] = pos_array[i]
 
         self._scanning_device.set_scanner_position(x=self._current_x,y=self._current_y,z=self._current_z)
+        self.signal_position_changed.emit()
         return 0
 
     def get_position(self):
