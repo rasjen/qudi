@@ -128,9 +128,11 @@ class ConfocalScannerAtto(Base, ConfocalScannerInterfaceAtto):
         """ Returns the physical range of the scanner.
 
         @return float [4][2]: array of 4 ranges with an array containing lower
-                              and upper limit
+                              and upper limit. The unit of the scan range is
+                              micrometer.
         """
-        return [[0, 1000], [0, 1000], [0, 1000]]
+        self._position_range = [[0, 5000e-6], [0, 5000e-6], [0, 5000e-6], [0, 0]]
+        return self._position_range
 
     def set_position_range(self, myrange=None):
         """ Sets the physical range of the scanner.
@@ -317,6 +319,7 @@ class ConfocalScannerAtto(Base, ConfocalScannerInterfaceAtto):
         pass
 
     def set_target_position(self,axis,position):
+        print('targetposition', axis ,position)
         pass
 
     def auto_move(self,axis,enable):
@@ -327,3 +330,42 @@ class ConfocalScannerAtto(Base, ConfocalScannerInterfaceAtto):
 
     def set_fine_position(self, axis, pos):
         pass
+
+    def scanner_set_position_abs(self, x=None, y=None, z=None):
+        """Move stage to x, y, z, a (where a is the fourth voltage channel).
+
+        #FIXME: No volts
+        @param float x: postion in x-direction (volts)
+        @param float y: postion in y-direction (volts)
+        @param float z: postion in z-direction (volts)
+        @param float a: postion in a-direction (volts)
+
+        @return int: error code (0:OK, -1:error)
+        """
+
+        print('test')
+        if x is not None:
+            if not (self._position_range[0][0] <= x <= self._position_range[0][1]):
+                self.log.error('You want to set x out of range: {0:f}.'.format(x))
+                return -1
+            self._current_position_abs[0] = np.float(x)
+
+        if y is not None:
+            if not (self._position_range[1][0] <= y <= self._position_range[1][1]):
+                self.log.error('You want to set y out of range: {0:f}.'.format(y))
+                return -1
+            self._current_position_abs[1] = np.float(y)
+
+        if z is not None:
+            if not (self._position_range[2][0] <= z <= self._position_range[2][1]):
+                self.log.error('You want to set z out of range: {0:f}.'.format(z))
+                return -1
+            self._current_position_abs[2] = np.float(z)
+        try:
+            for i, label in enumerate(self.get_scanner_axes()):
+                self.set_target_position(axis=label, position=self._current_position_abs[i])
+                self.auto_move(label, 1)
+        except:
+            self.log.error('did not move')
+            return -1
+        return 0

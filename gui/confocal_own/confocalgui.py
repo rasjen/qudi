@@ -197,25 +197,26 @@ class ConfocalGui(GUIBase):
         # on the widget)
         self._mw.xyScanView.addItem(self.xy_image)
 
-        ini_pos_x_crosshair = len(arr01) / 2
-        ini_pos_y_crosshair = len(arr01) / 2
+        ini_pos_x_crosshair = (self._scanning_logic.xy_image[-1,-1,1] + self._scanning_logic.xy_image[0,0,1]) / 2
+        ini_pos_y_crosshair = (self._scanning_logic.xy_image[-1,-1,0] + self._scanning_logic.xy_image[0,0,0]) / 2
 
+        self.pixel_size = (self._scanning_logic.xy_image[1,1,0] - self._scanning_logic.xy_image[0,0,0])/2
         # Create Region of Interest for xy image and add to xy Image Widget:
         self.roi_xy = CrossROI(
             [
-                ini_pos_x_crosshair - self._optimizer_logic.refocus_XY_size / 2,
-                ini_pos_y_crosshair - self._optimizer_logic.refocus_XY_size / 2
+                ini_pos_y_crosshair - self.pixel_size / 2,
+                ini_pos_x_crosshair - self.pixel_size / 2
             ],
-            [self._optimizer_logic.refocus_XY_size, self._optimizer_logic.refocus_XY_size],
+            [self.pixel_size, self.pixel_size],
             pen={'color': "F0F", 'width': 1},
             removable=True
         )
 
         self._mw.xyScanView.addItem(self.roi_xy)
         # create horizontal and vertical line as a crosshair in xy image:
-        self.hline_xy = CrossLine(pos=len(arr01) * 0.5,
+        self.hline_xy = CrossLine(pos=ini_pos_x_crosshair,
                                   angle=0, pen={'color': palette.green, 'width': 1})
-        self.vline_xy = CrossLine(pos=len(arr01) * 0.5,
+        self.vline_xy = CrossLine(pos=ini_pos_y_crosshair,
                                   angle=90, pen={'color': palette.green, 'width': 1})
 
 
@@ -239,8 +240,8 @@ class ConfocalGui(GUIBase):
 
         self.fixed_aspect_ratio_xy = True
         # Label the axes:
-        self._mw.xyScanView.setLabel('bottom', 'X position', units='μm')
-        self._mw.xyScanView.setLabel('left', 'Y position', units='μm')
+        self._mw.xyScanView.setLabel('bottom', 'X position', units='m')
+        self._mw.xyScanView.setLabel('left', 'Y position', units='m')
 
         self.my_colors = ColorScaleViridis()
         self.xy_cb = ColorBar(self.my_colors.cmap_normed, width=100, cb_min=0, cb_max=100)
@@ -364,9 +365,8 @@ class ConfocalGui(GUIBase):
         # a refresh of the GUI picture:
         self._scanning_logic.signal_xy_image_updated.connect(self.refresh_xy_image)
         self._scanning_logic.signal_position_changed.connect(self.update_position_abs)
-
+        self._scanning_logic.signal_change_position.connect(self.update_crosshair_position_from_logic)
         #self._scanning_logic.signal_xy_image_updated.connect(self.refresh_scan_line)
-
         self._scanning_logic.sigImageXYInitialized.connect(self.adjust_xy_window)
 
         self._mw.xAmplitudeDoubleSpinBox.setValue(self.get_xAxisAmplitude())
@@ -723,7 +723,7 @@ class ConfocalGui(GUIBase):
         self.update_input_y(y_pos)
 
         self._scanning_logic.set_position('roixy', x=x_pos, y=y_pos)
-        self._optimizer_logic.set_position('roixy', x=x_pos, y=y_pos)
+        #self._optimizer_logic.set_position('roixy', x=x_pos, y=y_pos)
 
     def roi_xy_bounds_check(self, roi):
         """ Check if the focus cursor is oputside the allowed range after drag
@@ -805,7 +805,7 @@ class ConfocalGui(GUIBase):
         #self.update_roi_depth(x=x_pos)
         self.update_slider_x(x_pos)
         self._scanning_logic.set_position('xinput', x=x_pos)
-        self._optimizer_logic.set_position('xinput', x=x_pos)
+        #self._optimizer_logic.set_position('xinput', x=x_pos)
 
     def update_from_input_y(self):
         """ The user changed the number in the y position spin box, adjust all
@@ -814,7 +814,7 @@ class ConfocalGui(GUIBase):
         self.update_roi_xy(y=y_pos)
         self.update_slider_y(y_pos)
         self._scanning_logic.set_position('yinput', y=y_pos)
-        self._optimizer_logic.set_position('yinput', y=y_pos)
+        #self._optimizer_logic.set_position('yinput', y=y_pos)
 
     def update_from_input_z(self):
         """ The user changed the number in the z position spin box, adjust all
@@ -823,7 +823,7 @@ class ConfocalGui(GUIBase):
         #self.update_roi_depth(z=z_pos)
         self.update_slider_z(z_pos)
         self._scanning_logic.set_position('zinput', z=z_pos)
-        self._optimizer_logic.set_position('zinput', z=z_pos)
+        #self._optimizer_logic.set_position('zinput', z=z_pos)
 
     def update_input_x(self, x_pos):
         """ Update the displayed x-value.
@@ -859,7 +859,7 @@ class ConfocalGui(GUIBase):
         #self.update_roi_depth(x=x_pos)
         self.update_input_x(x_pos)
         self._scanning_logic.set_position('xslider', x=x_pos)
-        self._optimizer_logic.set_position('xslider', x=x_pos)
+       #self._optimizer_logic.set_position('xslider', x=x_pos)
 
     def update_from_slider_y(self, sliderValue):
         """The user moved the y position slider, adjust the other GUI elements.
@@ -870,7 +870,7 @@ class ConfocalGui(GUIBase):
         self.update_roi_xy(y=y_pos)
         self.update_input_y(y_pos)
         self._scanning_logic.set_position('yslider', y=y_pos)
-        self._optimizer_logic.set_position('yslider', y=y_pos)
+        #self._optimizer_logic.set_position('yslider', y=y_pos)
 
     def update_from_slider_z(self, sliderValue):
         """The user moved the z position slider, adjust the other GUI elements.
@@ -881,7 +881,7 @@ class ConfocalGui(GUIBase):
         #self.update_roi_depth(z=z_pos)
         self.update_input_z(z_pos)
         self._scanning_logic.set_position('zslider', z=z_pos)
-        self._optimizer_logic.set_position('zslider', z=z_pos)
+        #self._optimizer_logic.set_position('zslider', z=z_pos)
 
     def update_slider_x(self, x_pos):
         """ Update the x slider when a change happens.
@@ -921,3 +921,58 @@ class ConfocalGui(GUIBase):
     def change_z_image_range(self):
         """ Adjust the image range for z in the logic. """
         self._scanning_logic.image_z_range = [self._mw.z_min_InputWidget.value(), self._mw.z_max_InputWidget.value()]
+
+    def update_crosshair_position_from_logic(self, tag):
+        """ Update the GUI position of the crosshair from the logic.
+
+        @param str tag: tag indicating the source of the update
+
+        Ignore the update when it is tagged with one of the tags that the
+        confocal gui emits, as the GUI elements were already adjusted.
+        """
+        if 'roi' not in tag and 'slider' not in tag and 'key' not in tag and 'input' not in tag:
+            position = self._scanning_logic.get_position()
+            x_pos = position[0]
+            y_pos = position[1]
+            z_pos = position[2]
+
+            roi_x_view = x_pos - self.roi_xy.size()[0] * 0.5
+            roi_y_view = y_pos - self.roi_xy.size()[1] * 0.5
+            self.roi_xy.setPos([roi_x_view, roi_y_view])
+
+            #roi_x_view = x_pos - self.roi_depth.size()[0] * 0.5
+            #roi_y_view = z_pos - self.roi_depth.size()[1] * 0.5
+            #self.roi_depth.setPos([roi_x_view, roi_y_view])
+
+            self.update_slider_x(x_pos)
+            self.update_slider_y(y_pos)
+            self.update_slider_z(z_pos)
+
+            self.update_input_x(x_pos)
+            self.update_input_y(y_pos)
+            self.update_input_z(z_pos)
+
+    def put_cursor_in_xy_scan(self):
+        """Put the xy crosshair back if it is outside of the visible range. """
+        view_x_min = self._scanning_logic.image_x_range[0]
+        view_x_max = self._scanning_logic.image_x_range[1]
+        view_y_min = self._scanning_logic.image_y_range[0]
+        view_y_max = self._scanning_logic.image_y_range[1]
+
+        x_value = self.roi_xy.pos()[0]
+        y_value = self.roi_xy.pos()[1]
+        cross_pos = self.roi_xy.pos() + self.roi_xy.size() * 0.5
+
+        if (view_x_min > cross_pos[0]):
+            x_value = view_x_min + self.roi_xy.size()[0]
+
+        if (view_x_max < cross_pos[0]):
+            x_value = view_x_max - self.roi_xy.size()[0]
+
+        if (view_y_min > cross_pos[1]):
+            y_value = view_y_min + self.roi_xy.size()[1]
+
+        if (view_y_max < cross_pos[1]):
+            y_value = view_y_max - self.roi_xy.size()[1]
+
+        self.roi_xy.setPos([x_value, y_value], update=True)
