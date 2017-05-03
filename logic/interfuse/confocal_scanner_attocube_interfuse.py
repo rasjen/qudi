@@ -153,7 +153,7 @@ class AttocubeScannerInterfuse(Base, ConfocalScannerInterfaceAtto):
 
         return self._counter.get_counter_channels()
 
-    def scanner_set_position(self, x=None, y=None, z=None):
+    def set_scanner_position(self, x=None, y=None, z=None):
         """Move stage to x, y, z, a (where a is the fourth voltage channel).
 
         @param float x: postion in x-direction
@@ -352,7 +352,6 @@ class AttocubeScannerInterfuse(Base, ConfocalScannerInterfaceAtto):
     def get_scanner_position_abs(self):
         return self._atto_scanner_hw.get_scanner_position_abs()
 
-    def set_scanner_position_abs(self, x, y, z):
-        return self._atto_scanner_hw.scanner_set_position_abs(x,y,z)
+
 
 
