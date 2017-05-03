@@ -1441,6 +1441,7 @@ class ConfocalLogic(GenericLogic):
 
     def set_position_abs(self, x, y, z):
         self._scanning_device.set_scanner_position_abs(x, y, z)
+        self.signial_position_changed.emit()
 
 
 

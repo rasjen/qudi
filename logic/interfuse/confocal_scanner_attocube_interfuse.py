@@ -55,8 +55,6 @@ class AttocubeScannerInterfuse(Base, ConfocalScannerInterfaceAtto):
             self.log.warning('No clock_frequency configured taking 100 Hz '
                     'instead.')
 
-
-
         # Internal parameters
         self.integration_time = 100  # ms
         self.log.warning('integration time is set to 100 ms')
@@ -64,6 +62,7 @@ class AttocubeScannerInterfuse(Base, ConfocalScannerInterfaceAtto):
         self._XY_fine_scan = False
         self._set_stepscan = False
         self.stop_scan = False
+        self.current_position_abs = None
 
     def on_activate(self):
         """ Initialisation performed during activation of the module.
@@ -110,20 +109,6 @@ class AttocubeScannerInterfuse(Base, ConfocalScannerInterfaceAtto):
 
         return 0
 
-    def set_voltage_range(self, myrange=None):
-        """ Sets the voltage range of the NI Card.
-        This is a direct pass-through to the scanner HW
-
-        @param float [2] myrange: array containing lower and upper limit
-
-        @return int: error code (0:OK, -1:error)
-        """
-        if myrange is None:
-            myrange = [-10.,10.]
-
-        self._scanner_hw.set_voltage_range(myrange=myrange)
-        return 0
-
     def set_up_scanner_clock(self, clock_frequency = None, clock_channel = None):
         """ Configures the hardware clock of the NiDAQ card to give the timing.
         This is a direct pass-through to the scanner HW
@@ -149,8 +134,8 @@ class AttocubeScannerInterfuse(Base, ConfocalScannerInterfaceAtto):
         @return int: error code (0:OK, -1:error)
         """
         try:
-            #self._atto_scanner_hw.enable_trigger_input(self)
             [self.x_start, self.y_start, self.z_start] = self._atto_scanner_hw.get_scanner_position_abs()
+            self.current_position_abs = [self.x_start, self.y_start, self.z_start]
             self._atto_scanner_hw.enable_outputs()
             self._counter.set_up_counter()
             return 0
@@ -180,13 +165,19 @@ class AttocubeScannerInterfuse(Base, ConfocalScannerInterfaceAtto):
 
         @return int: error code (0:OK, -1:error)
         """
+        if self.current_position_abs is None:
+            self.log.warning('Make new scan! before dragging the crosshair')
+
+            [self.x_start, self.y_start, self.z_start] = self._atto_scanner_hw.get_scanner_position_abs()
+            self.current_position_abs = [self.x_start, self.y_start, self.z_start]
+
         try:
             x_abs = self.x_start + (x * 1e-6)
             y_abs = self.y_start + (y * 1e-6)
             z_abs = self.z_start + (z * 1e-6)
             return self._atto_scanner_hw.scanner_set_position_abs(x=x_abs, y=y_abs, z=z_abs)
         except:
-            self.log.error('can not make go to this position since ')
+            self.log.error('can not go to this position since ')
 
     def get_scanner_position(self):
         """ Get the current position of the scanner hardware.
@@ -375,7 +366,7 @@ class AttocubeScannerInterfuse(Base, ConfocalScannerInterfaceAtto):
     def get_scanner_position_abs(self):
         return self._atto_scanner_hw.get_scanner_position_abs()
 
-    def set_scanner_position_abs(self,x,y,z):
+    def set_scanner_position_abs(self, x, y, z):
         return self._atto_scanner_hw.scanner_set_position_abs(x,y,z)
 
 
