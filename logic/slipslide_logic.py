@@ -56,20 +56,32 @@ class ConfocalHistoryEntry(QtCore.QObject):
         self.y_range = confocal._scanning_device.get_position_range()[1]
         self.z_range = confocal._scanning_device.get_position_range()[2]
 
+        self.xV_range = confocal._scanning_device.get_voltage_range()[0]
+        self.yV_range = confocal._scanning_device.get_voltage_range()[1]
+
         # Sets the current position to the center of the maximal scanning range
         self.current_x = 0.0#(self.x_range[0] + self.x_range[1]) / 2
         self.current_y = 0.0#(self.y_range[0] + self.y_range[1]) / 2
         self.current_z = 0.0#(self.z_range[0] + self.z_range[1]) / 2
         self.current_a = 0.0
 
+        self._current_xfine = 0.0
+        self._current_yfine = 0.0
+
         # Sets the size of the image to the maximal scanning range
         self.image_x_range = self.x_range
         self.image_y_range = self.y_range
         self.image_z_range = self.z_range
 
+        self.fine_image_x_range = self.xV_range
+        self.fine_image_y_range = self.yV_range
+
         # Default values for the resolution of the scan
         self.xy_resolution = 100
         self.z_resolution = 50
+
+        self.x_fine_resolution = 61
+        self.y_fine_resolution = 71
 
         # Initialization of internal counter for scanning
         self.xy_line_position = 0
@@ -78,6 +90,7 @@ class ConfocalHistoryEntry(QtCore.QObject):
         # Variable to check if a scan is continuable
         self.xy_scan_continuable = False
         self.depth_scan_continuable = False
+        self.xyfine_scan_continuable = False
 
         # tilt correction stuff:
         self.tilt_correction = False
@@ -103,14 +116,21 @@ class ConfocalHistoryEntry(QtCore.QObject):
         confocal._current_y = self.current_y
         confocal._current_z = self.current_z
         confocal._current_a = self.current_a
+        confocal._current_xfine = self._current_xfine
+        confocal._current_yfine = self._current_yfine
         confocal.image_x_range = np.copy(self.image_x_range)
         confocal.image_y_range = np.copy(self.image_y_range)
+        confocal.fine_image_x_range = np.copy(self.fine_image_x_range)
+        confocal.fine_image_y_range = np.copy(self.fine_image_y_range)
         confocal.image_z_range = np.copy(self.image_z_range)
         confocal.xy_resolution = self.xy_resolution
+        confocal.x_fine_resolution = self.x_fine_resolution
+        confocal.y_fine_resolution = self.y_fine_resolution
         confocal.z_resolution = self.z_resolution
         confocal._xy_line_pos = self.xy_line_position
         confocal._depth_line_pos = self.depth_line_position
         confocal._xyscan_continuable = self.xy_scan_continuable
+        confocal._xyfinescan_continuable = self.xyfine_scan_continuable
         confocal._zscan_continuable = self.depth_scan_continuable
         confocal.point1 = np.copy(self.point1)
         confocal.point2 = np.copy(self.point2)
@@ -137,20 +157,36 @@ class ConfocalHistoryEntry(QtCore.QObject):
             self.depth_image = np.copy(confocal.depth_image)
         confocal._zscan = False
 
+        confocal._xy_fine = True
+        confocal.initialize_image()
+        try:
+            if confocal.fine_image.shape == self.fine_image.shape:
+                confocal.fine_image = np.copy(self.fine_image)
+        except AttributeError:
+            self.fine_image = np.copy(confocal.fine_image)
+        confocal._xy_fine = False
+
     def snapshot(self, confocal):
         """ Extract all necessary data from a confocal logic and keep it for later use """
         self.current_x = confocal._current_x
         self.current_y = confocal._current_y
         self.current_z = confocal._current_z
         self.current_a = confocal._current_a
+        self._current_xfine = confocal._current_xfine
+        self._current_yfine = confocal._current_yfine
         self.image_x_range = np.copy(confocal.image_x_range)
         self.image_y_range = np.copy(confocal.image_y_range)
         self.image_z_range = np.copy(confocal.image_z_range)
+        self.fine_image_x_range = np.copy(confocal.fine_image_x_range )
+        self.fine_image_y_range = np.copy(confocal.fine_image_y_range)
         self.xy_resolution = confocal.xy_resolution
+        self.x_fine_resolution = confocal.x_fine_resolution
+        self.y_fine_resolution = confocal.y_fine_resolution
         self.z_resolution = confocal.z_resolution
         self.xy_line_position = confocal._xy_line_pos
         self.depth_line_position = confocal._depth_line_pos
         self.xy_scan_continuable = confocal._xyscan_continuable
+        self.xyfine_scan_continuable = confocal._xyfinescan_continuable
         self.depth_scan_continuable = confocal._zscan_continuable
         self.tilt_correction = confocal._scanning_device.tiltcorrection
         self.tilt_slope_x = confocal._scanning_device.tilt_variable_ax
@@ -162,15 +198,22 @@ class ConfocalHistoryEntry(QtCore.QObject):
         self.point3 = np.copy(confocal.point3)
         self.xy_image = np.copy(confocal.xy_image)
         self.depth_image = np.copy(confocal.depth_image)
+        self.fine_image = np.copy(confocal.fine_image)
 
     def serialize(self):
         """ Give out a dictionary that can be saved via the usual means """
         serialized = dict()
         serialized['focus_position'] = [self.current_x, self.current_y, self.current_z, self.current_a]
+        serialized['_current_xfine'] = self._current_xfine
+        serialized['_current_yfine'] = self._current_yfine
         serialized['x_range'] = list(self.image_x_range)
         serialized['y_range'] = list(self.image_y_range)
         serialized['z_range'] = list(self.image_z_range)
+        serialized['x_fine_range'] = list(self.fine_image_x_range)
+        serialized['y_fine_range'] = list(self.fine_image_y_range)
         serialized['xy_resolution'] = self.xy_resolution
+        serialized['x_fine_resolution'] = self.x_fine_resolution
+        serialized['y_fine_resolution'] = self.y_fine_resolution
         serialized['z_resolution'] = self.z_resolution
         serialized['xy_line_position'] = self.xy_line_position
         serialized['depth_line_position'] = self.depth_line_position
@@ -184,6 +227,7 @@ class ConfocalHistoryEntry(QtCore.QObject):
         serialized['tilt_slope'] = [self.tilt_slope_x, self.tilt_slope_y]
         serialized['xy_image'] = self.xy_image
         serialized['depth_image'] = self.depth_image
+        serialized['fine_image'] = self.fine_image
         return serialized
 
     def deserialize(self, serialized):
@@ -193,14 +237,26 @@ class ConfocalHistoryEntry(QtCore.QObject):
             self.current_y = serialized['focus_position'][1]
             self.current_z = serialized['focus_position'][2]
             self.current_a = serialized['focus_position'][3]
+        if '_current_xfine' in serialized:
+            self._current_xfine = serialized['_current_xfine']
+        if '_current_yfine' in serialized:
+            self._current_yfine = serialized['_current_yfine']
         if 'x_range' in serialized and len(serialized['x_range']) == 2:
             self.image_x_range = serialized['x_range']
         if 'y_range' in serialized and len(serialized['y_range']) == 2:
             self.image_y_range = serialized['y_range']
         if 'z_range' in serialized and len(serialized['z_range']) == 2:
             self.image_z_range = serialized['z_range']
+        if 'x_fine_range' in serialized and len(serialized['x_fine_range']) == 2:
+            self.fine_image_x_range = serialized['x_fine_range']
+        if 'y_fine_range' in serialized and len(serialized['y_fine_range']) == 2:
+            self.fine_image_y_range = serialized['y_fine_range']
         if 'xy_resolution' in serialized:
             self.xy_resolution = serialized['xy_resolution']
+        if 'x_fine_resolution' in serialized:
+            self.x_fine_resolution = serialized['x_fine_resolution']
+        if 'y_fine_resolution' in serialized:
+            self.y_fine_resolution = serialized['y_fine_resolution']
         if 'z_resolution' in serialized:
             self.z_resolution = serialized['z_resolution']
         if 'tilt_correction' in serialized:
@@ -248,6 +304,7 @@ class ConfocalLogic(GenericLogic):
     signal_stop_scanning = QtCore.Signal()
     signal_scan_lines_next = QtCore.Signal()
     signal_xy_image_updated = QtCore.Signal()
+    signal_xy_fine_image_updated = QtCore.Signal()
     signal_depth_image_updated = QtCore.Signal()
     signal_change_position = QtCore.Signal(str)
     signal_xy_data_saved = QtCore.Signal()
@@ -258,6 +315,7 @@ class ConfocalLogic(GenericLogic):
     signal_position_changed = QtCore.Signal()
 
     sigImageXYInitialized = QtCore.Signal()
+    sigImageXYfineInitialized = QtCore.Signal()
     sigImageDepthInitialized = QtCore.Signal()
 
     signal_history_event = QtCore.Signal()
@@ -286,7 +344,7 @@ class ConfocalLogic(GenericLogic):
         self.scan_mode = scanning_modes[1]
         self.position = []
         self.kill_mode = False
-        self.xy_fine = False
+        self._xy_fine = False
 
 
 
@@ -311,6 +369,9 @@ class ConfocalLogic(GenericLogic):
         self.x_range = self._scanning_device.get_position_range()[0]
         self.y_range = self._scanning_device.get_position_range()[1]
         self.z_range = self._scanning_device.get_position_range()[2]
+
+        self.xV_range = self._scanning_device.get_voltage_range()[0]
+        self.yV_range = self._scanning_device.get_voltage_range()[1]
 
         # restore here ...
         self.history = []
@@ -394,7 +455,7 @@ class ConfocalLogic(GenericLogic):
         else:
             return 0
 
-    def start_scanning(self, zscan = False, tag='logic'):
+    def start_scanning(self, zscan = False, finescan = False, tag='logic'):
         """Starts scanning
 
         @param bool zscan: zscan if true, xyscan if false
@@ -406,22 +467,29 @@ class ConfocalLogic(GenericLogic):
 #            time.sleep(0.01)
         self._scan_counter = 0
         self._zscan = zscan
+        self._xy_fine = finescan
         if self._zscan:
             self._zscan_continuable = True
+        elif self._xy_fine:
+            self._xyfinescan_continuable = True
+            self.set_xy_fine_state(True)
         else:
             self._xyscan_continuable = True
 
         self.signal_start_scanning.emit(tag)
         return 0
 
-    def continue_scanning(self,zscan,tag='logic'):
+    def continue_scanning(self,zscan, finescan = False,tag='logic'):
         """Continue scanning
 
         @return int: error code (0:OK, -1:error)
         """
         self._zscan = zscan
+        self._xy_fine = finescan
         if zscan:
             self._scan_counter = self._depth_line_pos
+        elif finescan:
+            self._scan_counter = self._xyfine_line_pos
         else:
             self._scan_counter = self._xy_line_pos
         self.signal_continue_scanning.emit(tag)
@@ -436,6 +504,7 @@ class ConfocalLogic(GenericLogic):
             if self.getState() == 'locked':
                 self.stopRequested = True
         self.signal_stop_scanning.emit()
+        self.set_xy_fine_state(False)
         return 0
 
     def initialize_image(self):
@@ -521,6 +590,22 @@ class ConfocalLogic(GenericLogic):
                 self._return_YL = np.linspace(self._YL[-1], self._YL[0], self.return_slowness)
                 self._return_AL = np.zeros(self._return_YL.shape)
             self.sigImageDepthInitialized.emit()
+        elif self._xy_fine:
+
+            xV1, xV2 = self.fine_image_x_range[0],self.fine_image_x_range[1]
+            yV1, yV2 = self.fine_image_y_range[0], self.fine_image_y_range[1]
+            # Voltages and resolution for finescan
+            self._Xfine = np.linspace(xV1, xV2, self.x_fine_resolution)
+            self._Yfine = np.linspace(yV1, yV2, self.y_fine_resolution)
+            self._image_vert_axis = self._Yfine
+            self.fine_image = np.zeros(
+                (len(self._Yfine),
+                 len(self._Xfine),
+                 3 + len(self.get_scanner_count_channels())))
+            self.fine_image[:, :, 0] = np.full((len(self._Yfine), len(self._Xfine)), self._Xfine)
+            y_value_matrix = np.full((len(self._Xfine), len(self._Yfine)), self._Yfine)
+            self.fine_image[:, :, 1] = y_value_matrix.transpose()
+            self.sigImageXYfineInitialized.emit()
         else:
             self._image_vert_axis = self._Y
             # creats an image where each pixel will be [x,y,z,counts]
@@ -534,6 +619,8 @@ class ConfocalLogic(GenericLogic):
             self.xy_image[:, :, 2] = self._current_z * np.ones((len(self._image_vert_axis), len(self._X)))
             self.sigImageXYInitialized.emit()
         return 0
+
+
 
     def start_scanner(self):
         """Setting up the scanner device and starts the scanning procedure
@@ -696,9 +783,12 @@ class ConfocalLogic(GenericLogic):
                 self.unlock()
                 self.signal_xy_image_updated.emit()
                 self.signal_depth_image_updated.emit()
+                self.signal_xy_fine_image_updated.emit()
                 self.set_position('scanner')
                 if self._zscan:
                     self._depth_line_pos = self._scan_counter
+                elif self._xy_fine:
+                    self._xyfine_line_pos = self._scan_counter
                 else:
                     self._xy_line_pos = self._scan_counter
                 # add new history entry
@@ -709,8 +799,13 @@ class ConfocalLogic(GenericLogic):
                     self.history.pop(0)
                 self.history_index = len(self.history) - 1
                 return
+        if self._zscan:
+            image = self.depth_image
+        elif self._xy_fine:
+            image = self.fine_image
+        else:
+            image = self.xy_image
 
-        image = self.depth_image if self._zscan else self.xy_image
         n_ch = len(self.get_scanner_axes())
         s_ch = len(self.get_scanner_count_channels())
 
@@ -802,6 +897,9 @@ class ConfocalLogic(GenericLogic):
                     else:
                         self.depth_image[self._scan_counter, :, 3:3 + s_ch] = line_counts
                     self.signal_depth_image_updated.emit()
+                elif self._xy_fine:
+                    self.fine_image[self._scan_counter,:,3:3 + s_ch] = line_counts
+                    self.signal_xy_fine_image_updated.emit()
                 else:
                     self.xy_image[self._scan_counter, :, 3:3 + s_ch] = line_counts
                     self.signal_xy_image_updated.emit()
@@ -815,6 +913,8 @@ class ConfocalLogic(GenericLogic):
                         self.stop_scanning()
                         if self._zscan:
                             self._zscan_continuable = False
+                        elif self._xy_fine:
+                            self._xyfinescan_continuable = False
                         else:
                             self._xyscan_continuable = False
                     else:
@@ -888,6 +988,12 @@ class ConfocalLogic(GenericLogic):
                     else:
                         self.depth_image[self._scan_counter, :, 3:3 + s_ch] = line_counts
                     self.signal_depth_image_updated.emit()
+                elif self._xy_fine:
+                    if self._scan_counter % 2 == 0:
+                        self.fine_image[self._scan_counter, :, 3:3 + s_ch] = line_counts
+                    else:
+                        self.fine_image[self._scan_counter, :, 3:3 + s_ch] = line_counts#[::-1]
+                    self.signal_xy_fine_image_updated.emit()
                 else:
                     if self._scan_counter % 2 == 0:
                         self.xy_image[self._scan_counter, :, 3:3 + s_ch] = line_counts
@@ -906,6 +1012,8 @@ class ConfocalLogic(GenericLogic):
                         self.stop_scanning()
                         if self._zscan:
                             self._zscan_continuable = False
+                        elif self._xy_fine:
+                            self._xyfinescan_continuable = False
                         else:
                             self._xyscan_continuable = False
                     else:
@@ -950,7 +1058,10 @@ class ConfocalLogic(GenericLogic):
         parameters['Y image range'] = self.image_y_range[1] - self.image_y_range[0]
 
         parameters['XY resolution (samples per range)'] = self.xy_resolution
+        parameters['X fine resolution (samples per range)'] = self.x_fine_resolution
+        parameters['Y fine resolution (samples per range)'] = self.y_fine_resolution
         parameters['XY Image at z position (m)'] = self._current_z
+
 
         parameters['Clock frequency of scanner (Hz)'] = self._clock_frequency
         parameters['Return Slowness (Steps during retrace line)'] = self.return_slowness
@@ -1037,6 +1148,8 @@ class ConfocalLogic(GenericLogic):
         parameters['Z image range'] = self.image_z_range[1] - self.image_z_range[0]
 
         parameters['XY resolution (samples per range)'] = self.xy_resolution
+        parameters['X fine resolution (samples per range)'] = self.x_fine_resolution
+        parameters['Y fine resolution (samples per range)'] = self.y_fine_resolution
         parameters['Z resolution (samples per range)'] = self.z_resolution
         parameters['Depth Image at y position (m)'] = self._current_y
 
@@ -1347,6 +1460,15 @@ class ConfocalLogic(GenericLogic):
     def set_stepscan(self, state):
         self._scanning_device._set_stepscan = state
 
+    def set_position_fine(self,tag, x=None, y=None):
+        if x is not None:
+            self._current_xfine = x
+        if y is not None:
+            self._current_yfine = y
+        self._scanning_device.set_position_fine(x, y)
+
+    def get_position_fine(self):
+        return [self._current_xfine, self._current_yfine]
 
 
 

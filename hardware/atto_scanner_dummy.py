@@ -310,5 +310,17 @@ class ConfocalScannerAtto(Base, ConfocalScannerInterfaceAtto):
     def getAxisStatus_target(self,axis):
         return 1
 
-    def set_fine_position(self, axis, pos):
-        pass
+    def get_voltage_range(self):
+        xV_range = [0,60]
+        yV_range = [0,70]
+        return [xV_range, yV_range]
+
+    def set_dcvoltage(self, axis, voltage):
+        '''
+
+        :param axis: 'x', 'y' 'z'
+        :param voltage: DC output voltage [V], internal resolution is 1 mV
+        :return:
+        '''
+        voltage = np.round(voltage,3)
+        print('dc', axis, voltage)

@@ -270,7 +270,7 @@ class Attocube(Base):
         :param voltage: DC output voltage [V], internal resolution is 1 mV
         :return:
         '''
-
+        voltage = np.round(voltage, 3)
         axes = self.axisNo[axis]
         self.anc.setDcVoltage(axes, voltage)
 
@@ -341,33 +341,10 @@ class Attocube(Base):
 
         return target
 
-    def set_fine_position(self, axis, pos):
-        '''
-        
-        :param axis: 
-        :param pos: 
-        :return: 
-        '''
-        voltage = self.position_to_voltage(pos)
-        print('voltage = {}'.format(voltage))
-        if voltage > 100 or voltage < 0:
-            return -1
-        else:
-            self.anc.setDcVoltage(self.axisNo[axis], voltage)
-            return 0
+    def get_voltage_range(self):
+        xV_range = [0,60]
+        yV_range = [0,70]
+        return [xV_range, yV_range]
 
-    def position_to_voltage(self, pos):
-        '''
-        
-        :param pos: 
-        :return: 
-        '''
-        print('position = {}'.format(pos))
-        if pos > 5 or pos < 0:
-            # out of range
-            return 0
-        a = 60 / 5 # 5 my per 70 V
-        voltage = a * pos
-        return int(voltage)
 
 

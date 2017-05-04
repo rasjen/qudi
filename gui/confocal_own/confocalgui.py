@@ -398,7 +398,10 @@ class ConfocalGui(GUIBase):
         self._mw.percentileMaxDoubleSpinBox.valueChanged.connect(self.shortcut_to_xy_cb_centiles)
 
         self._mw.startScanPushButton.clicked.connect(self.xy_scan_clicked)
+        self._mw.startScanPushButton_2.clicked.connect(self.fine_scan_clicked)
         self._mw.KillScanPushButton.clicked.connect(self.kill_scan_clicked)
+        self._mw.KillScanPushButton_2.clicked.connect(self.kill_scan_clicked)
+
         # Connect the emitted signal of an image change from the logic with
         # a refresh of the GUI picture:
         self._scanning_logic.signal_xy_image_updated.connect(self.refresh_xy_image)
@@ -418,14 +421,152 @@ class ConfocalGui(GUIBase):
         self._mw.setposition_pushButton.clicked.connect(self.set_position)
 
         self._mw.integrationtime.setValue(self.get_integration_time())
-        self._mw.XY_fine_checkbox.stateChanged.connect(self.xy_fine)
-        self._mw.stepscan_checkBox.stateChanged.connect(self.stepper)
 
         self.update_position()
         self.adjust_xy_window()
         self._mw.savexy_pushButton.clicked.connect(self.save_xy)
 
+        ##############################################################################################################
+        ######### Fine scanner #######################################################################################
+        ##############################################################################################################
 
+        arr02 = self._scanning_logic.fine_image[:, :, 3 + self.xy_channel].transpose()
+        self.fine_image = pg.ImageItem(arr02)
+
+        # Add the display item to the xy fine VieWidget, which was defined in
+        # the UI file.
+        self._mw.xyScanView_2.addItem(self.fine_image)
+        self.fine_image.setLookupTable(self.my_colors.lut)
+
+        self.fine_cb = ColorBar(self.my_colors.cmap_normed, width=100, cb_min=0, cb_max=100)
+        self._mw.contrastView_2.addItem(self.fine_cb)
+
+        # Labelling axes
+        self._mw.xyScanView_2.setLabel('bottom', 'X Voltage', units='V')
+        self._mw.xyScanView_2.setLabel('left', 'Y Voltage', units='V')
+
+        self._mw.contrastView_2.setLabel('left', 'Fluorescence', units='c/s')
+
+        ini_pos_x_cross = (self._scanning_logic.fine_image[-1,-1,1] + self._scanning_logic.fine_image[0,0,1]) / 2
+        ini_pos_y_cross = (self._scanning_logic.fine_image[-1,-1,0] + self._scanning_logic.fine_image[0,0,0]) / 2
+
+        self.pixel_fine_size = (self._scanning_logic.fine_image[1,1,0] - self._scanning_logic.fine_image[0,0,0])/2
+
+        # Create Region of Interest for depth image and add to xy Image Widget:
+        self.roi_fine = CrossROI(
+            [
+                ini_pos_x_cross - self.pixel_fine_size / 2,
+                ini_pos_y_cross - self.pixel_fine_size / 2
+            ],
+            [self.pixel_fine_size, self.pixel_fine_size],
+            pen={'color': "F0F", 'width': 1},
+            removable=True
+        )
+        self._mw.xyScanView_2.addItem(self.roi_fine)
+
+        # create horizontal and vertical line as a crosshair in depth image:
+        self.hline_fine = CrossLine(
+            pos=self.roi_fine.pos() + self.roi_fine.size() * 0.5,
+            angle=0,
+            pen={'color': palette.green, 'width': 1}
+        )
+        self.vline_fine = CrossLine(
+            pos=self.roi_fine.pos() + self.roi_fine.size() * 0.5,
+            angle=90,
+            pen={'color': palette.green, 'width': 1}
+        )
+        # connect the change of a region with the adjustment of the crosshair:
+        self.roi_fine.sigRegionChanged.connect(self.hline_fine.adjust)
+        self.roi_fine.sigRegionChanged.connect(self.vline_fine.adjust)
+        self.roi_fine.sigUserRegionUpdate.connect(self.update_from_roi_fine)
+        self.roi_fine.sigRegionChangeFinished.connect(self.roi_fine_bounds_check)
+
+        # add the configured crosshair to the depth Widget:
+        self._mw.xyScanView_2.addItem(self.hline_fine)
+        self._mw.xyScanView_2.addItem(self.vline_fine)
+
+        self.slider_small_step_fine = 1e-3  # initial value in meter
+        self.slider_big_step_fine = 10e-3  # initial value in meter
+
+        # Setup the Sliders:
+        # Calculate the needed Range for the sliders. The image ranges comming
+        # from the Logic module must be in meters.
+        # 1 nanometer resolution per one change, units are meters
+        self.slider_res_fine = 1e-6
+
+        # How many points are needed for that kind of resolution:
+        num_of_points_x = (self._scanning_logic.xV_range[1] - self._scanning_logic.xV_range[0]) / self.slider_res_fine
+        num_of_points_y = (self._scanning_logic.yV_range[1] - self._scanning_logic.yV_range[0]) / self.slider_res_fine
+
+        # Set a Range for the sliders:
+        self._mw.x_SliderWidget_2.setRange(0, num_of_points_x)
+        self._mw.y_SliderWidget_2.setRange(0, num_of_points_y)
+
+        # Just to be sure, set also the possible maximal values for the spin
+        # boxes of the current values:
+        self._mw.x_current_InputWidget_2.setRange(self._scanning_logic.xV_range[0], self._scanning_logic.xV_range[1])
+        self._mw.y_current_InputWidget_2.setRange(self._scanning_logic.yV_range[0], self._scanning_logic.yV_range[1])
+
+        # set minimal steps for the current value
+        self._mw.x_current_InputWidget_2.setOpts(minStep=1e-3)
+        self._mw.y_current_InputWidget_2.setOpts(minStep=1e-3)
+
+        # Predefine the maximal and minimal image range as the default values
+        # for the display of the range:
+        self._mw.x_min_InputWidget_2.setValue(self._scanning_logic.fine_image_x_range[0])
+        self._mw.x_max_InputWidget_2.setValue(self._scanning_logic.fine_image_x_range[1])
+        self._mw.y_min_InputWidget_2.setValue(self._scanning_logic.fine_image_y_range[0])
+        self._mw.y_max_InputWidget_2.setValue(self._scanning_logic.fine_image_y_range[1])
+
+
+        # set the maximal ranges for the imagerange from the logic:
+        self._mw.x_min_InputWidget_2.setRange(self._scanning_logic.xV_range[0], self._scanning_logic.xV_range[1])
+        self._mw.x_max_InputWidget_2.setRange(self._scanning_logic.xV_range[0], self._scanning_logic.xV_range[1])
+        self._mw.y_min_InputWidget_2.setRange(self._scanning_logic.yV_range[0], self._scanning_logic.yV_range[1])
+        self._mw.y_max_InputWidget_2.setRange(self._scanning_logic.yV_range[0], self._scanning_logic.yV_range[1])
+
+
+        # set the minimal step size
+        self._mw.x_min_InputWidget_2.setOpts(minStep=1e-3)
+        self._mw.x_max_InputWidget_2.setOpts(minStep=1e-3)
+        self._mw.y_min_InputWidget_2.setOpts(minStep=1e-3)
+        self._mw.y_max_InputWidget_2.setOpts(minStep=1e-3)
+
+        # Handle slider movements by user:
+        self._mw.x_SliderWidget_2.sliderMoved.connect(self.update_from_fineslider_x)
+        self._mw.y_SliderWidget_2.sliderMoved.connect(self.update_from_fineslider_y)
+
+        # Take the default values from logic:
+        self._mw.x_res_InputWidget_2.setValue(self._scanning_logic.x_fine_resolution)
+        self._mw.y_res_InputWidget_2.setValue(self._scanning_logic.y_fine_resolution)
+
+        # Update the inputed/displayed numbers if the cursor has left the field:
+        self._mw.x_current_InputWidget_2.editingFinished.connect(self.update_from_input_x_fine)
+        self._mw.y_current_InputWidget_2.editingFinished.connect(self.update_from_input_y_fine)
+
+        self._mw.x_res_InputWidget_2.editingFinished.connect(self.change_x_fine_resolution)
+        self._mw.y_res_InputWidget_2.editingFinished.connect(self.change_y_fine_resolution)
+
+        self._mw.x_min_InputWidget_2.editingFinished.connect(self.change_x_fine_image_range)
+        self._mw.x_max_InputWidget_2.editingFinished.connect(self.change_x_fine_image_range)
+        self._mw.y_min_InputWidget_2.editingFinished.connect(self.change_y_fine_image_range)
+        self._mw.y_max_InputWidget_2.editingFinished.connect(self.change_y_fine_image_range)
+
+        # Connect the buttons and inputs for the depth colorbars
+        # RadioButtons in Main tab
+        self._mw.manual_RadioButton_2.clicked.connect(self.update_fine_cb_range)
+        self._mw.centiles_RadioButton_2.clicked.connect(self.update_fine_cb_range)
+
+        # input edits in Main tab
+        self._mw.xy_cb_min_DoubleSpinBox_2.valueChanged.connect(self.shortcut_to_fine_cb_manual)
+        self._mw.xy_cb_max_DoubleSpinBox_2.valueChanged.connect(self.shortcut_to_fine_cb_manual)
+        self._mw.xy_cb_low_percentile_DoubleSpinBox_2.valueChanged.connect(self.shortcut_to_fine_cb_centiles)
+        self._mw.xy_cb_high_percentile_DoubleSpinBox_2.valueChanged.connect(self.shortcut_to_fine_cb_centiles)
+
+        self._scanning_logic.signal_xy_fine_image_updated.connect(self.refresh_fine_image)
+        self._scanning_logic.sigImageXYfineInitialized.connect(self.adjust_fine_window)
+
+        self._scanning_logic.signal_change_position.connect(self.update_crosshair_position_from_logic)
 
     def on_deactivate(self):
         """ Reverse steps of activation
@@ -1014,3 +1155,337 @@ class ConfocalGui(GUIBase):
             y_value = view_y_max - self.roi_xy.size()[1]
 
         self.roi_xy.setPos([x_value, y_value], update=True)
+
+    def roi_fine_bounds_check(self, roi):
+        """ Check if the focus cursor is oputside the allowed range after drag
+            and set its position to the limit """
+        x_pos = roi.pos()[0] + 0.5 * roi.size()[0]
+        y_pos = roi.pos()[1] + 0.5 * roi.size()[1]
+
+        needs_reset = False
+
+        if x_pos < self._scanning_logic.xV_range[0]:
+            x_pos = self._scanning_logic.xV_range[0]
+            needs_reset = True
+        elif x_pos > self._scanning_logic.xV_range[1]:
+            x_pos = self._scanning_logic.xV_range[1]
+            needs_reset = True
+
+        if y_pos < self._scanning_logic.yV_range[0]:
+            y_pos = self._scanning_logic.yV_range[0]
+            needs_reset = True
+        elif y_pos > self._scanning_logic.yV_range[1]:
+            y_pos = self._scanning_logic.yV_range[1]
+            needs_reset = True
+
+        if needs_reset:
+            self.update_roi_fine(x_pos, y_pos)
+
+    def update_from_roi_fine(self, roi):
+            """The user manually moved the Z ROI, adjust all other GUI elements accordingly
+
+            @params object roi: PyQtGraph ROI object
+            """
+            x_pos = roi.pos()[0] + 0.5 * roi.size()[0]
+            y_pos = roi.pos()[1] + 0.5 * roi.size()[1]
+
+            if x_pos < self._scanning_logic.xV_range[0]:
+                x_pos = self._scanning_logic.xV_range[0]
+            elif x_pos > self._scanning_logic.xV_range[1]:
+                x_pos = self._scanning_logic.xV_range[1]
+
+            if y_pos < self._scanning_logic.yV_range[0]:
+                y_pos = self._scanning_logic.yV_range[0]
+            elif y_pos > self._scanning_logic.yV_range[1]:
+                y_pos = self._scanning_logic.yV_range[1]
+
+            self.update_fineslider_x(x_pos)
+            self.update_fineslider_y(y_pos)
+            self.update_input_x_fine(x_pos)
+            self.update_input_y_fine(y_pos)
+
+            self._scanning_logic.set_position_fine('roifine', x=x_pos, y=y_pos)
+
+    def update_roi_fine(self, x=None, y=None):
+        """ Adjust the xy ROI position if the value has changed.
+
+        @param float x: real value of the current x position
+        @param float y: real value of the current y position
+
+        Since the origin of the region of interest (ROI) is not the crosshair
+        point but the lowest left point of the square, you have to shift the
+        origin according to that. Therefore the position of the ROI is not
+        the actual position!
+        """
+        roi_xfine_view = self.roi_fine.pos()[0]
+        roi_yfine_view = self.roi_fine.pos()[1]
+
+        if x is not None:
+            roi_xfine_view = x - self.roi_fine.size()[0] * 0.5
+        if y is not None:
+            roi_yfine_view = y - self.roi_fine.size()[1] * 0.5
+
+        self.roi_fine.setPos([roi_xfine_view, roi_yfine_view])
+
+    def update_from_fineslider_x(self, sliderValue):
+        """The user moved the x position slider, adjust the other GUI elements.
+
+        @params int sliderValue: slider postion, a quantized whole number
+        """
+        x_pos = self._scanning_logic.xV_range[0] + sliderValue * self.slider_res
+        self.update_roi_fine(x=x_pos)
+        #self.update_roi_depth(x=x_pos)
+        self.update_input_x_fine(x_pos)
+        self._scanning_logic.set_position_fine('xslider', x=x_pos)
+       #self._optimizer_logic.set_position('xslider', x=x_pos)
+
+    def update_from_fineslider_y(self, sliderValue):
+        """The user moved the y position slider, adjust the other GUI elements.
+
+        @params int sliderValue: slider postion, a quantized whole number
+        """
+        y_pos = self._scanning_logic.yV_range[0] + sliderValue * self.slider_res
+        self.update_roi_fine(y=y_pos)
+        self.update_input_y_fine(y_pos)
+        self._scanning_logic.set_position_fine('yslider', y=y_pos)
+        #self._optimizer_logic.set_position('yslider', y=y_pos)
+
+    def update_input_x_fine(self, x_pos):
+        """ Update the displayed x-value.
+
+        @param float x_pos: the current value of the x position in m
+        """
+        # Convert x_pos to number of points for the slider:
+        self._mw.x_current_InputWidget_2.setValue(x_pos)
+
+    def update_input_y_fine(self, y_pos):
+        """ Update the displayed y-value.
+
+        @param float y_pos: the current value of the y position in m
+        """
+        # Convert x_pos to number of points for the slider:
+        self._mw.y_current_InputWidget_2.setValue(y_pos)
+
+    def update_from_input_x_fine(self):
+        """ The user changed the number in the x position spin box, adjust all
+            other GUI elements."""
+        x_pos = self._mw.x_current_InputWidget_2.value()
+        self.update_roi_fine(x=x_pos)
+        #self.update_roi_depth(x=x_pos)
+        self.update_fineslider_x(x_pos)
+        self._scanning_logic.set_position_fine('xinput', x=x_pos)
+        #self._optimizer_logic.set_position('xinput', x=x_pos)
+
+    def update_from_input_y_fine(self):
+        """ The user changed the number in the y position spin box, adjust all
+            other GUI elements."""
+        y_pos = self._mw.y_current_InputWidget_2.value()
+        self.update_roi_fine(y=y_pos)
+        self.update_fineslider_y(y_pos)
+        self._scanning_logic.set_position_fine('yinput', y=y_pos)
+        #self._optimizer_logic.set_position('yinput', y=y_pos)
+
+    def update_fineslider_x(self, x_pos):
+        """ Update the x slider when a change happens.
+
+        @param float x_pos: x position in m
+        """
+        self._mw.x_SliderWidget_2.setValue((x_pos - self._scanning_logic.x_range[0]) / self.slider_res)
+
+    def update_fineslider_y(self, y_pos):
+        """ Update the y slider when a change happens.
+
+        @param float y_pos: x yosition in m
+        """
+        self._mw.y_SliderWidget_2.setValue((y_pos - self._scanning_logic.y_range[0]) / self.slider_res)
+
+    def change_x_fine_resolution(self):
+        """ Update the xy resolution in the logic according to the GUI.
+        """
+        self._scanning_logic.x_fine_resolution = self._mw.x_res_InputWidget_2.value()
+
+    def change_y_fine_resolution(self):
+        """ Update the xy resolution in the logic according to the GUI.
+        """
+        self._scanning_logic.y_fine_resolution = self._mw.y_res_InputWidget_2.value()
+
+    def change_x_fine_image_range(self):
+        """ Adjust the image range for x in the logic. """
+        self._scanning_logic.fine_image_x_range = [self._mw.x_min_InputWidget_2.value(), self._mw.x_max_InputWidget_2.value()]
+
+    def change_y_fine_image_range(self):
+        """ Adjust the image range for y in the logic.
+        """
+        self._scanning_logic.fine_image_y_range = [self._mw.y_min_InputWidget_2.value(), self._mw.y_max_InputWidget_2.value()]
+
+    def update_fine_cb_range(self):
+        """Redraw z colour bar and scan image."""
+        self.refresh_fine_colorbar()
+        self.refresh_fine_image()
+
+    def refresh_fine_colorbar(self):
+        """ Adjust the depth colorbar.
+
+        Calls the refresh method from colorbar, which takes either the lowest
+        and higherst value in the image or predefined ranges. Note that you can
+        invert the colorbar if the lower border is bigger then the higher one.
+        """
+        cb_range = self.get_fine_cb_range()
+        self.fine_cb.refresh_colorbar(cb_range[0], cb_range[1])
+
+    def get_fine_cb_range(self):
+        """ Determines the cb_min and cb_max values for the xy scan image
+        """
+        # If "Manual" is checked, or the image data is empty (all zeros), then take manual cb range.
+        if self._mw.manual_RadioButton_2.isChecked() or np.max(self.fine_image.image) == 0.0:
+            cb_min = self._mw.xy_cb_min_DoubleSpinBox_2.value()
+            cb_max = self._mw.xy_cb_max_DoubleSpinBox_2.value()
+
+        # Otherwise, calculate cb range from percentiles.
+        else:
+            # Exclude any zeros (which are typically due to unfinished scan)
+            fine_image_nonzero = self.fine_image.image[np.nonzero(self.fine_image.image)]
+
+            # Read centile range
+            low_centile = self._mw.xy_cb_low_percentile_DoubleSpinBox_2.value()
+            high_centile = self._mw.xy_cb_high_percentile_DoubleSpinBox_2.value()
+
+            cb_min = np.percentile(fine_image_nonzero, low_centile)
+            cb_max = np.percentile(fine_image_nonzero, high_centile)
+
+        cb_range = [cb_min, cb_max]
+        return cb_range
+
+    def refresh_fine_image(self):
+        """ Update the current Depth image from the logic.
+
+        Everytime the scanner is scanning a line in depth the
+        image is rebuild and updated in the GUI.
+        """
+
+        self.fine_image.getViewBox().enableAutoRange()
+
+        fine_image_data = self._scanning_logic.fine_image[:, :, 3 + self.xy_channel].transpose()
+        cb_range = self.get_fine_cb_range()
+
+        # Now update image with new color scale, and update colorbar
+        self.fine_image.setImage(image=fine_image_data, levels=(cb_range[0], cb_range[1]))
+        self.refresh_fine_colorbar()
+
+        # Unlock state widget if scan is finished
+        # if self._scanning_logic.getState() != 'locked':
+        #     self.enable_scan_actions()
+
+    def shortcut_to_fine_cb_manual(self):
+        """Someone edited the absolute counts range for the z colour bar, better update."""
+        # Change cb mode
+        self._mw.manual_RadioButton_2.setChecked(True)
+        self.update_fine_cb_range()
+
+    def shortcut_to_fine_cb_centiles(self):
+        """Someone edited the centiles range for the z colour bar, better update."""
+        # Change cb mode
+        self._mw.centiles_RadioButton_2.setChecked(True)
+        self.update_fine_cb_range()
+
+    def adjust_fine_window(self):
+        """ Fit the visible window in the depth scan to full view.
+
+        Be careful in using that method, since it uses the input values for
+        the ranges to adjust x and z. Make sure that in the process of the depth scan
+        no method is calling adjust_xy_window, otherwise it will adjust for you
+        a window which does not correspond to the scan!
+        """
+        # It is extremly crutial that before adjusting the window view and
+        # limits, to make an update of the current image. Otherwise the
+        # adjustment will just be made for the previous image.
+        self.refresh_fine_image()
+
+        fine_viewbox = self.fine_image.getViewBox()
+
+        xMin = self._scanning_logic.fine_image_x_range[0]
+        xMax = self._scanning_logic.fine_image_x_range[1]
+        zMin = self._scanning_logic.fine_image_y_range[0]
+        zMax = self._scanning_logic.fine_image_y_range[1]
+
+        self.fixed_aspect_ratio_fine = True
+        if self.fixed_aspect_ratio_fine:
+            # Reset the limit settings so that the method 'setAspectLocked'
+            # works properly. It has to be done in a manual way since no method
+            # exists yet to reset the set limits:
+            fine_viewbox.state['limits']['xLimits'] = [None, None]
+            fine_viewbox.state['limits']['yLimits'] = [None, None]
+            fine_viewbox.state['limits']['xRange'] = [None, None]
+            fine_viewbox.state['limits']['yRange'] = [None, None]
+
+            fine_viewbox.setAspectLocked(lock=True, ratio=1.0)
+            fine_viewbox.updateViewRange()
+        # else:
+        #     fine_viewbox.setLimits(
+        #         xMin=xMin - xMin * self.image_x_padding,
+        #         xMax=xMax + xMax * self.image_x_padding,
+        #         yMin=zMin - zMin * self.image_z_padding,
+        #         yMax=zMax + zMax * self.image_z_padding
+        #     )
+
+        self.fine_image.setRect(QtCore.QRectF(xMin, zMin, xMax - xMin, zMax - zMin))
+
+        self.put_cursor_in_fine_scan()
+
+        fine_viewbox.updateAutoRange()
+        fine_viewbox.updateViewRange()
+
+    def put_cursor_in_fine_scan(self):
+        """Put the depth crosshair back if it is outside of the visible range. """
+        view_x_min = self._scanning_logic.fine_image_x_range[0]
+        view_x_max = self._scanning_logic.fine_image_x_range[1]
+        view_y_min = self._scanning_logic.fine_image_y_range[0]
+        view_y_max = self._scanning_logic.fine_image_y_range[1]
+
+        x_value = self.roi_fine.pos()[0]
+        y_value = self.roi_fine.pos()[1]
+        cross_pos = self.roi_fine.pos() + self.roi_fine.size() * 0.5
+
+        if (view_x_min > cross_pos[0]):
+            x_value = view_x_min + self.roi_fine.size()[0]
+
+        if (view_x_max < cross_pos[0]):
+            x_value = view_x_max - self.roi_fine.size()[0]
+
+        if (view_y_min > cross_pos[1]):
+            y_value = view_y_min + self.roi_fine.size()[1]
+
+        if (view_y_max < cross_pos[1]):
+            y_value = view_y_max - self.roi_fine.size()[1]
+
+        self.roi_fine.setPos([x_value, y_value], update=True)
+
+
+    def update_finecrosshair_position_from_logic(self, tag):
+        """ Update the GUI position of the crosshair from the logic.
+
+        @param str tag: tag indicating the source of the update
+
+        Ignore the update when it is tagged with one of the tags that the
+        confocal gui emits, as the GUI elements were already adjusted.
+        """
+        if 'roi' not in tag and 'slider' not in tag and 'key' not in tag and 'input' not in tag:
+            position = self._scanning_logic.get_position_fine()
+            x_pos = position[0]
+            y_pos = position[1]
+
+            roi_x_view = x_pos - self.roi_fine.size()[0] * 0.5
+            roi_y_view = y_pos - self.roi_fine.size()[1] * 0.5
+            self.roi_fine.setPos([roi_x_view, roi_y_view])
+
+
+            self.update_fineslider_x(x_pos)
+            self.update_fineslider_y(y_pos)
+
+            self.update_input_x_fine(x_pos)
+            self.update_input_y_fine(y_pos)
+
+    def fine_scan_clicked(self):
+        """ Manages what happens if the xy scan is started. """
+        # self.disable_scan_actions()
+        self._scanning_logic.start_scanning(zscan=False,finescan=True,  tag='gui')

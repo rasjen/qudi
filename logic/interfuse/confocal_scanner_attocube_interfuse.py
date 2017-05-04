@@ -94,6 +94,9 @@ class AttocubeScannerInterfuse(Base, ConfocalScannerInterfaceAtto):
 
         return self._atto_scanner_hw.get_position_range()
 
+    def get_voltage_range(self):
+        return self._atto_scanner_hw.get_voltage_range()
+
     def set_position_range(self, myrange=None):
         """ Sets the physical range of the scanner.
         This is a direct pass-through to the scanner HW
@@ -211,8 +214,8 @@ class AttocubeScannerInterfuse(Base, ConfocalScannerInterfaceAtto):
 
         if self._XY_fine_scan:
             for i in range(len(x_pos)):
-                self._atto_scanner_hw.set_fine_position('x', line_path[0][i])
-                self._atto_scanner_hw.set_fine_position('y', line_path[1][i])
+                self._atto_scanner_hw.set_dcvoltage('x', line_path[0][i])
+                self._atto_scanner_hw.set_dcvoltage('y', line_path[1][i])
                 rawdata = self._counter.get_counter(samples=self._counting_samples)
                 line_counts[0, i] = rawdata.sum() / self._counting_samples
 
@@ -348,6 +351,15 @@ class AttocubeScannerInterfuse(Base, ConfocalScannerInterfaceAtto):
         :return:
         '''
         return self._atto_scanner_hw.get_amplitude(axis)
+
+    def set_position_fine(self, x = None,y = None):
+
+        if x is not None:
+            self._atto_scanner_hw.set_dcvoltage('x', voltage=x)
+        if y is not None:
+            self._atto_scanner_hw.set_dcvoltage('y', voltage=y)
+
+        return 0
 
 
 
