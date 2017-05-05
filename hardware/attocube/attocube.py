@@ -22,22 +22,16 @@ top-level directory of this distribution and at <https://github.com/Ulm-IQO/qudi
 
 import numpy as np
 from hardware.attocube.pyanc350v4 import Positioner
-import ctypes, math, time
-
-
-
 from core.base import Base
-from interface.confocal_scanner_interface import ConfocalScannerInterface
+from interface.atto_scanner_interface import AttoScanner
 
 
-#class Attocube(Base, ConfocalScannerInterfrt):
-class Attocube(Base):
+class Attocube(Base, AttoScanner):
 
-    _modtype = 'AttocubeScanner'
+    _modtype = 'AttoScanner'
     _modclass = 'hardware'
 
-    _out = {'Scanner': 'SlowCounterInterface'
-            }
+    _connectors = {'scanner': 'AttoScanner'}
 
     def on_activate(self):
 

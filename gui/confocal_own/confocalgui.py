@@ -853,6 +853,7 @@ class ConfocalGui(GUIBase):
         x = self._mw.xpositionSpinBox.value()*1e-6
         y = self._mw.ypositionSpinBox.value()*1e-6
         z = self._mw.zpositionSpinBox.value()*1e-6
+        self.update_roi_xy(x,y)
         self._scanning_logic.set_position('gui',x, y, z)
 
     def save_xy(self):
@@ -1109,7 +1110,7 @@ class ConfocalGui(GUIBase):
         Ignore the update when it is tagged with one of the tags that the
         confocal gui emits, as the GUI elements were already adjusted.
         """
-        if 'roi' not in tag and 'slider' not in tag and 'key' not in tag and 'input' not in tag:
+        if 'roi' not in tag and 'slider' not in tag and 'key' not in tag and 'input' not in tag and 'gui' not in tag:
             position = self._scanning_logic.get_position()
             x_pos = position[0]
             y_pos = position[1]

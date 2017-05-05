@@ -35,7 +35,7 @@ class AttocubeScannerInterfuse(Base, ConfocalScannerInterfaceAtto):
     _modtype = 'interfuse'
     # connectors
     _connectors = {
-        'confocalscanner1': 'ConfocalScannerInterfaceAtto',
+        'scanner': 'AttoScanner',
         'counter1': 'SlowCounterInterface'
     }
 
@@ -68,7 +68,7 @@ class AttocubeScannerInterfuse(Base, ConfocalScannerInterfaceAtto):
         """ Initialisation performed during activation of the module.
         """
 
-        self._atto_scanner_hw = self.get_connector('confocalscanner1')
+        self._atto_scanner_hw = self.get_connector('scanner')
         self._counter = self.get_connector('counter1')
 
 
@@ -202,23 +202,26 @@ class AttocubeScannerInterfuse(Base, ConfocalScannerInterfaceAtto):
         if self.stop_scan == True:
             return -1
 
-        self._atto_scanner_hw.set_target_range('x', 500e-9)
-        self._atto_scanner_hw.set_target_range('y', 500e-9)
+        self._atto_scanner_hw.set_target_range('x', 400e-9)
+        self._atto_scanner_hw.set_target_range('y', 400e-9)
 
         self._counting_samples = int(self.integration_time/1000 * self._clock_frequency) #integration time is in ms
         x_pos = np.round(np.array(line_path[0]), 7)
         y_pos = np.round(np.array(line_path[1]), 7)
-
+        x_reverse = line_path[0][::-1]
         line_counts = np.zeros_like([line_path[0],])
 
 
         if self._XY_fine_scan:
+
+            self._atto_scanner_hw.set_dcvoltage('y', line_path[1][0])
             for i in range(len(x_pos)):
                 self._atto_scanner_hw.set_dcvoltage('x', line_path[0][i])
-                self._atto_scanner_hw.set_dcvoltage('y', line_path[1][i])
                 rawdata = self._counter.get_counter(samples=self._counting_samples)
                 line_counts[0, i] = rawdata.sum() / self._counting_samples
-
+            # Going back to not slide
+            for i in range(len(x_pos)-1):
+                self._atto_scanner_hw.set_dcvoltage('x', x_reverse[i+1])
 
         elif self._set_stepscan:
             self._atto_scanner_hw.set_amplitude('x', 30)
@@ -258,6 +261,7 @@ class AttocubeScannerInterfuse(Base, ConfocalScannerInterfaceAtto):
 
                     while True:
                         if self._atto_scanner_hw.getAxisStatus_target('x'):
+                            print('waiting')
                             break
 
                     rawdata = self._counter.get_counter( samples= self._counting_samples)
@@ -271,17 +275,16 @@ class AttocubeScannerInterfuse(Base, ConfocalScannerInterfaceAtto):
                     self._atto_scanner_hw.auto_move('x',1)
                     self._atto_scanner_hw.auto_move('y',1)
 
-                    try:
-                        while True:
-                            if self._atto_scanner_hw.getAxisStatus_target('y') & self._atto_scanner_hw.getAxisStatus_target('x'):
+
+                    while True:
+                        if self._atto_scanner_hw.getAxisStatus_target('y') & self._atto_scanner_hw.getAxisStatus_target('x'):
                                 #print('wait until taget is reached')
-                                break
+                            self._atto_scanner_hw.auto_move('x', 0)
+                            self._atto_scanner_hw.auto_move('y', 0)
+                            break
 
+                    rawdata = self._counter.get_counter(samples=self._counting_samples)
 
-                        rawdata = self._counter.get_counter(samples=self._counting_samples)
-                    except:
-                        self.log.error('No counter running')
-                        return -1
                 line_counts[0, i] = rawdata.sum() / self._counting_samples
 
         return line_counts.transpose()
@@ -293,7 +296,8 @@ class AttocubeScannerInterfuse(Base, ConfocalScannerInterfaceAtto):
         """
 
         self._counter.close_counter()
-        self._atto_scanner_hw.disable_outputs()
+        self._atto_scanner_hw.auto_move('x',0)
+        self._atto_scanner_hw.auto_move('y', 0)
         return 0
 
     def close_scanner_clock(self):

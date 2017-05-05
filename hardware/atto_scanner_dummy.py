@@ -19,19 +19,21 @@ along with Qudi. If not, see <http://www.gnu.org/licenses/>.
 Copyright (c) the Qudi Developers. See the COPYRIGHT.txt file at the
 top-level directory of this distribution and at <https://github.com/Ulm-IQO/qudi/>
 """
-
-
+from random import randint
+from time import sleep
 from core.base import Base
-from interface.confocal_scanner_atto_interface import ConfocalScannerInterfaceAtto
+from interface.atto_scanner_interface import AttoScanner
 import numpy as np
 
-class ConfocalScannerAtto(Base, ConfocalScannerInterfaceAtto):
+class ConfocalScannerAtto(Base, AttoScanner):
     """ This is the Interface class to define the controls for the simple
     microwave hardware.
     """
 
-    _modtype = 'ConfocalScannerInterfaceAtto'
+    _modtype = 'AttoScanner'
     _modclass = 'hardware'
+
+    _connectors = {'scanner': 'AttoScanner'}
 
     def __init__(self, config, **kwargs):
         super().__init__(config=config, **kwargs)
@@ -47,68 +49,13 @@ class ConfocalScannerAtto(Base, ConfocalScannerInterfaceAtto):
         self._current_position = [0, 0, 0]#[0:len(self.get_scanner_axes())]
         self._current_position_abs = [0, 0, 0]#[0:len(self.get_scanner_axes())]
         self._num_points = 500
+        self.can_move = False
+        self.target_position = [0,0,0]
 
     def on_activate(self):
         """ Initialisation performed during activation of the module.
         """
 
-
-        # put randomly distributed NVs in the scanner, first the x,y scan
-        self._points = np.empty([self._num_points, 7])
-        # amplitude
-        self._points[:, 0] = np.random.normal(
-            4e5,
-            1e5,
-            self._num_points)
-        # x_zero
-        self._points[:, 1] = np.random.uniform(
-            self._position_range[0][0],
-            self._position_range[0][1],
-            self._num_points)
-        # y_zero
-        self._points[:, 2] = np.random.uniform(
-            self._position_range[1][0],
-            self._position_range[1][1],
-            self._num_points)
-        # sigma_x
-        self._points[:, 3] = np.random.normal(
-            0.7e-6,
-            0.1e-6,
-            self._num_points)
-        # sigma_y
-        self._points[:, 4] = np.random.normal(
-            0.7e-6,
-            0.1e-6,
-            self._num_points)
-        # theta
-        self._points[:, 5] = 10
-        # offset
-        self._points[:, 6] = 0
-
-        # now also the z-position
-        #       gaussian_function(self,x_data=None,amplitude=None, x_zero=None, sigma=None, offset=None):
-
-        self._points_z = np.empty([self._num_points, 4])
-        # amplitude
-        self._points_z[:, 0] = np.random.normal(
-            1,
-            0.05,
-            self._num_points)
-
-        # x_zero
-        self._points_z[:, 1] = np.random.uniform(
-            45e-6,
-            55e-6,
-            self._num_points)
-
-        # sigma
-        self._points_z[:, 2] = np.random.normal(
-            0.5e-6,
-            0.1e-6,
-            self._num_points)
-
-        # offset
-        self._points_z[:, 3] = 0
 
     def on_deactivate(self):
         """ Deactivate properly the confocal scanner dummy.
@@ -142,7 +89,7 @@ class ConfocalScannerAtto(Base, ConfocalScannerInterfaceAtto):
 
         @return int: error code (0:OK, -1:error)
         """
-        pass
+        self._position_range = myrange
 
     def get_scanner_axes(self):
         """ Find out how many axes the scanning device is using for confocal and their names.
@@ -158,46 +105,6 @@ class ConfocalScannerAtto(Base, ConfocalScannerInterfaceAtto):
           On error, return an empty list.
         """
         return ['x', 'y', 'z']
-
-    def get_scanner_count_channels(self):
-        """ Returns the list of channels that are recorded while scanning an image.
-
-        @return list(str): channel names
-
-        Most methods calling this might just care about the number of channels.
-        """
-        pass
-
-    def set_up_scanner_clock(self, clock_frequency=None, clock_channel=None):
-        """ Configures the hardware clock of the NiDAQ card to give the timing.
-
-        @param float clock_frequency: if defined, this sets the frequency of the
-                                      clock
-        @param str clock_channel: if defined, this is the physical channel of
-                                  the clock
-
-        @return int: error code (0:OK, -1:error)
-        """
-        pass
-
-    def set_up_scanner(self,
-                       counter_channels=None,
-                       sources=None,
-                       clock_channel=None,
-                       scanner_ao_channels=None):
-        """ Configures the actual scanner with a given clock.
-
-        @param str counter_channels: if defined, these are the physical conting devices
-        @param str sources: if defined, these are the physical channels where
-                                  the photons are to count from
-        @param str clock_channel: if defined, this specifies the clock for the
-                                  counter
-        @param str scanner_ao_channels: if defined, this specifies the analoque
-                                        output channels
-
-        @return int: error code (0:OK, -1:error)
-        """
-        pass
 
 
     def set_scanner_position(self, x=None, y=None, z=None):
@@ -219,31 +126,6 @@ class ConfocalScannerAtto(Base, ConfocalScannerInterfaceAtto):
         """
         return self._current_position
 
-
-    def scan_line(self, line_path=None, pixel_clock=False):
-        """ Scans a line and returns the counts on that line.
-
-        @param float[k][n] line_path: array k of n-part tuples defining the pixel positions
-        @param bool pixel_clock: whether we need to output a pixel clock for this line
-
-        @return float[k][m]: the photon counts per second for k pixels with m channels
-        """
-        pass
-
-
-    def close_scanner(self):
-        """ Closes the scanner and cleans up afterwards.
-
-        @return int: error code (0:OK, -1:error)
-        """
-        pass
-
-    def close_scanner_clock(self, power=0):
-        """ Closes the clock and cleans up afterwards.
-
-        @return int: error code (0:OK, -1:error)
-        """
-        pass
 
     def single_step(self, axis='x', direction='forward'):
         """ Closes the clock and cleans up afterwards.
@@ -292,23 +174,37 @@ class ConfocalScannerAtto(Base, ConfocalScannerInterfaceAtto):
         return 10
 
     def enable_outputs(self):
+        self.can_move = True
         pass
 
     def disable_outputs(self):
-        pass
+        self.can_move = False
 
     def set_target_range(self, axis, range):
         pass
 
     def set_target_position(self,axis,position):
+        if axis == 'x':
+            self.target_position[0] = position
+        elif axis == 'y':
+            self.target_position[1] = position
+        elif axis == 'z':
+            self.target_position[2] = position
+        else:
+            self.log.error('Axes should be x,y or z')
         print('targetposition', axis ,position)
-        pass
+        return 0
 
     def auto_move(self,axis,enable):
-        pass
+        if self.can_move is True:
+            self._current_position = self.target_position
+            while True:
+                if self.getAxisStatus_target(axis):
+                    break
 
     def getAxisStatus_target(self,axis):
-        return 1
+        x = randint(0,1)
+        return x
 
     def get_voltage_range(self):
         xV_range = [0,60]

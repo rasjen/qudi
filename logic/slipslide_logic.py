@@ -312,7 +312,7 @@ class ConfocalLogic(GenericLogic):
     signal_tilt_correction_active = QtCore.Signal(bool)
     signal_tilt_correction_update = QtCore.Signal()
     signal_draw_figure_completed = QtCore.Signal()
-    signal_position_changed = QtCore.Signal()
+    signal_position_changed = QtCore.Signal(str)
 
     sigImageXYInitialized = QtCore.Signal()
     sigImageXYfineInitialized = QtCore.Signal()
@@ -748,7 +748,7 @@ class ConfocalLogic(GenericLogic):
             pos_dict[ch_array[i]] = pos_array[i]
 
         self._scanning_device.set_scanner_position(x=self._current_x,y=self._current_y,z=self._current_z)
-        self.signal_position_changed.emit()
+        self.signal_position_changed.emit(tag)
         return 0
 
     def get_position(self):
