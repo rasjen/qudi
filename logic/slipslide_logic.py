@@ -283,6 +283,11 @@ class ConfocalHistoryEntry(QtCore.QObject):
                 self.depth_image = serialized['depth_image'].copy()
             else:
                 raise OldConfigFileError()
+        if 'fine_image' in serialized:
+            if isinstance(serialized['fine_image'], np.ndarray):
+                self.fine_image = serialized['fine_image'].copy()
+            else:
+                raise OldConfigFileError()
 
 
 class ConfocalLogic(GenericLogic):
