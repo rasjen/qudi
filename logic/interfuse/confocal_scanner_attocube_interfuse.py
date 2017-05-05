@@ -261,7 +261,6 @@ class AttocubeScannerInterfuse(Base, ConfocalScannerInterfaceAtto):
 
                     while True:
                         if self._atto_scanner_hw.getAxisStatus_target('x'):
-                            print('waiting')
                             break
 
                     rawdata = self._counter.get_counter( samples= self._counting_samples)

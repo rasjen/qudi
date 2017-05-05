@@ -853,7 +853,13 @@ class ConfocalGui(GUIBase):
         x = self._mw.xpositionSpinBox.value()*1e-6
         y = self._mw.ypositionSpinBox.value()*1e-6
         z = self._mw.zpositionSpinBox.value()*1e-6
+
         self.update_roi_xy(x,y)
+        self.update_slider_x(x)
+        self.update_slider_y(y)
+
+        self.update_input_x(x)
+        self.update_input_y(y)
         self._scanning_logic.set_position('gui',x, y, z)
 
     def save_xy(self):
