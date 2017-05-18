@@ -39,7 +39,7 @@ class ScopeDummy(Base, ScopeInterface):
     def run_single(self):
         pass
 
-    def stop(self):
+    def stop_acquisition(self):
         pass
 
     def get_channels(self):

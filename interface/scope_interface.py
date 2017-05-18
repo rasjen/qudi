@@ -14,7 +14,7 @@ class ScopeInterface(metaclass=InterfaceMetaclass):
         pass
 
     @abc.abstractmethod
-    def stop(self):
+    def stop_acquisition(self):
         pass
 
     @abc.abstractmethod
