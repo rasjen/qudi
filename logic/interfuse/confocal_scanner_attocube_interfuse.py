@@ -202,9 +202,6 @@ class AttocubeScannerInterfuse(Base, ConfocalScannerInterfaceAtto):
         if self.stop_scan == True:
             return -1
 
-        self._atto_scanner_hw.set_target_range('x', 400e-9)
-        self._atto_scanner_hw.set_target_range('y', 400e-9)
-
         self._counting_samples = int(self.integration_time/1000 * self._clock_frequency) #integration time is in ms
         x_pos = np.round(np.array(line_path[0]), 7)
         y_pos = np.round(np.array(line_path[1]), 7)
@@ -275,12 +272,14 @@ class AttocubeScannerInterfuse(Base, ConfocalScannerInterfaceAtto):
                     self._atto_scanner_hw.auto_move('y',1)
 
 
-                    while True:
-                        if self._atto_scanner_hw.getAxisStatus_target('y') & self._atto_scanner_hw.getAxisStatus_target('x'):
-                                #print('wait until taget is reached')
-                            self._atto_scanner_hw.auto_move('x', 0)
-                            self._atto_scanner_hw.auto_move('y', 0)
-                            break
+                    #while True:
+                        #if self._atto_scanner_hw.getAxisStatus_target('y') & self._atto_scanner_hw.getAxisStatus_target('x'):
+                        #        #print('wait until taget is reached')
+                        #    self._atto_scanner_hw.auto_move('x', 0)
+                        #    self._atto_scanner_hw.auto_move('y', 0)
+                        #    break
+                        #else:
+                        #     time.sleep(0.05)
 
                     rawdata = self._counter.get_counter(samples=self._counting_samples)
 

@@ -19,7 +19,7 @@ along with Qudi. If not, see <http://www.gnu.org/licenses/>.
 Copyright (c) the Qudi Developers. See the COPYRIGHT.txt file at the
 top-level directory of this distribution and at <https://github.com/Ulm-IQO/qudi/>
 """
-
+from time import sleep
 import numpy as np
 from hardware.attocube.pyanc350v4 import Positioner
 from core.base import Base
@@ -37,6 +37,9 @@ class Attocube(Base, AttoScanner):
 
         self.anc = Positioner()
         self.axisNo = {'y': 0, 'x': 1, 'z': 2}
+
+        self.set_target_range('x', 250e-9)
+        self.set_target_range('y', 250e-9)
 
 
     def on_deactivate(self, e=None):
@@ -197,6 +200,7 @@ class Attocube(Base, AttoScanner):
         except:
             self.log.error('did not move')
             return -1
+
         return 0
 
     def get_scanner_position(self):
