@@ -92,7 +92,7 @@ class Scope3024T(Base, ScopeInterface):
         if hide_params:
             (header, data) = string.split(command, " ", 1)
 
-        self.scope.write("%{}".format(command))
+        self.scope.write("{}".format(command))
         if hide_params:
             self._check_instrument_errors(header)
         else:
@@ -103,7 +103,7 @@ class Scope3024T(Base, ScopeInterface):
     # =========================================================
     def _do_query_string(self, query):
 
-        result = self.scope.ask("%s\n".format(query))
+        result = self.scope.ask("{}".format(query))
         self._check_instrument_errors(query)
         return result
     # =========================================================
@@ -111,7 +111,7 @@ class Scope3024T(Base, ScopeInterface):
     # =========================================================
     def _do_query_values(self, query):
 
-        results = self.scope.ask_for_values("%s\n" % query)
+        results = self.scope.ask_for_values("%{}".format(query))
         self._check_instrument_errors(query)
         return results
 
@@ -121,7 +121,7 @@ class Scope3024T(Base, ScopeInterface):
 
     def _do_query_ascii_values(self, query):
 
-        results = self.scope.query_ascii_values("%s\n" % query, container=np.array)
+        results = self.scope.query_ascii_values("%{}".format(query), container=np.array)
         self._check_instrument_errors(query)
         return results
 
@@ -131,7 +131,7 @@ class Scope3024T(Base, ScopeInterface):
 
     def _do_query_binary_values(self, query):
 
-        results = self.scope.query_binary_values("%s\n" % query, container=np.array, is_big_endian=False, datatype='B')
+        results = self.scope.query_binary_values("{}".format(query), container=np.array, is_big_endian=False, datatype='B')
         self._check_instrument_errors(query)
         return results
 
