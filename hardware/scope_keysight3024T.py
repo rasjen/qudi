@@ -94,9 +94,9 @@ class Scope3024T(Base, ScopeInterface):
 
         self.scope.write("%{}".format(command))
         if hide_params:
-            self.check_instrument_errors(header)
+            self._check_instrument_errors(header)
         else:
-            self.check_instrument_errors(command)
+            self._check_instrument_errors(command)
 
     # =========================================================
     # Send a query, check for errors, return string:
