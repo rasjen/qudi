@@ -53,7 +53,7 @@ class Scope3024T(Base, ScopeInterface):
     def run_single(self):
         pass
 
-    def stop(self):
+    def stop_acquisition(self):
         self._do_command(':stop')
 
     def get_channels(self):
