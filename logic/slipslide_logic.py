@@ -22,7 +22,7 @@ top-level directory of this distribution and at <https://github.com/Ulm-IQO/qudi
 from qtpy import QtCore
 from collections import OrderedDict
 from copy import copy
-from datetime import datetime
+import datetime
 import numpy as np
 import matplotlib as mpl
 import matplotlib.pyplot as plt
@@ -1063,8 +1063,6 @@ class ConfocalLogic(GenericLogic):
         parameters['Y image range'] = self.image_y_range[1] - self.image_y_range[0]
 
         parameters['XY resolution (samples per range)'] = self.xy_resolution
-        parameters['X fine resolution (samples per range)'] = self.x_fine_resolution
-        parameters['Y fine resolution (samples per range)'] = self.y_fine_resolution
         parameters['XY Image at z position (m)'] = self._current_z
 
 

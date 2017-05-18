@@ -1496,3 +1496,22 @@ class ConfocalGui(GUIBase):
         """ Manages what happens if the xy scan is started. """
         # self.disable_scan_actions()
         self._scanning_logic.start_scanning(zscan=False,finescan=True,  tag='gui')
+
+    def save_xy_scan_data(self):
+        """ Run the save routine from the logic to save the xy confocal data."""
+        cb_range = self.get_xy_cb_range()
+
+        # Percentile range is None, unless the percentile scaling is selected in GUI.
+        pcile_range = None
+        if not self._mw.manualRadioButton.isChecked():
+            low_centile = self._mw.percentileMinDoubleSpinBox.value()
+            high_centile = self._mw.percentileMaxDoubleSpinBox.value()
+            pcile_range = [low_centile, high_centile]
+
+        self._scanning_logic.save_xy_data(colorscale_range=cb_range, percentile_range=pcile_range)
+
+        # TODO: find a way to produce raw image in savelogic.  For now it is saved here.
+        filepath = self._save_logic.get_path_for_module(module_name='Confocal')
+        filename = filepath + os.sep + time.strftime('%Y%m%d-%H%M-%S_confocal_xy_scan_raw_pixel_image')
+
+        self.xy_image.save(filename + '_raw.png')
