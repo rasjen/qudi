@@ -26,6 +26,7 @@ class ScopeLogic(GenericLogic):
     sigRunContinuous = QtCore.Signal()
     sigRunSingle = QtCore.Signal()
     sigStop = QtCore.Signal()
+    sigDataUpdated = QtCore.Signal()
 
 
 
@@ -45,12 +46,53 @@ class ScopeLogic(GenericLogic):
         self._scope = self.get_connector('scope')
         self._save_logic = self.get_connector('savelogic')
 
-        self.sigRunContinuous.connect(self._scope.run_continuous)
+        self.sigRunContinuous.connect(self.run_continuous)
         self.sigRunSingle.connect(self._scope.run_single)
-        self.sigStop.connect(self._scope.stop)
+        self.sigStop.connect(self.stop_aq)
+
+        self.scopetime = np.arange(0,1,0.1)
+        self.scopedata = [np.zeros([10]) for i in range(4)]
 
     def on_deactivate(self):
         """ Perform required deactivation. """
+
+    def run_continuous(self):
+        self._scope.run_continuous()
+
+    def stop_aq(self):
+        self._scope.stop_acquisition()
+
+    def get_data(self):
+        t, y = self._scope.aquire_data(self.get_channels())
+
+        self.scopetime = t
+        self.scopedata = y
+
+        self.sigDataUpdated.emit()
+
+    def get_timescale(self):
+        return self.scopetime
+
+    def get_channels(self):
+        return self._scope.get_channels()
+
+    def change_channel_state(self, channel, state):
+        '''
+
+        @param channel:
+        @param state:
+        @return:
+        '''
+        if state is 'on':
+            self._scope.turn_on_channel(channel)
+        else:
+            self._scope.turn_off_channel(channel)
+
+
+
+
+
+
 
 
 

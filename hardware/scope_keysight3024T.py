@@ -47,6 +47,31 @@ class Scope3024T(Base, ScopeInterface):
         self.rm.close()
         return
 
+    def aquire_data(self,channels):
+
+        self._do_command(':ACQuire:TYPE NORMal')
+        self._do_command(':TIMebase:MODE MAIN')
+
+        self._do_command(':WAVeform:FORMat BYTE')  # 8 bits
+        self._do_command(':WAVeform:UNSigned ON')
+        self._do_command(':WAVeform:POINTs:MODE MAXimum')
+        self._do_command(':WAVeform:POINTs 8000000')
+
+        y_data = []
+
+
+        self.stop_acquisition()
+        for channel in channels:
+
+            self._do_command(':WAVeform:SOURce CHANnel{}'.format(channel))
+
+            t, y = self._get_data()
+            y_data.append(y)
+        t_data = t
+        self.run_continuous()
+        return t_data, y_data
+
+
     def run_continuous(self):
         self._do_command(':run')
 
@@ -75,8 +100,13 @@ class Scope3024T(Base, ScopeInterface):
         return self._do_query_ascii_values(':Channel{}:Range?'.format(channel))
 
     def _get_data(self):
-        self.data = self._do_query_binary_values('WAVeform:DATA?')
-        self.preamble = self._do_query_ascii_values('WAVeform:PREamble?')
+        data = self._do_query_binary_values('WAVeform:DATA?')
+        preamble = self._do_query_ascii_values('WAVeform:PREamble?')
+
+        self.t_data = self._convert_t_data(data, preamble)
+        self.y_data = self._convert_y_data(data, preamble)
+
+        return self.t_data, self.y_data
 
     def _convert_y_data(self, data, preamble):
         return (data - preamble[9]) * preamble[7] + preamble[8]
@@ -111,7 +141,7 @@ class Scope3024T(Base, ScopeInterface):
     # =========================================================
     def _do_query_values(self, query):
 
-        results = self.scope.ask_for_values("%{}".format(query))
+        results = self.scope.ask_for_values("{}".format(query))
         self._check_instrument_errors(query)
         return results
 
@@ -121,7 +151,7 @@ class Scope3024T(Base, ScopeInterface):
 
     def _do_query_ascii_values(self, query):
 
-        results = self.scope.query_ascii_values("%{}".format(query), container=np.array)
+        results = self.scope.query_ascii_values("{}".format(query), container=np.array)
         self._check_instrument_errors(query)
         return results
 
