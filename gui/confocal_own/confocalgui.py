@@ -217,7 +217,7 @@ class ConfocalGui(GUIBase):
 
         # All our gui elements are dockable, and so there should be no "central" widget.
         # always use first channel on startup, can be changed afterwards
-        self.xy_channel = 0
+        self.xy_channel = 1
 
         # Get the image for the display from the logic. Transpose the received
         # matrix to get the proper scan. The graphig widget displays vector-

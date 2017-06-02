@@ -195,8 +195,9 @@ class Attocube(Base, AttoScanner):
             self._current_position_abs[2] = np.float(z)
         try:
             for i, label in enumerate(self.get_scanner_axes()):
-                self.set_target_position(axis=label, position=self._current_position_abs[i])
-                self.auto_move(label, 1)
+                if label is not 'z':
+                    self.set_target_position(axis=label, position=self._current_position_abs[i])
+                    self.auto_move(label, 1)
         except:
             self.log.error('did not move')
             return -1

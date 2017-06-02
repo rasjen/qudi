@@ -91,7 +91,7 @@ class CounterGui(GUIBase):
         self._pw.setLabel('bottom', 'Time', units='s')
 
         self.curves = []
-
+        self.count_channel = 1
         for i, ch in enumerate(self._counting_logic.get_channels()):
             if i % 2 == 0:
                 # Create an empty plot curve to be filled later, set its pen
@@ -202,7 +202,7 @@ class CounterGui(GUIBase):
 
         if self._counting_logic.getState() == 'locked':
             self._mw.count_value_Label.setText(
-                '{0:,.0f}'.format(self._counting_logic.countdata_smoothed[0, -1]))
+                '{0:,.0f}'.format(self._counting_logic.countdata_smoothed[self.count_channel, -1]))
 
             x_vals = (
                 np.arange(0, self._counting_logic.get_count_length())
