@@ -13,7 +13,7 @@
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
-  <property name="toolTipDuration" stdset="0">
+  <property name="toolTipDuration">
    <number>0</number>
   </property>
   <widget class="QWidget" name="centralwidget">
@@ -41,6 +41,13 @@
            </widget>
           </item>
          </layout>
+        </item>
+        <item row="1" column="0">
+         <widget class="QPushButton" name="savedata_pushButton">
+          <property name="text">
+           <string>Save data</string>
+          </property>
+         </widget>
         </item>
        </layout>
       </widget>

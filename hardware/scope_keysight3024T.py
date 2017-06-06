@@ -47,7 +47,7 @@ class Scope3024T(Base, ScopeInterface):
         self.rm.close()
         return
 
-    def aquire_data(self,channels):
+    def aquire_data(self, channels):
 
         self._do_command(':ACQuire:TYPE NORMal')
         self._do_command(':TIMebase:MODE MAIN')

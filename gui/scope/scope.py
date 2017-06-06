@@ -53,6 +53,7 @@ class ScopeGUI(GUIBase):
         self._mw.run_pushButton.clicked.connect(self._scope_logic.run_continuous)
         self._mw.stop_pushButton.clicked.connect(self._scope_logic.stop_aq)
         self._mw.getdata_pushButton.clicked.connect(self._scope_logic.get_data)
+        self._mw.savedata_pushButton.clicked.connect(self._scope_logic.save_data)
 
         self._mw.Channel1_radioButton.clicked.connect(self.channel1_state_chage)
         self._mw.Channel2_radioButton.clicked.connect(self.channel2_state_chage)
