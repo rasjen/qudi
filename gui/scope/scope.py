@@ -60,6 +60,11 @@ class ScopeGUI(GUIBase):
         self._mw.Channel3_radioButton.clicked.connect(self.channel3_state_chage)
         self._mw.Channel4_radioButton.clicked.connect(self.channel4_state_chage)
 
+        self._mw.Channel1_radioButton.setChecked(True)
+        self._mw.Channel2_radioButton.setChecked(True)
+        self._mw.Channel3_radioButton.setChecked(True)
+        self._mw.Channel4_radioButton.setChecked(True)
+
         # Plot labels.
         self._pw = self._mw.scope_PlotWidget
 
@@ -83,6 +88,9 @@ class ScopeGUI(GUIBase):
 
         self._scope_logic.sigDataUpdated.connect(self.updateData)
 
+        for ch in self._scope_logic.get_channels():
+            self._scope_logic.change_channel_state(channel=ch, state='on')
+
     def on_deactivate(self):
         """ Reverse steps of activation
 
@@ -99,8 +107,7 @@ class ScopeGUI(GUIBase):
 
         t_vals = self._scope_logic.get_timescale()
 
-        for i, ch in enumerate(self._scope_logic.get_channels()):
-             print(t_vals)
+        for i, ch in enumerate(self._scope_logic.active_channels):
              self.curves[i].setData(y=self._scope_logic.scopedata[i], x=t_vals)
 
         return 0

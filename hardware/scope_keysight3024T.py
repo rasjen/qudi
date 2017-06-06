@@ -22,21 +22,16 @@ class Scope3024T(Base, ScopeInterface):
             self.log.info('{0}: {1}'.format(key,config[key]))
 
         self.rm = visa.ResourceManager()
-        res = self.rm.list_resources()
+        self.res = self.rm.list_resources()
 
-        self.scope = self.rm.open_resource(res[0])
-        print('Connected to ' + self.scope.query('*IDN?'))
+
 
     def on_activate(self):
         """ Initialisation performed during activation of the module.
         """
         config = self.getConfiguration()
 
-
-        self.rm = visa.ResourceManager()
-        res = self.rm.list_resources()
-
-        self.scope = self.rm.open_resource(res[0])
+        self.scope = self.rm.open_resource(self.res[0])
         print('Connected to ' + self.scope.query('*IDN?'))
         return
 

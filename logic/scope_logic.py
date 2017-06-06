@@ -6,6 +6,7 @@ from logic.generic_logic import GenericLogic
 from core.util.mutex import Mutex
 from collections import OrderedDict
 import time
+import matplotlib.pyplot as plt
 
 class ScopeLogic(GenericLogic):
     """
@@ -94,7 +95,7 @@ class ScopeLogic(GenericLogic):
             self.active_channels.remove(channel)
 
 
-    def save_data(self, to_file=True, postfix=''):
+    def save_data(self):
         """ Save the counter trace data and writes it to a file.
 
         @param bool to_file: indicate, whether data have to be saved to file
@@ -102,28 +103,47 @@ class ScopeLogic(GenericLogic):
 
         @return dict parameters: Dictionary which contains the saving parameters
         """
-        # stop saving thus saving state has to be set to False
 
-        if to_file:
-            # If there is a postfix then add separating underscore
-            if postfix == '':
-                filelabel = 'scope_trace'
-            else:
-                filelabel = 'scope_trace_' + postfix
 
-            parameters = OrderedDict()
-            parameters['Scope time'] = time.strftime('%d.%m.%Y %Hh:%Mmin:%Ss', time.localtime(self._saving_start_time))
 
-            self.data_to_save = [self.scopetime, self.scopedata]
-            data = self._data_to_save
-            filepath = self._save_logic.get_path_for_module(module_name='Scope')
+        filelabel = 'scope_trace'
 
-            fig = self.draw_figure(data=np.array(self._data_to_save))
-            self._save_logic.save_data(data, filepath=filepath, parameters=parameters,
+
+        parameters = OrderedDict()
+        parameters['Scope time'] = time.strftime('%d.%m.%Y %Hh:%Mmin:%Ss')
+
+        self._data_to_save = np.array([self.scopetime, self.scopedata])
+        header = 'Time (s)'
+        for i, ch in enumerate(self.get_channels()):
+            header = header + ',Signal{0} (V)'.format(i)
+
+        data = {header: self._data_to_save}
+        filepath = self._save_logic.get_path_for_module(module_name='Scope')
+
+        fig = self.draw_figure(data=np.array(self._data_to_save))
+        self._save_logic.save_data(data, filepath=filepath, parameters=parameters,
                                        filelabel=filelabel, plotfig=fig, delimiter='\t')
-            self.log.info('Scope Trace saved to:\n{0}'.format(filepath))
+        self.log.info('Scope Trace saved to:\n{0}'.format(filepath))
 
-        return self._data_to_save, parameters
+        return 0
+
+    def draw_figure(self, data):
+        """ Draw figure to save with data file.
+
+        @param: nparray data: a numpy array containing counts vs time for all detectors
+
+        @return: fig fig: a matplotlib figure object to be saved to file.
+        """
+        # Use qudi style
+        plt.style.use(self._save_logic.mpl_qd_style)
+
+        # Create figure
+        fig, ax = plt.subplots()
+        for ydata in data[1]:
+            ax.plot(data[0], ydata, linestyle=':', linewidth=0.5)
+        ax.set_xlabel('Time (s)')
+        ax.set_ylabel('Voltage (V)')
+        return fig
 
 
 
