@@ -60,6 +60,9 @@ class ScopeGUI(GUIBase):
         self._mw.Channel3_radioButton.clicked.connect(self.channel3_state_chage)
         self._mw.Channel4_radioButton.clicked.connect(self.channel4_state_chage)
 
+        self._mw.time_range_Spinbox.setValue(self._scope_logic.get_time_range()*1e6)
+        self._mw.time_range_Spinbox.valueChanged.connect(self.set_time_range)
+
         self._mw.Channel1_radioButton.setChecked(True)
         self._mw.Channel2_radioButton.setChecked(True)
         self._mw.Channel3_radioButton.setChecked(True)
@@ -78,7 +81,6 @@ class ScopeGUI(GUIBase):
                 self.curves.append(
                     pg.PlotDataItem(pen=pg.mkPen(self.colors[i]), symbol=None))
                 self._pw.addItem(self.curves[-1])
-
 
         # setting the x axis length correctly
         self._pw.setXRange(
@@ -110,6 +112,8 @@ class ScopeGUI(GUIBase):
         for i, ch in enumerate(self._scope_logic.active_channels):
              self.curves[i].setData(y=self._scope_logic.scopedata[i], x=t_vals)
 
+        self._pw.enableAutoRange()
+
         return 0
 
     def channel1_state_chage(self):
@@ -135,6 +139,12 @@ class ScopeGUI(GUIBase):
             self._scope_logic.change_channel_state(channel=4, state='on')
         else:
             self._scope_logic.change_channel_state(channel=4, state='off')
+
+    def set_time_range(self):
+        self._scope_logic.set_time_range(self._mw.time_range_Spinbox.value()*1e-6)
+
+
+
 
 
 

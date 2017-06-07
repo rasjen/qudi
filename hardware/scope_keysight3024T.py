@@ -50,8 +50,8 @@ class Scope3024T(Base, ScopeInterface):
         self._do_command(':WAVeform:FORMat BYTE')  # 8 bits
         self._do_command(':WAVeform:UNSigned ON')
         self._do_command(':WAVeform:POINTs:MODE MAXimum')
-        self._do_command(':WAVeform:POINTs 8000000')
-
+        #self._do_command(':WAVeform:POINTs 8000000')
+        self._do_command(':WAVeform:POINTs 1000000')
         y_data = []
 
 
@@ -87,6 +87,9 @@ class Scope3024T(Base, ScopeInterface):
 
     def set_time_range(self, time_range):
         self._do_command(':Timebase:RANGe ' + str(time_range))
+
+    def get_time_range(self):
+        return self._do_query_ascii_values(':Timebase:RANGe?')
 
     def set_voltage_range(self, channel, voltage_range):
         self._do_command(':Channel{}:RANGe '.format(channel) + str(voltage_range) + 'V')
@@ -126,9 +129,9 @@ class Scope3024T(Base, ScopeInterface):
     # =========================================================
     # Send a query, check for errors, return string:
     # =========================================================
-    def _do_query_string(self, query):
+    def _do_query(self, query):
 
-        result = self.scope.ask("{}".format(query))
+        result = self.scope.query("{}".format(query))
         self._check_instrument_errors(query)
         return result
     # =========================================================
