@@ -153,36 +153,40 @@ class ScopeLogic(GenericLogic):
 
 
 
-    def _split_array(self, trigger_channel = 3, cutoff = 15000):
-        trigger_data = self.scopedata[trigger_channel]
-        time_data = self.scopetime
+    def _split_array(self, trigger_data, resonance_data,time_data):
 
-        treshold = 2.0
+        treshold = 1.5
         diff_trigger = np.diff(trigger_data ) > treshold
-
         indices = np.where(diff_trigger == True)
 
         split_time = np.split(time_data,indices[0])
-        split_data = np.split(trigger_data,indices[0])
-        split_data2  = np.split(self.scopedata[0],indices[0])
+        split_trigger = np.split(trigger_data,indices[0])
+        split_data = np.split(resonance_data, indices[0])
 
-        freq = 1.0 / np.abs(split_time[1][0]-split_time[1][-1])
+
+        # first and last er not complete scans
+        return split_time[1:-1], split_trigger[1:-1], split_data[1:-1]
+
+
+    def analyse(self, trigger_channel=3, resonance_channel = 0,  cutoff = 15000):
+        trigger_data = self.scopedata[trigger_channel]
+        resonance_data = self.scopedata[resonance_channel]
+        time_data = self.scopetime
+
+        [split_time, split_trigger, self.split_data] = self._split_array(trigger_data, resonance_data, time_data)
+
+
+        freq = 1.0 / np.abs(split_time[1][0] - split_time[1][-1])
         print('freq {}'.format(freq))
 
-        plt.figure(2)
-        for i in range(len(split_data2)-2):
-            plt.plot(split_data2[i+1])
-        plt.xlabel('time (arb)')
-        plt.ylabel('Voltage (V)')
-        plt.show()
-        cycles = len(split_data2)-2
+        cycles = len(self.split_data)
         t = np.linspace(0, 1/freq*cycles, cycles)
         pos1 = []
         pos2 = []
         for i in range(cycles):
             # only upward ramp
-            firsthalf = split_data2[i+1][0:int(len(split_time[1])/2)]
-            firsthalf_time = split_time[i+1][0:int(len(split_time[1])/2)]
+            firsthalf = self.split_data[i+1][0:int(len(split_time[0])/2)]
+            firsthalf_time = self.split_time[i+1][0:int(len(split_time[0])/2)]
             #plt.figure(i+2)
             #plt.plot(firsthalf)
             #plt.show()
