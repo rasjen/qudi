@@ -69,8 +69,8 @@ class ScopeLogic(GenericLogic):
     def get_data(self):
         t, y = self._scope.aquire_data(self.active_channels)
 
-        self.scopetime = t
-        self.scopedata = y
+        self.scopetime = np.array(t)
+        self.scopedata = np.array(y)
 
         self.sigDataUpdated.emit()
 
@@ -79,6 +79,12 @@ class ScopeLogic(GenericLogic):
 
     def get_channels(self):
         return self._scope.get_channels()
+
+    def get_time_range(self):
+        return self._scope.get_time_range()
+
+    def set_time_range(self, time_range):
+        self._scope.set_time_range(time_range)
 
     def change_channel_state(self, channel, state):
         '''
@@ -112,12 +118,12 @@ class ScopeLogic(GenericLogic):
         parameters = OrderedDict()
         parameters['Scope time'] = time.strftime('%d.%m.%Y %Hh:%Mmin:%Ss')
 
-        self._data_to_save = np.array([self.scopetime, self.scopedata])
+        self._data_to_save = np.vstack((self.scopetime, self.scopedata))
         header = 'Time (s)'
         for i, ch in enumerate(self.get_channels()):
-            header = header + ',Signal{0} (V)'.format(i)
+            header = header + ',Channel{0} (V)'.format(i)
 
-        data = {header: self._data_to_save}
+        data = {header: self._data_to_save.transpose()}
         filepath = self._save_logic.get_path_for_module(module_name='Scope')
 
         fig = self.draw_figure(data=np.array(self._data_to_save))
@@ -139,11 +145,66 @@ class ScopeLogic(GenericLogic):
 
         # Create figure
         fig, ax = plt.subplots()
-        for ydata in data[1]:
-            ax.plot(data[0], ydata, linestyle=':', linewidth=0.5)
+        for i in range(len(data)-1):
+            ax.plot(data[0], data[i+1], linestyle=':', linewidth=0.5)
         ax.set_xlabel('Time (s)')
         ax.set_ylabel('Voltage (V)')
         return fig
+
+
+
+    def _split_array(self, trigger_channel = 3, cutoff = 15000):
+        trigger_data = self.scopedata[trigger_channel]
+        time_data = self.scopetime
+
+        treshold = 2.0
+        diff_trigger = np.diff(trigger_data ) > treshold
+
+        indices = np.where(diff_trigger == True)
+
+        split_time = np.split(time_data,indices[0])
+        split_data = np.split(trigger_data,indices[0])
+        split_data2  = np.split(self.scopedata[0],indices[0])
+
+        freq = 1.0 / np.abs(split_time[1][0]-split_time[1][-1])
+        print('freq {}'.format(freq))
+
+        plt.figure(2)
+        for i in range(len(split_data2)-2):
+            plt.plot(split_data2[i+1])
+        plt.xlabel('time (arb)')
+        plt.ylabel('Voltage (V)')
+        plt.show()
+        cycles = len(split_data2)-2
+        t = np.linspace(0, 1/freq*cycles, cycles)
+        pos1 = []
+        pos2 = []
+        for i in range(cycles):
+            # only upward ramp
+            firsthalf = split_data2[i+1][0:int(len(split_time[1])/2)]
+            firsthalf_time = split_time[i+1][0:int(len(split_time[1])/2)]
+            #plt.figure(i+2)
+            #plt.plot(firsthalf)
+            #plt.show()
+            # first resonance
+            res1 = firsthalf[0:cutoff]
+            #
+            res2 = firsthalf[cutoff:]
+            min_indices1 = np.argmin(res1)
+            min_indices2 = np.argmin(res2)
+            pos1.append(min_indices1)
+            pos2.append(min_indices2)
+        print(pos1, pos2)
+        plt.figure(1)
+        plt.plot(t*1e3,pos1-pos1[0])
+        plt.plot(t*1e3,pos2-pos2[0])
+        plt.xlabel('time (ms)')
+        plt.ylabel('resonance position (arb)')
+        plt.show()
+
+
+
+
 
 
 
