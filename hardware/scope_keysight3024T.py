@@ -4,6 +4,7 @@ import visa
 import string
 import sys
 import numpy as np
+import time
 
 class Scope3024T(Base, ScopeInterface):
     """This is the Interface class to define the controls for the simple
@@ -112,6 +113,14 @@ class Scope3024T(Base, ScopeInterface):
     def _convert_t_data(self, data, preamble):
         t = np.linspace(0, len(data) - 1, len(data))
         return (t - preamble[6]) * preamble[4] + preamble[5]
+
+    def _wait_for_trigger(self):
+        while True:
+            if self._do_query(':OPER:Condition?'):
+                break
+            else:
+                time.sleep(0.5)
+
 
     # =========================================================
     # Send a command and check for errors:
