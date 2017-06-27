@@ -1,5 +1,6 @@
 from core.base import Base
 from interface.scope_interface import ScopeInterface
+import numpy as np
 
 class ScopeDummy(Base, ScopeInterface):
     """This is the Interface class to define the controls for the simple
@@ -50,3 +51,12 @@ class ScopeDummy(Base, ScopeInterface):
 
     def turn_off_channel(self, channel):
         self.channel[channel] = 'off'
+
+    def aquire_data(self, channels):
+        y_data = []
+
+        for i in range(len(channels)):
+            y = 1
+            y_data.append(y)
+        t_data = np.linspace(0,1,1)
+        return t_data, y_data

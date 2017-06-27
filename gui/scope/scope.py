@@ -93,6 +93,15 @@ class ScopeGUI(GUIBase):
         for ch in self._scope_logic.get_channels():
             self._scope_logic.change_channel_state(channel=ch, state='on')
 
+
+        # Analysetab
+        self._mw.analyse_pushButton.clicked.connect(self._scope_logic.analyse)
+        # Plot labels.
+        self._tracesWidget = self._mw.traces_PlotWidget
+
+        self._tracesWidget.setLabel('left', 'Voltage', units='V')
+        self._tracesWidget.setLabel('bottom', 'index')
+
     def on_deactivate(self):
         """ Reverse steps of activation
 
@@ -142,6 +151,12 @@ class ScopeGUI(GUIBase):
 
     def set_time_range(self):
         self._scope_logic.set_time_range(self._mw.time_range_Spinbox.value()*1e-6)
+
+    def update_traceplot(self):
+        self._tracesWidget.clear()
+        for data in self._scope_logic.split_data:
+            self._pw.addItem(pg.PlotDataItem(pen=pg.mkPen(data), symbol=None))
+
 
 
 
