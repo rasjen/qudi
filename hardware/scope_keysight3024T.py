@@ -51,18 +51,19 @@ class Scope3024T(Base, ScopeInterface):
         self._do_command(':WAVeform:UNSigned ON')
         self._do_command(':WAVeform:POINTs:MODE MAXimum')
         #self._do_command(':WAVeform:POINTs 8000000')
-        self._do_command(':WAVeform:POINTs 1000000')
+        self._do_command(':WAVeform:POINTs 8000000')
         y_data = []
-
+        t_data = []
 
         self.stop_acquisition()
         for channel in channels:
 
             self._do_command(':WAVeform:SOURce CHANnel{}'.format(channel))
 
-            t, y = self._get_data()
+            timedata, y = self._get_data()
             y_data.append(y)
-        t_data = t
+
+        t_data = timedata
         self.run_continuous()
         return t_data, y_data
 
