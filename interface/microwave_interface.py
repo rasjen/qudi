@@ -78,7 +78,7 @@ class MicrowaveInterface(metaclass=InterfaceMetaclass):
         """
         pass
 
-    @abc.abstractmethod
+    @abc.abstractm  ethod
     def set_power(self, power=0.):
         """ Sets the microwave output power.
 
