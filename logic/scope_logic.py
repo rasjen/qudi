@@ -68,6 +68,7 @@ class ScopeLogic(GenericLogic):
 
 
 
+
     # Channel 1 functions
 
     def set_channel1_DC_couling(self):
@@ -103,6 +104,7 @@ class ScopeLogic(GenericLogic):
 
     def set_channel2_impedance_input_1M(self):
         self._scope.set_channel2_impedance_input_1M()
+
 
 
 
@@ -147,13 +149,17 @@ class ScopeLogic(GenericLogic):
 
     # Trigger functions
 
-    def trigger_mode_EDGE(self):
-        self.trigger_mode_EDGE()
+    def trigger_source(self, mode, channel):
+        self._scope.trigger_source(mode, channel)
 
-    def trigger_source(self):
-        self._scope.trigger_source()
+    def trigger_mode(self, mode):
+        self._scope.trigger_mode(mode)
 
+    def trigger_50(self):
+        self._scope.trigger_50()
 
+    def trigger_level(self, mode, value):
+        self._scope.trigger_level(mode, value)
 
     # Acquire functions
 
@@ -169,16 +175,10 @@ class ScopeLogic(GenericLogic):
     def aqcuire_mode_average(self):
         self._scope.aqcuire_mode_average()
 
-
-
-
-
     def get_data(self):
         t, y = self._scope.aquire_data(self.active_channels)
-
         self.scopetime = np.array(t)
         self.scopedata = np.array(y)
-
         self.sigDataUpdated.emit()
 
     def get_timescale(self):
@@ -286,6 +286,23 @@ class ScopeLogic(GenericLogic):
         plt.ylabel('resonance position (arb)')
         plt.show()
 
+    def time_scale(self, value):
+        self._scope.time_scale(value)
+
+    def time_delay(self, value):
+        self._scope.time_delay(value)
+
+    def channel1_offset(self, value):
+        self._scope.channel1_offset(value)
+
+    def channel2_offset(self, value):
+        self._scope.channel2_offset(value)
+
+    def channel3_offset(self, value):
+        self._scope.channel3_offset(value)
+
+    def channel4_offset(self, value):
+        self._scope.channel4_offset(value)
 
 
 

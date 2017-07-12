@@ -42,12 +42,12 @@ class Scope3024T(Base, ScopeInterface):
         return
 
     def aquire_data(self, channels):
-        self._do_command(':ACQuire:TYPE NORMal')
-        self._do_command(':TIMebase:MODE MAIN')
-        self._do_command(':WAVeform:FORMat BYTE')  # 8 bits
-        self._do_command(':WAVeform:UNSigned ON')
-        self._do_command(':WAVeform:POINTs:MODE MAXimum')
-        self._do_command(':WAVeform:POINTs 8000000')
+       # self._do_command(':ACQuire:TYPE NORMal')
+       # self._do_command(':TIMebase:MODE MAIN')
+       # self._do_command(':WAVeform:FORMat BYTE')  # 8 bits
+       # self._do_command(':WAVeform:UNSigned ON')
+       # self._do_command(':WAVeform:POINTs:MODE MAXimum')
+       # self._do_command(':WAVeform:POINTs 8000000')
         y_data = []
         t_data = []
         self.stop_acquisition()
@@ -61,12 +61,17 @@ class Scope3024T(Base, ScopeInterface):
         self.run_continuous()
         return t_data, y_data
 
-
+    def _get_data(self):
+        data = self._do_query_binary_values('WAVeform:DATA?')
+        preamble = self._do_query_ascii_values('WAVeform:PREamble?')
+        self.t_data = self._convert_t_data(data, preamble)
+        self.y_data = self._convert_y_data(data, preamble)
+        return self.t_data, self.y_data
 
     # General functions
 
     def auto_scale(self):
-        self.do_command(":AUToscale")
+        self._do_command(":AUToscale")
 
     def run_continuous(self):
         self._do_command(':run')
@@ -88,15 +93,6 @@ class Scope3024T(Base, ScopeInterface):
 
     def get_voltage_range(self, channel):
         return self._do_query_ascii_values(':Channel{}:Range?'.format(channel))
-
-    def _get_data(self):
-        data = self._do_query_binary_values('WAVeform:DATA?')
-        preamble = self._do_query_ascii_values('WAVeform:PREamble?')
-
-        self.t_data = self._convert_t_data(data, preamble)
-        self.y_data = self._convert_y_data(data, preamble)
-
-        return self.t_data, self.y_data
 
     def _convert_y_data(self, data, preamble):
         return (data - preamble[9]) * preamble[7] + preamble[8]
@@ -141,7 +137,8 @@ class Scope3024T(Base, ScopeInterface):
     def set_channel1_impedance_input_1M(self):
         self._do_command('CHANnel1:IMPedance ONEM')
 
-
+    def channel1_offset(self, value):
+        self._do_command('CHANnel1:OFFSet {}'.format(value))
 
 
     # Channel 2 functions
@@ -161,7 +158,8 @@ class Scope3024T(Base, ScopeInterface):
     def set_channel2_impedance_input_1M(self):
         self._do_command('CHANnel2:IMPedance ONEM')
 
-
+    def channel2_offset(self, value):
+        self._do_command('CHANnel2:OFFSet {}'.format(value))
 
 
     # Channel 3 functions
@@ -181,7 +179,8 @@ class Scope3024T(Base, ScopeInterface):
     def set_channel3_impedance_input_1M(self):
         self._do_command('CHANnel3:IMPedance ONEM')
 
-
+    def channel3_offset(self, value):
+        self._do_command('CHANnel3:OFFSet {}'.format(value))
 
 
     # Channel 4 functions
@@ -201,7 +200,8 @@ class Scope3024T(Base, ScopeInterface):
     def set_channel4_impedance_input_1M(self):
         self._do_command('CHANnel4:IMPedance ONEM')
 
-
+    def channel4_offset(self, value):
+        self._do_command('CHANnel4:OFFSet {}'.format(value))
 
     # All channels functions
 
@@ -218,11 +218,23 @@ class Scope3024T(Base, ScopeInterface):
 
     # Trigger functions
 
-    def trigger_mode_EDGE(self):
-        self._do_command(':TRIGger:MODE EDGE')
+    def trigger_mode(self, mode):
+        self._do_command(':TRIGger:MODE {}'.format(mode))
 
+    def trigger_source(self, mode, channel):
+        self._do_command(':TRIGger:{0}:SOURCe CHANnel{1}'.format(mode, channel))
 
+    def trigger_50(self):
+        self._do_command(':TRIGger:LEVel:ASETup')
 
+    def trigger_level(self, mode, value):
+        self._do_command(':TRIGger:{0}:LEVel {1}'.format(mode, value))
+
+    def time_scale(self, value):
+        self._do_command(':TIMebase:SCALe {}'.format(value))
+
+    def time_delay(self, value):
+        self._do_command(':TIMebase:DELay {}'.format(value))
 
     # =========================================================
     # Send a command and check for errors:
