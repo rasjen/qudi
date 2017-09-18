@@ -3,9 +3,8 @@ import numpy as np
 
 from logic.generic_logic import GenericLogic
 from core.util.mutex import Mutex
-from collections import OrderedDict
-import time
 import matplotlib.pyplot as plt
+import time
 
 class ScopeLogic(GenericLogic):
     """
@@ -26,6 +25,7 @@ class ScopeLogic(GenericLogic):
     sigRunSingle = QtCore.Signal()
     sigStop = QtCore.Signal()
     sigDataUpdated = QtCore.Signal()
+    screenshotDataUpdated = QtCore.Signal()
 
     def __init__(self, config, **kwargs):
         super().__init__(config=config, **kwargs)
@@ -41,27 +41,37 @@ class ScopeLogic(GenericLogic):
         self._save_logic = self.get_connector('savelogic')
 
         self.sigRunContinuous.connect(self.run_continuous)
-        self.sigRunSingle.connect(self._scope.run_single)
-        self.sigStop.connect(self.stop_aq)
+        self.sigRunSingle.connect(self._scope.single_acquisition)
+        self.sigStop.connect(self.stop_acquisition)
         self.scopetime = np.arange(0,1,0.1)
         self.scopedata = [np.zeros([10]) for i in range(4)]
         self.active_channels = []
+        self.acquisition_mode = self.get_acquire_mode()
 
     def on_deactivate(self):
         """ Perform required deactivation. """
 
-
+    def get_displayed_channels(self):
+        displayed_channels = []
+        n=1
+        while n <= 4 :
+            if self._scope.get_display_status(n) == '1':
+                displayed_channels.append(n)
+                n += 1
+            else :
+                n += 1
+        return displayed_channels
 
     # General functions
 
     def run_continuous(self):
         self._scope.run_continuous()
 
-    def stop_aq(self):
+    def stop_acquisition(self):
         self._scope.stop_acquisition()
 
-    def single_aq(self):
-        self._scope.run_single()
+    def single_acquisition(self):
+        self._scope.single_acquisition()
 
     def auto_scale(self):
         self._scope.auto_scale()
@@ -149,37 +159,40 @@ class ScopeLogic(GenericLogic):
 
     # Trigger functions
 
-    def trigger_source(self, mode, channel):
-        self._scope.trigger_source(mode, channel)
+    def set_trigger_source(self, mode, channel):
+        self._scope.set_trigger_source(mode, channel)
 
-    def trigger_mode(self, mode):
-        self._scope.trigger_mode(mode)
+    def set_trigger_mode(self, mode):
+        self._scope.set_trigger_mode(mode)
 
-    def trigger_50(self):
-        self._scope.trigger_50()
+    def set_trigger_50(self):
+        self._scope.set_trigger_50()
 
-    def trigger_level(self, mode, value):
-        self._scope.trigger_level(mode, value)
+    def set_trigger_level(self, mode, value):
+        self._scope.set_trigger_level(mode, value)
 
     # Acquire functions
 
-    def acquire_mode_normal(self):
+    def get_acquire_mode(self):
+        return self._scope.get_acquire_mode()
+
+    def set_acquire_mode_normal(self):
         self._scope.acquire_mode_normal()
 
-    def aqcuire_mode_highres(self):
+    def set_aqcuire_mode_highres(self):
         self._scope.aqcuire_mode_highres()
 
-    def aqcuire_mode_peak(self):
+    def set_aqcuire_mode_peak(self):
         self._scope.aqcuire_mode_peak()
 
-    def aqcuire_mode_average(self):
+    def set_aqcuire_mode_average(self):
         self._scope.aqcuire_mode_average()
 
     def get_data(self):
         t, y = self._scope.aquire_data(self.active_channels)
         self.scopetime = np.array(t)
         self.scopedata = np.array(y)
-        self.sigDataUpdated.emit()
+    #    self.sigDataUpdated.emit()
 
     def get_timescale(self):
         return self.scopetime
@@ -206,103 +219,101 @@ class ScopeLogic(GenericLogic):
             self._scope.turn_off_channel(channel)
             self.active_channels.remove(channel)
 
+    def set_time_scale(self, value):
+        self._scope.set_time_scale(value)
+
+    def set_time_delay(self, value):
+        self._scope.set_time_delay(value)
+
+    def set_channel1_offset(self, value):
+        self._scope.set_channel1_offset(value)
+
+    def set_channel2_offset(self, value):
+        self._scope.set_channel2_offset(value)
+
+    def set_channel3_offset(self, value):
+        self._scope.set_channel3_offset(value)
+
+    def set_channel4_offset(self, value):
+        self._scope.set_channel4_offset(value)
+
+    def get_screenshot_data(self):
+        data_screenshot = self._scope.get_screenshot_data()
+        newfile=open('screenshot.png','wb')
+        newfile.write(bytearray(data_screenshot))
+        newfile.close()
+        self.screenshotDataUpdated.emit()
+
+    def get_channel_vscale(self, channel):
+        return self._scope.get_channel_vscale(channel)
+
+    def get_channel_coupling(self, channel):
+        return self._scope.get_channel_coupling(channel)
+
+    def get_display_status(self, channel):
+        return self._scope.get_display_status(channel)
+
+    def get_impedance_input(self, channel):
+        return self._scope.get_impedance_input(channel)
+
+    def get_channel_offset(self, channel):
+        return self._scope.get_channel_offset(channel)
+
+    def get_time_scale(self):
+        return self._scope.get_time_scale()
+
+    def get_time_delay(self):
+        return self._scope.get_time_delay()
+
+    def get_trigger_mode(self):
+        return self._scope.get_trigger_mode()
+
+    def get_trigger_source(self):
+        return self._scope.get_trigger_source()
+
+    def get_trigger_level(self):
+        return self._scope.get_trigger_level()
+
+
+
+    def get_save_data_points_number(self):
+        return self._scope.get_save_data_points_number()
+
+    def _convert_y_data(self, data, preamble):
+        return (data - preamble[9]) * preamble[7] + preamble[8]
+
+    def _convert_t_data(self, data, preamble):
+        t = np.linspace(0, len(data) - 1, len(data))
+        return (t - preamble[6]) * preamble[4] + preamble[5]
+
+    def get_data(self):
+        '''Get data from all the channels of the scope (displayed or not)
+        Data format : [time (s), Channel 1 (V), Channel 2 (V), Channel 3 (V), Channel 4 (V),]
+        '''
+        self._scope.set_saved_data_format('BYTE')
+        self._scope.set_save_data_unsigned_mode(1)
+        self._scope.set_save_data_point_maximum_mode()
+        self._scope.set_save_data_points_number(8000000)
+        n=1
+        while n<=4:
+            self._scope.set_saved_data_source(n)
+            data_channel = self._scope.get_channels_data()
+            preamble_channel = self._scope.get_preamble()
+            data_channel = self._convert_y_data(data_channel, preamble_channel)
+            data_time = self._convert_t_data(data_channel, preamble_channel)
+            if n == 1:
+                data = [data_time, data_channel]
+            else:
+                data.append(data_channel)
+            n += 1
+        return data
+
     def save_data(self):
-        """ Save the counter trace data and writes it to a file.
-        @param bool to_file: indicate, whether data have to be saved to file
-        @param str postfix: an additional tag, which will be added to the filename upon save
-        @return dict parameters: Dictionary which contains the saving parameters
-        """
-        filelabel = 'scope_trace'
-        parameters = OrderedDict()
-        parameters['Scope time'] = time.strftime('%d.%m.%Y %Hh:%Mmin:%Ss')
-        self._data_to_save = np.vstack((self.scopetime, self.scopedata))
-        header = 'Time (s)'
-        for i, ch in enumerate(self.get_channels()):
-            header = header + ',Channel{0} (V)'.format(i)
-        data = {header: self._data_to_save.transpose()}
-        filepath = self._save_logic.get_path_for_module(module_name='Scope')
-        fig = self.draw_figure(data=np.array(self._data_to_save))
-        self._save_logic.save_data(data, filepath=filepath, parameters=parameters,
-                                       filelabel=filelabel, plotfig=fig, delimiter='\t')
-        self.log.info('Scope Trace saved to:{0}'.format(filepath)) #'Scope Trace saved to:\n{0}
+        self.time = time.gmtime()
+        filename = 'scope_trace' + '_' + str(self.time[0]) + '_' + str(self.time[1])+ '_' + str(self.time[2])+ '_' + str(self.time[3]+2)+ '_' + str(self.time[4])+ '_' + str(self.time[5]) + '.txt'
+        data_to_save = self.get_data()
+        print(type(data_to_save))
+        filepath = self._save_logic.get_path_for_module(module_name='scope')
+        np.savetxt(filepath + filename, data_to_save, fmt='%.18e', delimiter=' ', newline='\n', header='', footer='', comments='# ')
+        self.log.info('Scope Trace saved to:{0}'.format(filepath))
         return 0
-
-    def draw_figure(self, data):
-        """ Draw figure to save with data file.
-        @param: nparray data: a numpy array containing counts vs time for all detectors
-        @return: fig fig: a matplotlib figure object to be saved to file.
-        """
-        # Use qudi style
-        plt.style.use(self._save_logic.mpl_qd_style)
-        # Create figure
-        fig, ax = plt.subplots()
-        for i in range(len(data)-1):
-            ax.plot(data[0], data[i+1], linestyle=':', linewidth=0.5)
-        ax.set_xlabel('Time (s)')
-        ax.set_ylabel('Voltage (V)')
-        return fig
-
-    def _split_array(self, trigger_channel = 2, cutoff = 15000):
-        trigger_data = self.scopedata[trigger_channel]
-        time_data = self.scopetime
-        treshold = 1.5
-        diff_trigger = np.diff(trigger_data ) > treshold
-        indices = np.where(diff_trigger == True)
-        split_time = np.split(time_data, indices[0])
-        split_data = np.split(trigger_data, indices[0])
-        split_data2 = np.split(self.scopedata[0], indices[0])
-        freq = 1.0 / np.abs(split_time[1][0]-split_time[1][-1])
-        print('freq {}'.format(freq))
-        plt.figure(2)
-        for i in range(len(split_data2)-2):
-            plt.plot(split_data2[i+1])
-        plt.xlabel('time (arb)')
-        plt.ylabel('Voltage (V)')
-        plt.show()
-        cycles = len(split_data2)-2
-        t = np.linspace(0, 1/freq*cycles, cycles)
-        pos1 = []
-        pos2 = []
-        for i in range(cycles):
-            # only upward ramp
-            firsthalf = split_data2[i+1][0:int(len(split_time[1])/2)]
-            firsthalf_time = split_time[i+1][0:int(len(split_time[1])/2)]
-            #plt.figure(i+2)
-            #plt.plot(firsthalf)
-            #plt.show()
-            # first resonance
-            res1 = firsthalf[0:cutoff]
-            #
-            res2 = firsthalf[cutoff:]
-            min_indices1 = np.argmin(res1)
-            min_indices2 = np.argmin(res2)
-            pos1.append(min_indices1)
-            pos2.append(min_indices2)
-        print(pos1, pos2)
-        plt.figure(1)
-        plt.plot(t*1e3,pos1-pos1[0])
-        plt.plot(t*1e3,pos2-pos2[0])
-        plt.xlabel('time (ms)')
-        plt.ylabel('resonance position (arb)')
-        plt.show()
-
-    def time_scale(self, value):
-        self._scope.time_scale(value)
-
-    def time_delay(self, value):
-        self._scope.time_delay(value)
-
-    def channel1_offset(self, value):
-        self._scope.channel1_offset(value)
-
-    def channel2_offset(self, value):
-        self._scope.channel2_offset(value)
-
-    def channel3_offset(self, value):
-        self._scope.channel3_offset(value)
-
-    def channel4_offset(self, value):
-        self._scope.channel4_offset(value)
-
-
-

@@ -10,15 +10,11 @@ class ScopeInterface(metaclass=InterfaceMetaclass):
         pass
 
     @abc.abstractmethod
-    def run_single(self):
+    def single_acquisition(self):
         pass
 
     @abc.abstractmethod
     def stop_acquisition(self):
-        pass
-
-    @abc.abstractmethod
-    def get_channels(self):
         pass
 
     @abc.abstractmethod

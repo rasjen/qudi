@@ -4,6 +4,7 @@ import visa
 import string
 import sys
 import numpy as np
+import matplotlib.pyplot as plt
 
 class Scope3024T(Base, ScopeInterface):
     """
@@ -28,7 +29,7 @@ class Scope3024T(Base, ScopeInterface):
         """
         config = self.getConfiguration()
         self.scope = self.rm.open_resource(self.res[0])
-        self.scope.timeout = 1000
+        self.scope.timeout = 10000
         self.scope.read_termination = None
         self.scope.write_termination = '\n'
         print('Connected to ' + self.scope.query('*IDN?'))
@@ -41,32 +42,30 @@ class Scope3024T(Base, ScopeInterface):
         self.rm.close()
         return
 
-    def aquire_data(self, channels):
-       # self._do_command(':ACQuire:TYPE NORMal')
-       # self._do_command(':TIMebase:MODE MAIN')
-       # self._do_command(':WAVeform:FORMat BYTE')  # 8 bits
-       # self._do_command(':WAVeform:UNSigned ON')
-       # self._do_command(':WAVeform:POINTs:MODE MAXimum')
-       # self._do_command(':WAVeform:POINTs 8000000')
-        y_data = []
-        t_data = []
-        self.stop_acquisition()
 
-        for channel in channels:
-            self._do_command(':WAVeform:SOURce CHANnel{}'.format(channel))
-            timedata, y = self._get_data()
-            y_data.append(y)
-        if len(channels)>0:
-            t_data = timedata
-        self.run_continuous()
-        return t_data, y_data
+    # Save functions
 
-    def _get_data(self):
-        data = self._do_query_binary_values('WAVeform:DATA?')
-        preamble = self._do_query_ascii_values('WAVeform:PREamble?')
-        self.t_data = self._convert_t_data(data, preamble)
-        self.y_data = self._convert_y_data(data, preamble)
-        return self.t_data, self.y_data
+    def set_saved_data_format(self, data_type):
+        self._do_command(':WAVeform:FORMat {}'.format(data_type))
+
+    def set_saved_data_source(self,channel):
+        self._do_command(':WAVeform:SOURce CHANnel{}'.format(int(channel)))
+
+    def set_save_data_unsigned_mode(self, unsigned_mode):
+        self._do_command(':WAVeform:UNSigned {}'.format(str(unsigned_mode)))
+
+    def set_save_data_point_maximum_mode(self):
+        self._do_command(':WAVeform:POINTs:MODE MAXimum')
+
+    def set_save_data_points_number(self, number_of_points):
+        self._do_command(':WAVeform:POINTs {}'.format(int(number_of_points)))
+
+    def get_channels_data(self):
+        return self._do_query_binary_values('WAVeform:DATA?')
+
+    def get_preamble(self):
+        return self._do_query_ascii_values(':WAVeform:PREamble?')
+
 
     # General functions
 
@@ -76,7 +75,7 @@ class Scope3024T(Base, ScopeInterface):
     def run_continuous(self):
         self._do_command(':run')
 
-    def run_single(self):
+    def single_acquisition(self):
         self._do_command(':SINGle')
 
     def stop_acquisition(self):
@@ -94,16 +93,31 @@ class Scope3024T(Base, ScopeInterface):
     def get_voltage_range(self, channel):
         return self._do_query_ascii_values(':Channel{}:Range?'.format(channel))
 
-    def _convert_y_data(self, data, preamble):
-        return (data - preamble[9]) * preamble[7] + preamble[8]
+    def get_channel_vscale(self, channel):
+        return "%0.E"% float(self._do_query('CHANnel{}:SCALe?'.format(channel)))
 
-    def _convert_t_data(self, data, preamble):
-        t = np.linspace(0, len(data) - 1, len(data))
-        return (t - preamble[6]) * preamble[4] + preamble[5]
+    def get_time_delay(self):
+        return float(self._do_query(':TIMebase:DELay?'))
 
+    def get_channel_coupling(self, channel):
+        return self._do_query(':CHANnel{}:COUPling?'.format(channel))
 
+    def get_display_status(self, channel):
+        return self._do_query(':CHANnel{}:DISPlay?'.format(channel)).strip()
+
+    def get_impedance_input(self, channel):
+        return self._do_query('CHANnel{}:IMPedance?'.format(channel))
+
+    def get_channel_offset(self, channel):
+        return float(self._do_query('CHANnel{}:OFFSet?'.format(channel)))
+
+    def get_save_data_points_number(self):
+        return int(self._do_query(':WAVeform:POINts?'))
 
     # Acquisition functions
+
+    def get_acquire_mode(self):
+        return self._do_query(':ACQuire:TYPE?').strip()
 
     def acquire_mode_normal(self):
         self._do_command(':ACQuire:TYPE NORMal')
@@ -137,8 +151,9 @@ class Scope3024T(Base, ScopeInterface):
     def set_channel1_impedance_input_1M(self):
         self._do_command('CHANnel1:IMPedance ONEM')
 
-    def channel1_offset(self, value):
+    def set_channel1_offset(self, value):
         self._do_command('CHANnel1:OFFSet {}'.format(value))
+
 
 
     # Channel 2 functions
@@ -158,8 +173,9 @@ class Scope3024T(Base, ScopeInterface):
     def set_channel2_impedance_input_1M(self):
         self._do_command('CHANnel2:IMPedance ONEM')
 
-    def channel2_offset(self, value):
+    def set_channel2_offset(self, value):
         self._do_command('CHANnel2:OFFSet {}'.format(value))
+
 
 
     # Channel 3 functions
@@ -179,7 +195,7 @@ class Scope3024T(Base, ScopeInterface):
     def set_channel3_impedance_input_1M(self):
         self._do_command('CHANnel3:IMPedance ONEM')
 
-    def channel3_offset(self, value):
+    def set_channel3_offset(self, value):
         self._do_command('CHANnel3:OFFSet {}'.format(value))
 
 
@@ -200,13 +216,12 @@ class Scope3024T(Base, ScopeInterface):
     def set_channel4_impedance_input_1M(self):
         self._do_command('CHANnel4:IMPedance ONEM')
 
-    def channel4_offset(self, value):
+    def set_channel4_offset(self, value):
         self._do_command('CHANnel4:OFFSet {}'.format(value))
 
-    # All channels functions
 
-    def get_channels(self):
-        return [1,2,3,4]
+
+    # All channels functions
 
     def turn_on_channel(self, channel):
         self._do_command(":Channel{}:DISPlay ON".format(int(channel)))
@@ -218,23 +233,41 @@ class Scope3024T(Base, ScopeInterface):
 
     # Trigger functions
 
-    def trigger_mode(self, mode):
+    def set_trigger_mode(self, mode):
         self._do_command(':TRIGger:MODE {}'.format(mode))
 
-    def trigger_source(self, mode, channel):
+    def set_trigger_source(self, mode, channel):
         self._do_command(':TRIGger:{0}:SOURCe CHANnel{1}'.format(mode, channel))
 
-    def trigger_50(self):
+    def set_trigger_50(self):
         self._do_command(':TRIGger:LEVel:ASETup')
 
-    def trigger_level(self, mode, value):
+    def set_trigger_level(self, mode, value):
         self._do_command(':TRIGger:{0}:LEVel {1}'.format(mode, value))
 
-    def time_scale(self, value):
+    def get_trigger_mode(self):
+        return self._do_query(':TRIGger:MODE?').strip()
+
+    def get_trigger_source(self):
+        return self._do_query('TRIGger:{}:SOURce?'.format(self.get_trigger_mode())).strip()
+
+    def get_trigger_level(self):
+        return float(self._do_query(':TRIGger:{}:LEVel?'.format(self.get_trigger_mode())).strip())
+
+    # Time
+    def set_time_scale(self, value):
         self._do_command(':TIMebase:SCALe {}'.format(value))
 
-    def time_delay(self, value):
+    def get_time_scale(self):
+        return "%0.E"% float(self._do_query(':TIMebase:SCALe?'))
+
+    def set_time_delay(self, value):
         self._do_command(':TIMebase:DELay {}'.format(value))
+
+
+
+    def get_screenshot_data(self):
+        return self._do_query_binary_values(':DISPlay:DATA? PNG, COLOR')
 
     # =========================================================
     # Send a command and check for errors:
@@ -283,7 +316,7 @@ class Scope3024T(Base, ScopeInterface):
 
     def _do_query_binary_values(self, query):
 
-        results = self.scope.query_binary_values("{}".format(query), container=np.array, is_big_endian=False, datatype='B')
+        results = self.scope.query_binary_values("{}".format(query), datatype='B') #container=np.array, is_big_endian=False,
         self._check_instrument_errors(query)
         return results
 

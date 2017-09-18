@@ -6,9 +6,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1270</width>
-    <height>803</height>
+    <width>1182</width>
+    <height>476</height>
    </rect>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>10777215</width>
+    <height>16777215</height>
+   </size>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
@@ -20,204 +26,210 @@
    <property name="enabled">
     <bool>true</bool>
    </property>
-   <layout class="QGridLayout" name="gridLayout_3">
-    <item row="0" column="0" rowspan="3">
-     <widget class="PlotWidget" name="scope_PlotWidget">
-      <property name="minimumSize">
-       <size>
-        <width>500</width>
-        <height>0</height>
-       </size>
-      </property>
-     </widget>
-    </item>
-    <item row="0" column="4">
-     <widget class="QGroupBox" name="general_groupBox">
-      <property name="title">
-       <string>General</string>
-      </property>
-      <layout class="QGridLayout" name="gridLayout_9">
-       <item row="0" column="0">
-        <layout class="QGridLayout" name="gridLayout_2">
-         <item row="0" column="0">
-          <widget class="QPushButton" name="run_pushButton">
-           <property name="text">
-            <string>Run</string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="1">
-          <widget class="QPushButton" name="autoscale_pushButton">
-           <property name="text">
-            <string>Auto Scale</string>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="1">
-          <widget class="QPushButton" name="singlerun_pushButton">
-           <property name="text">
-            <string>Single</string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="0">
-          <widget class="QPushButton" name="stop_pushButton">
-           <property name="text">
-            <string>Stop</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
-      </layout>
-     </widget>
-    </item>
-    <item row="1" column="1" colspan="3">
-     <widget class="QGroupBox" name="trigger_groupBox">
-      <property name="title">
-       <string>Trigger</string>
-      </property>
-      <layout class="QGridLayout" name="gridLayout_10">
-       <item row="1" column="2" colspan="2">
-        <widget class="QPushButton" name="force_trigger_pushButton">
-         <property name="text">
-          <string>Force Trigger</string>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="0">
-        <widget class="QLabel" name="trigger_mode_label">
-         <property name="text">
-          <string>Mode</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="0" colspan="2">
-        <widget class="QPushButton" name="trigger50_pushButton">
-         <property name="text">
-          <string>Trigger 50%</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="2" colspan="2">
-        <widget class="QComboBox" name="trigger_source_comboBox"/>
-       </item>
-       <item row="2" column="1">
-        <widget class="QComboBox" name="trigger_mode_comboBox"/>
-       </item>
-       <item row="2" column="2">
-        <widget class="QLabel" name="trigger_level_label">
-         <property name="text">
-          <string>Level (V)</string>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="3">
-        <widget class="QDoubleSpinBox" name="trigger_level_doubleSpinBox">
-         <property name="decimals">
-          <number>2</number>
-         </property>
-         <property name="minimum">
-          <double>-6.000000000000000</double>
-         </property>
-         <property name="maximum">
-          <double>6.000000000000000</double>
-         </property>
-         <property name="singleStep">
-          <double>0.010000000000000</double>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="1">
-        <widget class="QLabel" name="source_label">
-         <property name="text">
-          <string>Source</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </widget>
-    </item>
-    <item row="1" column="4">
-     <widget class="QGroupBox" name="acquire_groupBox">
-      <property name="title">
-       <string>Acquire</string>
-      </property>
-      <layout class="QGridLayout" name="gridLayout_7">
-       <item row="0" column="0">
-        <layout class="QGridLayout" name="gridLayout">
-         <item row="2" column="0">
-          <widget class="QRadioButton" name="aqcuire_mode_peak_radioButton">
-           <property name="text">
-            <string>Peak</string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="0">
-          <widget class="QRadioButton" name="aqcuire_mode_average_radioButton">
-           <property name="text">
-            <string>Average</string>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="0">
-          <widget class="QRadioButton" name="aqcuire_mode_normal_radioButton">
-           <property name="text">
-            <string>Normal</string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="1">
-          <widget class="QSpinBox" name="average_value_spinBox"/>
-         </item>
-         <item row="3" column="0" colspan="2">
-          <widget class="QRadioButton" name="aqcuire_mode_highres_radioButton">
-           <property name="text">
-            <string>High Resolution</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
-      </layout>
-     </widget>
-    </item>
-    <item row="2" column="1">
-     <widget class="QDoubleSpinBox" name="time_range_Spinbox">
-      <property name="buttonSymbols">
-       <enum>QAbstractSpinBox::NoButtons</enum>
-      </property>
-      <property name="suffix">
-       <string extracomment="micro sec"/>
-      </property>
-      <property name="decimals">
-       <number>5</number>
-      </property>
-      <property name="maximum">
-       <double>3000000.000000000000000</double>
-      </property>
-      <property name="singleStep">
-       <double>0.000001000000000</double>
-      </property>
-     </widget>
-    </item>
-    <item row="2" column="2">
-     <widget class="QPushButton" name="getdata_pushButton">
+   <layout class="QGridLayout" name="gridLayout_12">
+    <item row="0" column="0">
+     <widget class="QLabel" name="label">
       <property name="text">
-       <string>Get data</string>
+       <string/>
       </property>
      </widget>
     </item>
-    <item row="2" column="3" colspan="2">
-     <widget class="QPushButton" name="savedata_pushButton">
-      <property name="text">
-       <string>Save data</string>
-      </property>
-     </widget>
-    </item>
-    <item row="3" column="0">
-     <layout class="QGridLayout" name="gridLayout_14">
+    <item row="0" column="1">
+     <layout class="QGridLayout" name="gridLayout_9">
       <item row="0" column="0">
+       <layout class="QGridLayout" name="gridLayout_5">
+        <item row="0" column="1" rowspan="2" colspan="2">
+         <widget class="QGroupBox" name="general_groupBox">
+          <property name="title">
+           <string>General</string>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_7">
+           <item row="0" column="0">
+            <widget class="QPushButton" name="run_pushButton">
+             <property name="text">
+              <string>Run</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QPushButton" name="singlerun_pushButton">
+             <property name="text">
+              <string>Single</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QPushButton" name="stop_pushButton">
+             <property name="text">
+              <string>Stop</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QPushButton" name="autoscale_pushButton">
+             <property name="text">
+              <string>Auto Scale</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item row="2" column="0">
+         <widget class="QGroupBox" name="trigger_groupBox">
+          <property name="title">
+           <string>Trigger</string>
+          </property>
+          <layout class="QGridLayout" name="gridLayout">
+           <item row="0" column="0">
+            <widget class="QLabel" name="source_label">
+             <property name="text">
+              <string>Source</string>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="0">
+            <widget class="QLabel" name="trigger_mode_label">
+             <property name="text">
+              <string>Mode</string>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="1">
+            <widget class="QComboBox" name="trigger_mode_comboBox"/>
+           </item>
+           <item row="4" column="4">
+            <widget class="QDoubleSpinBox" name="trigger_level_doubleSpinBox">
+             <property name="decimals">
+              <number>2</number>
+             </property>
+             <property name="minimum">
+              <double>-6.000000000000000</double>
+             </property>
+             <property name="maximum">
+              <double>6.000000000000000</double>
+             </property>
+             <property name="singleStep">
+              <double>0.010000000000000</double>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="3">
+            <widget class="QLabel" name="trigger_level_label">
+             <property name="text">
+              <string>Level (V)</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="3" colspan="2">
+            <widget class="QPushButton" name="force_trigger_pushButton">
+             <property name="text">
+              <string>Force Trigger</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1" colspan="4">
+            <widget class="QComboBox" name="trigger_source_comboBox"/>
+           </item>
+           <item row="2" column="1" colspan="2">
+            <widget class="QPushButton" name="trigger50_pushButton">
+             <property name="text">
+              <string>Trigger 50%</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item row="2" column="1" colspan="2">
+         <widget class="QGroupBox" name="acquire_groupBox">
+          <property name="title">
+           <string>Acquire</string>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_3">
+           <item row="0" column="0">
+            <widget class="QRadioButton" name="aqcuire_mode_normal_radioButton">
+             <property name="text">
+              <string>Normal</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QRadioButton" name="aqcuire_mode_average_radioButton">
+             <property name="text">
+              <string>Average</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QSpinBox" name="average_value_spinBox"/>
+           </item>
+           <item row="2" column="0">
+            <widget class="QRadioButton" name="aqcuire_mode_peak_radioButton">
+             <property name="text">
+              <string>Peak</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="0" colspan="2">
+            <widget class="QRadioButton" name="aqcuire_mode_highres_radioButton">
+             <property name="text">
+              <string>High Resolution</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item row="0" column="0" rowspan="2">
+         <widget class="QGroupBox" name="horizontal_groupBox">
+          <property name="title">
+           <string>Horizontal</string>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_2">
+           <item row="1" column="0">
+            <widget class="QLabel" name="time_delay_label">
+             <property name="text">
+              <string>Delay (s)</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QDoubleSpinBox" name="time_delay_doubleSpinBox">
+             <property name="decimals">
+              <number>2</number>
+             </property>
+             <property name="minimum">
+              <double>-6.000000000000000</double>
+             </property>
+             <property name="maximum">
+              <double>6.000000000000000</double>
+             </property>
+             <property name="singleStep">
+              <double>0.010000000000000</double>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="0" colspan="2">
+            <widget class="QComboBox" name="time_scale_comboBox"/>
+           </item>
+          </layout>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item row="1" column="0">
+       <widget class="QPushButton" name="screenshot_pushButton">
+        <property name="text">
+         <string>Screenshot</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item row="1" column="0">
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
        <widget class="QGroupBox" name="channel1_groupBox">
         <property name="title">
          <string>Channel 1</string>
@@ -302,7 +314,7 @@
         </layout>
        </widget>
       </item>
-      <item row="0" column="1">
+      <item>
        <widget class="QGroupBox" name="channel2_groupBox">
         <property name="title">
          <string>Channel 2</string>
@@ -387,7 +399,7 @@
         </layout>
        </widget>
       </item>
-      <item row="0" column="2">
+      <item>
        <widget class="QGroupBox" name="channel3_groupBox">
         <property name="title">
          <string>Channel 3</string>
@@ -469,7 +481,7 @@
         </layout>
        </widget>
       </item>
-      <item row="0" column="3">
+      <item>
        <widget class="QGroupBox" name="channel3_groupBox_2">
         <property name="title">
          <string>Channel 4</string>
@@ -553,69 +565,32 @@
       </item>
      </layout>
     </item>
-    <item row="0" column="1" colspan="3">
-     <widget class="QGroupBox" name="horizontal_groupBox">
-      <property name="title">
-       <string>Horizontal</string>
-      </property>
-      <layout class="QGridLayout" name="gridLayout_5">
-       <item row="0" column="0">
-        <widget class="QLabel" name="time_delay_label">
-         <property name="text">
-          <string>Delay (s)</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="1">
-        <widget class="QDoubleSpinBox" name="time_delay_doubleSpinBox">
-         <property name="decimals">
-          <number>2</number>
-         </property>
-         <property name="minimum">
-          <double>-6.000000000000000</double>
-         </property>
-         <property name="maximum">
-          <double>6.000000000000000</double>
-         </property>
-         <property name="singleStep">
-          <double>0.010000000000000</double>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="0" colspan="2">
-        <widget class="QComboBox" name="time_scale_comboBox"/>
-       </item>
-      </layout>
-     </widget>
+    <item row="1" column="1">
+     <layout class="QGridLayout" name="gridLayout_10">
+      <item row="0" column="0">
+       <widget class="QPushButton" name="savedata_pushButton">
+        <property name="text">
+         <string>Save data</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
     </item>
    </layout>
-   <zorder>general_groupBox</zorder>
-   <zorder>trigger_groupBox</zorder>
-   <zorder>acquire_groupBox</zorder>
-   <zorder>time_range_Spinbox</zorder>
-   <zorder>getdata_pushButton</zorder>
-   <zorder>savedata_pushButton</zorder>
-   <zorder>scope_PlotWidget</zorder>
-   <zorder>horizontal_groupBox</zorder>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1270</width>
+     <width>1182</width>
      <height>21</height>
     </rect>
    </property>
   </widget>
  </widget>
- <customwidgets>
-  <customwidget>
-   <class>PlotWidget</class>
-   <extends>QGraphicsView</extends>
-   <header>pyqtgraph</header>
-  </customwidget>
- </customwidgets>
- <resources/>
+ <resources>
+  <include location="../../screenshot_ressource_file.qrc"/>
+ </resources>
  <connections/>
 </ui>
