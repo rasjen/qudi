@@ -24,7 +24,7 @@ top-level directory of this distribution and at <https://github.com/Ulm-IQO/qudi
 #TODO: What does get status do or need as return?
 #TODO: Check if there are more modules which are missing, and more settings for FastComtec which need to be put, should we include voltage threshold?
 
-from core.base import Base
+from core.module import Base
 from interface.fast_counter_interface import FastCounterInterface
 import time
 import os
@@ -154,7 +154,7 @@ class FastComtec(Base, FastCounterInterface):
     def __init__(self, config, **kwargs):
         super().__init__(config=config, **kwargs)
 
-        self.log.info('The following configuration was found.')
+        self.log.debug('The following configuration was found.')
 
         # checking for the right configuration
         for key in config.keys():
@@ -240,6 +240,7 @@ class FastComtec(Base, FastCounterInterface):
         binwidth_s = self.set_binwidth(bin_width_s)
         no_of_bins = record_length_s / binwidth_s
         if sweep_reset:
+            self.load_setup('')
             self.set_length(no_of_bins, preset=preset, cycles=cycles)
         else:
             self.set_length(no_of_bins)
@@ -501,3 +502,8 @@ class FastComtec(Base, FastCounterInterface):
         status = AcqStatus()
         self.dll.GetStatusData(ctypes.byref(status), 0)
         return status
+
+
+    def load_setup(self, configname):
+        cmd = 'loadcnf={0}'.format(configname)
+        self.dll.RunCmd(0, bytes(cmd, 'ascii'))
