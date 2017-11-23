@@ -175,7 +175,7 @@ class SaveLogic(GenericLogic):
         elif 'win32' in sys.platform or 'AMD64' in sys.platform:
             self.os_system = 'win'
             self.data_dir = self._win_data_dir
-            else:
+        else:
             raise Exception('Identify the operating system.')
 
         # start logging into daily directory?
