@@ -22,7 +22,7 @@ top-level directory of this distribution and at <https://github.com/Ulm-IQO/qudi
 from time import sleep
 import numpy as np
 from hardware.attocube.pyanc350v4 import Positioner
-from core.base import Base
+from core.module import Base
 from interface.atto_scanner_interface import AttoScanner
 
 

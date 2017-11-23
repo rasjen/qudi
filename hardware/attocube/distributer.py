@@ -1,7 +1,7 @@
 from hardware.attocube.attocube import Attocube
 from hardware.attocube.nicard_digital import NIcard
 from interface.confocal_scanner_atto_interface import ConfocalScannerInterfaceAtto
-from core.base import Base
+from core.module import Base
 from time import sleep
 
 import numpy as np

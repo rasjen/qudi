@@ -30,7 +30,7 @@ import ctypes, math, time
 import PyDAQmx as daq
 from interface.slow_counter_interface import SlowCounterConstraints
 from interface.slow_counter_interface import CountingMode
-from core.base import Base
+from core.module import Base
 
 
 
