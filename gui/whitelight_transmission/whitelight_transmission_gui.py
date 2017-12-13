@@ -1,0 +1,254 @@
+import numpy as np
+import os
+import pyqtgraph as pg
+
+from core.module import Connector
+from core.util import units
+from gui.guibase import GUIBase
+from gui.guiutils import ColorBar
+from gui.colordefs import ColorScaleInferno
+from gui.colordefs import QudiPalettePale as palette
+from qtpy import QtCore
+from qtpy import QtWidgets
+from qtpy import uic
+
+
+class WLTMainWindow(QtWidgets.QMainWindow):
+    """ The main window for the ODMR measurement GUI.
+    """
+    def __init__(self):
+        # Get the path to the *.ui file
+        this_dir = os.path.dirname(__file__)
+        ui_file = os.path.join(this_dir, 'whitelight_transmission.ui')
+
+        # Load it
+        super(WLTMainWindow, self).__init__()
+        uic.loadUi(ui_file, self)
+        self.show()
+
+
+
+class WLTGui(GUIBase):
+    """
+    This is the GUI Class for WLT measurements
+    """
+
+    _modclass = 'WLTGui'
+    _modtype = 'gui'
+
+    # declare connectors
+    cavitylogic = Connector(interface='CavityLogic')
+    savelogic = Connector(interface='SaveLogic')
+
+    sigStartWLTScan = QtCore.Signal()
+    sigStopWLTScan = QtCore.Signal()
+    sigContinueWLTScan = QtCore.Signal()
+    sigClearData = QtCore.Signal()
+    sigSpectrometerParamsChanged = QtCore.Signal(float, float)
+    # sigSaveMeasurement = QtCore.Signal(str, list, list)
+
+    def __init__(self, config, **kwargs):
+        super().__init__(config=config, **kwargs)
+
+    def on_activate(self):
+        """ Definition, configuration and initialisation of the ODMR GUI.
+
+        This init connects all the graphic modules, which were created in the
+        *.ui file and configures the event handling between the modules.
+        """
+
+        # setting up main window
+        self._mw = WLTMainWindow()
+
+        # connect to cavity logic
+        self._cavity_logic = self.get_connector('cavitylogic')
+
+        constraints_dict = self._cavity_logic.get_hw_constraints()
+
+        # Create a QSettings object for the mainwindow and store the actual GUI layout
+        self.mwsettings = QtCore.QSettings("QUDI", "WLT")
+        self.mwsettings.setValue("geometry", self._mw.saveGeometry())
+        self.mwsettings.setValue("windowState", self._mw.saveState())
+
+        # Adjust range of scientific spinboxes above what is possible in Qt Designer
+        self._mw.start_position_doubleSpinBox.setRange(constraints_dict['min_position']*1e6,
+                                                       constraints_dict['max_position']*1e6)
+        self._mw.stop_position_doubleSpinBox.setRange(constraints_dict['min_position']*1e6,
+                                                      constraints_dict['max_position']*1e6)
+        self._mw.scan_speed_doubleSpinBox.setRange(constraints_dict['min_speed'], constraints_dict['max_speed'])
+        self._mw.set_temperature_doubleSpinBox.setRange(constraints_dict['min_temperature'],
+                                                        constraints_dict['max_temperature'])
+        self._mw.get_temperature_doubleSpinBox.setRange(constraints_dict['min_temperature'],
+                                                        constraints_dict['max_temperature'])
+        self._mw.averages_doubleSpinBox.setRange(constraints_dict['min_averages'], constraints_dict['max_averages'])
+        self._mw.exposure_time_doubleSpinBox.setRange(constraints_dict['min_exposure'],
+                                                      constraints_dict['max_exposure'])
+
+
+        # Get the image from the logic
+        self.WLT_image = pg.ImageItem(self._cavity_logic.WLT_image, axisOrder='row-major')
+        #self.odmr_matrix_image.setRect(QtCore.QRectF(
+        #        self._odmr_logic.mw_start,
+        #        0,
+        #        self._odmr_logic.mw_stop - self._odmr_logic.mw_start,
+        #        self._odmr_logic.number_of_lines
+        #    ))
+
+        self.spectrum_image = pg.PlotDataItem(self._cavity_logic.spectrometer_wavelengths,
+                                          self._cavity_logic.spectrometer_counts,
+                                          pen=pg.mkPen(palette.c1, style=QtCore.Qt.DotLine),
+                                          symbol='o',
+                                          symbolPen=palette.c1,
+                                          symbolBrush=palette.c1,
+                                          symbolSize=7)#
+
+        # Add the display item to the xy and xz ViewWidget, which was defined in the UI file.
+        self._mw.transmission_map_PlotWidget.addItem(self.WLT_image)
+        self._mw.transmission_map_PlotWidget.setLabel(axis='left', text='Cavity length', units='um')
+        self._mw.transmission_map_PlotWidget.setLabel(axis='bottom', text='Wavelength', units='nm')
+
+
+        self._mw.spectrum_PlotWidget.addItem(self.spectrum_image)
+        self._mw.spectrum_PlotWidget.setLabel(axis='left', text='Counts', units='Counts/s')
+        self._mw.spectrum_PlotWidget.setLabel(axis='bottom', text='Wavelength', units='nm')
+        self._mw.spectrum_PlotWidget.showGrid(x=True, y=True, alpha=0.8)
+
+        # Get the colorscales at set LUT
+        my_colors = ColorScaleInferno()
+        self.WLT_image.setLookupTable(my_colors.lut)
+
+        ########################################################################
+        #                  Configuration of the Colorbar                       #
+        ########################################################################
+        self.transmission_map_cb = ColorBar(my_colors.cmap_normed, 100, 0, 100000)
+
+        # adding colorbar to ViewWidget
+        self._mw.transmission_map_cb_PlotWidget.addItem(self.transmission_map_cb)
+        self._mw.transmission_map_cb_PlotWidget.hideAxis('bottom')
+        self._mw.transmission_map_cb_PlotWidget.hideAxis('left')
+        self._mw.transmission_map_cb_PlotWidget.setLabel('right', 'Counts', units='counts/s')
+
+        ########################################################################
+        #                       Connect signals                                #
+        ########################################################################
+        # Internal user input changed signals
+        self._mw.start_position_doubleSpinBox.editingFinished.connect(self.changed_pos_params)
+        self._mw.stop_position_doubleSpinBox.editingFinished.connect(self.changed_pos_params)
+        self._mw.scan_speed_doubleSpinBox.editingFinished.connect(self.changed_pos_params)
+
+        self._mw.averages_doubleSpinBox.editingFinished.connect(self.changed_spectrometer_params)
+        self._mw.exposure_time_doubleSpinBox.editingFinished.connect(self.changed_spectrometer_params)
+
+        # Internal trigger signals
+        self._mw.transmission_map_cb_manual_RadioButton.clicked.connect(self.colorscale_changed)
+        self._mw.start_pushButton.clicked.connect(self.run_wlt)
+        self._mw.stop_pushButton.clicked.connect(self.stop_wlt)
+        self._mw.continue_pushButton.clicked.connect(self.continue_wlt)
+        self._mw.set_temperature_pushButton.clicked.connect(self.set_temperature)
+
+
+        # Control/values-changed signals to logic
+        self.sigStartWLTScan.connect(self._cavity_logic.start_wlt_measurement, QtCore.Qt.QueuedConnection)
+        self.sigStopWLTScan.connect(self._cavity_logic.stop_wlt_measurement, QtCore.Qt.QueuedConnection)
+        self.sigContinueWLTScan.connect(self._cavity_logic.continue_wlt_measurement,
+                                         QtCore.Qt.QueuedConnection)
+        self._mw.get_temperature_pushButton.clicked.connect(self._cavity_logic.get_temperature)
+
+        # Update signals coming from logic:
+        self._cavity_logic.sigParameterUpdated.connect(self.update_parameter,
+                                                    QtCore.Qt.QueuedConnection)
+
+
+        # Show the Main ODMR GUI:
+        self.show()
+
+    def show(self):
+        """Make window visible and put it above all other windows. """
+        self._mw.show()
+        self._mw.activateWindow()
+        self._mw.raise_()
+
+    def restore_defaultview(self):
+        self._mw.restoreGeometry(self.mwsettings.value("geometry", ""))
+        self._mw.restoreState(self.mwsettings.value("windowState", ""))
+
+    def colorscale_changed(self):
+        """
+        Updates the range of the displayed colorscale in both the colorbar and the matrix plot.
+        """
+        cb_range = self.get_matrix_cb_range()
+        self.update_colorbar(cb_range)
+        matrix_image = self.WLT_image.image
+        self.WLT_image.setImage(image=matrix_image, levels=(cb_range[0], cb_range[1]))
+        return
+
+    def update_colorbar(self, cb_range):
+        """
+        Update the colorbar to a new range.
+
+        @param list cb_range: List or tuple containing the min and max values for the cb range
+        """
+        self.transmission_map_cb.refresh_colorbar(cb_range[0], cb_range[1])
+        return
+
+    def get_matrix_cb_range(self):
+        """
+        Determines the cb_min and cb_max values for the matrix plot
+        """
+        matrix_image = self.WLT_image.image
+
+        # If "Manual" is checked or the image is empty (all zeros), then take manual cb range.
+        # Otherwise, calculate cb range from percentiles.
+        if self._mw.transmission_map_cb_manual_RadioButton.isChecked() or np.max(matrix_image) < 0.1:
+            cb_min = self._mw.transmission_map_cb_min_DoubleSpinBox.value()
+            cb_max = self._mw.transmission_map_cb_max_DoubleSpinBox.value()
+        else:
+            # Exclude any zeros (which are typically due to unfinished scan)
+            matrix_image_nonzero = matrix_image[np.nonzero(matrix_image)]
+
+            # Read centile range
+            low_centile = self._mw.transmission_map_cb_low_percentile_DoubleSpinBox.value()
+            high_centile = self._mw.transmission_map_cb_high_percentile_DoubleSpinBox.value()
+
+            cb_min = np.percentile(matrix_image_nonzero, low_centile)
+            cb_max = np.percentile(matrix_image_nonzero, high_centile)
+
+        cb_range = [cb_min, cb_max]
+        return cb_range
+
+    def changed_spectrometer_params(self):
+        self._cavity_logic.set_exposure_time(self._mw.exposure_time_doubleSpinBox.value())
+        self._cavity_logic.set_averages(self._mw.averages_doubleSpinBox.value())
+
+    def changed_pos_params(self):
+        pass
+
+    def run_wlt(self):
+        """ Starts the WLT"""
+        self.sigStartWLTScan.emit()
+
+    def stop_wlt(self):
+        """ Stops the WLT"""
+        self.sigStopWLTScan.emit()
+
+    def continue_wlt(self):
+        """ Continues the WLT measurement"""
+        self.sigContinueWLTScan.emit()
+
+    def update_parameter(self, temperature, exposure_time, averages):
+        """
+        Updates the paremeters from the spectrometer
+        
+        :return: 
+        """
+        self._mw.get_temperature_doubleSpinBox.setValue(temperature)
+        self._mw.exposure_time_doubleSpinBox.setValue(exposure_time)
+        self._mw.averages_doubleSpinBox.setValue(averages)
+
+    def set_temperature(self):
+        """
+        
+        :return: 
+        """
+        self._cavity_logic.set_temperature(self._mw.set_temperature_doubleSpinBox.value())
+
