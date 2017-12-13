@@ -50,6 +50,7 @@ class ConfocalScannerDummy(Base, ConfocalScannerInterface):
         self._position_range = [[0, 100e-6], [0, 100e-6], [0, 100e-6], [0, 1e-6]]
         self._current_position = [0, 0, 0, 0][0:len(self.get_scanner_axes())]
         self._num_points = 500
+        self._cavity_position_range = [0, 20e-6]
 
     def on_activate(self):
         """ Initialisation performed during activation of the module.

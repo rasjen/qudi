@@ -1,4 +1,4 @@
-from core.base import Base
+from core.module import Base
 from interface.scope_interface import ScopeInterface
 import numpy as np
 
@@ -60,3 +60,6 @@ class ScopeDummy(Base, ScopeInterface):
             y_data.append(y)
         t_data = np.linspace(0,1,1)
         return t_data, y_data
+
+    def single_acquisition(self):
+        pass

@@ -21,7 +21,7 @@ top-level directory of this distribution and at <https://github.com/Ulm-IQO/qudi
 """
 from random import randint
 from time import sleep
-from core.base import Base
+from core.module import Base
 from interface.atto_scanner_interface import AttoScanner
 import numpy as np
 
