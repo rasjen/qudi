@@ -620,7 +620,6 @@ class ConfocalGui(GUIBase):
     def set_zAxisAmplitude(self):
         self._scanning_logic.set_amplitude(axis='z', amp=self._mw.zAmplitudeDoubleSpinBox.value())
 
-
     def get_xAxisFrequency(self):
         return self._scanning_logic.get_frequency(axis='x')
 
@@ -881,7 +880,6 @@ class ConfocalGui(GUIBase):
         header = header1+header2+header3+header4
         np.savetxt(filename, xy_image_data, header=header)
 
-
     def update_from_roi_xy(self, roi):
         """The user manually moved the XY ROI, adjust all other GUI elements accordingly
 
@@ -936,7 +934,6 @@ class ConfocalGui(GUIBase):
 
         if needs_reset:
             self.update_roi_xy(x_pos, y_pos)
-
 
     def update_roi_xy(self, x=None, y=None):
         """ Adjust the xy ROI position if the value has changed.
@@ -1466,7 +1463,6 @@ class ConfocalGui(GUIBase):
             y_value = view_y_max - self.roi_fine.size()[1]
 
         self.roi_fine.setPos([x_value, y_value], update=True)
-
 
     def update_finecrosshair_position_from_logic(self, tag):
         """ Update the GUI position of the crosshair from the logic.

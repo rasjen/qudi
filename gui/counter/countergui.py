@@ -86,7 +86,7 @@ class CounterGui(GUIBase):
         self._pw.setLabel('bottom', 'Time', units='s')
 
         self.curves = []
-        self.count_channel = 1
+        self.count_channel = 0 # The GUI shows the number of count of this channel
         for i, ch in enumerate(self._counting_logic.get_channels()):
             if i % 2 == 0:
                 # Create an empty plot curve to be filled later, set its pen

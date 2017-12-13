@@ -1179,7 +1179,7 @@ class NIcard(Base):
     # ================ End ConfocalScannerInterface Commands ===================
 
 
-   # =================== SlowCounterInterface Commands ========================
+   # =================== Sl☻s ========================
 
     def set_up_counter(self,
                        counter_channels=None,

@@ -71,7 +71,6 @@ class AttocubeScannerInterfuse(Base, ConfocalScannerInterfaceAtto):
         self._atto_scanner_hw = self.get_connector('scanner')
         self._counter = self.get_connector('counter1')
 
-
     def on_deactivate(self):
         self.reset_hardware()
 

@@ -301,7 +301,6 @@ class Attocube(Base, AttoScanner):
         for i, label in enumerate(self.get_scanner_axes()):
             self.anc.configureExtTrigger(self.axisNo[label], 2)
 
-
     def set_target_position(self, axis, position):
         '''
 
@@ -319,7 +318,6 @@ class Attocube(Base, AttoScanner):
         @return:
         '''
         self.anc.setTargetRange(self.axisNo[axis], range)
-
 
     def auto_move(self,axis,enable):
         '''
@@ -344,6 +342,3 @@ class Attocube(Base, AttoScanner):
         xV_range = [0,60]
         yV_range = [0,70]
         return [xV_range, yV_range]
-
-
-

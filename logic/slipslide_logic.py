@@ -351,8 +351,6 @@ class ConfocalLogic(GenericLogic):
         self.kill_mode = False
         self._xy_fine = False
 
-
-
     def on_activate(self):
         """ Initialisation performed during activation of the module.
         """
@@ -624,8 +622,6 @@ class ConfocalLogic(GenericLogic):
             self.xy_image[:, :, 2] = self._current_z * np.ones((len(self._image_vert_axis), len(self._X)))
             self.sigImageXYInitialized.emit()
         return 0
-
-
 
     def start_scanner(self):
         """Setting up the scanner device and starts the scanning procedure
@@ -1032,8 +1028,6 @@ class ConfocalLogic(GenericLogic):
             self.log.exception('The scan mode is unknown, killing the scanner.')
             self.stop_scanning()
             self.signal_scan_lines_next.emit()
-
-
 
     def save_xy_data(self, colorscale_range=None, percentile_range=None):
         """ Save the current confocal xy data to file.
