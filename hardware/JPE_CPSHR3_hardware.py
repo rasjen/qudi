@@ -17,7 +17,7 @@ class JPE_CPSHR3_hardware(Base, JPE_CPSHR3_interface):
     
     _modtype = 'JPE_CPSHR3_hardware'
     _modclass = 'hardware'
-
+# blabla
     def on_activate(self):
         """ Initialisation performed during activation of the module.
         """
