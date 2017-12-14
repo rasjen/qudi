@@ -95,6 +95,46 @@ class JPE_CPSHR3_logic(GenericLogic):
         step_amp = self.CLA1.get_STEP_AMP_MAX()
         number_of_steps = np.around(np.divide(value, step_amp), 0)
         return number_of_steps.astype(int)
+        def stop_CLAs(self):
+        self._JPE_CPSHR3_hardware.do_command('STP 1')
+        self._JPE_CPSHR3_hardware.do_command('STP 2')
+        self._JPE_CPSHR3_hardware.do_command('STP 3')
+        return 0
+
+    def get_CLI_ver(self):
+            """ Get CLI version information.
+            """
+            self._JPE_CPSHR3_hardware.do_command('/ver')
+            return 0
+
+    def get_list_CLA_type(self):
+        """ List supported cryo linear actuator (CLA) types.
+        """
+        self._JPE_CPSHR3_hardware.do_command('/type')
+        return 0
+
+    def get_module_info(self):
+        """ Get information about installed modules.
+        """
+        self._JPE_CPSHR3_hardware.do_command('modlist')
+        return 0
+
+    def get_actuator_info(self, ADDR, CH):
+        '''Get information on actuator types set
+        '''
+        self.COMMAND = 'INFO'
+        self.ADDR = str(ADDR)
+        self.CH = str(CH)
+        self._JPE_CPSHR3_hardware.do_command(self.COMMAND, self.ADDR, self.CH)
+        return 0
+
+    def get_module_description(self, ADDR):
+        '''Get information on installed modules
+        '''
+        self.COMMAND = 'DESC'
+        self.ADDR = str(ADDR)
+        self._JPE_CPSHR3_hardware.do_command(self.COMMAND, self.ADDR)
+        return 0
 
     def edit_cmd_line(self, *list_parameters):
         '''Convert a list of parameters into a command line sutable for cacli.exe
@@ -218,6 +258,50 @@ class JPE_CPSHR3_logic(GenericLogic):
                     break
             n += 1
 
+    def set_snake_scan_begin_position(self, step, square_side):
+        '''The snake scan scan a square area around a central spot.
+        This function move the sample in order to start the snake scan on the top left corner
+        of the square area and make the sample move back to the central spot when the snake scan is finished'''
+        n = 0
+        while n <= (square_side/2)/step:
+            print(n)
+            self.move_xyz(-step, -step, 0)
+            while True:
+                time.sleep(selfsleep_time)
+                if self.get_CLA_STATUS(1) == 'Stopped' and self.get_CLA_STATUS(2) == 'Stopped' and self.get_CLA_STATUS(3) == 'Stopped':
+                    break
+            n += 1
+
+    def snake_scan(self, step, square_side):
+        '''Scan a square area around a central spot describing a snake movement'''
+        # Go to top left position of the square area
+        self.set_snake_scan_begin_position(step, square_side)
+        n = 0
+        n_lines = square_side/step
+        while n <= n_lines :
+            print('line = ', n)
+            if n % 2 == 0 :
+                self.scan_line_left_to_right(step, square_side)
+            else :
+                self.scan_line_right_to_left(step, square_side)
+            self.move_verticaly(step)
+            n += 1
+        self.set_snake_scan_begin_position(step, square_side)
+
+    def move_verticaly(self, y):
+        self.move_xyz(0, y, 0)
+        while True:
+                time.sleep(self.sleep_time)
+                if self.get_CLA_STATUS(1) == 'Stopped' and self.get_CLA_STATUS(2) == 'Stopped' and self.get_CLA_STATUS(3) == 'Stopped':
+                    break
+
+    def move_horizontaly(self, x):
+        self.move_xyz(x, 0, 0)
+        while True:
+                time.sleep(self.sleep_time)
+                if self.get_CLA_STATUS(1) == 'Stopped' and self.get_CLA_STATUS(2) == 'Stopped' and self.get_CLA_STATUS(3) == 'Stopped':
+                    break
+
     def scan_line_left_to_right(self, step_x, range_x):
         ''' Scan a line from left to right'''
         n = 0
@@ -243,73 +327,3 @@ class JPE_CPSHR3_logic(GenericLogic):
                     break
             n_points -= 1
 
-    def move_verticaly(self, y):
-        self.move_xyz(0, y, 0)
-        while True:
-                time.sleep(self.sleep_time)
-                if self.get_CLA_STATUS(1) == 'Stopped' and self.get_CLA_STATUS(2) == 'Stopped' and self.get_CLA_STATUS(3) == 'Stopped':
-                    break
-
-    def move_horizontaly(self, x):
-        self.move_xyz(x, 0, 0)
-        while True:
-                time.sleep(self.sleep_time)
-                if self.get_CLA_STATUS(1) == 'Stopped' and self.get_CLA_STATUS(2) == 'Stopped' and self.get_CLA_STATUS(3) == 'Stopped':
-                    break
-
-    def snake_scan(self, step, square_side):
-        '''Scan a square area around a central spot describing a snake movement'''
-        # Go to top left position of the square area
-        self.set_snake_scan_begin_position(step, square_side)
-        n = 0
-        n_lines = square_side/step
-        while n <= n_lines :
-            print('line = ', n)
-            if n % 2 == 0 :
-                self.scan_line_left_to_right(step, square_side)
-            else :
-                self.scan_line_right_to_left(step, square_side)
-            self.move_verticaly(step)
-            n += 1
-        self.set_snake_scan_begin_position(step, square_side)
-
-    def stop_CLAs(self):
-        self._JPE_CPSHR3_hardware.do_command('STP 1')
-        self._JPE_CPSHR3_hardware.do_command('STP 2')
-        self._JPE_CPSHR3_hardware.do_command('STP 3')
-        return 0
-
-    def get_CLI_ver(self):
-            """ Get CLI version information.
-            """
-            self._JPE_CPSHR3_hardware.do_command('/ver')
-            return 0
-
-    def get_list_CLA_type(self):
-        """ List supported cryo linear actuator (CLA) types.
-        """
-        self._JPE_CPSHR3_hardware.do_command('/type')
-        return 0
-
-    def get_module_info(self):
-        """ Get information about installed modules.
-        """
-        self._JPE_CPSHR3_hardware.do_command('modlist')
-        return 0
-
-    def get_actuator_info(self, ADDR, CH):
-        '''Get information on actuator types set
-        '''
-        self.COMMAND = 'INFO'
-        self.ADDR = str(ADDR)
-        self.CH = str(CH)
-        self._JPE_CPSHR3_hardware.do_command(self.COMMAND, self.ADDR, self.CH)
-        return 0
-
-    def get_module_description(self, ADDR):
-        '''Get information on installed modules
-        '''
-        self.COMMAND = 'DESC'
-        self.ADDR = str(ADDR)
-        self._JPE_CPSHR3_hardware.do_command(self.COMMAND, self.ADDR)
-        return 0
