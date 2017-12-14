@@ -288,20 +288,6 @@ class JPE_CPSHR3_logic(GenericLogic):
             n += 1
         self.set_snake_scan_begin_position(step, square_side)
 
-    def move_verticaly(self, y):
-        self.move_xyz(0, y, 0)
-        while True:
-                time.sleep(self.sleep_time)
-                if self.get_CLA_STATUS(1) == 'Stopped' and self.get_CLA_STATUS(2) == 'Stopped' and self.get_CLA_STATUS(3) == 'Stopped':
-                    break
-
-    def move_horizontaly(self, x):
-        self.move_xyz(x, 0, 0)
-        while True:
-                time.sleep(self.sleep_time)
-                if self.get_CLA_STATUS(1) == 'Stopped' and self.get_CLA_STATUS(2) == 'Stopped' and self.get_CLA_STATUS(3) == 'Stopped':
-                    break
-
     def scan_line_left_to_right(self, step_x, range_x):
         ''' Scan a line from left to right'''
         n = 0

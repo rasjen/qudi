@@ -70,18 +70,25 @@ class confocal_scanner_JPE_CPSHR3_nicard_interfuse(Base, confocal_scanner_JPE_CP
         self._counter_logic.set_count_length(length)
 
     # scanner methods
+
     def snake_scan(self, step, square_side):
         '''Scan a square area around a central spot describing a snake movement'''
         # Go to top left position of the square area
-        self.set_snake_scan_begin_position(step, square_side)
+        self._scanner_logic.set_snake_scan_begin_position(step, square_side)
         n = 0
         n_lines = square_side/step
+        point_number = 0
         while n <= n_lines :
             print('line = ', n)
             if n % 2 == 0 :
-                self.scan_line_left_to_right(step, square_side)
+                while point_number <= square_side/step:
+                    self._scanner_logic.move_xyz(step, 0, 0)
+                    point += 1
             else :
-                self.scan_line_right_to_left(step, square_side)
-            self.move_verticaly(step)
+                while point_number >= 0:
+                    self._scanner_logic.move_xyz(-step, 0, 0)
+                    point -=1
+            self._scanner_logic.move_xyz(0, step, 0)
             n += 1
-        self.set_snake_scan_begin_position(step, square_side)
+        self._scanner_logic.set_snake_scan_begin_position(step, square_side)
+
