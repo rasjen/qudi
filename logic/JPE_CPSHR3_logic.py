@@ -95,7 +95,8 @@ class JPE_CPSHR3_logic(GenericLogic):
         step_amp = self.CLA1.get_STEP_AMP_MAX()
         number_of_steps = np.around(np.divide(value, step_amp), 0)
         return number_of_steps.astype(int)
-        def stop_CLAs(self):
+
+    def stop_CLAs(self):
         self._JPE_CPSHR3_hardware.do_command('STP 1')
         self._JPE_CPSHR3_hardware.do_command('STP 2')
         self._JPE_CPSHR3_hardware.do_command('STP 3')
@@ -159,7 +160,7 @@ class JPE_CPSHR3_logic(GenericLogic):
             self._JPE_CPSHR3_hardware.do_command(CLA3_cmd_line)
 
     def move_xyz(self, delta_x, delta_y, delta_z):
-        '''Move the sample using xyz coordinate system'''
+        '''Move the sample using xyz coordinate system relative to the actual point'''
         # Calculation of the CLAs displacement
         CLA1_displacement, CLA2_displacement, CLA3_displacement = self.CLA_displacement(delta_x, delta_y, delta_z)
         # Set the CLA step to the closer integer number corresponding to the displacement
@@ -254,20 +255,6 @@ class JPE_CPSHR3_logic(GenericLogic):
             self.move_xyz(-step, -step, 0)
             while True:
                 time.sleep(self.sleep_time)
-                if self.get_CLA_STATUS(1) == 'Stopped' and self.get_CLA_STATUS(2) == 'Stopped' and self.get_CLA_STATUS(3) == 'Stopped':
-                    break
-            n += 1
-
-    def set_snake_scan_begin_position(self, step, square_side):
-        '''The snake scan scan a square area around a central spot.
-        This function move the sample in order to start the snake scan on the top left corner
-        of the square area and make the sample move back to the central spot when the snake scan is finished'''
-        n = 0
-        while n <= (square_side/2)/step:
-            print(n)
-            self.move_xyz(-step, -step, 0)
-            while True:
-                time.sleep(selfsleep_time)
                 if self.get_CLA_STATUS(1) == 'Stopped' and self.get_CLA_STATUS(2) == 'Stopped' and self.get_CLA_STATUS(3) == 'Stopped':
                     break
             n += 1

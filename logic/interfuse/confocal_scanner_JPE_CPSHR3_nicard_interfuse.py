@@ -24,7 +24,7 @@ import numpy as np
 from core.module import Base
 from interface.confocal_scanner_JPE_CPSHR3_nicard_interface import confocal_scanner_JPE_CPSHR3_nicard_interface
 from core.module import Connector, ConfigOption, StatusVar
-
+import matplotlib.pyplot as plt
 
 class confocal_scanner_JPE_CPSHR3_nicard_interfuse(Base, confocal_scanner_JPE_CPSHR3_nicard_interface):
 
@@ -63,6 +63,9 @@ class confocal_scanner_JPE_CPSHR3_nicard_interfuse(Base, confocal_scanner_JPE_CP
         counts = self._counter_logic._counting_device.get_counter(samples)
         return np.sum(counts[0])/samples
 
+    def set_up_counter(self, counter_channels='/Dev1/Ctr1', sources='/Dev1/PFI13', clock_channel='/Dev1/Ctr0', counter_buffer=None):
+        self._counter_logic._counting_device.set_up_counter(counter_channels, sources, clock_channel, counter_buffer)
+
     def set_count_frequency(self, frequency=50):
         self._counter_logic.set_count_frequency(frequency)
 
@@ -70,25 +73,38 @@ class confocal_scanner_JPE_CPSHR3_nicard_interfuse(Base, confocal_scanner_JPE_CP
         self._counter_logic.set_count_length(length)
 
     # scanner methods
+    def create_map(self, step, square_side):
+        data = np.zeros([int(np.round(square_side/step)), int(np.round(square_side/step))], dtype=int)
+        return data
 
     def snake_scan(self, step, square_side):
         '''Scan a square area around a central spot describing a snake movement'''
-        # Go to top left position of the square area
-        self._scanner_logic.set_snake_scan_begin_position(step, square_side)
-        n = 0
-        n_lines = square_side/step
-        point_number = 0
-        while n <= n_lines :
-            print('line = ', n)
-            if n % 2 == 0 :
-                while point_number <= square_side/step:
+        # Go to top left position of the square area{
+        # self._scanner_logic.set_snake_scan_begin_position(step, square_side)
+        self.start_counter()
+        data = self.create_map(step, square_side)
+        side_points_number = int(np.round(square_side/step))
+        m = 0
+        while m < side_points_number:
+            if m % 2 == 0 :
+                n = 0
+                while n < side_points_number:
                     self._scanner_logic.move_xyz(step, 0, 0)
-                    point += 1
-            else :
-                while point_number >= 0:
+                    count_number = self._counter_logic._counting_device.get_counter(1)[0, 0]
+                    data[m, n] = count_number
+                    n += 1
+            else:
+                n = side_points_number-1
+                while n >= 0:
                     self._scanner_logic.move_xyz(-step, 0, 0)
-                    point -=1
+                    count_number = self._counter_logic._counting_device.get_counter(1)[0, 0]
+                    data[m, n] = count_number
+                    n -= 1
             self._scanner_logic.move_xyz(0, step, 0)
-            n += 1
-        self._scanner_logic.set_snake_scan_begin_position(step, square_side)
+            m += 1
+        return data
+
+        # self._scanner_logic.set_snake_scan_begin_position(step, square_side)
+
+
 
