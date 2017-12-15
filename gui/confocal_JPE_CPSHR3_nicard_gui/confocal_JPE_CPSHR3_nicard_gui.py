@@ -93,14 +93,38 @@ class confocal_JPE_CPSHR3_nicard_gui(GUIBase):
         self._confocal_scan_logic = self.get_connector('confocallogic')
         self._save_logic = self.get_connector('savelogic')
 
+        # Create an instance of ConfocalMainWindow class
         self._mw = ConfocalMainWindow()
-
-
-
+        self._mw.setGeometry(1184, 277, 868, 907)
+        self._mw.xy_ViewWidget.setGeometry(10, 88, 680, 634)
+        self._mw.emergency_stop_pushButton.setStyleSheet("background-color: darkred")
         # Take the default values from logic:
         self.step_size_value = self._mw.step_size_value_double_spinBox.value()*1e-6
+        self.CLA_movable = bool(0)
+        self._mw.step_xplus_pushButton.setEnabled(0)
+        self._mw.step_xminus_pushButton.setEnabled(0)
+        self._mw.step_yplus_pushButton.setEnabled(0)
+        self._mw.step_yminus_pushButton.setEnabled(0)
+        self._mw.step_zplus_pushButton.setEnabled(0)
+        self._mw.step_zminus_pushButton.setEnabled(0)
+
+        # Create an empty image and add it to the plot widget
+        xy_image_data = np.zeros([50, 50], dtype=int)
+        self.xy_image = pg.ImageItem(image=xy_image_data, axisOrder='row-major')
+
+        self._mw.xy_ViewWidget.addItem(self.xy_image)
+
+        self.my_colors = ColorScaleInferno()
+        self.xy_cb = ColorBar(self.my_colors.cmap_normed, width=100, cb_min=0, cb_max=100)
+        self._mw.xy_cb_ViewWidget.addItem(self.xy_cb)
+        self._mw.xy_cb_ViewWidget.hideAxis('bottom')
+        self._mw.xy_cb_ViewWidget.setLabel('left', 'Fluorescence', units='c/s')
+        self._mw.xy_cb_ViewWidget.setMouseEnabled(x=False, y=False)
 
         # Connections between GUI and logic fonctions
+
+        self._confocal_scan_logic.signal_xy_image_updated.connect(self.refresh_xy_image)
+
         self._mw.step_xplus_pushButton.clicked.connect(self.move_x_plus)
         self._mw.step_xminus_pushButton.clicked.connect(self.move_x_minus)
         self._mw.step_yplus_pushButton.clicked.connect(self.move_y_plus)
@@ -109,7 +133,11 @@ class confocal_JPE_CPSHR3_nicard_gui(GUIBase):
         self._mw.step_zminus_pushButton.clicked.connect(self.move_z_minus)
 
         self._mw.step_size_value_double_spinBox.valueChanged.connect(self.set_step_value)
+        self._mw.CLAs_movable_checkBox.clicked.connect(self.CLAs_movable_checkBox_clicked)
+        self._mw.emergency_stop_pushButton.clicked.connect(self.emergency_stop)
+        self._mw.start_scan_pushButton.clicked.connect(self.XY_scan)
 
+        self.n = 0
 
     def on_deactivate(self):
         """ Reverse steps of activation
@@ -128,23 +156,107 @@ class confocal_JPE_CPSHR3_nicard_gui(GUIBase):
 
     # Fonctions used for connectors
     def move_x_plus(self):
-        self._confocal_scan_logic._scanner_logic.move_xyz(self.step_size_value, 0, 0)
+            self._confocal_scan_logic._scanner_logic.move_xyz(self.step_size_value, 0, 0)
 
     def move_x_minus(self):
-        self._confocal_scan_logic._scanner_logic.move_xyz(-self.step_size_value, 0, 0)
+            self._confocal_scan_logic._scanner_logic.move_xyz(-self.step_size_value, 0, 0)
 
     def move_y_plus(self):
-        self._confocal_scan_logic._scanner_logic.move_xyz(0, self.step_size_value, 0)
+            self._confocal_scan_logic._scanner_logic.move_xyz(0, self.step_size_value, 0)
 
     def move_y_minus(self):
-        self._confocal_scan_logic._scanner_logic.move_xyz(0, -self.step_size_value, 0)
+            self._confocal_scan_logic._scanner_logic.move_xyz(0, -self.step_size_value, 0)
 
     def move_z_plus(self):
-        self._confocal_scan_logic._scanner_logic.move_xyz(0, 0, self.step_size_value)
+            self._confocal_scan_logic._scanner_logic.move_xyz(0, 0, self.step_size_value)
 
     def move_z_minus(self):
-        self._confocal_scan_logic._scanner_logic.move_xyz(0, 0, -self.step_size_value)
+            self._confocal_scan_logic._scanner_logic.move_xyz(0, 0, -self.step_size_value)
 
     def set_step_value(self):
-        self.step_size_value = self._mw.step_size_value_double_spinBox.value()*1e-6
+            self.step_size_value = self._mw.step_size_value_double_spinBox.value()
 
+    def CLAs_movable_checkBox_clicked(self):
+        if self._mw.CLAs_movable_checkBox.isChecked() == False:
+            self._mw.step_xplus_pushButton.setEnabled(0)
+            self._mw.step_xminus_pushButton.setEnabled(0)
+            self._mw.step_yplus_pushButton.setEnabled(0)
+            self._mw.step_yminus_pushButton.setEnabled(0)
+            self._mw.step_zplus_pushButton.setEnabled(0)
+            self._mw.step_zminus_pushButton.setEnabled(0)
+        elif self._mw.CLAs_movable_checkBox.isChecked() == True:
+            self._mw.step_xplus_pushButton.setEnabled(1)
+            self._mw.step_xminus_pushButton.setEnabled(1)
+            self._mw.step_yplus_pushButton.setEnabled(1)
+            self._mw.step_yminus_pushButton.setEnabled(1)
+            self._mw.step_zplus_pushButton.setEnabled(1)
+            self._mw.step_zminus_pushButton.setEnabled(1)
+
+    def emergency_stop(self):
+        self._confocal_scan_logic._scanner_logic.stop_CLAs()
+
+    def XY_scan(self):
+        step = self._mw.scanner_step_size_value_double_spinBox.value()
+        square_size = self._mw.scanner_range_size_value_double_spinBox.value()
+        self._confocal_scan_logic.snake_scan(step, square_size)
+
+    def refresh_xy_image(self):
+        """ Update the current XY image from the logic.
+
+        Everytime the scanner is scanning a line in xy the
+        image is rebuild and updated in the GUI.
+        """
+        self.xy_image.getViewBox().updateAutoRange()
+
+        xy_image_data = self._confocal_scan_logic.data
+
+        cb_range = self.get_xy_cb_range()
+
+        # Now update image with new color scale, and update colorbar
+        self.xy_image.setImage(image=xy_image_data, levels=(cb_range[0], cb_range[1]))
+        self.refresh_xy_colorbar()
+
+        # Unlock state widget if scan is finished
+        if self._confocal_scan_logic.getState() != 'locked':
+            self.enable_scan_actions()
+
+    def get_xy_cb_range(self):
+        """ Determines the cb_min and cb_max values for the xy scan image
+        """
+        # If "Manual" is checked, or the image data is empty (all zeros), then take manual cb range.
+        if self._mw.xy_cb_manual_RadioButton.isChecked() or np.max(self.xy_image.image) == 0.0:
+            cb_min = self._mw.xy_cb_min_DoubleSpinBox.value()
+            cb_max = self._mw.xy_cb_max_DoubleSpinBox.value()
+
+        # Otherwise, calculate cb range from percentiles.
+        else:
+            # Exclude any zeros (which are typically due to unfinished scan)
+            xy_image_nonzero = self.xy_image.image[np.nonzero(self.xy_image.image)]
+            # Read centile range
+            low_centile = self._mw.xy_cb_low_percentile_DoubleSpinBox.value()
+            high_centile = self._mw.xy_cb_high_percentile_DoubleSpinBox.value()
+
+            cb_min = np.percentile(xy_image_nonzero, low_centile)
+            cb_max = np.percentile(xy_image_nonzero, high_centile)
+
+        cb_range = [cb_min, cb_max]
+        print(cb_range)
+        return cb_range
+
+    def refresh_xy_colorbar(self):
+        """ Adjust the xy colorbar.
+
+        Calls the refresh method from colorbar, which takes either the lowest
+        and higherst value in the image or predefined ranges. Note that you can
+        invert the colorbar if the lower border is bigger then the higher one.
+        """
+        cb_range = self.get_xy_cb_range()
+        self.xy_cb.refresh_colorbar(cb_range[0], cb_range[1])
+
+    def enable_scan_actions(self):
+        """ Reset the scan action buttons to the default active
+        state when the system is idle.
+        """
+        # Disable the stop scanning button
+
+        # Enable the scan buttons

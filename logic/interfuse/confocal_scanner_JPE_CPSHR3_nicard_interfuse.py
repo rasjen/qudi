@@ -25,6 +25,7 @@ from core.module import Base
 from interface.confocal_scanner_JPE_CPSHR3_nicard_interface import confocal_scanner_JPE_CPSHR3_nicard_interface
 from core.module import Connector, ConfigOption, StatusVar
 import matplotlib.pyplot as plt
+from qtpy import QtCore
 
 class confocal_scanner_JPE_CPSHR3_nicard_interfuse(Base, confocal_scanner_JPE_CPSHR3_nicard_interface):
 
@@ -36,6 +37,8 @@ class confocal_scanner_JPE_CPSHR3_nicard_interfuse(Base, confocal_scanner_JPE_CP
     # connectors
     scanner = Connector(interface='confocal_scanner_JPE_CPSHR3_nicard_interface')
     counter = Connector(interface='CounterLogic')
+
+    signal_xy_image_updated = QtCore.Signal()
 
     def on_activate(self):
         """ Initialisation performed during activation of the module.
@@ -74,16 +77,16 @@ class confocal_scanner_JPE_CPSHR3_nicard_interfuse(Base, confocal_scanner_JPE_CP
 
     # scanner methods
     def create_map(self, step, square_side):
-        data = np.zeros([int(np.round(square_side/step)), int(np.round(square_side/step))], dtype=int)
-        return data
+        self.data = np.zeros([int(np.round(square_side/step)), int(np.round(square_side/step))], dtype=int)
+        return self.data
 
     def snake_scan(self, step, square_side):
         '''Scan a square area around a central spot describing a snake movement'''
-        # Go to top left position of the square area{
-        # self._scanner_logic.set_snake_scan_begin_position(step, square_side)
         self.start_counter()
-        data = self.create_map(step, square_side)
+        self.data = self.create_map(step, square_side)
         side_points_number = int(np.round(square_side/step))
+        # Go to top left position of the square area
+        self.set_snake_scan_begin_position(step, square_side)
         m = 0
         while m < side_points_number:
             if m % 2 == 0 :
@@ -91,18 +94,33 @@ class confocal_scanner_JPE_CPSHR3_nicard_interfuse(Base, confocal_scanner_JPE_CP
                 while n < side_points_number:
                     self._scanner_logic.move_xyz(step, 0, 0)
                     count_number = self._counter_logic._counting_device.get_counter(1)[0, 0]
-                    data[m, n] = count_number
+                    self.data[m, n] = count_number
+                    self.signal_xy_image_updated.emit()
                     n += 1
             else:
                 n = side_points_number-1
                 while n >= 0:
                     self._scanner_logic.move_xyz(-step, 0, 0)
                     count_number = self._counter_logic._counting_device.get_counter(1)[0, 0]
-                    data[m, n] = count_number
+                    self.data[m, n] = count_number
+                    self.signal_xy_image_updated.emit()
                     n -= 1
             self._scanner_logic.move_xyz(0, step, 0)
             m += 1
-        return data
+        # Go back to central position of the square area
+        self.set_snake_scan_begin_position(step, square_side)
+        print(self.data)
+        return self.data
+
+    def set_snake_scan_begin_position(self, step, square_side):
+        '''The snake scan scan a square area around a central spot.
+        This function move the sample in order to start the snake scan on the top left corner
+        of the square area and make the sample move back to the central spot when the snake scan is finished
+        step, square_side expressed in micrometers'''
+        n = 0
+        while n <= (square_side/2)/step:
+            self._scanner_logic.move_xyz(-step, -step, 0)
+            n += 1
 
         # self._scanner_logic.set_snake_scan_begin_position(step, square_side)
 
