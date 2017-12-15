@@ -74,7 +74,6 @@ class AndorSpectrometerInterfuse(Base, SpectrometerInterface):
         # //Set initial exposure time
         self.andor.set_exposure_time(self.exp_time)
 
-
     def __del__(self):
         if not self.closed:
             self.andor.shutdown()
@@ -91,7 +90,7 @@ class AndorSpectrometerInterfuse(Base, SpectrometerInterface):
             #         print(e)
             # print("End AndorSpectrometer.__del__")
 
-    def shutdown(self):
+    def on_deactivate(self):
         self.andor.shutdown()
         self.shamrock.shutdown()
         self.closed = True
@@ -129,7 +128,7 @@ class AndorSpectrometerInterfuse(Base, SpectrometerInterface):
 
     def set_exposure_time(self, seconds):
         self.andor.set_exposure_time(seconds)
-        self.exp_time = seconds
+        self.exposure_time = seconds
 
     def set_slit_width(self, slitwidth):
         self.shamrock.SetAutoSlitWidth(1, slitwidth)
@@ -140,6 +139,7 @@ class AndorSpectrometerInterfuse(Base, SpectrometerInterface):
             self.andor.set_image(1, 1, 1, self._width, self._hstart, self._hstop)
 
     def get_wavelength(self):
+        self.shamrock.get_calibration(self._width)
         return self._wl
 
     def set_full_image(self):
@@ -162,7 +162,7 @@ class AndorSpectrometerInterfuse(Base, SpectrometerInterface):
         # return data.transpose()
         return data
 
-    def set_cntre_wavelength(self, wavelength):
+    def set_centre_wavelength(self, wavelength):
         minwl, maxwl = self.shamrock.get_wavelength_limits(self.shamrock.get_grating())
         # if (wavelength < maxwl) and (wavelength > minwl):
         #     self.shamrock.SetWavelength(wavelength)
@@ -228,7 +228,7 @@ class AndorSpectrometerInterfuse(Base, SpectrometerInterface):
         self.andor.set_image(1, 1, 1, self._width, self._hstart, self._hstop)
         self.mode = 'SingleTrack'
 
-    def take_single_track(self):
+    def take_single_spectrum(self):
         self.andor.start_acquisition()
         acquiring = True
         while acquiring:
