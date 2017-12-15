@@ -48,7 +48,7 @@ ERROR_CODE = {
     20992: "DRV_NOT_AVAILABLE"
 }
 
-class Andor(Base,SpectrometerInterface):
+class Andor(Base, SpectrometerInterface):
     """
     This module is controling the Andor spectrometer
         
@@ -60,7 +60,7 @@ class Andor(Base,SpectrometerInterface):
 
 
     def __init__(self, config, **kwargs):
-        super.__init__(config=config, **kwargs)
+        super().__init__(config=config, **kwargs)
 
 
     def on_activate(self):
@@ -72,23 +72,19 @@ class Andor(Base,SpectrometerInterface):
 
         if platform.system() == "Windows":
             if platform.architecture()[0] == "32bit":
-                self.dll = cdll("C:\\Program Files\\Andor SOLIS\\Drivers\\atmcd32d")
+                self.dll = cdll.LoadLibrary(r"C:\Program Files\Andor SDK\atmcd32d.dll")
             else:
-                self.dll = cdll("C:\\Program Files\\Andor SOLIS\\Drivers\\atmcd64d")
-                # for Linux
-        if platform.system() == "Linux":
-            dllname = "/usr/local/lib/libandor.so"
-            self.dll = cdll.LoadLibrary(dllname)
+                self.dll = windll.LoadLibrary(r"C:\Program Files\Andor SDK\atmcd64d.dll")
         else:
-            print
-            "Cannot detect operating system, wil now stop"
-            raise
+            self.log.error("Cannot detect operating system, wil now stop")
+        self.verbosity = True
 
-        error = self.Initialize()
+        error = self.initialize()
 
         cw = c_int()
         ch = c_int()
         self.dll.GetDetector(byref(cw), byref(ch))
+
 
         self.width = cw.value
         self.height = ch.value
@@ -207,17 +203,17 @@ class Andor(Base,SpectrometerInterface):
         self.verbose(ERROR_CODE[error], sys._getframe().f_code.co_name)
         return ERROR_CODE[error]
 
-    def SetAccumulationCycleTime(self, time):
+    def set_accumulation_cycle_time(self, time):
         error = self.dll.SetAccumulationCycleTime(c_float(time))
         self.verbose(ERROR_CODE[error], sys._getframe().f_code.co_name)
         return ERROR_CODE[error]
 
-    def SetKineticCycleTime(self, time):
+    def set_kinetic_cycle_time(self, time):
         error = self.dll.SetKineticCycleTime(c_float(time))
         self.verbose(ERROR_CODE[error], sys._getframe().f_code.co_name)
         return ERROR_CODE[error]
 
-    def SetShutter(self, typ, mode, closingtime, openingtime):
+    def set_shutter(self, typ, mode, closingtime, openingtime):
         error = self.dll.SetShutter(typ, mode, closingtime, openingtime)
         self.verbose(ERROR_CODE[error], sys._getframe().f_code.co_name)
         return ERROR_CODE[error]
@@ -269,6 +265,10 @@ class Andor(Base,SpectrometerInterface):
         self.exposure = time
         self.verbose(ERROR_CODE[error], sys._getframe().f_code.co_name)
         return ERROR_CODE[error]
+
+    def get_exposure_time(self):
+        self.get_acquired_data()
+        return self.exposure
 
     def get_acquisition_timings(self):
         exposure = c_float()
@@ -348,3 +348,10 @@ class Andor(Base,SpectrometerInterface):
         error = self.dll.SetTriggerMode(mode)
         self.verbose(ERROR_CODE[error], sys._getframe().f_code.co_name)
         return ERROR_CODE[error]
+
+    def get_pixel_size(self):
+        xSize = c_float()
+        ySize = c_float()
+        error = self.dll.GetPixelSize(byref(xSize), byref(ySize))
+        self.verbose(error, "GetPixelSize")
+        return xSize, ySize
