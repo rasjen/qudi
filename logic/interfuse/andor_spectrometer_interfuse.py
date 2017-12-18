@@ -38,19 +38,18 @@ class AndorSpectrometerInterfuse(Base, SpectrometerInterface):
         start_cooler = False
         init_shutter = False
 
-
         self.andor.set_temperature(-15)
         if start_cooler:
             self.andor.cooler_on()
 
-        # //Set Read Mode to --Image--
-        self.andor.set_read_mode(4)
+        # //Set Read Mode to --FVB --
+        self.andor.set_read_mode(0)
 
         # //Set Acquisition mode to --Single scan--
         self.andor.set_acquisition_mode(1)
 
         # //Get Detector dimensions
-        self._width, self._height = self.andor.hend, self.andor.vend
+        self._width, self._height = self.andor.get_detector()
         # print((self._width, self._height))
         self.min_width = 1
         self.max_width = self._width
@@ -138,8 +137,8 @@ class AndorSpectrometerInterfuse(Base, SpectrometerInterface):
             self.calc_single_track_slit_pixels()
             self.andor.set_image(1, 1, 1, self._width, self._hstart, self._hstop)
 
-    def get_wavelength(self):
-        self.shamrock.get_calibration(self._width)
+    def get_wavelengths(self):
+        self._wl = self.shamrock.get_calibration()
         return self._wl
 
     def set_full_image(self):
@@ -154,11 +153,13 @@ class AndorSpectrometerInterfuse(Base, SpectrometerInterface):
         acquiring = True
         while acquiring:
             status = self.andor.get_status()
-            if status == 20073:
+            self.log.info(status)
+            if status == 'DRV_IDLE':
                 acquiring = False
-            elif not status == 20072:
+                continue
+            elif not status == 'DRV_ACQUIRING':
                 return None
-        data = self.andor.get_acquired_data(width, height)
+        data = self.andor.get_acquired_data()
         # return data.transpose()
         return data
 

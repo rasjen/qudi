@@ -236,7 +236,7 @@ class Andor(Base, SpectrometerInterface):
         self.verbose(ERROR_CODE[error], sys._getframe().f_code.co_name)
         return ERROR_CODE[error]
 
-    def get_acquired_data(self, imageArray):
+    def get_acquired_data(self):
         if (self.ReadMode == 4):
             if (self.AcquisitionMode == 1):
                 dim = self.width * self.height / self.hbin / self.vbin
@@ -253,12 +253,14 @@ class Andor(Base, SpectrometerInterface):
         error = self.dll.GetAcquiredData(pointer(cimage), dim)
         self.verbose(ERROR_CODE[error], sys._getframe().f_code.co_name)
 
+
+        imageArray = []
         for i in range(len(cimage)):
             imageArray.append(cimage[i])
 
         self.imageArray = imageArray[:]
         # self.verbose(ERROR_CODE[error], sys._getframe().f_code.co_name)
-        return ERROR_CODE[error]
+        return imageArray[:]
 
     def set_exposure_time(self, time):
         error = self.dll.SetExposureTime(c_float(time))
@@ -267,7 +269,7 @@ class Andor(Base, SpectrometerInterface):
         return ERROR_CODE[error]
 
     def get_exposure_time(self):
-        self.get_acquired_data()
+        self.get_acquisition_timings()
         return self.exposure
 
     def get_acquisition_timings(self):
@@ -327,7 +329,7 @@ class Andor(Base, SpectrometerInterface):
         error = self.dll.GetTemperature(byref(ctemperature))
         self.temperature = ctemperature.value
         self.verbose(ERROR_CODE[error], sys._getframe().f_code.co_name)
-        return ERROR_CODE[error]
+        return ctemperature.value
 
     def set_temperature(self,temperature):
         #ctemperature = c_int(temperature)
@@ -353,5 +355,12 @@ class Andor(Base, SpectrometerInterface):
         xSize = c_float()
         ySize = c_float()
         error = self.dll.GetPixelSize(byref(xSize), byref(ySize))
-        self.verbose(error, "GetPixelSize")
+        self.verbose(ERROR_CODE[error], "GetPixelSize")
         return xSize, ySize
+
+    def get_detector(self):
+        width = c_int(0)
+        height = c_int(0)
+        error = self.dll.GetDetector(byref(width), byref(height))
+        self.verbose(ERROR_CODE[error], "GetDetector")
+        return width, height

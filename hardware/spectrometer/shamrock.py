@@ -99,7 +99,7 @@ class Shamrock(Base, SpectrometerInterface):
 
     # Calibration functions
     def set_pixel_width(self, width):
-        error = self.dll.ShamrockSetPixelWidth(self.current_shamrock, c_float(width))
+        error = self.dll.ShamrockSetPixelWidth(self.current_shamrock, width)
         self.verbose(ERROR_CODE[error], sys._getframe().f_code.co_name)
         return ERROR_CODE[error]
 
@@ -248,7 +248,7 @@ class Shamrock(Base, SpectrometerInterface):
         return ERROR_CODE[error]
 
     def get_calibration(self):
-        self.ShamrockGetNumberPixels()
+        self.get_number_pixels()
         ccalib = c_float * self.pixel_number
         ccalib_array = ccalib()
         error = self.dll.ShamrockGetCalibration(self.current_shamrock, pointer(ccalib_array), self.pixel_number)
@@ -259,6 +259,8 @@ class Shamrock(Base, SpectrometerInterface):
             calib.append(ccalib_array[i])
 
         self.wl_calibration = calib[:]
+
+        return calib
 
     # Output Slits
     def get_auto_slit_width(self, slit):
