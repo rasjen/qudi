@@ -61,9 +61,9 @@ class WLTGui(GUIBase):
         self._mw = WLTMainWindow()
 
         # connect to cavity logic
-        self._cavity_logic = self.get_connector('cavitylogic')
+        self._wlt_logic = self.get_connector('cavitylogic')
 
-        constraints_dict = self._cavity_logic.get_hw_constraints()
+        constraints_dict = self._wlt_logic.get_hw_constraints()
 
         # Create a QSettings object for the mainwindow and store the actual GUI layout
         self.mwsettings = QtCore.QSettings("QUDI", "WLT")
@@ -80,13 +80,14 @@ class WLTGui(GUIBase):
                                                         constraints_dict['max_temperature'])
         self._mw.get_temperature_doubleSpinBox.setRange(constraints_dict['min_temperature'],
                                                         constraints_dict['max_temperature'])
-        self._mw.averages_doubleSpinBox.setRange(constraints_dict['min_averages'], constraints_dict['max_averages'])
+        self._mw.averages_doubleSpinBox.setRange(constraints_dict['min_number_accumulations'],
+                                                 constraints_dict['max_number_accumulations'])
         self._mw.exposure_time_doubleSpinBox.setRange(constraints_dict['min_exposure'],
                                                       constraints_dict['max_exposure'])
 
 
         # Get the image from the logic
-        self.WLT_image = pg.ImageItem(self._cavity_logic.WLT_image, axisOrder='row-major')
+        self.WLT_image = pg.ImageItem(self._wlt_logic.WLT_image, axisOrder='row-major')
         #self.odmr_matrix_image.setRect(QtCore.QRectF(
         #        self._odmr_logic.mw_start,
         #        0,
@@ -94,8 +95,8 @@ class WLTGui(GUIBase):
         #        self._odmr_logic.number_of_lines
         #    ))
 
-        self.spectrum_image = pg.PlotDataItem(self._cavity_logic.spectrometer_wavelengths,
-                                          self._cavity_logic.spectrometer_counts,
+        self.spectrum_image = pg.PlotDataItem(self._wlt_logic.wl,
+                                          self._wlt_logic.counts,
                                           pen=pg.mkPen(palette.c1, style=QtCore.Qt.DotLine),
                                           symbol='o',
                                           symbolPen=palette.c1,
@@ -148,15 +149,17 @@ class WLTGui(GUIBase):
 
 
         # Control/values-changed signals to logic
-        self.sigStartWLTScan.connect(self._cavity_logic.start_wlt_measurement, QtCore.Qt.QueuedConnection)
-        self.sigStopWLTScan.connect(self._cavity_logic.stop_wlt_measurement, QtCore.Qt.QueuedConnection)
-        self.sigContinueWLTScan.connect(self._cavity_logic.continue_wlt_measurement,
+        self.sigStartWLTScan.connect(self._wlt_logic.start_wlt_measurement, QtCore.Qt.QueuedConnection)
+        self.sigStopWLTScan.connect(self._wlt_logic.stop_wlt_measurement, QtCore.Qt.QueuedConnection)
+        self.sigContinueWLTScan.connect(self._wlt_logic.continue_wlt_measurement,
                                          QtCore.Qt.QueuedConnection)
-        self._mw.get_temperature_pushButton.clicked.connect(self._cavity_logic.get_temperature)
+        self._mw.get_temperature_pushButton.clicked.connect(self._wlt_logic.get_temperature)
+        self._mw.take_spectrum_pushButton.clicked.connect(self._wlt_logic.take_single_spectrum)
 
         # Update signals coming from logic:
-        self._cavity_logic.sigParameterUpdated.connect(self.update_parameter,
+        self._wlt_logic.sigParameterUpdated.connect(self.update_parameter,
                                                     QtCore.Qt.QueuedConnection)
+        self._wlt_logic.sigSpectrumPlotUpdated.connect(self.refresh_spectrum_graph, QtCore.Qt.QueuedConnection)
 
 
         # Show the Main ODMR GUI:
@@ -217,8 +220,8 @@ class WLTGui(GUIBase):
         return cb_range
 
     def changed_spectrometer_params(self):
-        self._cavity_logic.set_exposure_time(self._mw.exposure_time_doubleSpinBox.value())
-        self._cavity_logic.set_averages(self._mw.averages_doubleSpinBox.value())
+        self._wlt_logic.set_exposure_time(self._mw.exposure_time_doubleSpinBox.value())
+        self._wlt_logic.set_number_accumulations(self._mw.averages_doubleSpinBox.value())
 
     def changed_pos_params(self):
         pass
@@ -235,7 +238,7 @@ class WLTGui(GUIBase):
         """ Continues the WLT measurement"""
         self.sigContinueWLTScan.emit()
 
-    def update_parameter(self, temperature, exposure_time, averages):
+    def update_parameter(self, temperature, exposure_time, number_accumulations):
         """
         Updates the paremeters from the spectrometer
         
@@ -243,12 +246,15 @@ class WLTGui(GUIBase):
         """
         self._mw.get_temperature_doubleSpinBox.setValue(temperature)
         self._mw.exposure_time_doubleSpinBox.setValue(exposure_time)
-        self._mw.averages_doubleSpinBox.setValue(averages)
+        self._mw.averages_doubleSpinBox.setValue(number_accumulations)
 
     def set_temperature(self):
         """
         
         :return: 
         """
-        self._cavity_logic.set_temperature(self._mw.set_temperature_doubleSpinBox.value())
+        self._wlt_logic.set_temperature(self._mw.set_temperature_doubleSpinBox.value())
+
+    def refresh_spectrum_graph(self, wavelengths, counts):
+        self.spectrum_image.setData(x=wavelengths, y=counts)
 

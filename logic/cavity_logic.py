@@ -23,7 +23,6 @@ class CavityLogic(GenericLogic):
     # declare connectors
     nicard = Connector(interface='ConfocalScannerInterface')
     scope = Connector(interface='scopeinterface')
-    spectrometer = Connector(interface='spectrometerInterface')
     savelogic = Connector(interface='SaveLogic')
 
     sigFullSweepPlotUpdated = QtCore.Signal(np.ndarray, np.ndarray)
@@ -31,14 +30,6 @@ class CavityLogic(GenericLogic):
     sigResonancesUpdated = QtCore.Signal(np.ndarray)
     sigSweepNumberUpdated = QtCore.Signal(int)
     sigTargetModeNumberUpdated = QtCore.Signal(int)
-
-    # signals for WLT
-    sigNextLine = QtCore.Signal()
-
-    # Update signals, e.g. for GUI module
-    sigParameterUpdated = QtCore.Signal(int, float, int)
-    sigOutputStateUpdated = QtCore.Signal(str, bool)
-    sigOdmrPlotsUpdated = QtCore.Signal(np.ndarray)
 
     def __init__(self, config, **kwargs):
         super().__init__(config=config, **kwargs)
@@ -61,9 +52,6 @@ class CavityLogic(GenericLogic):
         self.current_mode_number = 10
         self.current_sweep_number = 1
 
-        self.number_of_steps = 1
-        self.spectrometer_resolution = 100
-
         self.first_sweep = None
         self.first_corrected_resonances = None
         self.last_sweep = None
@@ -79,16 +67,8 @@ class CavityLogic(GenericLogic):
         self._ni = self.get_connector('nicard')
         self._scope = self.get_connector('scope')
         self._save_logic = self.get_connector('savelogic')
-        self._spectrometer = self.get_connector('spectrometer')
         self.cavity_range = self._ni._cavity_position_range[1] - self._ni._cavity_position_range[0]
 
-        self.exposure_time = -1
-        self.averages = -1
-        self.current_temperature = -999
-        self.target_temperature = -999
-
-        self.setup_WLT_image()
-        self.initialize_spectrometer()
 
 
     def on_deactivate(self):
@@ -891,138 +871,6 @@ class CavityLogic(GenericLogic):
 
     def stop_finesse_measurement(self):
         pass
-
-### ------------------------------ White light transmission (wlt) measurement ------------------------------ ###
-
-    def start_wlt_measurement(self):
-        '''
-        Start the white light transmission measurement
-        
-        :return: 
-        '''
-
-        pass
-
-    def stop_wlt_measurement(self):
-        '''
-        Stops the white light transmission measurement
-        :return: 
-        '''
-        pass
-
-    def continue_wlt_measurement(self):
-        '''
-        Continues the white light transmission measurement
-        
-        :return: 
-        '''
-        pass
-
-    def setup_wlt_measurement(self, scan_frequency, scan_range, exposure_time, measurement_frequency):
-        '''
-        
-        :param scan_frequency: How fast is the cavity length swept
-        :param scan_range: What is the min and max cavity position during the measurement
-        :param exposure_time: Exposure time of the camera
-        :param measurement_frequency: How fast are we going to measure
-        :return: 
-        '''
-        pass
-
-    def get_temperature(self):
-        '''
-        Gets the temperature for the camera in spectrometer
-        
-        :return: the temperature of the camera in spectrometer 
-        '''
-
-        try:
-            self.current_temperature = self._spectrometer.get_temperature()
-        except:
-            self.log.error('Could not get temperature from spectrometer')
-
-        self.sigParameterUpdated.emit(self.current_temperature, self.exposure_time, self.averages)
-
-    def set_temperature(self, temperature=None):
-        '''
-        Sets the temperature for the spectrometer 
-        
-        :param temperature: in C [-75, 25]
-        :return: 
-        '''
-
-        if temperature is None:
-            if self.target_temperature is not None:
-                temperature = self.target_temperature
-            else:
-                self.log.error('No target temperature')
-
-        self._spectrometer.set_temperature(temperature)
-
-    def setup_WLT_image(self):
-        '''
-        Setup an initial array for the WLT measurement
-        
-        :return: 
-        '''
-        self.WLT_image = np.zeros([self.number_of_steps, self.spectrometer_resolution])
-
-    def initialize_spectrometer(self):
-        self.get_averages()
-        self.get_exposure_time()
-        self.get_temperature()
-
-        self.spectrometer_wavelengths = self._spectrometer.get_wavelengths()
-        self.spectrometer_counts = np.zeros_like(self.spectrometer_wavelengths)
-
-    def set_exposure_time(self, exposure_time=None):
-        '''
-        Sets the exposure time for the camera in the spectrometer
-        
-        :return: 
-        '''
-        if exposure_time is None:
-            exposure_time = self.exposure_time
-
-        self._spectrometer.set_exposure_time(exposure_time)
-
-        self.get_exposure_time()
-
-    def get_exposure_time(self):
-        '''
-        Gets the exposure time for the camera in the spectrometer
-        
-        :return: 
-        '''
-
-        self.exposure_time = self._spectrometer.get_exposure_time()
-
-        self.sigParameterUpdated.emit(self.current_temperature, self.exposure_time, self.averages)
-
-    def set_averages(self, averages=None):
-        """
-        Sets the number of averages that the spectrometer 
-        
-        :param averages: number of averages (int)
-        :return: 
-        """
-        if averages is None:
-            averages = self.averages
-
-        self._spectrometer.set_averages(averages)
-
-        self.get_averages()
-
-
-    def get_averages(self):
-        '''
-        Gets the number of averages for the spectrometer
-
-        :return: 
-        '''
-        self.averages = self._spectrometer.get_averages()
-        self.sigParameterUpdated.emit(self.current_temperature, self.exposure_time, self.averages)
-
 
 
 

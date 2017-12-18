@@ -26,13 +26,10 @@ class SpectrometerInterfaceDummy(Base,SpectrometerInterface):
         self.temperature = 20
         self.averages = 1
 
-
     def on_activate(self):
         """ Activate module.
         """
         self._fitLogic = self.get_connector('fitlogic')
-
-
 
     def on_deactivate(self):
         """ Deactivate module.
@@ -113,25 +110,25 @@ class SpectrometerInterfaceDummy(Base,SpectrometerInterface):
 
         return self.temperature
 
-    def get_wavelengths(self):
+    def get_wavelength(self):
         '''
         
         :return: retruns an array with the wavelengths in nm
         '''
-        return np.linspace(500,900,4001)
+        self.wl = np.linspace(500,900,4001)
+        return self.wl
 
-    def set_averages(self, averages):
+    def set_number_accumulations(self, averages):
 
         self.averages = averages
 
-    def get_averages(self):
+    def get_number_accumulations(self):
 
         return self.averages
 
-    def setup_spectrometer(self):
-
-        pass
-
+    def take_single_spectrum(self):
+        data = np.random.rand(self.wl.size)
+        return data
 
 
 
