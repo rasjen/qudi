@@ -48,6 +48,9 @@ class AndorSpectrometerInterfuse(Base, SpectrometerInterface):
         # //Set Acquisition mode to --Single scan--
         self.andor.set_acquisition_mode(1)
 
+        # Set Exposure time
+        self.set_exposure_time(exposure_time=0.02)
+
         # //Get Detector dimensions
         self._width, self._height = self.andor.get_detector()
         # print((self._width, self._height))
@@ -145,10 +148,7 @@ class AndorSpectrometerInterfuse(Base, SpectrometerInterface):
         self.andor.set_image(1, 1, 1, self._width, 1, self._height)
         self.mode = 'Image'
 
-    def take_full_image(self):
-        return self.take_image(self._width, self._height)
-
-    def take_image(self, width, height):
+    def acquisition_data(self):
         self.andor.start_acquisition()
         acquiring = True
         while acquiring:
@@ -160,7 +160,6 @@ class AndorSpectrometerInterfuse(Base, SpectrometerInterface):
             elif not status == 'DRV_ACQUIRING':
                 return None
         data = self.andor.get_acquired_data()
-        # return data.transpose()
         return data
 
     def set_centre_wavelength(self, wavelength):
@@ -230,23 +229,18 @@ class AndorSpectrometerInterfuse(Base, SpectrometerInterface):
         self.mode = 'SingleTrack'
 
     def take_single_spectrum(self):
-        self.andor.start_acquisition()
-        acquiring = True
-        while acquiring:
-            status = self.andor.get_status()
-            if status == 20073:
-                acquiring = False
-            elif not status == 20072:
-                print(self.andor.ERROR_CODE[status])
-                return np.zeros((self._width, 7))
-        data = self.andor.get_acquired_data(self._width, (self._hstop - self._hstart) + 1)
-        # data = np.mean(data, 1)
-        data = data[:, 3:]  # throw away 'bad rows', see CalcSingleTrackSlitPixels(self) for details
-        print('Acquired Data: ' + str(data.shape))
-        # return data[:, 3:]  # throw away 'bad rows', see CalcSingleTrackSlitPixels(self) for details
+        self.andor.set_read_mode(0)
+        self.andor.set_acquisition_mode(1)
+        data = self.acquisition_data()
         return data
 
     def set_exposure_time(self, exposure_time):
+        """
+        Sets exposure time for the camera
+        
+        :param exposure_time: time in seconds 
+        :return: 
+        """
         self.andor.set_exposure_time(exposure_time)
 
     def get_exposure_time(self):

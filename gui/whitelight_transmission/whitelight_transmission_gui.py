@@ -40,7 +40,7 @@ class WLTGui(GUIBase):
     cavitylogic = Connector(interface='CavityLogic')
     savelogic = Connector(interface='SaveLogic')
 
-    sigStartWLTScan = QtCore.Signal()
+    sigStartWLTScan = QtCore.Signal(float, float, float)
     sigStopWLTScan = QtCore.Signal()
     sigContinueWLTScan = QtCore.Signal()
     sigClearData = QtCore.Signal()
@@ -228,7 +228,9 @@ class WLTGui(GUIBase):
 
     def run_wlt(self):
         """ Starts the WLT"""
-        self.sigStartWLTScan.emit()
+        self.sigStartWLTScan.emit(1/self._mw.scan_speed_doubleSpinBox.value(),
+                                  self._mw.start_position_doubleSpinBox.value(),
+                                  self._mw.stop_position_doubleSpinBox.value())
 
     def stop_wlt(self):
         """ Stops the WLT"""

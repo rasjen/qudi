@@ -110,7 +110,7 @@ class SpectrometerInterfaceDummy(Base,SpectrometerInterface):
 
         return self.temperature
 
-    def get_wavelength(self):
+    def get_wavelengths(self):
         '''
         
         :return: retruns an array with the wavelengths in nm
