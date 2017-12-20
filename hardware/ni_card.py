@@ -161,6 +161,7 @@ class NICard(Base, SlowCounterInterface, ConfocalScannerInterface, ODMRCounterIn
         self._clock_daq_task = None
         self._scanner_clock_daq_task = None
         self._scanner_ao_task = None
+        self._cavity_ao_task = None
         self._scanner_counter_daq_tasks = []
         self._line_length = None
         self._odmr_length = None
@@ -178,12 +179,15 @@ class NICard(Base, SlowCounterInterface, ConfocalScannerInterface, ODMRCounterIn
         self._photon_sources = []
         self._cavity_voltage_range = []
         self._cavity_position_range = []
+        self._current_cavity_position = []
 
         if 'cavity_ao' in config.keys():
             self.cavity_channel = config['cavity_ao']
             self._cavity_voltage_range = [-10,10]
             self._current_cavity_position.append(0)
-            self._cavity_position_range.append([0, 20e-6])
+            plow = float(config['cavity_position_range'][0])
+            phigh = float(config['cavity_position_range'][1])
+            self._cavity_position_range = [plow, phigh]
 
         if 'cavity_voltage_range' in config.keys():
             if float(config['cavity_voltage_range'][0]) < float(config['cavity_voltage_range'][1]):

@@ -226,7 +226,7 @@ class Andor(Base, SpectrometerInterface):
         return ERROR_CODE[error]
 
     def set_number_accumulations(self, number):
-        error = self.dll.SetNumberAccumulations(number)
+        error = self.dll.SetNumberAccumulations(c_int(int(number)))
         self.verbose(ERROR_CODE[error], sys._getframe().f_code.co_name)
         return ERROR_CODE[error]
 
@@ -298,6 +298,10 @@ class Andor(Base, SpectrometerInterface):
     def get_exposure_time(self):
         self.get_acquisition_timings()
         return self.exposure
+
+    def get_number_accumulations(self):
+        self.get_acquisition_timings()
+        return self.accumulate
 
     def get_acquisition_timings(self):
         exposure = c_float()

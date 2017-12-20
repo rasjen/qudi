@@ -117,7 +117,7 @@ class WLTLogic(GenericLogic):
 
         :return: 
         '''
-        self.wl = self._spectrometer.get_wavelength()
+        self.wl = self._spectrometer.get_wavelengths()
 
         self.WLT_image = np.zeros([self.wl.size, self.number_of_steps])
         pass
@@ -128,7 +128,7 @@ class WLTLogic(GenericLogic):
         
         :return: 
         """
-        self.wl = self._spectrometer.get_wavelength()
+        self.wl = self._spectrometer.get_wavelengths()
         self.counts = 1e6*np.random.rand(self.wl.size)
         pass
 
@@ -234,8 +234,8 @@ class WLTLogic(GenericLogic):
         :return: 
         """
 
-        start_volt = self.pos_to_voltage(pos_start)
-        stop_volt = self.pos_to_voltage(pos_stop)
+        start_volt = self._scanning_devices._cavity_position_to_volt(np.array(pos_start))
+        stop_volt = self._scanning_devices._cavity_position_to_volt(np.array(pos_stop))
 
         self._scanning_devices.cavity_set_voltage(start_volt)
         sleep(1.0)

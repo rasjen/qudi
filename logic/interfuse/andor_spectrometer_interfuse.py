@@ -93,8 +93,8 @@ class AndorSpectrometerInterfuse(Base, SpectrometerInterface):
             # print("End AndorSpectrometer.__del__")
 
     def on_deactivate(self):
-        self.andor.shutdown()
-        self.shamrock.shutdown()
+        self.andor.on_deactivate()
+        self.shamrock.on_deactivate()
         self.closed = True
 
     def set_temperature(self, temp):
@@ -141,7 +141,7 @@ class AndorSpectrometerInterfuse(Base, SpectrometerInterface):
             self.andor.set_image(1, 1, 1, self._width, self._hstart, self._hstop)
 
     def get_wavelengths(self):
-        self._wl = self.shamrock.get_calibration()
+        self._wl = np.asarray(self.shamrock.get_calibration())
         return self._wl
 
     def set_full_image(self):
@@ -160,7 +160,7 @@ class AndorSpectrometerInterfuse(Base, SpectrometerInterface):
             elif not status == 'DRV_ACQUIRING':
                 return None
         data = self.andor.get_acquired_data()
-        return data
+        return np.asarray(data)
 
     def set_centre_wavelength(self, wavelength):
         minwl, maxwl = self.shamrock.get_wavelength_limits(self.shamrock.get_grating())
@@ -245,3 +245,6 @@ class AndorSpectrometerInterfuse(Base, SpectrometerInterface):
 
     def get_exposure_time(self):
         return self.andor.get_exposure_time()
+
+    def get_number_accumulations(self):
+        return self.andor.get_number_accumulations()
