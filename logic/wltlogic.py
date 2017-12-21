@@ -6,6 +6,7 @@ import os
 from itertools import product
 from time import sleep, time
 import matplotlib.pyplot as plt
+import matplotlib as mpl
 
 from scipy.optimize import curve_fit
 from logic.generic_logic import GenericLogic
@@ -33,6 +34,8 @@ class WLTLogic(GenericLogic):
     sigParameterUpdated = QtCore.Signal(int, float, int)
     sigOutputStateUpdated = QtCore.Signal(str, bool)
     sigSpectrumPlotUpdated = QtCore.Signal(np.ndarray, np.ndarray)
+    sigWLTimageUpdated = QtCore.Signal()
+    signal_xy_data_saved = QtCore.Signal()
 
     def __init__(self, config, **kwargs):
         super().__init__(config=config, **kwargs)
@@ -52,8 +55,11 @@ class WLTLogic(GenericLogic):
 
         self.target_temperature = -999
         self.current_temperature = -999
-        self.number_accumulations = 1
-        self.exposure_time = 1.0
+        self.number_accumulations = 50
+        self.exposure_time = 0.003 # sec
+        self.scan_frequency = 1.0 # Hz
+        self.pos_start = self._scanning_devices._cavity_position_range[0]
+        self.pos_stop = self._scanning_devices._cavity_position_range[1]
 
         self.get_number_accumulations()
         self.get_exposure_time()
@@ -78,9 +84,15 @@ class WLTLogic(GenericLogic):
 
         :return: 
         '''
-
+        self.scan_frequency = frequency
         self._sweep(frequency, pos_start, pos_stop)
+
+        sleep(0.5)
+        self._scanning_devices.start_sweep()
         self._start_spectrometer_measurements()
+
+        sleep(10.0)
+        self._scanning_devices.close_sweep()
 
         pass
 
@@ -243,11 +255,7 @@ class WLTLogic(GenericLogic):
 
         self._scanning_devices.set_up_sweep(start_volt, stop_volt, frequency, RepOfSweep)
 
-        sleep(0.5)
-        self._scanning_devices.start_sweep()
 
-        sleep(4.0)
-        self._scanning_devices.close_sweep()
 
     def set_cavity_position(self, position):
         """
@@ -265,8 +273,190 @@ class WLTLogic(GenericLogic):
         :return: 
         """
 
+        number_of_cycles = self.number_of_steps
+        cycle_time = 0.5 * 1/self.scan_frequency / self.number_of_steps
+        exposure_time = self.exposure_time
+
+        data = self._spectrometer.kinetic_scan(exposure_time=exposure_time, cycle_time=cycle_time,
+                                               number_of_cycles=number_of_cycles)
+
+
+        self.WLT_image = data
+        self.sigWLTimageUpdated.emit()
 
         pass
 
 
 
+
+    def save_xy_data(self, colorscale_range=None, percentile_range=None):
+        """ Save the current confocal xy data to file.
+
+        Two files are created.  The first is the imagedata, which has a text-matrix of count values
+        corresponding to the pixel matrix of the image.  Only count-values are saved here.
+
+        The second file saves the full raw data with x, y, z, and counts at every pixel.
+
+        A figure is also saved.
+
+        @param: list colorscale_range (optional) The range [min, max] of the display colour scale (for the figure)
+
+        @param: list percentile_range (optional) The percentile range [min, max] of the color scale
+        """
+        filepath = self._save_logic.get_path_for_module('WhiteLightTransmission')
+        timestamp = datetime.datetime.now()
+        # Prepare the metadata parameters (common to both saved files):
+        parameters = OrderedDict()
+
+
+        # Prepare a figure to be saved
+        image_extent = [self.wl[0],
+                        self.wl[-1],
+                        self.pos_start,
+                        self.pos_stop]
+        axes = ['Wavelength', 'Position']
+
+
+        fig = self.draw_figure( data=self.WLT_image,
+                                image_extent=image_extent,
+                                scan_axis=axes,
+                                cbar_range=colorscale_range,
+                                percentile_range=percentile_range)
+
+
+        image_data = OrderedDict()
+        # FIXME: new text
+
+        image_data['Confocal pure XY scan image data without axis.\n'
+            'The upper left entry represents the signal at the upper left pixel position.\n'
+            'A pixel-line in the image corresponds to a row '
+            'of entries where the Signal is in counts/s:'] = self.WLT_image
+
+        filelabel = 'wlt_image'
+        self._save_logic.save_data(image_data,
+                                   filepath=filepath,
+                                   timestamp=timestamp,
+                                   parameters=parameters,
+                                   filelabel=filelabel,
+                                   fmt='%.6e',
+                                   delimiter='\t',
+                                   plotfig=fig)
+
+
+        self.signal_xy_data_saved.emit()
+        return
+
+
+    def draw_figure(self, data, image_extent, scan_axis=None, cbar_range=None, percentile_range=None):
+        """ Create a 2-D color map figure of the scan image.
+
+        @param: array data: The NxM array of count values from a scan with NxM pixels.
+
+        @param: list image_extent: The scan range in the form [hor_min, hor_max, ver_min, ver_max]
+
+        @param: list axes: Names of the horizontal and vertical axes in the image
+
+        @param: list cbar_range: (optional) [color_scale_min, color_scale_max].  If not supplied then a default of
+                                 data_min to data_max will be used.
+
+        @param: list percentile_range: (optional) Percentile range of the chosen cbar_range.
+
+        @param: list crosshair_pos: (optional) crosshair position as [hor, vert] in the chosen image axes.
+
+        @return: fig fig: a matplotlib figure object to be saved to file.
+        """
+
+        # If no colorbar range was given, take full range of data
+        if cbar_range is None:
+            cbar_range = [np.min(data), np.max(data)]
+
+        # Scale color values using SI prefix
+        prefix = ['', 'k', 'M', 'G']
+        prefix_count = 0
+        image_data = data
+        draw_cb_range = np.array(cbar_range)
+        image_dimension = image_extent.copy()
+
+        while draw_cb_range[1] > 1000:
+            image_data = image_data/1000
+            draw_cb_range = draw_cb_range/1000
+            prefix_count = prefix_count + 1
+
+        c_prefix = prefix[prefix_count]
+
+
+        # Scale axes values using SI prefix
+        axes_prefix = ['', 'm', r'$\mathrm{\mu}$', 'n']
+        x_prefix_count = 0
+        y_prefix_count = 0
+
+        while np.abs(image_dimension[1]-image_dimension[0]) < 1:
+            image_dimension[0] = image_dimension[0] * 1000.
+            image_dimension[1] = image_dimension[1] * 1000.
+            x_prefix_count = x_prefix_count + 1
+
+        while np.abs(image_dimension[3] - image_dimension[2]) < 1:
+            image_dimension[2] = image_dimension[2] * 1000.
+            image_dimension[3] = image_dimension[3] * 1000.
+            y_prefix_count = y_prefix_count + 1
+
+        x_prefix = axes_prefix[x_prefix_count]
+        y_prefix = axes_prefix[y_prefix_count]
+
+        # Use qudi style
+        plt.style.use(self._save_logic.mpl_qd_style)
+
+        # Create figure
+        fig, ax = plt.subplots()
+
+        # Create image plot
+        cfimage = ax.imshow(image_data.transpose(),
+                            cmap=plt.get_cmap('inferno'), # reference the right place in qd
+                            origin="lower",
+                            vmin=draw_cb_range[0],
+                            vmax=draw_cb_range[1],
+                            interpolation='none',
+                            extent=image_dimension
+
+                         )
+        ax.set_aspect('auto')
+        ax.set_xlabel(scan_axis[0] + '(' + x_prefix + 'm)')
+        ax.set_ylabel(scan_axis[1] + '(' + y_prefix + 'm)')
+        ax.spines['bottom'].set_position(('outward', 10))
+        ax.spines['left'].set_position(('outward', 10))
+        ax.spines['top'].set_visible(False)
+        ax.spines['right'].set_visible(False)
+        ax.get_xaxis().tick_bottom()
+        ax.get_yaxis().tick_left()
+
+        # Draw the colorbar
+        cbar = plt.colorbar(cfimage, shrink=0.8)#, fraction=0.046, pad=0.08, shrink=0.75)
+        cbar.set_label('Fluorescence (' + c_prefix + 'c/s)')
+
+        # remove ticks from colorbar for cleaner image
+        cbar.ax.tick_params(which=u'both', length=0)
+
+        # If we have percentile information, draw that to the figure
+        if percentile_range is not None:
+            cbar.ax.annotate(str(percentile_range[0]),
+                             xy=(-0.3, 0.0),
+                             xycoords='axes fraction',
+                             horizontalalignment='right',
+                             verticalalignment='center',
+                             rotation=90
+                             )
+            cbar.ax.annotate(str(percentile_range[1]),
+                             xy=(-0.3, 1.0),
+                             xycoords='axes fraction',
+                             horizontalalignment='right',
+                             verticalalignment='center',
+                             rotation=90
+                             )
+            cbar.ax.annotate('(percentile)',
+                             xy=(-0.3, 0.5),
+                             xycoords='axes fraction',
+                             horizontalalignment='right',
+                             verticalalignment='center',
+                             rotation=90
+                             )
+        return fig

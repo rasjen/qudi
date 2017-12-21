@@ -248,3 +248,45 @@ class AndorSpectrometerInterfuse(Base, SpectrometerInterface):
 
     def get_number_accumulations(self):
         return self.andor.get_number_accumulations()
+
+    def kinetic_scan(self, exposure_time=None, cycle_time=None, number_of_cycles=None):
+        """
+        Takes a kinetic scan
+
+        @param exposure_time: This is the time in seconds during which the CCD collects light prior to readout
+        @param cycle_time: This is the period in seconds between the start of individual scans
+        @param number_of_cycles: This is the number of scans (or ‘accumulated scans’) you specify to be in your series
+        @return:
+        """
+
+        # Full vertical binning
+        self.andor.set_read_mode(0)
+        # Set Kinetic scan
+        self.andor.set_acquisition_mode(3)
+        # Sets exposure time
+        if exposure_time is not None:
+            self.andor.set_exposure_time(exposure_time)
+        else:
+            self.log.warning('No exposure time given for kinetic scan')
+        # Sets number of accumulations to 1
+        self.andor.set_number_accumulations(1)
+
+        if cycle_time is not None:
+            self.andor.set_accumulation_cycle_time(cycle_time)
+        else:
+            self.log.warning('No cycle time givin for the kinetic scan')
+
+        if number_of_cycles is not None:
+            self.andor.set_number_kinetics(number_of_cycles)
+        else:
+            self.log.warning('No number given for then number cycles in kinetic scan')
+
+        #Take the data
+        data = self.acquisition_data()
+
+        # Reshape data
+        data = data.reshape(number_of_cycles, int(data.size/number_of_cycles)).transpose()
+
+        return data
+
+
