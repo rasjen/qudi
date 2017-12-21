@@ -105,7 +105,7 @@ class WLTGui(GUIBase):
 
         # Add the display item to the xy and xz ViewWidget, which was defined in the UI file.
         self._mw.transmission_map_PlotWidget.addItem(self.WLT_image)
-        self._mw.transmission_map_PlotWidget.setLabel(axis='left', text='Cavity length', units='um')
+        self._mw.transmission_map_PlotWidget.setLabel(axis='left', text='Cavity length', units='m')
         self._mw.transmission_map_PlotWidget.setLabel(axis='bottom', text='Wavelength', units='nm')
 
 
@@ -147,6 +147,13 @@ class WLTGui(GUIBase):
         self._mw.continue_pushButton.clicked.connect(self.continue_wlt)
         self._mw.set_temperature_pushButton.clicked.connect(self.set_temperature)
 
+        self._mw.transmission_map_cb_manual_RadioButton.clicked.connect(self.refresh_WLT_image)
+        self._mw.transmission_map_cb_centiles_RadioButton.clicked.connect(self.refresh_WLT_image)
+
+        self._mw.transmission_map_cb_min_DoubleSpinBox.valueChanged.connect(self.shortcut_to_xy_cb_manual)
+        self._mw.transmission_map_cb_max_DoubleSpinBox.valueChanged.connect(self.shortcut_to_xy_cb_manual)
+        self._mw.transmission_map_cb_low_percentile_DoubleSpinBox.valueChanged.connect(self.shortcut_to_xy_cb_centiles)
+        self._mw.transmission_map_cb_high_percentile_DoubleSpinBox.valueChanged.connect(self.shortcut_to_xy_cb_centiles)
 
         # Control/values-changed signals to logic
         self.sigStartWLTScan.connect(self._wlt_logic.start_wlt_measurement, QtCore.Qt.QueuedConnection)
@@ -160,10 +167,22 @@ class WLTGui(GUIBase):
         self._wlt_logic.sigParameterUpdated.connect(self.update_parameter,
                                                     QtCore.Qt.QueuedConnection)
         self._wlt_logic.sigSpectrumPlotUpdated.connect(self.refresh_spectrum_graph, QtCore.Qt.QueuedConnection)
+        self._wlt_logic.sigWLTimageUpdated.connect(self.refresh_WLT_image, QtCore.Qt.QueuedConnection)
 
 
         # Show the Main ODMR GUI:
         self.show()
+        # Update parameters
+        self._wlt_logic.get_temperature()
+        self.adjust_xy_window()
+
+    def on_deactivate(self):
+        """ Reverse steps of activation
+
+        @return int: error code (0:OK, -1:error)
+        """
+        self._mw.close()
+        return 0
 
     def show(self):
         """Make window visible and put it above all other windows. """
@@ -181,8 +200,7 @@ class WLTGui(GUIBase):
         """
         cb_range = self.get_matrix_cb_range()
         self.update_colorbar(cb_range)
-        matrix_image = self.WLT_image.image
-        self.WLT_image.setImage(image=matrix_image, levels=(cb_range[0], cb_range[1]))
+        self.WLT_image.setImage(image=self.WLT_image.image.transpose(), levels=(cb_range[0], cb_range[1]))
         return
 
     def update_colorbar(self, cb_range):
@@ -191,15 +209,18 @@ class WLTGui(GUIBase):
 
         @param list cb_range: List or tuple containing the min and max values for the cb range
         """
+
         self.transmission_map_cb.refresh_colorbar(cb_range[0], cb_range[1])
         return
 
-    def get_matrix_cb_range(self):
+    def get_matrix_cb_range(self, data=None):
         """
         Determines the cb_min and cb_max values for the matrix plot
         """
-        matrix_image = self.WLT_image.image
-
+        if data is None:
+            matrix_image = self.WLT_image.image
+        else:
+            matrix_image = data
         # If "Manual" is checked or the image is empty (all zeros), then take manual cb range.
         # Otherwise, calculate cb range from percentiles.
         if self._mw.transmission_map_cb_manual_RadioButton.isChecked() or np.max(matrix_image) < 0.1:
@@ -260,3 +281,57 @@ class WLTGui(GUIBase):
     def refresh_spectrum_graph(self, wavelengths, counts):
         self.spectrum_image.setData(x=wavelengths, y=counts)
 
+    def refresh_WLT_image(self):
+        """ Update the current XY image from the logic.
+
+        Everytime the scanner is scanning a line in xy the
+        image is rebuild and updated in the GUI.
+        """
+        self.WLT_image.getViewBox().updateAutoRange()
+
+        WLT_image_data = self._wlt_logic.WLT_image
+
+        cb_range = self.get_matrix_cb_range(WLT_image_data)
+
+        # Now update image with new color scale, and update colorbar
+        self.WLT_image.setImage(image=WLT_image_data.transpose(), levels=(cb_range[0], cb_range[1]))
+        self.update_colorbar(cb_range=cb_range)
+        self.adjust_xy_window()
+
+    def shortcut_to_xy_cb_manual(self):
+        """Someone edited the absolute counts range for the xy colour bar, better update."""
+        self._mw.transmission_map_cb_manual_RadioButton.setChecked(True)
+        self.refresh_WLT_image()
+
+    def shortcut_to_xy_cb_centiles(self):
+        """Someone edited the centiles range for the xy colour bar, better update."""
+        self._mw.transmission_map_cb_centiles_RadioButton.setChecked(True)
+        self.refresh_WLT_image()
+
+    def adjust_xy_window(self):
+        """ Fit the visible window in the xy scan to full view.
+
+        Be careful in using that method, since it uses the input values for
+        the ranges to adjust x and y. Make sure that in the process of the depth scan
+        no method is calling adjust_depth_window, otherwise it will adjust for you
+        a window which does not correspond to the scan!
+        """
+        # It is extremly crucial that before adjusting the window view and
+        # limits, to make an update of the current image. Otherwise the
+        # adjustment will just be made for the previous image.
+
+        xMin = self._wlt_logic.wl[0]
+        xMax = self._wlt_logic.wl[-1]
+        yMin = self._wlt_logic.pos_start
+        yMax = self._wlt_logic.pos_stop
+
+
+        #xy_viewbox.setLimits(xMin=xMin - (xMax - xMin) * 0.01,
+        #                         xMax=xMax + (xMax - xMin) * 0.01,
+        #                         yMin=yMin - (yMax - yMin) * 0.01,
+        #                         yMax=yMax + (yMax - yMin) * 0.01)
+
+        self.WLT_image.setRect(QtCore.QRectF(xMin, yMin, xMax - xMin, yMax - yMin))
+
+        #xy_viewbox.updateAutoRange()
+        #xy_viewbox.updateViewRange()
