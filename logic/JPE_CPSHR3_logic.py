@@ -41,7 +41,7 @@ class JPE_CPSHR3_logic(GenericLogic):
     _modtype = 'logic'
 
     # declare connectors
-    JPE_CPSHR3_logic_to_JPE_CPSHR3_hardware_connector = Connector(interface='JPE_CPSHR3_interface')
+    scanner2 = Connector(interface='EmptyInterface')
     savelogic = Connector(interface='SaveLogic')
 
     # status vars
@@ -51,7 +51,7 @@ class JPE_CPSHR3_logic(GenericLogic):
     def on_activate(self):
         """ Initialisation performed during activation of the module.
         """
-        self._JPE_CPSHR3_hardware = self.get_connector('JPE_CPSHR3_logic_to_JPE_CPSHR3_hardware_connector')
+        self._JPE_CPSHR3_hardware = self.get_connector('scanner2')
         self._save_logic = self.get_connector('savelogic')
 
         self.CLA1 = self._JPE_CPSHR3_hardware.CLA1
@@ -161,6 +161,9 @@ class JPE_CPSHR3_logic(GenericLogic):
 
     def move_xyz(self, delta_x, delta_y, delta_z):
         '''Move the sample using xyz coordinate system relative to the actual point'''
+        delta_x = delta_x * 1e-6
+        delta_y = delta_y * 1e-6
+        delta_z = delta_z * 1e-6
         # Calculation of the CLAs displacement
         CLA1_displacement, CLA2_displacement, CLA3_displacement = self.CLA_displacement(delta_x, delta_y, delta_z)
         # Set the CLA step to the closer integer number corresponding to the displacement
@@ -185,16 +188,21 @@ class JPE_CPSHR3_logic(GenericLogic):
         CLA2_cmd_line = 'MOV ' + self.edit_cmd_line(self.CLA2.get_ADDR(), self.CLA2.get_CH(), self.CLA2.get_TYPE(), self.CLA2.get_TEMP(), self.CLA2.get_DIR(), self.CLA1.get_FREQ(), self.CLA2.get_REL(), self.CLA2.get_STEPS())
         CLA3_cmd_line = 'MOV ' + self.edit_cmd_line(self.CLA3.get_ADDR(), self.CLA3.get_CH(), self.CLA3.get_TYPE(), self.CLA3.get_TEMP(), self.CLA3.get_DIR(), self.CLA1.get_FREQ(), self.CLA3.get_REL(), self.CLA3.get_STEPS())
         # Execute the comand lines
-        print(CLA1_cmd_line)
-        print(CLA2_cmd_line)
-        print(CLA3_cmd_line)
+        #while True:
+        #    time.sleep(0.1)
+        #    if self.get_CLA_STATUS(1) == 'Stopped' and self.get_CLA_STATUS(2) == 'Stopped' and self.get_CLA_STATUS(
+        #            3) == 'Stopped':
+        #        break
+        #print(CLA1_cmd_line)
+        #print(CLA2_cmd_line)
+        #print(CLA3_cmd_line)
         # self.exec_cmd_lines(CLA1_cmd_line, CLA2_cmd_line, CLA3_cmd_line)
 
     def tilt(self, direction, alpha):
         '''Tilt the sample mount by an angle in a chosen direction
         direction = 'up', 'down', 'left' or 'right'
         alpha = angle (unit : degree)
-        NOT WORKING PROPERLY : NEED TO BE MODIFIED
+        FIX ME : NEED TO BE MODIFIED
         '''
         alpha_rad = alpha*np.pi/180
         if direction == 'up':
@@ -245,58 +253,46 @@ class JPE_CPSHR3_logic(GenericLogic):
         print(CLA3_cmd_line)
         # self.exec_cmd_lines()
 
-    def set_snake_scan_begin_position(self, step, square_side):
-        '''The snake scan scan a square area around a central spot.
-        This function move the sample in order to start the snake scan on the top left corner
-        of the square area and make the sample move back to the central spot when the snake scan is finished'''
-        n = 0
-        while n <= (square_side/2)/step:
-            print(n)
-            self.move_xyz(-step, -step, 0)
-            while True:
-                time.sleep(self.sleep_time)
-                if self.get_CLA_STATUS(1) == 'Stopped' and self.get_CLA_STATUS(2) == 'Stopped' and self.get_CLA_STATUS(3) == 'Stopped':
-                    break
-            n += 1
 
-    def snake_scan(self, step, square_side):
-        '''Scan a square area around a central spot describing a snake movement'''
-        # Go to top left position of the square area
-        self.set_snake_scan_begin_position(step, square_side)
-        n = 0
-        n_lines = square_side/step
-        while n <= n_lines :
-            print('line = ', n)
-            if n % 2 == 0 :
-                self.scan_line_left_to_right(step, square_side)
-            else :
-                self.scan_line_right_to_left(step, square_side)
-            self.move_verticaly(step)
-            n += 1
-        self.set_snake_scan_begin_position(step, square_side)
 
-    def scan_line_left_to_right(self, step_x, range_x):
-        ''' Scan a line from left to right'''
-        n = 0
-        n_points = np.around(range_x/step_x,0)
-        while n <= n_points :
-            print('point = ', int(n))
-            self.move_xyz(step_x, 0, 0)
-            while True:
-                time.sleep(self.sleep_time)
-                if self.get_CLA_STATUS(1) == 'Stopped' and self.get_CLA_STATUS(2) == 'Stopped' and self.get_CLA_STATUS(3) == 'Stopped':
-                    break
-            n += 1
+    def move_CLA1(self, CLA1_displacement):
+        CLA1_displacement = CLA1_displacement*1e-6
+        self.CLA1.set_STEPS(np.abs(self.calc_STEPS_number(CLA1_displacement)))
+        if CLA1_displacement < 0 :
+            self.CLA1.set_DIR(1)
+        else:
+            self.CLA1.set_DIR(0)
+        CLA1_cmd_line = 'MOV ' + self.edit_cmd_line(self.CLA1.get_ADDR(), self.CLA1.get_CH(), self.CLA1.get_TYPE(), self.CLA1.get_TEMP(), self.CLA1.get_DIR(), self.CLA1.get_FREQ(), self.CLA1.get_REL(), self.CLA1.get_STEPS())
+        if self.CLA1.get_STEPS() == '0':
+            pass
+        else:
+            print(CLA1_cmd_line)
+            #  self._JPE_CPSHR3_hardware.do_command(CLA1_cmd_line)
 
-    def scan_line_right_to_left(self, step_x, range_x):
-        ''' Scan a line from right to left'''
-        n_points = np.around(range_x/step_x,0)
-        while n_points >= 0 :
-            print('point = ', int(n_points))
-            self.move_xyz(-step_x, 0, 0)
-            while True:
-                time.sleep(self.sleep_time)
-                if self.get_CLA_STATUS(1) == 'Stopped' and self.get_CLA_STATUS(2) == 'Stopped' and self.get_CLA_STATUS(3) == 'Stopped':
-                    break
-            n_points -= 1
+    def move_CLA2(self, CLA2_displacement):
+        CLA2_displacement = CLA2_displacement * 1e-6
+        self.CLA2.set_STEPS(np.abs(self.calc_STEPS_number(CLA2_displacement)))
+        if CLA2_displacement < 0 :
+            self.CLA2.set_DIR(1)
+        else:
+            self.CLA2.set_DIR(0)
+        CLA2_cmd_line = 'MOV ' + self.edit_cmd_line(self.CLA2.get_ADDR(), self.CLA2.get_CH(), self.CLA2.get_TYPE(), self.CLA2.get_TEMP(), self.CLA2.get_DIR(), self.CLA2.get_FREQ(), self.CLA2.get_REL(), self.CLA2.get_STEPS())
+        if self.CLA2.get_STEPS() == '0':
+            pass
+        else:
+            print(CLA2_cmd_line)
+            #  self._JPE_CPSHR3_hardware.do_command(CLA2_cmd_line)
 
+    def move_CLA3(self, CLA3_displacement):
+        CLA3_displacement = CLA3_displacement * 1e-6
+        self.CLA3.set_STEPS(np.abs(self.calc_STEPS_number(CLA3_displacement)))
+        if CLA3_displacement < 0 :
+            self.CLA3.set_DIR(1)
+        else:
+            self.CLA3.set_DIR(0)
+        CLA3_cmd_line = 'MOV ' + self.edit_cmd_line(self.CLA3.get_ADDR(), self.CLA3.get_CH(), self.CLA3.get_TYPE(), self.CLA3.get_TEMP(), self.CLA3.get_DIR(), self.CLA1.get_FREQ(), self.CLA3.get_REL(), self.CLA3.get_STEPS())
+        if self.CLA3.get_STEPS() == '0':
+            pass
+        else:
+            print(CLA3_cmd_line)
+            #  self._JPE_CPSHR3_hardware.do_command(CLA3_cmd_line)

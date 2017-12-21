@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-
 """
-This module contains the Qudi interface file for confocal scanner.
+Interface for logging small amounts of time series data to some place.
+First use case is Influxdb.
 
 Qudi is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -19,25 +19,12 @@ along with Qudi. If not, see <http://www.gnu.org/licenses/>.
 Copyright (c) the Qudi Developers. See the COPYRIGHT.txt file at the
 top-level directory of this distribution and at <https://github.com/Ulm-IQO/qudi/>
 """
+from enum import Enum
 
 import abc
 from core.util.interfaces import InterfaceMetaclass
 
 
-class JPE_CPSHR3_interface(metaclass=InterfaceMetaclass):
-    """ This is the Interface class to define the controls for the simple
-    microwave hardware.
-    """
-
-    _modtype = 'JPE_CPSHR3_interface'
+class EmptyInterface(metaclass=InterfaceMetaclass):
+    _modtype = 'EmptyInterface'
     _modclass = 'interface'
-
-    @abc.abstractmethod
-    def reset_hardware(self):
-        """ Resets the hardware, so the connection is lost and other programs
-            can access it.
-
-        @return int: error code (0:OK, -1:error)
-        """
-        pass
-
