@@ -38,19 +38,21 @@ class AndorSpectrometerInterfuse(Base, SpectrometerInterface):
         start_cooler = False
         init_shutter = False
 
-
         self.andor.set_temperature(-15)
         if start_cooler:
             self.andor.cooler_on()
 
-        # //Set Read Mode to --Image--
-        self.andor.set_read_mode(4)
+        # //Set Read Mode to --FVB --
+        self.andor.set_read_mode(0)
 
         # //Set Acquisition mode to --Single scan--
         self.andor.set_acquisition_mode(1)
 
+        # Set Exposure time
+        self.set_exposure_time(exposure_time=0.02)
+
         # //Get Detector dimensions
-        self._width, self._height = self.andor.hend, self.andor.vend
+        self._width, self._height = self.andor.get_detector()
         # print((self._width, self._height))
         self.min_width = 1
         self.max_width = self._width
@@ -91,8 +93,8 @@ class AndorSpectrometerInterfuse(Base, SpectrometerInterface):
             # print("End AndorSpectrometer.__del__")
 
     def on_deactivate(self):
-        self.andor.shutdown()
-        self.shamrock.shutdown()
+        self.andor.on_deactivate()
+        self.shamrock.on_deactivate()
         self.closed = True
 
     def set_temperature(self, temp):
@@ -138,29 +140,27 @@ class AndorSpectrometerInterfuse(Base, SpectrometerInterface):
             self.calc_single_track_slit_pixels()
             self.andor.set_image(1, 1, 1, self._width, self._hstart, self._hstop)
 
-    def get_wavelength(self):
-        self.shamrock.get_calibration(self._width)
+    def get_wavelengths(self):
+        self._wl = np.asarray(self.shamrock.get_calibration())
         return self._wl
 
     def set_full_image(self):
         self.andor.set_image(1, 1, 1, self._width, 1, self._height)
         self.mode = 'Image'
 
-    def take_full_image(self):
-        return self.take_image(self._width, self._height)
-
-    def take_image(self, width, height):
+    def acquisition_data(self):
         self.andor.start_acquisition()
         acquiring = True
         while acquiring:
             status = self.andor.get_status()
-            if status == 20073:
+            self.log.info(status)
+            if status == 'DRV_IDLE':
                 acquiring = False
-            elif not status == 20072:
+                continue
+            elif not status == 'DRV_ACQUIRING':
                 return None
-        data = self.andor.get_acquired_data(width, height)
-        # return data.transpose()
-        return data
+        data = self.andor.get_acquired_data()
+        return np.asarray(data)
 
     def set_centre_wavelength(self, wavelength):
         minwl, maxwl = self.shamrock.get_wavelength_limits(self.shamrock.get_grating())
@@ -229,24 +229,22 @@ class AndorSpectrometerInterfuse(Base, SpectrometerInterface):
         self.mode = 'SingleTrack'
 
     def take_single_spectrum(self):
-        self.andor.start_acquisition()
-        acquiring = True
-        while acquiring:
-            status = self.andor.get_status()
-            if status == 20073:
-                acquiring = False
-            elif not status == 20072:
-                print(self.andor.ERROR_CODE[status])
-                return np.zeros((self._width, 7))
-        data = self.andor.get_acquired_data(self._width, (self._hstop - self._hstart) + 1)
-        # data = np.mean(data, 1)
-        data = data[:, 3:]  # throw away 'bad rows', see CalcSingleTrackSlitPixels(self) for details
-        print('Acquired Data: ' + str(data.shape))
-        # return data[:, 3:]  # throw away 'bad rows', see CalcSingleTrackSlitPixels(self) for details
+        self.andor.set_read_mode(0)
+        self.andor.set_acquisition_mode(1)
+        data = self.acquisition_data()
         return data
 
     def set_exposure_time(self, exposure_time):
+        """
+        Sets exposure time for the camera
+        
+        :param exposure_time: time in seconds 
+        :return: 
+        """
         self.andor.set_exposure_time(exposure_time)
 
     def get_exposure_time(self):
         return self.andor.get_exposure_time()
+
+    def get_number_accumulations(self):
+        return self.andor.get_number_accumulations()

@@ -72,33 +72,15 @@ class WLTLogic(GenericLogic):
         self._scanning_device.on_deactivate()
 
 
-    def start_wlt_measurement(self):
+    def start_wlt_measurement(self, frequency, pos_start, pos_stop):
         '''
         Start the white light transmission measurement
 
         :return: 
         '''
-        self.line_counter = 0
 
-        self.lock()
-
-        self._scanning_device.lock()
-        if self.initialize_image() < 0:
-            self._scanning_device.unlock()
-            self.unlock()
-            return -1
-
-        clock_status = self._scanning_device.set_up_scanner_clock(
-            clock_frequency=self._clock_frequency)
-
-
-        if clock_status < 0:
-            self._scanning_device.unlock()
-            self.unlock()
-            self.set_position('scanner')
-            return -1
-
-        scanner_status = self._scanning_device.set_up_scanner()
+        self._sweep(frequency, pos_start, pos_stop)
+        self._start_spectrometer_measurements()
 
         pass
 
@@ -135,7 +117,7 @@ class WLTLogic(GenericLogic):
 
         :return: 
         '''
-        self.wl = self._spectrometer.get_wavelength()
+        self.wl = self._spectrometer.get_wavelengths()
 
         self.WLT_image = np.zeros([self.wl.size, self.number_of_steps])
         pass
@@ -146,7 +128,7 @@ class WLTLogic(GenericLogic):
         
         :return: 
         """
-        self.wl = self._spectrometer.get_wavelength()
+        self.wl = self._spectrometer.get_wavelengths()
         self.counts = 1e6*np.random.rand(self.wl.size)
         pass
 
@@ -240,5 +222,51 @@ class WLTLogic(GenericLogic):
 
     def take_single_spectrum(self):
         self.counts = self._spectrometer.take_single_spectrum()
+        self.wl = self._spectrometer.get_wavelengths()
         self.sigSpectrumPlotUpdated.emit(self.wl, self.counts)
+
+    def _sweep(self, frequency, pos_start, pos_stop):
+        """
+        
+        :param frequency: 
+        :param pos_start: 
+        :param pos_stop: 
+        :return: 
+        """
+
+        start_volt = self._scanning_devices._cavity_position_to_volt(np.array(pos_start))
+        stop_volt = self._scanning_devices._cavity_position_to_volt(np.array(pos_stop))
+
+        self._scanning_devices.cavity_set_voltage(start_volt)
+        sleep(1.0)
+        RepOfSweep = 1
+
+        self._scanning_devices.set_up_sweep(start_volt, stop_volt, frequency, RepOfSweep)
+
+        sleep(0.5)
+        self._scanning_devices.start_sweep()
+
+        sleep(4.0)
+        self._scanning_devices.close_sweep()
+
+    def set_cavity_position(self, position):
+        """
+        set the position of the cavity 
+        
+        :param position: 
+        :return: 
+        """
+        self._scanning_devices.cavity_set_position(position)
+
+    def _start_spectrometer_measurements(self):
+        """
+        Takes data while the cavity is besing scanned
+        
+        :return: 
+        """
+
+
+        pass
+
+
 

@@ -182,7 +182,7 @@ class OptimizerSettingDialog(QtWidgets.QDialog):
         super(OptimizerSettingDialog, self).__init__()
         uic.loadUi(ui_file, self)
 
-
+|
 class ConfocalGui(GUIBase):
 
     """ Main Confocal Class for xy and depth scans.
@@ -1781,7 +1781,6 @@ class ConfocalGui(GUIBase):
 
         self.roi_xy.setPos([x_value, y_value], update=True)
 
-
     def put_cursor_in_depth_scan(self):
         """Put the depth crosshair back if it is outside of the visible range. """
         view_x_min = self._scanning_logic.image_x_range[0]
@@ -2159,7 +2158,6 @@ class ConfocalGui(GUIBase):
 
         self._mw.action_zoom.setChecked(False)
 
-
     def reset_depth_imagerange(self):
         """ Reset the imagerange if autorange was pressed.
 
@@ -2240,4 +2238,3 @@ class ConfocalGui(GUIBase):
         """
         if tag == 'logic':
             self.disable_scan_actions()
-
