@@ -180,6 +180,7 @@ class NICard(Base, SlowCounterInterface, ConfocalScannerInterface, ODMRCounterIn
         self._cavity_voltage_range = []
         self._cavity_position_range = []
         self._current_cavity_position = []
+        self.cavity_channel = []
 
         if 'cavity_ao' in config.keys():
             self.cavity_channel = config['cavity_ao']
@@ -383,9 +384,10 @@ class NICard(Base, SlowCounterInterface, ConfocalScannerInterface, ODMRCounterIn
 
         # Analog output is always needed and it does not interfere with the
         # rest, so start it always and leave it running
-        if self._start_cavity_analog_output() < 0:
-            self.log.error('Failed to start analog output.')
-            raise Exception('Failed to start NI Card module due to analog output failure.')
+        if len(self.cavity_channel) > 0:
+            if self._start_cavity_analog_output() < 0:
+                self.log.error('Failed to start analog output.')
+                raise Exception('Failed to start NI Card module due to analog output failure.')
 
 
     def on_deactivate(self):
