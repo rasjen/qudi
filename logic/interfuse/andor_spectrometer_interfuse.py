@@ -16,8 +16,9 @@ class AndorSpectrometerInterfuse(Base, SpectrometerInterface):
 
     verbosity = 2
     _max_slit_width = 2500  # maximal width of slit in um
-    exp_time = 1.0
+    exp_time = 0.02
     cam = None
+    offset = 40
     spec = None
     closed = False
     mode = None
@@ -48,9 +49,6 @@ class AndorSpectrometerInterfuse(Base, SpectrometerInterface):
         # //Set Acquisition mode to --Single scan--
         self.andor.set_acquisition_mode(1)
 
-        # Set Exposure time
-        self.set_exposure_time(exposure_time=0.02)
-
         # //Get Detector dimensions
         self._width, self._height = self.andor.get_detector()
         # print((self._width, self._height))
@@ -69,6 +67,9 @@ class AndorSpectrometerInterfuse(Base, SpectrometerInterface):
 
         # shamrock = ShamrockSDK()
 
+        # Used for calibration
+        self.shamrock.set_grating_offset(self.offset)
+
         self.shamrock.set_number_pixels(self._width)
 
         self.shamrock.set_pixel_width(self._pixelwidth)
@@ -77,25 +78,12 @@ class AndorSpectrometerInterfuse(Base, SpectrometerInterface):
         self.andor.set_exposure_time(self.exp_time)
 
     def __del__(self):
-        if not self.closed:
-            self.andor.shutdown()
-            self.shamrock.shutdown()
-            # print("Begin AndorSpectrometer.__del__")
-            # if not self.closed:
-            #     try:
-            #         andor.Shutdown()
-            #     except (AttributeError, TypeError) as e:
-            #         print(e)
-            #     try:
-            #         shamrock.Shutdown()
-            #     except (AttributeError, TypeError) as e:
-            #         print(e)
-            # print("End AndorSpectrometer.__del__")
+        self.andor.shutdown()
+        self.shamrock.shutdown()
 
     def on_deactivate(self):
         self.andor.on_deactivate()
         self.shamrock.on_deactivate()
-        self.closed = True
 
     def set_temperature(self, temp):
         self.andor.set_temperature(temp)

@@ -211,7 +211,7 @@ class Shamrock(Base, SpectrometerInterface):
 
     def get_grating_offset(self):
         if self.current_grating == None:
-            self.getGrating()
+            self.get_grating()
         self.GratingOffset = c_int()  # not this is in steps, so int
         error = self.dll.ShamrockGetGratingOffset(self.current_shamrock, self.current_grating,
                                                   byref(self.GratingOffset))
@@ -230,7 +230,7 @@ class Shamrock(Base, SpectrometerInterface):
         return self.DetectorOffset
 
     def set_detector_offset(self, offset):
-        error = self.dll.ShamrockSetDetectorOffset(self.current_shamrock, self.current_grating, c_int(offset))
+        error = self.dll.ShamrockSetDetectorOffset(self.current_shamrock, self.current_grating, c_long(offset))
         self.verbose(ERROR_CODE[error], sys._getframe().f_code.co_name)
         return ERROR_CODE[error]
 
