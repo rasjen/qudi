@@ -18,7 +18,7 @@ class AndorSpectrometerInterfuse(Base, SpectrometerInterface):
     _max_slit_width = 2500  # maximal width of slit in um
     exp_time = 0.02
     cam = None
-    offset = 40
+
     spec = None
     closed = False
     mode = None
@@ -30,6 +30,7 @@ class AndorSpectrometerInterfuse(Base, SpectrometerInterface):
         self._wl = None
         self._hstart = 128 - 5
         self._hstop = 128 + 5
+        self.offset = 40
 
 
     def on_activate(self):
@@ -76,6 +77,9 @@ class AndorSpectrometerInterfuse(Base, SpectrometerInterface):
 
         # //Set initial exposure time
         self.andor.set_exposure_time(self.exp_time)
+
+        # Change orientation of image
+        self.andor.set_image_flip(horizontal=1, vertical=0)
 
     def __del__(self):
         self.andor.shutdown()

@@ -363,9 +363,8 @@ class Andor(Base, SpectrometerInterface):
         return ctemperature.value
 
     def set_temperature(self,temperature):
-        #ctemperature = c_int(temperature)
-        #error = self.dll.SetTemperature(byref(ctemperature))
-        error = self.dll.SetTemperature(temperature)
+        ctemperature = c_int(temperature)
+        error = self.dll.SetTemperature(ctemperature)
         self.set_T = temperature
         self.verbose(ERROR_CODE[error], sys._getframe().f_code.co_name)
         return ERROR_CODE[error]
@@ -395,3 +394,17 @@ class Andor(Base, SpectrometerInterface):
         error = self.dll.GetDetector(byref(width), byref(height))
         self.verbose(ERROR_CODE[error], "GetDetector")
         return width, height
+
+    def set_image_flip(self, horizontal=1, vertical=0):
+        """
+        Flips the image of spectrometer. For some reason it seems that the horizontal need to be flipped
+
+        @param horizontal:
+        @param vertical:
+        @return:
+        """
+        chorizontal = c_int(horizontal)
+        cvertical = c_int(vertical)
+        error = self.dll.SetImageFlip(chorizontal,cvertical)
+        self.verbose(ERROR_CODE[error], "SetImageFlip")
+        return ERROR_CODE[error]
