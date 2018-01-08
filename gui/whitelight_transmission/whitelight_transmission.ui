@@ -245,10 +245,18 @@
       </widget>
      </item>
      <item row="3" column="1">
-      <widget class="QDoubleSpinBox" name="scan_speed_doubleSpinBox"/>
+      <widget class="QDoubleSpinBox" name="scan_speed_doubleSpinBox">
+       <property name="value">
+        <double>1.000000000000000</double>
+       </property>
+      </widget>
      </item>
      <item row="1" column="1">
-      <widget class="QDoubleSpinBox" name="stop_position_doubleSpinBox"/>
+      <widget class="QDoubleSpinBox" name="stop_position_doubleSpinBox">
+       <property name="value">
+        <double>2.000000000000000</double>
+       </property>
+      </widget>
      </item>
      <item row="4" column="1">
       <widget class="QPushButton" name="stop_pushButton">
@@ -274,6 +282,9 @@
        </property>
        <property name="maximum">
         <double>1000.000000000000000</double>
+       </property>
+       <property name="value">
+        <double>10.000000000000000</double>
        </property>
       </widget>
      </item>
@@ -301,12 +312,18 @@
        <property name="decimals">
         <number>0</number>
        </property>
+       <property name="value">
+        <double>1.000000000000000</double>
+       </property>
       </widget>
      </item>
      <item row="4" column="1">
       <widget class="QDoubleSpinBox" name="exposure_time_doubleSpinBox">
        <property name="decimals">
         <number>3</number>
+       </property>
+       <property name="value">
+        <double>1.000000000000000</double>
        </property>
       </widget>
      </item>
