@@ -5,6 +5,7 @@ from ctypes import *
 import sys
 import numpy as np
 from core.module import Connector
+from time import sleep
 
 class AndorSpectrometerInterfuse(Base, SpectrometerInterface):
 
@@ -133,7 +134,12 @@ class AndorSpectrometerInterfuse(Base, SpectrometerInterface):
             self.andor.set_image(1, 1, 1, self._width, self._hstart, self._hstop)
 
     def get_wavelengths(self):
-        self._wl = np.asarray(self.shamrock.get_calibration())
+        """
+        Get the wavelenghts and converts them to nanometer
+
+        @return:
+        """
+        self._wl = np.asarray(self.shamrock.get_calibration())*1.0e-9
         return self._wl
 
     def set_full_image(self):
@@ -144,13 +150,17 @@ class AndorSpectrometerInterfuse(Base, SpectrometerInterface):
         self.andor.start_acquisition()
         acquiring = True
         while acquiring:
+            sleep(1.0)
             status = self.andor.get_status()
             self.log.info(status)
             if status == 'DRV_IDLE':
                 acquiring = False
                 continue
-            elif not status == 'DRV_ACQUIRING':
+            elif status == 'DRV_ACQUIRING':
+                continue
+            else: #not status == 'DRV_ACQUIRING':
                 return None
+
         data = self.andor.get_acquired_data()
         return np.asarray(data)
 

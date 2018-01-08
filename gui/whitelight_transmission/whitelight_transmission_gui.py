@@ -106,12 +106,12 @@ class WLTGui(GUIBase):
         # Add the display item to the xy and xz ViewWidget, which was defined in the UI file.
         self._mw.transmission_map_PlotWidget.addItem(self.WLT_image)
         self._mw.transmission_map_PlotWidget.setLabel(axis='left', text='Cavity length', units='m')
-        self._mw.transmission_map_PlotWidget.setLabel(axis='bottom', text='Wavelength', units='nm')
+        self._mw.transmission_map_PlotWidget.setLabel(axis='bottom', text='Wavelength', units='m')
 
 
         self._mw.spectrum_PlotWidget.addItem(self.spectrum_image)
         self._mw.spectrum_PlotWidget.setLabel(axis='left', text='Counts', units='Counts/s')
-        self._mw.spectrum_PlotWidget.setLabel(axis='bottom', text='Wavelength', units='nm')
+        self._mw.spectrum_PlotWidget.setLabel(axis='bottom', text='Wavelength', units='m')
         self._mw.spectrum_PlotWidget.showGrid(x=True, y=True, alpha=0.8)
 
         # Get the colorscales at set LUT
@@ -136,6 +136,7 @@ class WLTGui(GUIBase):
         self._mw.start_position_doubleSpinBox.editingFinished.connect(self.changed_pos_params)
         self._mw.stop_position_doubleSpinBox.editingFinished.connect(self.changed_pos_params)
         self._mw.scan_speed_doubleSpinBox.editingFinished.connect(self.changed_pos_params)
+        self._mw.number_of_steps_doubleSpinBox.editingFinished.connect(self.changed_pos_params)
 
         self._mw.averages_doubleSpinBox.editingFinished.connect(self.changed_spectrometer_params)
         self._mw.exposure_time_doubleSpinBox.editingFinished.connect(self.changed_spectrometer_params)
@@ -244,12 +245,18 @@ class WLTGui(GUIBase):
         self._wlt_logic.set_exposure_time(self._mw.exposure_time_doubleSpinBox.value())
         self._wlt_logic.set_number_accumulations(self._mw.averages_doubleSpinBox.value())
 
+
     def changed_pos_params(self):
-        pass
+        pos_start = self._mw.start_position_doubleSpinBox.value()*1e-6
+        pos_stop = self._mw.stop_position_doubleSpinBox.value()*1e-6
+        number_of_steps = self._mw.number_of_steps_doubleSpinBox.value()
+        freq = 1/self._mw.scan_speed_doubleSpinBox.value()
+        self._wlt_logic.set_positions_parameters(pos_start=pos_start, pos_stop=pos_stop,
+                                                 number_of_steps=number_of_steps, frequency=freq)
 
     def run_wlt(self):
         """ Starts the WLT"""
-        self.sigStartWLTScan.emit(1/self._mw.scan_speed_doubleSpinBox.value(),
+        self.sigStartWLTScan.emit(self._mw.scan_speed_doubleSpinBox.value(),
                                   self._mw.start_position_doubleSpinBox.value()*1e-6,
                                   self._mw.stop_position_doubleSpinBox.value()*1e-6)
 

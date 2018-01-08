@@ -75,7 +75,7 @@ class WLTLogic(GenericLogic):
         @return int: error code (0:OK, -1:error)
         """
         self._spectrometer.on_deactivate()
-        self._scanning_device.on_deactivate()
+        self._scanning_devices.on_deactivate()
 
 
     def start_wlt_measurement(self, frequency, pos_start, pos_stop):
@@ -84,6 +84,8 @@ class WLTLogic(GenericLogic):
 
         :return: 
         '''
+        self.pos_start = pos_start
+        self.pos_stop = pos_stop
         self.scan_frequency = frequency
         self._sweep(frequency, pos_start, pos_stop)
 
@@ -91,10 +93,16 @@ class WLTLogic(GenericLogic):
         self._scanning_devices.start_sweep()
         self._start_spectrometer_measurements()
 
-        sleep(10.0)
-        self._scanning_devices.close_sweep()
+        sleep(1/frequency+5)
+        self._scanning_devices.stop_sweep()
 
         pass
+
+    def set_positions_parameters(self, pos_start, pos_stop, number_of_steps, frequency):
+        self.pos_start = pos_start
+        self.pos_stop = pos_stop
+        self.number_of_steps = number_of_steps
+        self.scan_frequency = frequency
 
     def stop_wlt_measurement(self):
         '''
@@ -255,8 +263,6 @@ class WLTLogic(GenericLogic):
 
         self._scanning_devices.set_up_sweep(start_volt, stop_volt, frequency, RepOfSweep)
 
-
-
     def set_cavity_position(self, position):
         """
         set the position of the cavity 
@@ -273,21 +279,20 @@ class WLTLogic(GenericLogic):
         :return: 
         """
 
-        number_of_cycles = self.number_of_steps
+        number_of_cycles = int(self.number_of_steps)
         cycle_time = 0.5 * 1/self.scan_frequency / self.number_of_steps
         exposure_time = self.exposure_time
+
+        if exposure_time > cycle_time:
+            self.log.warning('Exposure is larger than the cycle time. Setting cycle time equal to exposure time')
+            cycle_time = exposure_time
 
         data = self._spectrometer.kinetic_scan(exposure_time=exposure_time, cycle_time=cycle_time,
                                                number_of_cycles=number_of_cycles)
 
-
         self.WLT_image = data
         self.sigWLTimageUpdated.emit()
-
         pass
-
-
-
 
     def save_xy_data(self, colorscale_range=None, percentile_range=None):
         """ Save the current confocal xy data to file.
@@ -307,6 +312,11 @@ class WLTLogic(GenericLogic):
         timestamp = datetime.datetime.now()
         # Prepare the metadata parameters (common to both saved files):
         parameters = OrderedDict()
+
+        parameters['wavelength min (m)'] = self.wl[0]
+        parameters['wavelength max (m)'] = self.wl[-1]
+        parameters['pos min (m)'] = self.pos_start
+        parameters['pos max (m)'] = self.pos_stop
 
 
         # Prepare a figure to be saved

@@ -220,7 +220,8 @@ class Andor(Base, SpectrometerInterface):
         return ERROR_CODE[error]
 
     def set_number_kinetics(self, numKin):
-        error = self.dll.SetNumberKinetics(numKin)
+        cnumKin = c_int(int(numKin))
+        error = self.dll.SetNumberKinetics(cnumKin)
         self.verbose(ERROR_CODE[error], sys._getframe().f_code.co_name)
         self.scans = numKin
         return ERROR_CODE[error]
@@ -363,7 +364,7 @@ class Andor(Base, SpectrometerInterface):
         return ctemperature.value
 
     def set_temperature(self,temperature):
-        ctemperature = c_int(temperature)
+        ctemperature = c_int(int(temperature))
         error = self.dll.SetTemperature(ctemperature)
         self.set_T = temperature
         self.verbose(ERROR_CODE[error], sys._getframe().f_code.co_name)
