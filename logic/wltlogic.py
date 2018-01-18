@@ -26,6 +26,7 @@ class WLTLogic(GenericLogic):
     nicard = Connector(interface='ConfocalScannerInterface')
     spectrometer = Connector(interface='spectrometerInterface')
     savelogic = Connector(interface='SaveLogic')
+    scopelogic = Connector(interface='ScopeLogic')
 
     # signals for WLT
     sigNextLine = QtCore.Signal()
@@ -52,6 +53,7 @@ class WLTLogic(GenericLogic):
         self._scanning_devices = self.get_connector('nicard')
         self._save_logic = self.get_connector('savelogic')
         self._spectrometer = self.get_connector('spectrometer')
+        self._scope = self.get_connector('scopelogic')
 
         self.target_temperature = -999
         self.current_temperature = -999
@@ -84,6 +86,8 @@ class WLTLogic(GenericLogic):
 
         :return: 
         '''
+
+        self.log.info('Measurement started')
         self.pos_start = pos_start
         self.pos_stop = pos_stop
         self.scan_frequency = frequency
@@ -93,8 +97,9 @@ class WLTLogic(GenericLogic):
         self._scanning_devices.start_sweep()
         self._start_spectrometer_measurements()
 
-        sleep(1/frequency+5)
+        sleep(1/frequency)
         self._scanning_devices.stop_sweep()
+        self.log.info('Measurement finished')
 
         pass
 

@@ -2379,7 +2379,6 @@ class NICard(Base, SlowCounterInterface, ConfocalScannerInterface, ODMRCounterIn
             return -1
         return 0
 
-
     def start_ramp(self):
         """Actually start the preconfigured counter task
         @return int: error code (0:OK, -1:error)
