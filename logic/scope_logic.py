@@ -5,6 +5,7 @@ from logic.generic_logic import GenericLogic
 from core.util.mutex import Mutex
 import matplotlib.pyplot as plt
 import time
+from core.module import Connector
 
 class ScopeLogic(GenericLogic):
     """
@@ -13,10 +14,10 @@ class ScopeLogic(GenericLogic):
     _modclass = 'scopelogic'
     _modtype = 'logic'
     ## declare connectors
-    _connectors = {
-        'scope': 'ScopeInterface',
-        'savelogic': 'SaveLogic'
-    }
+
+
+    scope = Connector(interface = 'ScopeInterface')
+    savelogic = Connector(interface='SaveLogic')
 
     # General Signals, used everywhere:
     sigIdleStateChanged = QtCore.Signal(bool)

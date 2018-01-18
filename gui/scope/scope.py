@@ -9,7 +9,7 @@ import numpy as np
 import os
 import matplotlib.image as mpimg
 import matplotlib.pyplot as plt
-
+from core.module import Connector
 
 
 class ScopeWindow(QtWidgets.QMainWindow):
@@ -32,7 +32,7 @@ class ScopeGUI(GUIBase):
     _modclass = 'scopegui'
     _modtype = 'gui'
     ## declare connectors
-    _connectors = {'scopelogic': 'ScopeLogic'}
+    scopelogic = Connector(interface='ScopeLogic')
 
     sigStart = QtCore.Signal()
     sigStop = QtCore.Signal()
