@@ -1,4 +1,4 @@
-from core.base import Base
+from core.module import Base
 from interface.scope_interface import ScopeInterface
 import visa
 import string
