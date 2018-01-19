@@ -254,6 +254,9 @@ class Scope3024T(Base, ScopeInterface):
     def get_trigger_level(self):
         return float(self._do_query(':TRIGger:{}:LEVel?'.format(self.get_trigger_mode())).strip())
 
+    def force_trigger(self):
+         self._do_command(':TRIGger:FORCe')
+
     # Time
     def set_time_scale(self, value):
         self._do_command(':TIMebase:SCALe {}'.format(value))

@@ -1,5 +1,7 @@
 from qtpy import QtCore
 import numpy as np
+import datetime
+from collections import OrderedDict
 
 from logic.generic_logic import GenericLogic
 from core.util.mutex import Mutex
@@ -275,6 +277,9 @@ class ScopeLogic(GenericLogic):
     def get_trigger_level(self):
         return self._scope.get_trigger_level()
 
+    def force_trigger(self):
+        self._scope.force_trigger()
+
 
 
     def get_save_data_points_number(self):
@@ -310,11 +315,20 @@ class ScopeLogic(GenericLogic):
         return data
 
     def save_data(self):
-        self.time = time.gmtime()
-        filename = 'scope_trace' + '_' + str(self.time[0]) + '_' + str(self.time[1])+ '_' + str(self.time[2])+ '_' + str(self.time[3]+2)+ '_' + str(self.time[4])+ '_' + str(self.time[5]) + '.txt'
-        data_to_save = self.get_data()
-        print(type(data_to_save))
+        timestamp = datetime.datetime.now()
+        #filename = 'scope_trace' + '_' + str(self.time[0]) + '_' + str(self.time[1])+ '_' + str(self.time[2])+ '_' + str(self.time[3]+2)+ '_' + str(self.time[4])+ '_' + str(self.time[5]) + '.txt'
+        data_to_save = OrderedDict()
+        data_to_save['scope_data'] = self.get_data()
+        parameters = OrderedDict()
+        #parameters['wavelength min (m)'] = self.wl[0]
+        filelabel = 'wlt_image'
         filepath = self._save_logic.get_path_for_module(module_name='scope')
-        np.savetxt(filepath + filename, data_to_save, fmt='%.18e', delimiter=' ', newline='\n', header='', footer='', comments='# ')
+        self._save_logic.save_data(data_to_save,
+                                   filepath=filepath,
+                                   timestamp=timestamp,
+                                   parameters=parameters,
+                                   filelabel=filelabel,
+                                   fmt='%.6e',
+                                   delimiter='\t')
         self.log.info('Scope Trace saved to:{0}'.format(filepath))
         return 0
