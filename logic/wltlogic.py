@@ -4,7 +4,7 @@ import datetime
 import numpy as np
 import os
 from itertools import product
-from time import sleep, time
+from time import sleep
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 
@@ -70,6 +70,10 @@ class WLTLogic(GenericLogic):
         self.initialize_image()
         self.initialize_spectrum_plot()
 
+        self._spectrometer.sigMeasurementStarted.connect(self._scanning_devices.start_sweep)
+        self._spectrometer.sigMeasurementStarted.connect(self._scope.force_trigger)
+
+
 
     def on_deactivate(self):
         """ Reverse steps of activation
@@ -94,11 +98,12 @@ class WLTLogic(GenericLogic):
         self._sweep(frequency, pos_start, pos_stop)
 
         sleep(0.5)
-        self._scanning_devices.start_sweep()
-        self._start_spectrometer_measurements()
+        self._scope.single_acquisition()
+        self._start_spectrometer_measurements(sweep_start=True)
 
         sleep(1/frequency)
         self._scanning_devices.stop_sweep()
+        self._scope.save_data()
         self.log.info('Measurement finished')
 
         pass
@@ -112,7 +117,7 @@ class WLTLogic(GenericLogic):
     def stop_wlt_measurement(self):
         '''
         Stops the white light transmission measurement
-        :return: 
+        :return:
         '''
         pass
 
@@ -120,21 +125,9 @@ class WLTLogic(GenericLogic):
         '''
         Continues the white light transmission measurement
 
-        :return: 
+        :return:
         '''
         pass
-
-    def setup_wlt_measurement(self, scan_frequency, scan_range, measurement_frequency):
-        '''
-
-        :param scan_frequency: How fast is the cavity length swept
-        :param scan_range: What is the min and max cavity position during the measurement
-        :param exposure_time: Exposure time of the camera
-        :param measurement_frequency: How fast are we going to measure
-        :return: 
-        '''
-        pass
-
 
     def initialize_image(self):
         '''
@@ -277,7 +270,7 @@ class WLTLogic(GenericLogic):
         """
         self._scanning_devices.cavity_set_position(position)
 
-    def _start_spectrometer_measurements(self):
+    def _start_spectrometer_measurements(self, sweep_start=False):
         """
         Takes data while the cavity is besing scanned
         
@@ -285,7 +278,7 @@ class WLTLogic(GenericLogic):
         """
 
         number_of_cycles = int(self.number_of_steps)
-        cycle_time = 0.5 * 1/self.scan_frequency / self.number_of_steps
+        cycle_time = 0.55 * 1/self.scan_frequency / self.number_of_steps
         exposure_time = self.exposure_time
 
         if exposure_time > cycle_time:
@@ -293,7 +286,7 @@ class WLTLogic(GenericLogic):
             cycle_time = exposure_time
 
         data = self._spectrometer.kinetic_scan(exposure_time=exposure_time, cycle_time=cycle_time,
-                                               number_of_cycles=number_of_cycles)
+                                               number_of_cycles=number_of_cycles, sweep_start=sweep_start)
 
         self.WLT_image = data
         self.sigWLTimageUpdated.emit()
@@ -353,7 +346,7 @@ class WLTLogic(GenericLogic):
                                    timestamp=timestamp,
                                    parameters=parameters,
                                    filelabel=filelabel,
-                                   fmt='%.6e',
+                                   fmt='%.8e',
                                    delimiter='\t',
                                    plotfig=fig)
 

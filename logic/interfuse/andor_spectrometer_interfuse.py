@@ -6,6 +6,7 @@ import sys
 import numpy as np
 from core.module import Connector
 from time import sleep
+from qtpy import QtCore
 
 class AndorSpectrometerInterfuse(Base, SpectrometerInterface):
 
@@ -24,6 +25,8 @@ class AndorSpectrometerInterfuse(Base, SpectrometerInterface):
     closed = False
     mode = None
     single_track_minimum_vertical_pixels = 0
+
+    sigMeasurementStarted = QtCore.Signal()
 
     def __init__(self, config, **kwargs):
         super().__init__(config=config, **kwargs)
@@ -146,8 +149,11 @@ class AndorSpectrometerInterfuse(Base, SpectrometerInterface):
         self.andor.set_image(1, 1, 1, self._width, 1, self._height)
         self.mode = 'Image'
 
-    def acquisition_data(self):
+    def acquisition_data(self, start_sweep=False):
         self.andor.start_acquisition()
+        sleep(1.0)
+        if start_sweep is True:
+            self.sigMeasurementStarted.emit()
         acquiring = True
         while acquiring:
             sleep(1.0)
@@ -251,7 +257,7 @@ class AndorSpectrometerInterfuse(Base, SpectrometerInterface):
     def get_number_accumulations(self):
         return self.andor.get_number_accumulations()
 
-    def kinetic_scan(self, exposure_time=None, cycle_time=None, number_of_cycles=None):
+    def kinetic_scan(self, exposure_time=None, cycle_time=None, number_of_cycles=None, sweep_start=False):
         """
         Takes a kinetic scan
 
@@ -274,7 +280,7 @@ class AndorSpectrometerInterfuse(Base, SpectrometerInterface):
         self.andor.set_number_accumulations(1)
 
         if cycle_time is not None:
-            self.andor.set_accumulation_cycle_time(cycle_time)
+            self.andor.set_kinetic_cycle_time(cycle_time)
         else:
             self.log.warning('No cycle time givin for the kinetic scan')
 
@@ -284,7 +290,7 @@ class AndorSpectrometerInterfuse(Base, SpectrometerInterface):
             self.log.warning('No number given for then number cycles in kinetic scan')
 
         #Take the data
-        data = self.acquisition_data()
+        data = self.acquisition_data(start_sweep=sweep_start)
 
         # Reshape data
         data = data.reshape(number_of_cycles, int(data.size/number_of_cycles)).transpose()
