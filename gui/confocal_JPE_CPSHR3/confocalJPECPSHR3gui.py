@@ -163,7 +163,8 @@ class ConfocalGui(GUIBase):
         self._mw.CLA2_step_down_pushButton.clicked.connect(self.CLA2_step_down_pushButton_clicked)
         self._mw.CLA3_step_down_pushButton.clicked.connect(self.CLA3_step_down_pushButton_clicked)
 
-        self._mw.scan_pushButton.clicked.connect(self.scan_pushButton_clicked)
+        self._mw.snake_scan_pushButton.clicked.connect(self.snake_scan_pushButton_clicked)
+        self._mw.horizontal_scan_pushButton.clicked.connect(self.horizontal_scan_pushButton_clicked)
         self.show()
 
     def on_deactivate(self):
@@ -428,7 +429,12 @@ class ConfocalGui(GUIBase):
     def CLA3_step_down_pushButton_clicked(self):
         self._scanning_logic.move_CLA3(-self._mw.step_size_value_double_spinBox.value())
 
-    def scan_pushButton_clicked(self):
+    def snake_scan_pushButton_clicked(self):
         self._mw.CLAs_movable_checkBox.setCheckState(0)
-        self._scanning_logic.initialize_snake_scan(self._mw.scan_step_doubleSpinBox.value(), self._mw.scan_range_doubleSpinBox.value())
+        self._scanning_logic.initialize_scan(self._mw.scan_step_doubleSpinBox.value(), self._mw.scan_range_doubleSpinBox.value())
         self._scanning_logic.snake_scan()
+
+    def horizontal_scan_pushButton_clicked(self):
+        self._mw.CLAs_movable_checkBox.setCheckState(0)
+        self._scanning_logic.initialize_scan(self._mw.scan_step_doubleSpinBox.value(), self._mw.scan_range_doubleSpinBox.value())
+        self._scanning_logic.horizontal_scan()

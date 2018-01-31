@@ -196,7 +196,8 @@ class JPE_CPSHR3_logic(GenericLogic):
         #print(CLA1_cmd_line)
         #print(CLA2_cmd_line)
         #print(CLA3_cmd_line)
-        # self.exec_cmd_lines(CLA1_cmd_line, CLA2_cmd_line, CLA3_cmd_line)
+        self.exec_cmd_lines(CLA1_cmd_line, CLA2_cmd_line, CLA3_cmd_line)
+        return 0
 
     def tilt(self, direction, alpha):
         '''Tilt the sample mount by an angle in a chosen direction
@@ -251,7 +252,7 @@ class JPE_CPSHR3_logic(GenericLogic):
         print(CLA1_cmd_line)
         print(CLA2_cmd_line)
         print(CLA3_cmd_line)
-        # self.exec_cmd_lines()
+        #self.exec_cmd_lines()
 
 
 
@@ -267,7 +268,7 @@ class JPE_CPSHR3_logic(GenericLogic):
             pass
         else:
             print(CLA1_cmd_line)
-            #  self._JPE_CPSHR3_hardware.do_command(CLA1_cmd_line)
+            self._JPE_CPSHR3_hardware.do_command(CLA1_cmd_line)
 
     def move_CLA2(self, CLA2_displacement):
         CLA2_displacement = CLA2_displacement * 1e-6
@@ -281,7 +282,7 @@ class JPE_CPSHR3_logic(GenericLogic):
             pass
         else:
             print(CLA2_cmd_line)
-            #  self._JPE_CPSHR3_hardware.do_command(CLA2_cmd_line)
+            self._JPE_CPSHR3_hardware.do_command(CLA2_cmd_line)
 
     def move_CLA3(self, CLA3_displacement):
         CLA3_displacement = CLA3_displacement * 1e-6
@@ -295,4 +296,4 @@ class JPE_CPSHR3_logic(GenericLogic):
             pass
         else:
             print(CLA3_cmd_line)
-            #  self._JPE_CPSHR3_hardware.do_command(CLA3_cmd_line)
+            self._JPE_CPSHR3_hardware.do_command(CLA3_cmd_line)

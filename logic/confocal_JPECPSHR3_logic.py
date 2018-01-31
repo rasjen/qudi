@@ -42,6 +42,7 @@ class ConfocalScannerLogic(Base, EmptyInterface):
 
     signal_xy_image_updated = QtCore.Signal()
     signal_continue_snake_scan = QtCore.Signal()
+    signal_continue_horizontal_scan = QtCore.Signal()
 
 
     def on_activate(self):
@@ -53,7 +54,7 @@ class ConfocalScannerLogic(Base, EmptyInterface):
 
         #self.signal_xy_image_updated.connect(self.xy_image_updated, QtCore.Qt.QueuedConnection)
         self.signal_continue_snake_scan.connect(self.snake_scan, QtCore.Qt.QueuedConnection)
-
+        self.signal_continue_horizontal_scan.connect(self.horizontal_scan, QtCore.Qt.QueuedConnection)
 
 
     def on_deactivate(self):
@@ -86,60 +87,93 @@ class ConfocalScannerLogic(Base, EmptyInterface):
         self._counter_logic.set_count_length(length)
 
     # snake scan methods
-    def initialize_snake_scan(self, step, square_side):
+    def initialize_scan(self, step, square_side):
         self.start_counter()
         self.step = step
         self.square_side = square_side
         self.point = 0
         self.line = 0
         self.data = np.zeros((int(np.round(square_side / step)), int(np.round(square_side / step))), dtype=int)
-        self.snake_scan_iteration = 0
+        self.scan_iteration = 0
 
     def snake_scan(self):
         '''Scan a square area around a central spot describing a snake movement'''
-        # First snake scan iteration :
-        # 1: Go to the starting point of the scan area
-        # 2: Acquire the point
-        # 3: Continue to scan
-        if self.snake_scan_iteration == 0:
-            self.set_snake_scan_begin_position(self.step, self.square_side)
+        if self.scan_iteration == 0:
+            # First snake scan iteration
+            self.set_scan_begin_position(self.step, self.square_side)
             self.acquire_point()
             self.signal_xy_image_updated.emit()
             self.point += 1
-            self.snake_scan_iteration += 1
+            self.scan_iteration += 1
             self.signal_continue_snake_scan.emit()
             return
-        # Last snake scan iteration after the last point is scanend :
-        # 1: Go back to central point of the area of the scan
-        # 2: Stop the scan
-        elif self.snake_scan_iteration == self.square_side**2:
-            self.set_snake_scan_begin_position(self.step, self.square_side)
-            self.snake_scan_iteration += 1
+        elif self.scan_iteration == (self.square_side/self.step)**2:
+            # Last snake scan iteration after the last point is scanned
+            self.set_scan_begin_position(self.step, self.square_side)
+            self.scan_iteration += 1
             return
-        # Other snake scan iterations
-        # 1: Move the scanner
-        # 2: Acquire the point
-        # 3: Continue to scan
         else:
-            # change line if the number of point complete a line
-            if self.point == self.square_side:
-                self.point = 0
-                # vertical_move
+            # Other snake scan iterations
+            if self.point == int(self.square_side/self.step):
+                # Line completed
                 self.move_scanner_xyz(0, self.step, 0)
                 self.line += 1
-            if self.line % 2 == 0:
-                # horizontal move (positive way)
-                self.move_scanner_xyz(self.step, 0, 0)
-                self.acquire_point()
+                self.point = 0
+                if self.line % 2 == 0:
+                    self.acquire_point()
+                else:
+                    self.acquire_point_reversed()
             else:
-                # horizontal move (negative way)
-                self.move_scanner_xyz(-self.step, 0, 0)
-                self.acquire_point_reversed()
+                # Line not completed
+                if self.line % 2 == 0:
+                    # Horizontal move (positive way)
+                    self.move_scanner_xyz(self.step, 0, 0)
+                    self.acquire_point()
+                else:
+                    # Horizontal move (negative way)
+                    self.move_scanner_xyz(-self.step, 0, 0)
+                    self.acquire_point_reversed()
             # update the image
             self.signal_xy_image_updated.emit()
             self.point += 1
-            self.snake_scan_iteration += 1
+            self.scan_iteration += 1
             self.signal_continue_snake_scan.emit()
+            return
+
+    def horizontal_scan(self):
+        '''Scan a square area around a central spot line by line always from left to right'''
+        if self.scan_iteration == 0:
+            # First scan iteration
+            self.set_scan_begin_position(self.step, self.square_side)
+            self.acquire_point()
+            self.signal_xy_image_updated.emit()
+            self.point += 1
+            self.scan_iteration += 1
+            self.signal_continue_horizontal_scan.emit()
+            return
+        elif self.scan_iteration == (self.square_side/self.step)**2-1:
+            # Last snake scan iteration
+            self.set_scan_begin_position(self.step, self.square_side)
+            self.scan_iteration += 1
+            return
+        else:
+            # Other scan iterations
+            if self.point == int(self.square_side/self.step)-1:
+                # Line completed
+                self.move_scanner_xyz(0, self.step, 0)  # Vertical move
+                self.move_scanner_xyz(-int(self.square_side/self.step), 0, 0)
+                time.sleep(2)
+                print('moved by ', -int(self.square_side/self.step))
+                self.point = 0
+                self.line += 1
+            else:
+                # Line not completed
+                self.move_scanner_xyz(self.step, 0, 0)  # horizontal move
+                self.point += 1
+            self.acquire_point()
+            self.signal_xy_image_updated.emit()
+            self.scan_iteration += 1
+            self.signal_continue_horizontal_scan.emit()
             return
 
     def acquire_point(self):
@@ -153,8 +187,6 @@ class ConfocalScannerLogic(Base, EmptyInterface):
     def xy_image_updated(self):
         print(self.data)
         return 0
-
-
 
     def move_scanner_xyz(self,x, y, z):
         self._scanner_logic.move_xyz(x, y, z)
@@ -172,7 +204,7 @@ class ConfocalScannerLogic(Base, EmptyInterface):
         self._scanner_logic.move_CLA3(displacement)
         return 0
 
-    def set_snake_scan_begin_position(self, step, square_side):
+    def set_scan_begin_position(self, step, square_side):
         '''The snake scan scan a square area around a central spot.
         This function move the sample in order to start the snake scan on the top left corner
         of the square area and make the sample move back to the central spot when the snake scan is finished'''
@@ -184,4 +216,3 @@ class ConfocalScannerLogic(Base, EmptyInterface):
             #    if self.get_CLA_STATUS(1) == 'Stopped' and self.get_CLA_STATUS(2) == 'Stopped' and self.get_CLA_STATUS(3) == 'Stopped':
             #       break
             n += 1
-        print('done')

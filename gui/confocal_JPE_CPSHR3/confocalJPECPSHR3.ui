@@ -22,66 +22,6 @@
       </property>
       <widget class="QWidget" name="dockWidgetContents_4">
        <layout class="QGridLayout" name="gridLayout_2">
-        <item row="0" column="0">
-         <widget class="QRadioButton" name="xy_cb_centiles_RadioButton">
-          <property name="text">
-           <string>Percentiles</string>
-          </property>
-          <property name="checked">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="1">
-         <widget class="ScienDSpinBox" name="xy_cb_low_percentile_DoubleSpinBox">
-          <property name="maximumSize">
-           <size>
-            <width>100</width>
-            <height>16777215</height>
-           </size>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-          </property>
-          <property name="suffix">
-           <string>%</string>
-          </property>
-          <property name="minimum">
-           <double>0.000000000000000</double>
-          </property>
-          <property name="maximum">
-           <double>100.000000000000000</double>
-          </property>
-          <property name="value">
-           <double>0.000000000000000</double>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="2">
-         <widget class="ScienDSpinBox" name="xy_cb_high_percentile_DoubleSpinBox">
-          <property name="maximumSize">
-           <size>
-            <width>100</width>
-            <height>16777215</height>
-           </size>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-          </property>
-          <property name="suffix">
-           <string>%</string>
-          </property>
-          <property name="minimum">
-           <double>0.000000000000000</double>
-          </property>
-          <property name="maximum">
-           <double>100.000000000000000</double>
-          </property>
-          <property name="value">
-           <double>100.000000000000000</double>
-          </property>
-         </widget>
-        </item>
         <item row="1" column="0">
          <widget class="QRadioButton" name="xy_cb_manual_RadioButton">
           <property name="text">
@@ -132,6 +72,31 @@
           </property>
          </widget>
         </item>
+        <item row="0" column="2">
+         <widget class="ScienDSpinBox" name="xy_cb_high_percentile_DoubleSpinBox">
+          <property name="maximumSize">
+           <size>
+            <width>100</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+          </property>
+          <property name="suffix">
+           <string>%</string>
+          </property>
+          <property name="minimum">
+           <double>0.000000000000000</double>
+          </property>
+          <property name="maximum">
+           <double>100.000000000000000</double>
+          </property>
+          <property name="value">
+           <double>100.000000000000000</double>
+          </property>
+         </widget>
+        </item>
         <item row="1" column="2">
          <widget class="ScienDSpinBox" name="xy_cb_max_DoubleSpinBox">
           <property name="sizePolicy">
@@ -172,6 +137,38 @@
           </property>
          </widget>
         </item>
+        <item row="0" column="1">
+         <widget class="ScienDSpinBox" name="xy_cb_low_percentile_DoubleSpinBox">
+          <property name="maximumSize">
+           <size>
+            <width>100</width>
+            <height>16777215</height>
+           </size>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+          </property>
+          <property name="suffix">
+           <string>%</string>
+          </property>
+          <property name="minimum">
+           <double>0.000000000000000</double>
+          </property>
+          <property name="maximum">
+           <double>100.000000000000000</double>
+          </property>
+          <property name="value">
+           <double>0.000000000000000</double>
+          </property>
+         </widget>
+        </item>
+        <item row="5" column="0">
+         <widget class="QPushButton" name="snake_scan_pushButton">
+          <property name="text">
+           <string>Snake Scan</string>
+          </property>
+         </widget>
+        </item>
         <item row="2" column="0" colspan="3">
          <widget class="PlotWidgetModified" name="xy_ViewWidget">
           <property name="sizePolicy">
@@ -182,6 +179,16 @@
           </property>
           <property name="transformationAnchor">
            <enum>QGraphicsView::AnchorUnderMouse</enum>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="0">
+         <widget class="QRadioButton" name="xy_cb_centiles_RadioButton">
+          <property name="text">
+           <string>Percentiles</string>
+          </property>
+          <property name="checked">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
@@ -201,21 +208,21 @@
           </property>
          </widget>
         </item>
-        <item row="3" column="2" colspan="2">
+        <item row="5" column="1">
+         <widget class="QPushButton" name="horizontal_scan_pushButton">
+          <property name="text">
+           <string>Horizontal Scan</string>
+          </property>
+         </widget>
+        </item>
+        <item row="5" column="2">
          <widget class="QPushButton" name="stop_pushButton">
           <property name="text">
            <string>Stop</string>
           </property>
          </widget>
         </item>
-        <item row="3" column="0" colspan="2">
-         <widget class="QPushButton" name="scan_pushButton">
-          <property name="text">
-           <string>Scan</string>
-          </property>
-         </widget>
-        </item>
-        <item row="4" column="0" colspan="4">
+        <item row="6" column="0" colspan="3">
          <widget class="QGroupBox" name="scan_parameters_groupBox">
           <property name="title">
            <string>Scan Parameters</string>
@@ -453,7 +460,7 @@
              <double>0.000000000000000</double>
             </property>
             <property name="maximum">
-             <double>10.000000000000000</double>
+             <double>100.000000000000000</double>
             </property>
             <property name="singleStep">
              <double>0.100000000000000</double>
