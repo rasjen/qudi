@@ -32,7 +32,7 @@ class WLTLogic(GenericLogic):
     sigNextLine = QtCore.Signal()
 
     # Update signals, e.g. for GUI module
-    sigParameterUpdated = QtCore.Signal(int, float, int)
+    sigParameterUpdated = QtCore.Signal(int, float, int, float)
     sigOutputStateUpdated = QtCore.Signal(str, bool)
     sigSpectrumPlotUpdated = QtCore.Signal(np.ndarray, np.ndarray)
     sigWLTimageUpdated = QtCore.Signal()
@@ -58,8 +58,9 @@ class WLTLogic(GenericLogic):
         self.target_temperature = -999
         self.current_temperature = -999
         self.number_accumulations = 50
-        self.exposure_time = 0.003 # sec
+        self.exposure_time = 0.02 # sec
         self.scan_frequency = 1.0 # Hz
+        self.cycle_time = 0.02
         self.pos_start = self._scanning_devices._cavity_position_range[0]
         self.pos_stop = self._scanning_devices._cavity_position_range[1]
 
@@ -97,7 +98,7 @@ class WLTLogic(GenericLogic):
         self.scan_frequency = frequency
         self._sweep(frequency, pos_start, pos_stop)
 
-        sleep(0.5)
+        sleep(3.0)
         self._scope.single_acquisition()
         self._start_spectrometer_measurements(sweep_start=True)
 
@@ -163,7 +164,7 @@ class WLTLogic(GenericLogic):
         except:
             self.log.error('Could not get temperature from spectrometer')
 
-        self.sigParameterUpdated.emit(self.current_temperature, self.exposure_time, self.number_accumulations)
+        self.sigParameterUpdated.emit(self.current_temperature, self.exposure_time, self.number_accumulations, self.cycle_time)
 
     def set_temperature(self, temperature=None):
         '''
@@ -180,6 +181,12 @@ class WLTLogic(GenericLogic):
                 self.log.error('No target temperature')
 
         self._spectrometer.set_temperature(temperature)
+
+    def set_cycle_time(self, cycle_time):
+        self.cycle_time = cycle_time
+
+    def get_cycle_time(self):
+        return self.cycle_time
 
     def set_exposure_time(self, exposure_time=None):
         '''
@@ -203,7 +210,7 @@ class WLTLogic(GenericLogic):
 
         self.exposure_time = self._spectrometer.get_exposure_time()
 
-        self.sigParameterUpdated.emit(self.current_temperature, self.exposure_time, self.number_accumulations)
+        self.sigParameterUpdated.emit(self.current_temperature, self.exposure_time, self.number_accumulations, self.cycle_time)
 
     def set_number_accumulations(self, number_accumulations=None):
         """
@@ -226,7 +233,7 @@ class WLTLogic(GenericLogic):
         :return: 
         '''
         self.number_accumulations = self._spectrometer.get_number_accumulations()
-        self.sigParameterUpdated.emit(self.current_temperature, self.exposure_time, self.number_accumulations)
+        self.sigParameterUpdated.emit(self.current_temperature, self.exposure_time, self.number_accumulations, self.cycle_time)
 
     def get_hw_constraints(self):
         """ Return the names of all ocnfigured fit functions.
@@ -257,7 +264,6 @@ class WLTLogic(GenericLogic):
         stop_volt = self._scanning_devices._cavity_position_to_volt(np.array(pos_stop))
 
         self._scanning_devices.cavity_set_voltage(start_volt)
-        sleep(1.0)
         RepOfSweep = 1
 
         self._scanning_devices.set_up_sweep(start_volt, stop_volt, frequency, RepOfSweep)
@@ -279,7 +285,7 @@ class WLTLogic(GenericLogic):
         """
         self.wl = self._spectrometer.get_wavelengths()
         number_of_cycles = int(self.number_of_steps)
-        cycle_time = 0.55 * 1/self.scan_frequency / self.number_of_steps
+        cycle_time = self.cycle_time
         exposure_time = self.exposure_time
 
         if exposure_time > cycle_time:
@@ -316,6 +322,10 @@ class WLTLogic(GenericLogic):
         parameters['wavelength max (m)'] = self.wl[-1]
         parameters['pos min (m)'] = self.pos_start
         parameters['pos max (m)'] = self.pos_stop
+        parameters['scan_frequency (Hz)'] = self.scan_frequency
+        parameters['exposure time (s)'] = self.exposure_time
+        parameters['number of steps'] = self.number_of_steps
+        parameters['cycle_time (s)'] = self.cycle_time
 
 
         # Prepare a figure to be saved
@@ -336,7 +346,7 @@ class WLTLogic(GenericLogic):
         image_data = OrderedDict()
         # FIXME: new text
 
-        image_data['Confocal pure XY scan image data without axis.\n'
+        image_data['White light transmission measurement scan.\n'
             'The upper left entry represents the signal at the upper left pixel position.\n'
             'A pixel-line in the image corresponds to a row '
             'of entries where the Signal is in counts/s:'] = self.WLT_image
@@ -393,7 +403,6 @@ class WLTLogic(GenericLogic):
 
         c_prefix = prefix[prefix_count]
 
-
         # Scale axes values using SI prefix
         axes_prefix = ['', 'm', r'$\mathrm{\mu}$', 'n']
         x_prefix_count = 0
@@ -426,7 +435,6 @@ class WLTLogic(GenericLogic):
                             vmax=draw_cb_range[1],
                             interpolation='none',
                             extent=image_dimension
-
                          )
         ax.set_aspect('auto')
         ax.set_xlabel(scan_axis[0] + '(' + x_prefix + 'm)')

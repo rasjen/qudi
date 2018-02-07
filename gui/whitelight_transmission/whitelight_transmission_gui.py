@@ -140,6 +140,7 @@ class WLTGui(GUIBase):
 
         self._mw.averages_doubleSpinBox.editingFinished.connect(self.changed_spectrometer_params)
         self._mw.exposure_time_doubleSpinBox.editingFinished.connect(self.changed_spectrometer_params)
+        self._mw.cycle_time_doubleSpinBox.editingFinished.connect(self.changed_spectrometer_params)
 
         # Internal trigger signals
         self._mw.transmission_map_cb_manual_RadioButton.clicked.connect(self.colorscale_changed)
@@ -244,6 +245,7 @@ class WLTGui(GUIBase):
     def changed_spectrometer_params(self):
         self._wlt_logic.set_exposure_time(self._mw.exposure_time_doubleSpinBox.value())
         self._wlt_logic.set_number_accumulations(self._mw.averages_doubleSpinBox.value())
+        self._wlt_logic.set_cycle_time(self._mw.cycle_time_doubleSpinBox.value())
 
 
     def changed_pos_params(self):
@@ -268,7 +270,7 @@ class WLTGui(GUIBase):
         """ Continues the WLT measurement"""
         self.sigContinueWLTScan.emit()
 
-    def update_parameter(self, temperature, exposure_time, number_accumulations):
+    def update_parameter(self, temperature, exposure_time, number_accumulations, cycle_time):
         """
         Updates the paremeters from the spectrometer
         
@@ -277,6 +279,7 @@ class WLTGui(GUIBase):
         self._mw.get_temperature_doubleSpinBox.setValue(temperature)
         self._mw.exposure_time_doubleSpinBox.setValue(exposure_time)
         self._mw.averages_doubleSpinBox.setValue(number_accumulations)
+        self._mw.cycle_time_doubleSpinBox.setValue(cycle_time)
 
     def set_temperature(self):
         """
