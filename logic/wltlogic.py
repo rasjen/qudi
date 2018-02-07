@@ -104,6 +104,7 @@ class WLTLogic(GenericLogic):
         sleep(1/frequency)
         self._scanning_devices.stop_sweep()
         self._scope.save_data()
+        self.save_xy_data()
         self.log.info('Measurement finished')
 
         pass
@@ -276,7 +277,7 @@ class WLTLogic(GenericLogic):
         
         :return: 
         """
-
+        self.wl = self._spectrometer.get_wavelengths()
         number_of_cycles = int(self.number_of_steps)
         cycle_time = 0.55 * 1/self.scan_frequency / self.number_of_steps
         exposure_time = self.exposure_time

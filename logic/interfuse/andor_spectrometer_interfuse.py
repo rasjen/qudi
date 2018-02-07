@@ -86,12 +86,14 @@ class AndorSpectrometerInterfuse(Base, SpectrometerInterface):
         self.andor.set_image_flip(horizontal=1, vertical=0)
 
     def __del__(self):
-        self.andor.shutdown()
-        self.shamrock.shutdown()
+        pass
+        #self.andor.shutdown()
+        #self.shamrock.shutdown()
 
     def on_deactivate(self):
-        self.andor.on_deactivate()
-        self.shamrock.on_deactivate()
+        pass
+        #self.andor.on_deactivate()
+        #self.shamrock.on_deactivate()
 
     def set_temperature(self, temp):
         self.andor.set_temperature(temp)

@@ -246,8 +246,11 @@
      </item>
      <item row="3" column="1">
       <widget class="QDoubleSpinBox" name="scan_speed_doubleSpinBox">
+       <property name="decimals">
+        <number>3</number>
+       </property>
        <property name="value">
-        <double>1.000000000000000</double>
+        <double>0.020000000000000</double>
        </property>
       </widget>
      </item>
