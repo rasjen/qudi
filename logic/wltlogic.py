@@ -99,10 +99,11 @@ class WLTLogic(GenericLogic):
         self._sweep(frequency, pos_start, pos_stop)
 
         sleep(3.0)
+        self._scope.set_time_range(1/self.scan_frequency)
         self._scope.single_acquisition()
         self._start_spectrometer_measurements(sweep_start=True)
 
-        sleep(1/frequency)
+        sleep(1/frequency-self.cycle_time*self.number_accumulations)
         self._scanning_devices.stop_sweep()
         self._scope.save_data()
         self.save_xy_data()

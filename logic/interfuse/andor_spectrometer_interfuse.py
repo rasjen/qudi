@@ -153,7 +153,7 @@ class AndorSpectrometerInterfuse(Base, SpectrometerInterface):
 
     def acquisition_data(self, start_sweep=False):
         self.andor.start_acquisition()
-        sleep(1.0)
+        sleep(0.8)
         if start_sweep is True:
             self.sigMeasurementStarted.emit()
         acquiring = True
@@ -165,7 +165,7 @@ class AndorSpectrometerInterfuse(Base, SpectrometerInterface):
                 acquiring = False
                 continue
             elif status == 'DRV_ACQUIRING':
-                continue
+                continue 
             else: #not status == 'DRV_ACQUIRING':
                 return None
 
