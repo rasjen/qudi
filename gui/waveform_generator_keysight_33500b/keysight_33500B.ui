@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Keysight_33500B</class>
+ <widget class="QMainWindow" name="Keysight_33500B">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>628</width>
+    <height>254</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Keysight_33500B</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QGridLayout" name="gridLayout_4">
+    <item row="0" column="0">
+     <widget class="QGroupBox" name="wavefor_generator_groupBox">
+      <property name="title">
+       <string>Waveform Generator</string>
+      </property>
+      <property name="flat">
+       <bool>false</bool>
+      </property>
+      <layout class="QGridLayout" name="gridLayout_3">
+       <item row="0" column="0">
+        <widget class="QGroupBox" name="channel_1_groupBox">
+         <property name="title">
+          <string>Channel 1</string>
+         </property>
+         <layout class="QGridLayout" name="gridLayout">
+          <item row="0" column="0">
+           <widget class="QLabel" name="output_label">
+            <property name="text">
+             <string>Output</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QComboBox" name="output_comboBox"/>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="function_label">
+            <property name="text">
+             <string>Function</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QComboBox" name="function_comboBox"/>
+          </item>
+          <item row="2" column="0">
+           <widget class="QLabel" name="frequency_label">
+            <property name="text">
+             <string>Frequency (Hz)</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="0">
+           <widget class="QLabel" name="amplitude_label">
+            <property name="text">
+             <string>Amplitude (V)</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="1">
+           <widget class="QDoubleSpinBox" name="amplitude_doubleSpinBox">
+            <property name="decimals">
+             <number>3</number>
+            </property>
+            <property name="minimum">
+             <double>0.001000000000000</double>
+            </property>
+            <property name="maximum">
+             <double>10.000000000000000</double>
+            </property>
+            <property name="singleStep">
+             <double>0.100000000000000</double>
+            </property>
+            <property name="value">
+             <double>1.000000000000000</double>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="0">
+           <widget class="QLabel" name="offset_label">
+            <property name="text">
+             <string>Offset (V)</string>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="1">
+           <widget class="QDoubleSpinBox" name="offset_doubleSpinBox">
+            <property name="decimals">
+             <number>3</number>
+            </property>
+            <property name="minimum">
+             <double>-5.000000000000000</double>
+            </property>
+            <property name="maximum">
+             <double>5.000000000000000</double>
+            </property>
+            <property name="singleStep">
+             <double>0.100000000000000</double>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="0">
+           <widget class="QLabel" name="phase_label">
+            <property name="text">
+             <string>Phase (º)</string>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="1">
+           <widget class="QDoubleSpinBox" name="phase_doubleSpinBox">
+            <property name="enabled">
+             <bool>true</bool>
+            </property>
+            <property name="maximum">
+             <double>180.000000000000000</double>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="QDoubleSpinBox" name="frequency_doubleSpinBox">
+            <property name="decimals">
+             <number>6</number>
+            </property>
+            <property name="minimum">
+             <double>0.000001000000000</double>
+            </property>
+            <property name="maximum">
+             <double>20000000.000000000000000</double>
+            </property>
+            <property name="value">
+             <double>1.000000000000000</double>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QGroupBox" name="channel_2_groupBox">
+         <property name="title">
+          <string>Channel 2</string>
+         </property>
+         <layout class="QGridLayout" name="gridLayout_2">
+          <item row="0" column="0">
+           <widget class="QLabel" name="output_label_2">
+            <property name="text">
+             <string>Output</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QComboBox" name="output_comboBox_2"/>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="function_label_2">
+            <property name="text">
+             <string>Function</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QComboBox" name="function_comboBox_2"/>
+          </item>
+          <item row="2" column="0">
+           <widget class="QLabel" name="frequency_label_2">
+            <property name="text">
+             <string>Frequency (Hz)</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="0">
+           <widget class="QLabel" name="amplitude_label_2">
+            <property name="text">
+             <string>Amplitude (V)</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="1">
+           <widget class="QDoubleSpinBox" name="amplitude_doubleSpinBox_2">
+            <property name="decimals">
+             <number>3</number>
+            </property>
+            <property name="minimum">
+             <double>0.001000000000000</double>
+            </property>
+            <property name="maximum">
+             <double>10.000000000000000</double>
+            </property>
+            <property name="singleStep">
+             <double>0.100000000000000</double>
+            </property>
+            <property name="value">
+             <double>1.000000000000000</double>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="0">
+           <widget class="QLabel" name="offset_label_2">
+            <property name="text">
+             <string>Offset (V)</string>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="1">
+           <widget class="QDoubleSpinBox" name="offset_doubleSpinBox_2">
+            <property name="decimals">
+             <number>3</number>
+            </property>
+            <property name="minimum">
+             <double>-5.000000000000000</double>
+            </property>
+            <property name="maximum">
+             <double>5.000000000000000</double>
+            </property>
+            <property name="singleStep">
+             <double>0.100000000000000</double>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="0">
+           <widget class="QLabel" name="phase_label_2">
+            <property name="text">
+             <string>Phase (º)</string>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="1">
+           <widget class="QDoubleSpinBox" name="phase_doubleSpinBox_2">
+            <property name="maximum">
+             <double>180.000000000000000</double>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="QDoubleSpinBox" name="frequency_doubleSpinBox_2">
+            <property name="decimals">
+             <number>6</number>
+            </property>
+            <property name="minimum">
+             <double>0.000001000000000</double>
+            </property>
+            <property name="maximum">
+             <double>20000000.000000000000000</double>
+            </property>
+            <property name="value">
+             <double>1.000000000000000</double>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item row="0" column="1">
+     <widget class="QGroupBox" name="groupBox">
+      <property name="title">
+       <string>Chopper wheel</string>
+      </property>
+      <layout class="QGridLayout" name="gridLayout_5">
+       <item row="0" column="0">
+        <widget class="QLabel" name="chopper_wheel_frequency_label">
+         <property name="text">
+          <string>Frequency (Hz)</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1" colspan="2">
+        <widget class="QSpinBox" name="chopper_wheel_frequency_spinBox"/>
+       </item>
+       <item row="1" column="0">
+        <widget class="QLabel" name="chopper_wheel_frequency_label_2">
+         <property name="text">
+          <string>Pulse duration (ms)</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1" colspan="2">
+        <widget class="QSpinBox" name="pulse_duration_spinBox"/>
+       </item>
+      </layout>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
