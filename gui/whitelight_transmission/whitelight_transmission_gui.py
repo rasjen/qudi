@@ -103,16 +103,30 @@ class WLTGui(GUIBase):
                                           symbolBrush=palette.c1,
                                           symbolSize=7)#
 
+        self.pzt_image = pg.PlotDataItem(self._wlt_logic.position_time,
+                                          self._wlt_logic.position_data,
+                                          pen=pg.mkPen(palette.c1, style=QtCore.Qt.DotLine),
+                                          symbol='o',
+                                          symbolPen=palette.c1,
+                                          symbolBrush=palette.c1,
+                                          symbolSize=7)#
+
         # Add the display item to the xy and xz ViewWidget, which was defined in the UI file.
         self._mw.transmission_map_PlotWidget.addItem(self.WLT_image)
-        self._mw.transmission_map_PlotWidget.setLabel(axis='left', text='Cavity length', units='m')
-        self._mw.transmission_map_PlotWidget.setLabel(axis='bottom', text='Wavelength', units='m')
+        self._mw.transmission_map_PlotWidget.setLabel(axis='bottom', text='Cavity length', units='m')
+        self._mw.transmission_map_PlotWidget.setLabel(axis='left', text='Wavelength', units='m')
 
 
         self._mw.spectrum_PlotWidget.addItem(self.spectrum_image)
         self._mw.spectrum_PlotWidget.setLabel(axis='left', text='Counts', units='Counts/s')
         self._mw.spectrum_PlotWidget.setLabel(axis='bottom', text='Wavelength', units='m')
         self._mw.spectrum_PlotWidget.showGrid(x=True, y=True, alpha=0.8)
+
+        self._mw.pzt_PlotWidget.addItem(self.pzt_image)
+        self._mw.pzt_PlotWidget.setLabel(axis='left', text='Voltage', units='V')
+        self._mw.pzt_PlotWidget.setLabel(axis='bottom', text='time', units='s')
+        self._mw.pzt_PlotWidget.showGrid(x=True, y=True, alpha=0.8)
+
 
         # Get the colorscales at set LUT
         my_colors = ColorScaleInferno()
@@ -170,6 +184,7 @@ class WLTGui(GUIBase):
                                                     QtCore.Qt.QueuedConnection)
         self._wlt_logic.sigSpectrumPlotUpdated.connect(self.refresh_spectrum_graph, QtCore.Qt.QueuedConnection)
         self._wlt_logic.sigWLTimageUpdated.connect(self.refresh_WLT_image, QtCore.Qt.QueuedConnection)
+        self._wlt_logic.sigPztimageUpdated.connect(self.refresh_pzt_plot, QtCore.Qt.QueuedConnection)
 
 
         # Show the Main ODMR GUI:
@@ -288,6 +303,9 @@ class WLTGui(GUIBase):
         """
         self._wlt_logic.set_temperature(self._mw.set_temperature_doubleSpinBox.value())
 
+    def refresh_pzt_plot(self):
+        self.pzt_image.setData(x=self._wlt_logic.position_time, y=self._wlt_logic.position_data)
+
     def refresh_spectrum_graph(self, wavelengths, counts):
         self.spectrum_image.setData(x=wavelengths, y=counts)
 
@@ -330,10 +348,10 @@ class WLTGui(GUIBase):
         # limits, to make an update of the current image. Otherwise the
         # adjustment will just be made for the previous image.
 
-        xMin = self._wlt_logic.wl[0]
-        xMax = self._wlt_logic.wl[-1]
-        yMin = self._wlt_logic.pos_start
-        yMax = self._wlt_logic.pos_stop
+        yMin = self._wlt_logic.wl[0]
+        yMax = self._wlt_logic.wl[-1]
+        xMin = self._wlt_logic.pos_start
+        xMax = self._wlt_logic.pos_stop
 
 
         #xy_viewbox.setLimits(xMin=xMin - (xMax - xMin) * 0.01,

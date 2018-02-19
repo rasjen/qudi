@@ -36,6 +36,7 @@ class WLTLogic(GenericLogic):
     sigOutputStateUpdated = QtCore.Signal(str, bool)
     sigSpectrumPlotUpdated = QtCore.Signal(np.ndarray, np.ndarray)
     sigWLTimageUpdated = QtCore.Signal()
+    sigPztimageUpdated = QtCore.Signal()
     signal_xy_data_saved = QtCore.Signal()
 
     def __init__(self, config, **kwargs):
@@ -53,7 +54,7 @@ class WLTLogic(GenericLogic):
         self._scanning_devices = self.get_connector('nicard')
         self._save_logic = self.get_connector('savelogic')
         self._spectrometer = self.get_connector('spectrometer')
-        self._scope = self.get_connector('scopelogic')
+        #self._scope = self.get_connector('scopelogic')
 
         self.target_temperature = -999
         self.current_temperature = -999
@@ -63,6 +64,8 @@ class WLTLogic(GenericLogic):
         self.cycle_time = 0.02
         self.pos_start = self._scanning_devices._cavity_position_range[0]
         self.pos_stop = self._scanning_devices._cavity_position_range[1]
+        self.position_time = np.linspace(0, 1/self.scan_frequency, 100)
+        self.position_data = np.ones_like(self.position_time)
 
         self.get_number_accumulations()
         self.get_exposure_time()
@@ -71,9 +74,10 @@ class WLTLogic(GenericLogic):
         self.initialize_image()
         self.initialize_spectrum_plot()
 
-        self._spectrometer.sigMeasurementStarted.connect(self._scanning_devices.start_sweep)
-        self._spectrometer.sigMeasurementStarted.connect(self._scope.force_trigger)
 
+        self._spectrometer.sigMeasurementStarted_0.connect(self._scanning_devices.start_read_position)
+        self._spectrometer.sigMeasurementStarted.connect(self._scanning_devices.start_sweep)
+        #self._spectrometer.sigMeasurementStarted.connect(self._scope.force_trigger)
 
 
     def on_deactivate(self):
@@ -84,6 +88,18 @@ class WLTLogic(GenericLogic):
         self._spectrometer.on_deactivate()
         self._scanning_devices.on_deactivate()
 
+    def setup_read_position(self):
+        """
+        Readouts
+
+        @return:
+        """
+        sample_rate = 500
+        number_of_sample = int(sample_rate*1/self.scan_frequency)
+        self.position_time = np.linspace(0, number_of_sample*1/sample_rate, number_of_sample, endpoint=False)
+        self._scanning_devices.setup_read_position(samples_rate=sample_rate, number_of_samples=number_of_sample)
+
+        return 0
 
     def start_wlt_measurement(self, frequency, pos_start, pos_stop):
         '''
@@ -93,20 +109,22 @@ class WLTLogic(GenericLogic):
         '''
 
         self.log.info('Measurement started')
+
         self.pos_start = pos_start
         self.pos_stop = pos_stop
         self.scan_frequency = frequency
         self._sweep(frequency, pos_start, pos_stop)
+        self.setup_read_position()
 
-        sleep(3.0)
-        self._scope.set_time_range(1/self.scan_frequency)
-        self._scope.single_acquisition()
         self._start_spectrometer_measurements(sweep_start=True)
 
         sleep(1/frequency-self.cycle_time*self.number_accumulations)
         self._scanning_devices.stop_sweep()
-        self._scope.save_data()
+        #self._scope.save_data()
+        self.position_data = self._scanning_devices.read_position(timeout=1/self.scan_frequency+0.1)
+        self.sigPztimageUpdated.emit()
         self.save_xy_data()
+        self.save_position_data()
         self.log.info('Measurement finished')
 
         pass
@@ -140,7 +158,7 @@ class WLTLogic(GenericLogic):
         '''
         self.wl = self._spectrometer.get_wavelengths()
 
-        self.WLT_image = np.zeros([self.wl.size, self.number_of_steps])
+        self.WLT_image = np.zeros([self.number_of_steps, self.wl.size])
         pass
 
     def initialize_spectrum_plot(self):
@@ -184,10 +202,16 @@ class WLTLogic(GenericLogic):
         self._spectrometer.set_temperature(temperature)
 
     def set_cycle_time(self, cycle_time):
-        self.cycle_time = cycle_time
+        self._spectrometer.set_cycle_time(cycle_time)
+
+        self.get_cycle_time()
 
     def get_cycle_time(self):
-        return self.cycle_time
+
+
+        self.cycle_time = self._spectrometer.get_cycle_time()
+
+        self.sigParameterUpdated.emit(self.current_temperature, self.exposure_time, self.number_accumulations, self.cycle_time)
 
     def set_exposure_time(self, exposure_time=None):
         '''
@@ -210,6 +234,17 @@ class WLTLogic(GenericLogic):
         '''
 
         self.exposure_time = self._spectrometer.get_exposure_time()
+
+        self.sigParameterUpdated.emit(self.current_temperature, self.exposure_time, self.number_accumulations, self.cycle_time)
+
+    def get_cycle_time(self):
+        '''
+        Gets the exposure time for the camera in the spectrometer
+
+        :return:
+        '''
+
+        self.cycle_time = self._spectrometer.get_cycle_time()
 
         self.sigParameterUpdated.emit(self.current_temperature, self.exposure_time, self.number_accumulations, self.cycle_time)
 
@@ -296,7 +331,7 @@ class WLTLogic(GenericLogic):
         data = self._spectrometer.kinetic_scan(exposure_time=exposure_time, cycle_time=cycle_time,
                                                number_of_cycles=number_of_cycles, sweep_start=sweep_start)
 
-        self.WLT_image = data
+        self.WLT_image = data.transpose()
         self.sigWLTimageUpdated.emit()
         pass
 
@@ -330,11 +365,11 @@ class WLTLogic(GenericLogic):
 
 
         # Prepare a figure to be saved
-        image_extent = [self.wl[0],
-                        self.wl[-1],
-                        self.pos_start,
-                        self.pos_stop]
-        axes = ['Wavelength', 'Position']
+        image_extent = [self.pos_start,
+                        self.pos_stop,
+                        self.wl[0],
+                        self.wl[-1]]
+        axes = ['Position', 'Wavelength']
 
 
         fig = self.draw_figure( data=self.WLT_image,
@@ -478,3 +513,32 @@ class WLTLogic(GenericLogic):
                              rotation=90
                              )
         return fig
+
+    def save_position_data(self,):
+
+        filepath = self._save_logic.get_path_for_module('WhiteLightTransmission')
+        timestamp = datetime.datetime.now()
+        # Prepare the metadata parameters (common to both saved files):
+        parameters = OrderedDict()
+
+        #parameters['wavelength min (m)'] = self.wl[0]
+
+        position_data = OrderedDict()
+        # FIXME: new text
+
+        position_data_save = np.vstack((self.position_time,self.position_time))
+
+        position_data['save in voltage * 2 to get position in micron'] = position_data_save
+
+        filelabel = 'position_data'
+        self._save_logic.save_data(position_data,
+                                   filepath=filepath,
+                                   timestamp=timestamp,
+                                   parameters=parameters,
+                                   filelabel=filelabel,
+                                   fmt='%.8e',
+                                   delimiter='\t')
+
+
+        return
+

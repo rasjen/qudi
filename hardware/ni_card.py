@@ -167,6 +167,8 @@ class NICard(Base, SlowCounterInterface, ConfocalScannerInterface, ODMRCounterIn
         self._odmr_length = None
         self._gated_counter_daq_tasks = []
         self._sweep_task = None
+        self._ramp_task = None
+        self._scanner_ai_task = None
 
         config = self.getConfiguration()
 
@@ -181,6 +183,10 @@ class NICard(Base, SlowCounterInterface, ConfocalScannerInterface, ODMRCounterIn
         self._cavity_position_range = []
         self._current_cavity_position = []
         self.cavity_channel = []
+        self._scanner_ai_channels = []
+
+        if 'strain_gauge' in config.keys():
+            self._scanner_ai_channels.append(config['strain_gauge'])
 
         if 'cavity_ao' in config.keys():
             self.cavity_channel = config['cavity_ao']
@@ -2484,4 +2490,108 @@ class NICard(Base, SlowCounterInterface, ConfocalScannerInterface, ODMRCounterIn
 
         return 0
 
+    def _start_analog_input(self):
+        """ Starts or restarts the analog input.
 
+        @return int: error code (0:OK, -1:error)
+        """
+        try:
+            # If an analog task is already running, kill that one first
+            if self._scanner_ai_task is not None:
+                # stop the analog output task
+                daq.DAQmxStopTask(self._scanner_ai_task)
+
+                # delete the configuration of the analog output
+                daq.DAQmxClearTask(self._scanner_ai_task)
+
+                # set the task handle to None as a safety
+                self._scanner_ai_task = None
+
+            # initialize ao channels / task for scanner, should always be active.
+            # Define at first the type of the variable as a Task:
+            self._scanner_ai_task = daq.TaskHandle()
+
+            # create the actual analog output task on the hardware device. Via
+            # byref you pass the pointer of the object to the TaskCreation function:
+            daq.DAQmxCreateTask('ScannerAI', daq.byref(self._scanner_ai_task))
+            for n, chan in enumerate(self._scanner_ai_channels):
+                # Assign and configure the created task to an analog output voltage channel.
+                daq.DAQmxCreateAIVoltageChan(
+                    # The AO voltage operation function is assigned to this task.
+                    self._scanner_ai_task,
+                    # use (all) scanner ao_channels for the output
+                    chan,
+                    # assign a name for that channel
+                    'Scanner AI Channel {0}'.format(n),
+                    #
+                    daq.DAQmx_Val_Cfg_Default,
+                    # minimum possible voltage
+                    -10,
+                    # maximum possible voltage
+                    10,
+                    # units is Volt
+                    daq.DAQmx_Val_Volts,
+                    # empty for future use
+                    '')
+        except:
+            self.log.exception('Error starting analog output task.')
+            return -1
+        return 0
+
+    def _stop_analog_input(self):
+        """ Stops the analog input.
+
+        @return int: error code (0:OK, -1:error)
+        """
+        if self._scanner_ai_task is None:
+            return -1
+        retval = 0
+        try:
+            # stop the analog output task
+            daq.DAQmxStopTask(self._scanner_ai_task)
+        except:
+            self.log.exception('Error stopping analog input.')
+            retval = -1
+        try:
+            daq.DAQmxSetSampTimingType(self._scanner_ai_task, daq.DAQmx_Val_OnDemand)
+        except:
+            self.log.exception('Error changing analog input mode.')
+            retval = -1
+        return retval
+
+    def start_read_position(self, samples_rate=200, number_of_samples=200, timeout=10):
+        """
+
+        @param samples_rate: samples per sec
+        @param number_of_samples: total number of samples to read.
+        @param timeout: time in sec to wait for reading
+        @return:
+        """
+
+        daq.DAQmxStartTask(self._scanner_ai_task)
+
+        return
+
+    def setup_read_position(self, samples_rate=200, number_of_samples=200):
+        self._start_analog_input()
+        daq.DAQmxCfgSampClkTiming(self._scanner_ai_task, "",
+                                  # The sampling rate (S/sec
+                                  samples_rate, daq.DAQmx_Val_Rising, daq.DAQmx_Val_FiniteSamps,
+                                  # Number of sample
+                                  number_of_samples)
+        self.rawdata = np.zeros(number_of_samples, dtype=np.float64)
+
+    def read_position(self, timeout=100):
+        read = daq.int32()
+        daq.DAQmxReadAnalogF64(self._scanner_ai_task,
+                           # The number of samples, per channel, to read
+                           100000,
+                           # The amount of time, in seconds, to wait for the function to read the sample
+                           timeout,
+                           daq.DAQmx_Val_GroupByChannel,
+                           self.rawdata,
+                           # The actual number of samples read from each channel
+                           100000,
+                           daq.byref(read), None)
+
+        return self.rawdata

@@ -27,6 +27,7 @@ class AndorSpectrometerInterfuse(Base, SpectrometerInterface):
     single_track_minimum_vertical_pixels = 0
 
     sigMeasurementStarted = QtCore.Signal()
+    sigMeasurementStarted_0 = QtCore.Signal()
 
     def __init__(self, config, **kwargs):
         super().__init__(config=config, **kwargs)
@@ -152,9 +153,12 @@ class AndorSpectrometerInterfuse(Base, SpectrometerInterface):
         self.mode = 'Image'
 
     def acquisition_data(self, start_sweep=False):
-        self.andor.start_acquisition()
-        sleep(0.8)
         if start_sweep is True:
+            self.sigMeasurementStarted_0.emit()
+            sleep(0.5)
+        self.andor.start_acquisition()
+        if start_sweep is True:
+            sleep(0.8)
             self.sigMeasurementStarted.emit()
         acquiring = True
         while acquiring:
@@ -165,7 +169,7 @@ class AndorSpectrometerInterfuse(Base, SpectrometerInterface):
                 acquiring = False
                 continue
             elif status == 'DRV_ACQUIRING':
-                continue 
+                continue
             else: #not status == 'DRV_ACQUIRING':
                 return None
 
@@ -244,15 +248,6 @@ class AndorSpectrometerInterfuse(Base, SpectrometerInterface):
         data = self.acquisition_data()
         return data
 
-    def set_exposure_time(self, exposure_time):
-        """
-        Sets exposure time for the camera
-        
-        :param exposure_time: time in seconds 
-        :return: 
-        """
-        self.andor.set_exposure_time(exposure_time)
-
     def get_exposure_time(self):
         return self.andor.get_exposure_time()
 
@@ -298,5 +293,12 @@ class AndorSpectrometerInterfuse(Base, SpectrometerInterface):
         data = data.reshape(number_of_cycles, int(data.size/number_of_cycles)).transpose()
 
         return data
+
+    def set_cycle_time(self, cycle_time):
+        self.andor.set_kinetic_cycle_time(cycle_time)
+
+    def get_cycle_time(self):
+        return self.andor.get_cycle_time()
+
 
 

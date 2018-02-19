@@ -304,6 +304,10 @@ class Andor(Base, SpectrometerInterface):
         self.get_acquisition_timings()
         return self.accumulate
 
+    def get_cycle_time(self):
+        self.get_acquired_data()
+        return self.kinetic
+
     def get_acquisition_timings(self):
         exposure = c_float()
         accumulate = c_float()
