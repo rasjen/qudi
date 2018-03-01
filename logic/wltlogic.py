@@ -58,12 +58,14 @@ class WLTLogic(GenericLogic):
 
         self.target_temperature = -999
         self.current_temperature = -999
-        self.number_accumulations = 50
+        self.number_accumulations = 1
         self.exposure_time = 0.02 # sec
         self.scan_frequency = 1.0 # Hz
         self.cycle_time = 0.02
         self.pos_start = self._scanning_devices._cavity_position_range[0]
         self.pos_stop = self._scanning_devices._cavity_position_range[1]
+        self.time_start = self.number_accumulations * self.cycle_time
+        self.time_stop = self.number_accumulations
         self.position_time = np.linspace(0, 1/self.scan_frequency, 100)
         self.position_data = np.ones_like(self.position_time)
 
@@ -118,7 +120,8 @@ class WLTLogic(GenericLogic):
 
         self._start_spectrometer_measurements(sweep_start=True)
 
-        sleep(1/frequency-self.cycle_time*self.number_accumulations)
+        #sleep(1/frequency-self.cycle_time*self.number_accumulations)
+        self.time_stop = self.cycle_time*self.number_of_steps
         self._scanning_devices.stop_sweep()
         #self._scope.save_data()
         self.position_data = self._scanning_devices.read_position(timeout=1/self.scan_frequency+0.1)
@@ -156,7 +159,11 @@ class WLTLogic(GenericLogic):
 
         :return: 
         '''
+
         self.wl = self._spectrometer.get_wavelengths()
+        if len(self.wl) == 0:
+            # did not lead wl from spectrometer
+            self.wl = np.arange(0,100,11)
 
         self.WLT_image = np.zeros([self.number_of_steps, self.wl.size])
         pass
@@ -168,6 +175,10 @@ class WLTLogic(GenericLogic):
         :return: 
         """
         self.wl = self._spectrometer.get_wavelengths()
+        if len(self.wl) == 0:
+            # did not lead wl from spectrometer
+            self.wl = np.arange(0,100,11)
+
         self.counts = 1e6*np.random.rand(self.wl.size)
         pass
 
@@ -362,14 +373,16 @@ class WLTLogic(GenericLogic):
         parameters['exposure time (s)'] = self.exposure_time
         parameters['number of steps'] = self.number_of_steps
         parameters['cycle_time (s)'] = self.cycle_time
+        parameters['Time start (m)'] = self.time_start
+        parameters['Time stop (m)'] = self.time_stop
 
 
         # Prepare a figure to be saved
-        image_extent = [self.pos_start,
-                        self.pos_stop,
+        image_extent = [self.time_start,
+                        self.time_stop,
                         self.wl[0],
                         self.wl[-1]]
-        axes = ['Position', 'Wavelength']
+        axes = ['Time', 'Wavelength']
 
 
         fig = self.draw_figure( data=self.WLT_image,
@@ -514,7 +527,7 @@ class WLTLogic(GenericLogic):
                              )
         return fig
 
-    def save_position_data(self,):
+    def save_position_data(self):
 
         filepath = self._save_logic.get_path_for_module('WhiteLightTransmission')
         timestamp = datetime.datetime.now()
@@ -526,7 +539,7 @@ class WLTLogic(GenericLogic):
         position_data = OrderedDict()
         # FIXME: new text
 
-        position_data_save = np.vstack((self.position_time,self.position_time))
+        position_data_save = np.vstack((self.position_time, self.position_data))
 
         position_data['save in voltage * 2 to get position in micron'] = position_data_save
 
@@ -542,3 +555,12 @@ class WLTLogic(GenericLogic):
 
         return
 
+    def start_ramp(self, amplitude, offset, freq):
+
+        self._scanning_devices.set_up_ramp_output(amplitude, offset, freq)
+        self._scanning_devices.start_ramp()
+
+    def stop_ramp(self):
+
+        self._scanning_devices.stop_ramp()
+        self._scanning_devices.close_ramp()

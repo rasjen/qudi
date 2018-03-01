@@ -92,7 +92,7 @@ class AndorSpectrometerInterfuse(Base, SpectrometerInterface):
         #self.shamrock.shutdown()
 
     def on_deactivate(self):
-        pass
+        self.log.info('Spectrometer deactivatecd')
         #self.andor.on_deactivate()
         #self.shamrock.on_deactivate()
 
@@ -295,6 +295,7 @@ class AndorSpectrometerInterfuse(Base, SpectrometerInterface):
         return data
 
     def set_cycle_time(self, cycle_time):
+        self.andor.set_acquisition_mode(3)
         self.andor.set_kinetic_cycle_time(cycle_time)
 
     def get_cycle_time(self):

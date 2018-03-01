@@ -113,7 +113,7 @@ class WLTGui(GUIBase):
 
         # Add the display item to the xy and xz ViewWidget, which was defined in the UI file.
         self._mw.transmission_map_PlotWidget.addItem(self.WLT_image)
-        self._mw.transmission_map_PlotWidget.setLabel(axis='bottom', text='Cavity length', units='m')
+        self._mw.transmission_map_PlotWidget.setLabel(axis='bottom', text='Time', units='s')
         self._mw.transmission_map_PlotWidget.setLabel(axis='left', text='Wavelength', units='m')
 
 
@@ -153,8 +153,8 @@ class WLTGui(GUIBase):
         self._mw.number_of_steps_doubleSpinBox.editingFinished.connect(self.changed_pos_params)
 
         self._mw.averages_doubleSpinBox.editingFinished.connect(self.changed_spectrometer_params)
-        self._mw.exposure_time_doubleSpinBox.editingFinished.connect(self.changed_spectrometer_params)
-        self._mw.cycle_time_doubleSpinBox.editingFinished.connect(self.changed_spectrometer_params)
+        self._mw.exposure_time_doubleSpinBox.editingFinished.connect(self.changed_exposure)
+        self._mw.cycle_time_doubleSpinBox.editingFinished.connect(self.changed_cycletime)
 
         # Internal trigger signals
         self._mw.transmission_map_cb_manual_RadioButton.clicked.connect(self.colorscale_changed)
@@ -165,6 +165,7 @@ class WLTGui(GUIBase):
 
         self._mw.transmission_map_cb_manual_RadioButton.clicked.connect(self.refresh_WLT_image)
         self._mw.transmission_map_cb_centiles_RadioButton.clicked.connect(self.refresh_WLT_image)
+        self._mw.normalize_checkBox.clicked.connect(self.refresh_WLT_image)
 
         self._mw.transmission_map_cb_min_DoubleSpinBox.valueChanged.connect(self.shortcut_to_xy_cb_manual)
         self._mw.transmission_map_cb_max_DoubleSpinBox.valueChanged.connect(self.shortcut_to_xy_cb_manual)
@@ -172,20 +173,30 @@ class WLTGui(GUIBase):
         self._mw.transmission_map_cb_high_percentile_DoubleSpinBox.valueChanged.connect(self.shortcut_to_xy_cb_centiles)
 
         # Control/values-changed signals to logic
-        self.sigStartWLTScan.connect(self._wlt_logic.start_wlt_measurement, QtCore.Qt.QueuedConnection)
-        self.sigStopWLTScan.connect(self._wlt_logic.stop_wlt_measurement, QtCore.Qt.QueuedConnection)
+        self.sigStartWLTScan.connect(self._wlt_logic.start_wlt_measurement)
+        self.sigStopWLTScan.connect(self._wlt_logic.stop_wlt_measurement)
         self.sigContinueWLTScan.connect(self._wlt_logic.continue_wlt_measurement,
-                                         QtCore.Qt.QueuedConnection)
+                                         )
         self._mw.get_temperature_pushButton.clicked.connect(self._wlt_logic.get_temperature)
         self._mw.take_spectrum_pushButton.clicked.connect(self._wlt_logic.take_single_spectrum)
 
         # Update signals coming from logic:
-        self._wlt_logic.sigParameterUpdated.connect(self.update_parameter,
-                                                    QtCore.Qt.QueuedConnection)
-        self._wlt_logic.sigSpectrumPlotUpdated.connect(self.refresh_spectrum_graph, QtCore.Qt.QueuedConnection)
-        self._wlt_logic.sigWLTimageUpdated.connect(self.refresh_WLT_image, QtCore.Qt.QueuedConnection)
-        self._wlt_logic.sigPztimageUpdated.connect(self.refresh_pzt_plot, QtCore.Qt.QueuedConnection)
+        self._wlt_logic.sigParameterUpdated.connect(self.update_parameter )
+        self._wlt_logic.sigSpectrumPlotUpdated.connect(self.refresh_spectrum_graph)
+        self._wlt_logic.sigWLTimageUpdated.connect(self.refresh_WLT_image)
+        self._wlt_logic.sigPztimageUpdated.connect(self.refresh_pzt_plot)
 
+        # Ramp
+        self._mw.ramp_frequency_DoubleSpinBox.setMaximum(50)
+        self._mw.ramp_frequency_DoubleSpinBox.setMinimum(0)
+        #self._mw.ramp_frequency_DoubleSpinBox.setOpts(minStep=0.5)  # set the minimal step to 0.5Hz
+        self._mw.ramp_offset_DoubleSpinBox.setMaximum(5)
+        self._mw.ramp_offset_DoubleSpinBox.setMinimum(0)
+        self._mw.ramp_amplitude_DoubleSpinBox.setMinimum(0)
+        self._mw.ramp_amplitude_DoubleSpinBox.setMaximum(5)
+
+        self._mw.StartRamp_PushButton.clicked.connect(self.start_ramp)
+        self._mw.StopRamp_PushButton.clicked.connect(self.stop_ramp)
 
         # Show the Main ODMR GUI:
         self.show()
@@ -258,8 +269,12 @@ class WLTGui(GUIBase):
         return cb_range
 
     def changed_spectrometer_params(self):
-        self._wlt_logic.set_exposure_time(self._mw.exposure_time_doubleSpinBox.value())
         self._wlt_logic.set_number_accumulations(self._mw.averages_doubleSpinBox.value())
+
+    def changed_exposure(self):
+        self._wlt_logic.set_exposure_time(self._mw.exposure_time_doubleSpinBox.value())
+
+    def changed_cycletime(self):
         self._wlt_logic.set_cycle_time(self._mw.cycle_time_doubleSpinBox.value())
 
 
@@ -317,7 +332,10 @@ class WLTGui(GUIBase):
         """
         self.WLT_image.getViewBox().updateAutoRange()
 
-        WLT_image_data = self._wlt_logic.WLT_image
+        if self._mw.normalize_checkBox.isChecked():
+            WLT_image_data = (self._wlt_logic.WLT_image.transpose() / self._wlt_logic.WLT_image.max(axis=1)).transpose()
+        else:
+            WLT_image_data = self._wlt_logic.WLT_image
 
         cb_range = self.get_matrix_cb_range(WLT_image_data)
 
@@ -350,8 +368,8 @@ class WLTGui(GUIBase):
 
         yMin = self._wlt_logic.wl[0]
         yMax = self._wlt_logic.wl[-1]
-        xMin = self._wlt_logic.pos_start
-        xMax = self._wlt_logic.pos_stop
+        xMin = self._wlt_logic.time_start
+        xMax = self._wlt_logic.time_stop
 
 
         #xy_viewbox.setLimits(xMin=xMin - (xMax - xMin) * 0.01,
@@ -363,3 +381,34 @@ class WLTGui(GUIBase):
 
         #xy_viewbox.updateAutoRange()
         #xy_viewbox.updateViewRange()
+
+    def start_ramp(self):
+        """
+
+        @return:
+        """
+
+        amplitude = self._mw.ramp_amplitude_DoubleSpinBox.value()
+        offset = self._mw.ramp_offset_DoubleSpinBox.value()
+        freq = self._mw.ramp_frequency_DoubleSpinBox.value()
+
+        self._wlt_logic.start_ramp(amplitude, offset, freq)
+
+        # Disable changes to parameters
+        self._mw.ramp_amplitude_DoubleSpinBox.setEnabled(False)
+        self._mw.ramp_offset_DoubleSpinBox.setEnabled(False)
+        self._mw.ramp_frequency_DoubleSpinBox.setEnabled(False)
+        self._mw.start_pushButton.setEnabled(False)
+
+
+    def stop_ramp(self):
+        self._wlt_logic.stop_ramp()
+
+        # Enable changes to parameters
+        self._mw.ramp_amplitude_DoubleSpinBox.setEnabled(True)
+        self._mw.ramp_offset_DoubleSpinBox.setEnabled(True)
+        self._mw.ramp_frequency_DoubleSpinBox.setEnabled(True)
+        self._mw.start_pushButton.setEnabled(True)
+
+
+
