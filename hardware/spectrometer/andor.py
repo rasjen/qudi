@@ -305,7 +305,7 @@ class Andor(Base, SpectrometerInterface):
         return self.accumulate
 
     def get_cycle_time(self):
-        self.get_acquired_data()
+        self.get_acquisition_timings()
         return self.kinetic
 
     def get_acquisition_timings(self):

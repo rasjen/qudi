@@ -1,4 +1,5 @@
 from core.module import Base
+from logic.generic_logic import GenericLogic
 from interface.spectrometer_interface2 import SpectrometerInterface
 import platform
 from ctypes import *
@@ -8,7 +9,7 @@ from core.module import Connector
 from time import sleep
 from qtpy import QtCore
 
-class AndorSpectrometerInterfuse(Base, SpectrometerInterface):
+class AndorSpectrometerInterfuse(GenericLogic, SpectrometerInterface):
 
     _modclass = 'spectrometerinterfuce'
     _modtype = 'interfuse'
@@ -92,7 +93,7 @@ class AndorSpectrometerInterfuse(Base, SpectrometerInterface):
         #self.shamrock.shutdown()
 
     def on_deactivate(self):
-        pass
+        self.log.info('Spectrometer deactivatecd')
         #self.andor.on_deactivate()
         #self.shamrock.on_deactivate()
 
@@ -295,6 +296,7 @@ class AndorSpectrometerInterfuse(Base, SpectrometerInterface):
         return data
 
     def set_cycle_time(self, cycle_time):
+        self.andor.set_acquisition_mode(3)
         self.andor.set_kinetic_cycle_time(cycle_time)
 
     def get_cycle_time(self):
