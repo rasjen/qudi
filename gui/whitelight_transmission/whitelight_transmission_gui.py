@@ -198,6 +198,8 @@ class WLTGui(GUIBase):
         self._mw.StartRamp_PushButton.clicked.connect(self.start_ramp)
         self._mw.StopRamp_PushButton.clicked.connect(self.stop_ramp)
 
+        self._mw.GOpushButton.clicked.connect(self.set_cavity_position)
+
         # Show the Main ODMR GUI:
         self.show()
         # Update parameters
@@ -409,6 +411,9 @@ class WLTGui(GUIBase):
         self._mw.ramp_offset_DoubleSpinBox.setEnabled(True)
         self._mw.ramp_frequency_DoubleSpinBox.setEnabled(True)
         self._mw.start_pushButton.setEnabled(True)
+
+    def set_cavity_position(self):
+        self._wlt_logic.set_cavity_position(self._mw.doubleSpinBox_2.value()*1e-6)
 
 
 

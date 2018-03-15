@@ -120,8 +120,8 @@ class WLTLogic(GenericLogic):
 
         self._start_spectrometer_measurements(sweep_start=True)
 
-        #sleep(1/frequency-self.cycle_time*self.number_accumulations)
-        self.time_stop = self.cycle_time*self.number_of_steps
+        sleep(1/frequency)
+        self.time_stop =  self.cycle_time*self.number_of_steps
         self._scanning_devices.stop_sweep()
         #self._scope.save_data()
         self.position_data = self._scanning_devices.read_position(timeout=1/self.scan_frequency+0.1)
@@ -289,7 +289,7 @@ class WLTLogic(GenericLogic):
         # FIXME: Should be from hardware
         constraints_dict = {'min_position': 0, 'max_position': 20e-6, 'min_speed': 0, 'max_speed':  100,
                             'min_temperature': -100, 'max_temperature': 30, 'min_number_accumulations': 1,
-                            'max_number_accumulations': 1000, 'min_exposure': 0, 'max_exposure': 100}
+                            'max_number_accumulations': 0000, 'min_exposure': 0, 'max_exposure': 100}
 
         return constraints_dict
 
@@ -564,3 +564,6 @@ class WLTLogic(GenericLogic):
 
         self._scanning_devices.stop_ramp()
         self._scanning_devices.close_ramp()
+
+    def set_cavity_position(self, position):
+        self._scanning_devices.cavity_set_position(position)

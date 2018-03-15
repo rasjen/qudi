@@ -1,4 +1,5 @@
 from core.module import Base
+from logic.generic_logic import GenericLogic
 from interface.spectrometer_interface2 import SpectrometerInterface
 import platform
 from ctypes import *
@@ -8,7 +9,7 @@ from core.module import Connector
 from time import sleep
 from qtpy import QtCore
 
-class AndorSpectrometerInterfuse(Base, SpectrometerInterface):
+class AndorSpectrometerInterfuse(GenericLogic, SpectrometerInterface):
 
     _modclass = 'spectrometerinterfuce'
     _modtype = 'interfuse'
