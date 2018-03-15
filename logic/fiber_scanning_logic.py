@@ -887,11 +887,9 @@ class ConfocalLogic(GenericLogic):
                 lsx = np.linspace(self._current_x, image[self._scan_counter, 0, 0], rs)
                 lsy = np.linspace(self._current_y, image[self._scan_counter, 0, 1], rs)
                 lsz = np.linspace(self._current_z, image[self._scan_counter, 0, 2], rs)
-                if n_ch <= 3:
-                    start_line = np.vstack([lsx, lsy, lsz][0:n_ch])
-                else:
-                    start_line = np.vstack(
-                        [lsx, lsy, lsz, np.ones(lsx.shape) * self._current_a])
+
+                start_line = np.vstack([lsx, lsy, lsz][0:n_ch])
+
                 # move to the start position of the scan, counts are thrown away
                 start_line_counts = self._scanning_device.scan_line(start_line)
                 if np.any(start_line_counts == -1):
@@ -901,8 +899,10 @@ class ConfocalLogic(GenericLogic):
 
             image = self.fiber_xy_image
 
-            lsx = np.full(len(self._Z), image[self._scan_counter, self._scan_counter_2, 0])
-            lsy = np.full(len(self._Z), image[self._scan_counter, self._scan_counter_2, 1])
+            x_pos = image[self._scan_counter, self._scan_counter_2, 0]
+            y_pos = image[self._scan_counter, self._scan_counter_2, 1]
+            lsx = np.full(len(self._Z), x_pos)
+            lsy = np.full(len(self._Z), y_pos)
             lsz = self._Z
             line = np.vstack([lsx, lsy, lsz][0:n_ch])
 
@@ -913,12 +913,10 @@ class ConfocalLogic(GenericLogic):
                 return
 
             # make a line to go to the starting position of the next scan line
-
-            self.return_ZL = np.
-            return_line = np.vstack([image[self._scan_counter, 0, 1] * np.ones(self._return_YL.shape),
-                                            self._return_ZL,
-                                            image[self._scan_counter, 0, 2] * np.ones(self._return_YL.shape)
-                                            ][0:n_ch])
+            self.return_ZL = np.linspace(self.return_ZL[-1],self.return_ZL,rs)
+            return_line = np.vstack([x_pos * np.ones(self._return_ZL.shape),
+                                     y_pos * np.ones(self._return_ZL.shape),
+                                     self._return_ZL][0:n_ch])
 
 
             # return the scanner to the start of next line, counts are thrown away
