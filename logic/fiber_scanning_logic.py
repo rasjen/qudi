@@ -271,7 +271,6 @@ class ConfocalLogic(GenericLogic):
     signal_scan_lines_next = QtCore.Signal()
     signal_scan_pixels_next = QtCore.Signal()
     signal_xy_image_updated = QtCore.Signal()
-    signal_fiber_xy_image_updated = QtCore.Signal()
     signal_depth_image_updated = QtCore.Signal()
     signal_change_position = QtCore.Signal(str)
     signal_xy_data_saved = QtCore.Signal()
@@ -280,6 +279,7 @@ class ConfocalLogic(GenericLogic):
     signal_tilt_correction_update = QtCore.Signal()
     signal_draw_figure_completed = QtCore.Signal()
     signal_position_changed = QtCore.Signal()
+    signal_line_counts_updated = QtCore.Signal()
 
     sigImageXYInitialized = QtCore.Signal()
     sigImageDepthInitialized = QtCore.Signal()
@@ -342,7 +342,7 @@ class ConfocalLogic(GenericLogic):
 
         # Sets connections between signals and functions
         self.signal_scan_lines_next.connect(self._scan_line, QtCore.Qt.QueuedConnection)
-        self.signal_xy_image_updated.connect(self._scan_pixel, QtCore.Qt.QueuedConnection)
+        self.signal_scan_pixels_next.connect(self._scan_pixel, QtCore.Qt.QueuedConnection)
         self.signal_start_scanning.connect(self.start_scanner, QtCore.Qt.QueuedConnection)
         self.signal_continue_scanning.connect(self.continue_scanner, QtCore.Qt.QueuedConnection)
 
@@ -867,7 +867,7 @@ class ConfocalLogic(GenericLogic):
                 self.kill_scanner()
                 self.stopRequested = False
                 self.unlock()
-                self.signal_fiber_xy_image_updated.emit()
+                self.signal_xy_image_updated.emit()
                 self.set_position('scanner')
                 self._fiber_xy_line_pos = (self._scan_counter, self._scan_counter_2)
                 # add new history entry
@@ -897,8 +897,6 @@ class ConfocalLogic(GenericLogic):
                     self.signal_scan_pixels_next.emit()
                     return
 
-            image = self.fiber_xy_image
-
             x_pos = image[self._scan_counter, self._scan_counter_2, 0]
             y_pos = image[self._scan_counter, self._scan_counter_2, 1]
             lsx = np.full(len(self._Z), x_pos)
@@ -913,7 +911,8 @@ class ConfocalLogic(GenericLogic):
                 return
 
             # make a line to go to the starting position of the next scan line
-            self.return_ZL = np.linspace(self.return_ZL[-1],self.return_ZL,rs)
+            rs = self.return_slowness
+            self._return_ZL = np.linspace(self._Z[-1], self._Z[0], rs)
             return_line = np.vstack([x_pos * np.ones(self._return_ZL.shape),
                                      y_pos * np.ones(self._return_ZL.shape),
                                      self._return_ZL][0:n_ch])
@@ -926,12 +925,19 @@ class ConfocalLogic(GenericLogic):
                 self.signal_scan_lines_next.emit()
                 return
 
+            # update image
+            self.xy_image[self._scan_counter, self._scan_counter_2, 3:3 + s_ch] = np.max(line_counts)
+            self.line_counts = line_counts
+            self.signal_line_counts_updated.emit()
+            self.signal_xy_image_updated.emit()
+
+            # scan next pixel
+            self._scan_counter_2 += 1
+
             if self._scan_counter_2 >= np.size(self._X):
             # next line in scan
                 self._scan_counter += 1
                 self._scan_counter_2 = 0
-            else:
-                self._scan_counter_2 +=1
 
             # stop if we are at the end
             if self._scan_counter >= np.size(self._image_vert_axis):
@@ -939,9 +945,6 @@ class ConfocalLogic(GenericLogic):
                     self.stop_scanning()
                 else:
                     self._scan_counter = 0
-
-            self.xy_image[self._scan_counter, self._scan_counter_2, 3:3 + s_ch] = np.max(line_counts)
-            self.signal_xy_image_updated.emit()
 
             self.signal_scan_pixels_next.emit()
         except:

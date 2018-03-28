@@ -322,19 +322,6 @@ class NICard(Base, SlowCounterInterface, ConfocalScannerInterface, ODMRCounterIn
             if len(self._position_range) > 3:
                 self.log.warning('No a_range configured taking [0,100e-6] instead.')
 
-        if 'voltage_range' in config.keys():
-            if float(config['voltage_range'][0]) < float(config['voltage_range'][1]):
-                vlow = float(config['voltage_range'][0])
-                vhigh = float(config['voltage_range'][1])
-                self._voltage_range = [
-                    [vlow, vhigh], [vlow, vhigh], [vlow, vhigh], [vlow, vhigh]
-                    ][0:len(self._voltage_range)]
-            else:
-                self.log.warning(
-                    'Configuration ({}) of voltage_range incorrect, taking [-10,10] instead.'
-                    ''.format(config['voltage_range']))
-        else:
-            self.log.warning('No voltage_range configured, taking [-10,10] instead.')
 
         if 'x_voltage_range' in config.keys() and len(self._voltage_range) > 0:
             if float(config['x_voltage_range'][0]) < float(config['x_voltage_range'][1]):
@@ -394,6 +381,12 @@ class NICard(Base, SlowCounterInterface, ConfocalScannerInterface, ODMRCounterIn
             if self._start_cavity_analog_output() < 0:
                 self.log.error('Failed to start analog output.')
                 raise Exception('Failed to start NI Card module due to analog output failure.')
+
+        # Analog output is always needed and it does not interfere with the
+        # rest, so start it always and leave it running
+        if self._start_analog_output() < 0:
+            self.log.error('Failed to start analog output.')
+            raise Exception('Failed to start NI Card module due to analog output failure.')
 
 
     def on_deactivate(self):

@@ -139,7 +139,7 @@ class ConfocalMainWindow(QtWidgets.QMainWindow):
     def __init__(self):
         # Get the path to the *.ui file
         this_dir = os.path.dirname(__file__)
-        ui_file = os.path.join(this_dir, 'JPE_stage_gui.ui')
+        ui_file = os.path.join(this_dir, 'ui_confocalgui.ui')
         self._doubleclicked = False
 
         # Load it
@@ -182,7 +182,6 @@ class OptimizerSettingDialog(QtWidgets.QDialog):
         super(OptimizerSettingDialog, self).__init__()
         uic.loadUi(ui_file, self)
 
-|
 class ConfocalGui(GUIBase):
 
     """ Main Confocal Class for xy and depth scans.
