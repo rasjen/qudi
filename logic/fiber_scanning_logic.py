@@ -175,6 +175,7 @@ class ConfocalHistoryEntry(QtCore.QObject):
         self.xy_image = np.copy(confocal.xy_image)
         self.depth_image = np.copy(confocal.depth_image)
 
+
     def serialize(self):
         """ Give out a dictionary that can be saved via the usual means """
         serialized = dict()
@@ -271,10 +272,12 @@ class ConfocalLogic(GenericLogic):
     signal_scan_lines_next = QtCore.Signal()
     signal_scan_pixels_next = QtCore.Signal()
     signal_xy_image_updated = QtCore.Signal()
+    signal_depth_line_updated = QtCore.Signal()
     signal_depth_image_updated = QtCore.Signal()
     signal_change_position = QtCore.Signal(str)
     signal_xy_data_saved = QtCore.Signal()
     signal_depth_data_saved = QtCore.Signal()
+    signal_depth_line_data_saved = QtCore.Signal()
     signal_tilt_correction_active = QtCore.Signal(bool)
     signal_tilt_correction_update = QtCore.Signal()
     signal_draw_figure_completed = QtCore.Signal()
@@ -416,7 +419,7 @@ class ConfocalLogic(GenericLogic):
         """
         self._zscan = zscan
         if zscan:
-            self._scan_counter = self._depth_line_pos
+            self._scan_counter, self._scan_counter_2 = self._fiber_xy_line_pos
         elif self._fiber_scan:
             self._scan_counter, self._scan_counter_2 = self._fiber_xy_line_pos
         else:
@@ -447,6 +450,12 @@ class ConfocalLogic(GenericLogic):
         # z1: x-start-value, z2: x-end-value
         z1, z2 = self.image_z_range[0], self.image_z_range[1]
 
+        self._Z = np.linspace(z1, z2, max(self.z_resolution, 2))
+        self.depth_line = np.zeros((len(self._Z), 3 + len(self.get_scanner_count_channels())))
+
+
+        self.depth_line[:,2] = self._Z
+        self.depth_line[:,3] = np.random.rand(len(self._Z))
         # Checks if the x-start and x-end value are ok
         if x2 < x1:
             self.log.error(
@@ -516,7 +525,7 @@ class ConfocalLogic(GenericLogic):
 
             # depth scan is yz plane instead of xz plane
             else:
-                #self._image_horz_axis = self._Y
+                self._image_horz_axis = self._Y
                 # creats an image where each pixel will be [x,y,z,counts]
                 self.depth_image = np.zeros((
                         len(self._image_vert_axis),
@@ -560,6 +569,7 @@ class ConfocalLogic(GenericLogic):
                 (len(self._image_vert_axis), len(self._X)))
 
             self.sigImageXYInitialized.emit()
+
         return 0
 
     def start_scanner(self):
@@ -592,7 +602,7 @@ class ConfocalLogic(GenericLogic):
             self.unlock()
             self.set_position('scanner')
             return -1
-        if self._fiber_scan:
+        if self._fiber_scan or self._zscan:
             self.signal_scan_pixels_next.emit()
         else:
             self.signal_scan_lines_next.emit()
@@ -868,6 +878,7 @@ class ConfocalLogic(GenericLogic):
                 self.stopRequested = False
                 self.unlock()
                 self.signal_xy_image_updated.emit()
+                self.signal_depth_line_updated.emit()
                 self.set_position('scanner')
                 self._fiber_xy_line_pos = (self._scan_counter, self._scan_counter_2)
                 # add new history entry
@@ -880,30 +891,43 @@ class ConfocalLogic(GenericLogic):
                 return
 
         try:
-            if self._scan_counter == 0 and self._scan_counter_2 == 0:
-                # make a line from the current cursor position to
-                # the starting position of the first scan line of the scan
-                rs = self.return_slowness
-                lsx = np.linspace(self._current_x, image[self._scan_counter, 0, 0], rs)
-                lsy = np.linspace(self._current_y, image[self._scan_counter, 0, 1], rs)
-                lsz = np.linspace(self._current_z, image[self._scan_counter, 0, 2], rs)
+            if self._zscan:
+                lsx = self._current_x*np.ones(self._Z.shape)
+                lsy = self._current_y*np.ones(self._Z.shape)
 
-                start_line = np.vstack([lsx, lsy, lsz][0:n_ch])
 
-                # move to the start position of the scan, counts are thrown away
-                start_line_counts = self._scanning_device.scan_line(start_line)
-                if np.any(start_line_counts == -1):
-                    self.stopRequested = True
-                    self.signal_scan_pixels_next.emit()
-                    return
+                self.depth_line[:, 0] = lsx
+                self.depth_line[:, 1] = lsy
 
-            x_pos = image[self._scan_counter, self._scan_counter_2, 0]
-            y_pos = image[self._scan_counter, self._scan_counter_2, 1]
-            lsx = np.full(len(self._Z), x_pos)
-            lsy = np.full(len(self._Z), y_pos)
-            lsz = self._Z
+                lsz = self._Z
+                self.stopRequested = True
+
+            else:
+                if self._scan_counter == 0 and self._scan_counter_2 == 0:
+                    # make a line from the current cursor position to
+                    # the starting position of the first scan line of the scan
+                    rs = self.return_slowness
+                    lsx = np.linspace(self._current_x, image[self._scan_counter, 0, 0], rs)
+                    lsy = np.linspace(self._current_y, image[self._scan_counter, 0, 1], rs)
+                    lsz = np.linspace(self._current_z, image[self._scan_counter, 0, 2], rs)
+
+                    start_line = np.vstack([lsx, lsy, lsz][0:n_ch])
+
+                    # move to the start position of the scan, counts are thrown away
+                    start_line_counts = self._scanning_device.scan_line(start_line)
+                    if np.any(start_line_counts == -1):
+                        self.stopRequested = True
+                        self.signal_scan_pixels_next.emit()
+                        return
+
+                x_pos = image[self._scan_counter, self._scan_counter_2, 0]
+                y_pos = image[self._scan_counter, self._scan_counter_2, 1]
+                lsx = np.full(len(self._Z), x_pos)
+                lsy = np.full(len(self._Z), y_pos)
+                lsz = self._Z
+
+
             line = np.vstack([lsx, lsy, lsz][0:n_ch])
-
             line_counts = self._scanning_device.scan_line(line, pixel_clock=True)
             if np.any(line_counts == -1):
                 self.stopRequested = True
@@ -913,8 +937,8 @@ class ConfocalLogic(GenericLogic):
             # make a line to go to the starting position of the next scan line
             rs = self.return_slowness
             self._return_ZL = np.linspace(self._Z[-1], self._Z[0], rs)
-            return_line = np.vstack([x_pos * np.ones(self._return_ZL.shape),
-                                     y_pos * np.ones(self._return_ZL.shape),
+            return_line = np.vstack([self._current_x * np.ones(self._return_ZL.shape),
+                                     self._current_y * np.ones(self._return_ZL.shape),
                                      self._return_ZL][0:n_ch])
 
 
@@ -926,10 +950,12 @@ class ConfocalLogic(GenericLogic):
                 return
 
             # update image
+            self.depth_line[:, 3:3 + s_ch] = line_counts
             self.xy_image[self._scan_counter, self._scan_counter_2, 3:3 + s_ch] = np.max(line_counts)
             self.line_counts = line_counts
             self.signal_line_counts_updated.emit()
             self.signal_xy_image_updated.emit()
+            self.signal_depth_line_updated.emit()
 
             # scan next pixel
             self._scan_counter_2 += 1
@@ -1273,6 +1299,41 @@ class ConfocalLogic(GenericLogic):
                              )
         self.signal_draw_figure_completed.emit()
         return fig
+
+    def save_depth_line_data(self):
+
+        filepath = self._save_logic.get_path_for_module('FiberScan')
+        timestamp = datetime.datetime.now()
+
+        # Prepare the metadata parameters (common to both saved files):
+        parameters = OrderedDict()
+
+        # TODO: This needs to check whether the scan was XZ or YZ direction
+
+        parameters['Z resolution (samples per range)'] = self.z_resolution
+        parameters['Depth line at x position (m)'] = self._current_x
+        parameters['Depth line at y position (m)'] = self._current_y
+
+        parameters['Clock frequency of scanner (Hz)'] = self._clock_frequency
+        parameters['Return Slowness (Steps during retrace line)'] = self.return_slowness
+
+        data = OrderedDict()
+        data['z position (m)'] = self.depth_line[:, 2]
+
+        for n, ch in enumerate(self.get_scanner_count_channels()):
+            data['count rate {0} (Hz)'.format(ch)] = self.depth_line[:, 3 + n]
+
+        filelabel = 'depth_line_data'
+        self._save_logic.save_data(data,
+                                   filepath=filepath,
+                                   timestamp=timestamp,
+                                   parameters=parameters,
+                                   filelabel=filelabel,
+                                   fmt='%.6e',
+                                   delimiter='\t')
+
+        self.signal_depth_line_data_saved.emit()
+
 
     ##################################### Tilt correction ########################################
 
