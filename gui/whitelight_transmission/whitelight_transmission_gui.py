@@ -391,14 +391,12 @@ class WLTGui(GUIBase):
         """
 
         amplitude = self._mw.ramp_amplitude_DoubleSpinBox.value()
-        offset = self._mw.ramp_offset_DoubleSpinBox.value()
         freq = self._mw.ramp_frequency_DoubleSpinBox.value()
 
-        self._wlt_logic.start_ramp(amplitude, offset, freq)
+        self._wlt_logic.start_ramp(amplitude, freq)
 
         # Disable changes to parameters
         self._mw.ramp_amplitude_DoubleSpinBox.setEnabled(False)
-        self._mw.ramp_offset_DoubleSpinBox.setEnabled(False)
         self._mw.ramp_frequency_DoubleSpinBox.setEnabled(False)
         self._mw.start_pushButton.setEnabled(False)
 
@@ -408,7 +406,6 @@ class WLTGui(GUIBase):
 
         # Enable changes to parameters
         self._mw.ramp_amplitude_DoubleSpinBox.setEnabled(True)
-        self._mw.ramp_offset_DoubleSpinBox.setEnabled(True)
         self._mw.ramp_frequency_DoubleSpinBox.setEnabled(True)
         self._mw.start_pushButton.setEnabled(True)
 

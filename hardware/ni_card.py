@@ -169,6 +169,7 @@ class NICard(Base, SlowCounterInterface, ConfocalScannerInterface, ODMRCounterIn
         self._sweep_task = None
         self._ramp_task = None
         self._scanner_ai_task = None
+        self.strain_gauge = True
 
         config = self.getConfiguration()
 
@@ -1129,6 +1130,7 @@ class NICard(Base, SlowCounterInterface, ConfocalScannerInterface, ODMRCounterIn
                     # which channel to count
                     my_photon_sources[i])
                 self._scanner_counter_daq_tasks.append(task)
+
         except:
             self.log.exception('Error while setting up scanner.')
             retval = -1
@@ -1312,6 +1314,11 @@ class NICard(Base, SlowCounterInterface, ConfocalScannerInterface, ODMRCounterIn
                 # count twice for each voltage +1 for safety
                 self._line_length + 1)
 
+            if self.strain_gauge:
+                self.setup_read_position(samples_rate=self._scanner_clock_frequency,
+                                         number_of_samples= self._line_length+1,
+                                         source='Scanner')
+
             for i, task in enumerate(self._scanner_counter_daq_tasks):
                 # Configure Implicit Timing for the scanner counting task.
                 # Set timing for scanner count task to the number of pixel.
@@ -1390,6 +1397,7 @@ class NICard(Base, SlowCounterInterface, ConfocalScannerInterface, ODMRCounterIn
                 start=False)
 
             # start the timed analog output task
+            daq.DAQmxStartTask(self._scanner_ai_task)
             daq.DAQmxStartTask(self._scanner_ao_task)
 
             for i, task in enumerate(self._scanner_counter_daq_tasks):
@@ -2461,8 +2469,20 @@ class NICard(Base, SlowCounterInterface, ConfocalScannerInterface, ODMRCounterIn
         '''
 
         # Generate ramp signal
-        t = np.linspace(0, 1, SampNum)
-        data = self.ramp_function(t, amp, off, freq, t0=0)
+        t = np.linspace(0, 1/freq, SampNum)
+
+        x_pos = self._current_position[0]
+        y_pos = self._current_position[1]
+        z_pos = self._current_position[2]
+
+        # [ [1, 2, 3, 4, 5], [1, 1, 1, 1, 1], [-2, -2, -2, -2] ]
+        x_pos_data = np.ones(SampNum)*x_pos
+        y_pos_data = np.ones(SampNum)*y_pos
+        z_pos_data = self.ramp_function(t, amp, off, freq, t0=0)
+
+        data = self._scanner_position_to_volt([x_pos_data, y_pos_data, z_pos_data])
+
+        self.ramp_data = data[2]
 
         # Create task for ramp signal
         self._ramp_task = daq.TaskHandle()
@@ -2474,12 +2494,13 @@ class NICard(Base, SlowCounterInterface, ConfocalScannerInterface, ODMRCounterIn
         else:
             self.log.error('No cavity channel to generate ramp, set a cavity channel in config file')
 
+        SampRate = freq * SampNum
         #Use internal clock for generate the ramp
-        daq.DAQmxCfgSampClkTiming(self._ramp_task,"",SampNum,daq.DAQmx_Val_Rising,
+        daq.DAQmxCfgSampClkTiming(self._ramp_task,"",SampRate,daq.DAQmx_Val_Rising,
                                   daq.DAQmx_Val_ContSamps,SampNum)
 
         # Write data to DAQ-card
-        daq.DAQmxWriteAnalogF64(self._ramp_task, SampNum,0,10.0,daq.DAQmx_Val_GroupByChannel,data, None, None)
+        daq.DAQmxWriteAnalogF64(self._ramp_task, SampNum,0,10.0,daq.DAQmx_Val_GroupByChannel,self.ramp_data, None, None)
 
         return 0
 
@@ -2552,6 +2573,12 @@ class NICard(Base, SlowCounterInterface, ConfocalScannerInterface, ODMRCounterIn
             retval = -1
         return retval
 
+    def DoneCallback_py(self, taskHandle, status, callbackData):
+        self.log.info(taskHandle)
+        self.log.info(status)
+        self.log.info(callbackData)
+        return 0
+
     def start_read_position(self, samples_rate=200, number_of_samples=200, timeout=10):
         """
 
@@ -2562,29 +2589,41 @@ class NICard(Base, SlowCounterInterface, ConfocalScannerInterface, ODMRCounterIn
         """
 
         daq.DAQmxStartTask(self._scanner_ai_task)
-
         return
 
-    def setup_read_position(self, samples_rate=200, number_of_samples=200):
+    def setup_read_position(self, samples_rate=20, number_of_samples=20, source=""):
         self._start_analog_input()
-        daq.DAQmxCfgSampClkTiming(self._scanner_ai_task, "",
+
+
+        daq.DAQmxCfgSampClkTiming(self._scanner_ai_task,
+                                  # The source terminal of the Sample Clock. To use the internal clock of the device,
+                                  #  use NULL or use OnboardClock
+                                  "",
                                   # The sampling rate (S/sec
-                                  samples_rate, daq.DAQmx_Val_Rising, daq.DAQmx_Val_FiniteSamps,
+                                  samples_rate, daq.DAQmx_Val_Falling, daq.DAQmx_Val_FiniteSamps,
                                   # Number of sample
                                   number_of_samples)
+
+        if source == 'Scanner':
+            source_trigger = "ao/SampleClock "
+            daq.DAQmxCfgDigEdgeStartTrig(self._scanner_ai_task, source_trigger, daq.DAQmx_Val_Falling)
+
         self.rawdata = np.zeros(number_of_samples, dtype=np.float64)
+        #DoneCallback = daq.DAQmxDoneEventCallbackPtr(self.DoneCallback_py)
+        #daq.DAQmxRegisterDoneEvent(self._scanner_ai_task, 0, DoneCallback, None)
 
     def read_position(self, timeout=100):
         read = daq.int32()
         daq.DAQmxReadAnalogF64(self._scanner_ai_task,
                            # The number of samples, per channel, to read
-                           100000,
+                           len(self.rawdata),
                            # The amount of time, in seconds, to wait for the function to read the sample
                            timeout,
                            daq.DAQmx_Val_GroupByChannel,
                            self.rawdata,
                            # The actual number of samples read from each channel
-                           100000,
+                           len(self.rawdata),
                            daq.byref(read), None)
 
         return self.rawdata
+

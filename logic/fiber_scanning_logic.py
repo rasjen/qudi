@@ -303,6 +303,7 @@ class ConfocalLogic(GenericLogic):
         self.depth_scan_dir_is_xz = True
         self.depth_img_is_xz = True
         self.permanent_scan = False
+        self.strain_gauge = True
 
     def on_activate(self):
         """ Initialisation performed during activation of the module.
@@ -456,6 +457,7 @@ class ConfocalLogic(GenericLogic):
 
         self.depth_line[:,2] = self._Z
         self.depth_line[:,3] = np.random.rand(len(self._Z))
+        self.line_position_data = np.random.rand(len(self._Z))
         # Checks if the x-start and x-end value are ok
         if x2 < x1:
             self.log.error(
@@ -929,6 +931,8 @@ class ConfocalLogic(GenericLogic):
 
             line = np.vstack([lsx, lsy, lsz][0:n_ch])
             line_counts = self._scanning_device.scan_line(line, pixel_clock=True)
+            if self.strain_gauge:
+                line_position_data = self._scanning_device.read_position()
             if np.any(line_counts == -1):
                 self.stopRequested = True
                 self.signal_scan_pixels_next.emit()
@@ -951,10 +955,13 @@ class ConfocalLogic(GenericLogic):
 
             # update image
             self.depth_line[:, 3:3 + s_ch] = line_counts
-            self.xy_image[self._scan_counter, self._scan_counter_2, 3:3 + s_ch] = np.max(line_counts)
+            if self._fiber_scan:
+                self.xy_image[self._scan_counter, self._scan_counter_2, 3:3 + s_ch] = np.max(line_counts)
             self.line_counts = line_counts
+            self.line_position_data = 2*line_position_data[1:]*1e-6
             self.signal_line_counts_updated.emit()
-            self.signal_xy_image_updated.emit()
+            if self._fiber_scan:
+                self.signal_xy_image_updated.emit()
             self.signal_depth_line_updated.emit()
 
             # scan next pixel
@@ -1318,7 +1325,7 @@ class ConfocalLogic(GenericLogic):
         parameters['Return Slowness (Steps during retrace line)'] = self.return_slowness
 
         data = OrderedDict()
-        data['z position (m)'] = self.depth_line[:, 2]
+        data['z position (m)'] = self.line_position_data
 
         for n, ch in enumerate(self.get_scanner_count_channels()):
             data['count rate {0} (Hz)'.format(ch)] = self.depth_line[:, 3 + n]
@@ -1333,6 +1340,22 @@ class ConfocalLogic(GenericLogic):
                                    delimiter='\t')
 
         self.signal_depth_line_data_saved.emit()
+
+
+    def start_ramp(self, amplitude, freq):
+
+        position = self._scanning_device.get_scanner_position()
+        z_pos = position[2]
+
+        self._scanning_device.set_up_ramp_output(amplitude,z_pos, freq)
+        self._scanning_device.start_ramp()
+
+    def stop_ramp(self):
+
+        self._scanning_device.stop_ramp()
+        self._scanning_device.close_ramp()
+
+        self.set_position('ramp')
 
 
     ##################################### Tilt correction ########################################

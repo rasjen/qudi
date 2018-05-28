@@ -271,9 +271,6 @@ class FiberScanGui(GUIBase):
         # Hide tilt correction window
         self._mw.tilt_correction_dockWidget.hide()
 
-        # Hide scan line display
-        self._mw.scanLineDockWidget.hide()
-
         # set up scan line plot
         sc = self._scanning_logic._scan_counter
         sc = sc - 1 if sc >= 1 else sc
@@ -282,8 +279,8 @@ class FiberScanGui(GUIBase):
         # else:
         data = self._scanning_logic.xy_image[sc, :, 0:4:3]
 
-        self.scan_line_plot = pg.PlotDataItem(data, pen=pg.mkPen(palette.c1))
-        self._mw.scanLineGraphicsView.addItem(self.scan_line_plot)
+        #self.scan_line_plot = pg.PlotDataItem(data, pen=pg.mkPen(palette.c1))
+        #self._mw.scanLineGraphicsView.addItem(self.scan_line_plot)
 
         ###################################################################
         #               Configuration of the optimizer tab                #
@@ -524,6 +521,16 @@ class FiberScanGui(GUIBase):
         self.xy_image.getViewBox().sigRangeChanged.connect(self.update_roi_xy_size)
         # self.depth_image.getViewBox().sigRangeChanged.connect(self.update_roi_depth_size)
 
+        # Ramp
+        self._mw.ramp_frequency_DoubleSpinBox.setMaximum(100)
+        self._mw.ramp_frequency_DoubleSpinBox.setMinimum(0)
+
+        self._mw.ramp_amplitude_DoubleSpinBox.setMinimum(0)
+        self._mw.ramp_amplitude_DoubleSpinBox.setMaximum(20)
+
+        self._mw.StartRamp_PushButton.clicked.connect(self.start_ramp)
+        self._mw.StopRamp_PushButton.clicked.connect(self.stop_ramp)
+
         #################################################################
         #                           Actions                             #
         #################################################################
@@ -622,7 +629,7 @@ class FiberScanGui(GUIBase):
         # Connect the emitted signal of an image change from the logic with
         # a refresh of the GUI picture:
         self._scanning_logic.signal_xy_image_updated.connect(self.refresh_xy_image)
-        self._scanning_logic.signal_xy_image_updated.connect(self.refresh_scan_line)
+        #self._scanning_logic.signal_xy_image_updated.connect(self.refresh_scan_line)
         # self._scanning_logic.signal_depth_image_updated.connect(self.refresh_scan_line)
         # self._scanning_logic.signal_depth_image_updated.connect(self.refresh_depth_image)
         self._optimizer_logic.sigImageUpdated.connect(self.refresh_refocus_image)
@@ -1585,7 +1592,8 @@ class FiberScanGui(GUIBase):
 
     def refresh_depth_line(self):
 
-        self.depth_line_plot.setData(self._scanning_logic.depth_line[:, 2:4])
+        self.depth_line_plot.setData(x=self._scanning_logic.line_position_data,
+                                     y=self._scanning_logic.depth_line[:, 3])
         self.depth_line_plot.getViewBox().updateAutoRange()
         self.log.info('updating plot')
 
@@ -1894,7 +1902,6 @@ class FiberScanGui(GUIBase):
         self._mw.depth_line_scan_dockWidget.show()
         self._mw.optimizer_dockWidget.show()
         self._mw.tilt_correction_dockWidget.hide()
-        self._mw.scanLineDockWidget.hide()
 
         # re-dock any floating dock widgets
         self._mw.xy_scan_dockWidget.setFloating(False)
@@ -1902,14 +1909,12 @@ class FiberScanGui(GUIBase):
         self._mw.depth_line_scan_dockWidget.setFloating(False)
         self._mw.optimizer_dockWidget.setFloating(False)
         self._mw.tilt_correction_dockWidget.setFloating(False)
-        self._mw.scanLineDockWidget.setFloating(False)
 
         self._mw.addDockWidget(QtCore.Qt.DockWidgetArea(1), self._mw.xy_scan_dockWidget)
         self._mw.addDockWidget(QtCore.Qt.DockWidgetArea(8), self._mw.scan_control_dockWidget)
         self._mw.addDockWidget(QtCore.Qt.DockWidgetArea(2), self._mw.depth_line_scan_dockWidget)
         self._mw.addDockWidget(QtCore.Qt.DockWidgetArea(2), self._mw.optimizer_dockWidget)
         self._mw.addDockWidget(QtCore.Qt.DockWidgetArea(8), self._mw.tilt_correction_dockWidget)
-        self._mw.addDockWidget(QtCore.Qt.DockWidgetArea(2), self._mw.scanLineDockWidget)
 
         # Resize window to default size
         self._mw.resize(1255, 939)
@@ -2257,3 +2262,30 @@ class FiberScanGui(GUIBase):
         """
         if tag == 'logic':
             self.disable_scan_actions()
+
+
+    def start_ramp(self):
+        """
+
+        @return:
+        """
+
+        amplitude = self._mw.ramp_amplitude_DoubleSpinBox.value()*1e-6
+        freq = self._mw.ramp_frequency_DoubleSpinBox.value()
+
+        self._scanning_logic.start_ramp(amplitude, freq)
+
+        # Disable changes to parameters
+        self._mw.ramp_amplitude_DoubleSpinBox.setEnabled(False)
+        self._mw.ramp_frequency_DoubleSpinBox.setEnabled(False)
+        self._mw.action_scan_xy_start.setEnabled(False)
+        self._mw.action_scan_depth_start.setEnabled(False)
+
+    def stop_ramp(self):
+        self._scanning_logic.stop_ramp()
+
+        # Enable changes to parameters
+        self._mw.ramp_amplitude_DoubleSpinBox.setEnabled(True)
+        self._mw.ramp_frequency_DoubleSpinBox.setEnabled(True)
+        self._mw.action_scan_xy_start.setEnabled(True)
+        self._mw.action_scan_depth_start.setEnabled(True)

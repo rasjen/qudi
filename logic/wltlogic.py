@@ -555,9 +555,9 @@ class WLTLogic(GenericLogic):
 
         return
 
-    def start_ramp(self, amplitude, offset, freq):
+    def start_ramp(self, amplitude, freq):
 
-        self._scanning_devices.set_up_ramp_output(amplitude, offset, freq)
+        self._scanning_devices.set_up_ramp_output(amplitude, freq)
         self._scanning_devices.start_ramp()
 
     def stop_ramp(self):

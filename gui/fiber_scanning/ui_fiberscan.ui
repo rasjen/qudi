@@ -1697,7 +1697,7 @@
    <addaction name="actionBack"/>
    <addaction name="actionForward"/>
   </widget>
-  <widget class="QDockWidget" name="scanLineDockWidget">
+  <widget class="QDockWidget" name="ramp">
    <property name="windowTitle">
     <string>Scan line</string>
    </property>
@@ -1707,7 +1707,62 @@
    <widget class="QWidget" name="dockWidgetContents_5">
     <layout class="QGridLayout" name="gridLayout_4">
      <item row="0" column="0">
-      <widget class="PlotWidget" name="scanLineGraphicsView"/>
+      <layout class="QFormLayout" name="formLayout_2">
+       <item row="0" column="0">
+        <widget class="QLabel" name="label_2">
+         <property name="text">
+          <string>Frequency (Hz)</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QDoubleSpinBox" name="ramp_frequency_DoubleSpinBox">
+         <property name="decimals">
+          <number>3</number>
+         </property>
+         <property name="maximum">
+          <double>200.000000000000000</double>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QLabel" name="label_4">
+         <property name="text">
+          <string>Amplitude (um)</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QDoubleSpinBox" name="ramp_amplitude_DoubleSpinBox">
+         <property name="decimals">
+          <number>3</number>
+         </property>
+         <property name="minimum">
+          <double>0.000000000000000</double>
+         </property>
+         <property name="maximum">
+          <double>1.860000000000000</double>
+         </property>
+         <property name="singleStep">
+          <double>0.010000000000000</double>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="0">
+        <widget class="QPushButton" name="StartRamp_PushButton">
+         <property name="text">
+          <string>Start ramp</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="1">
+        <widget class="QPushButton" name="StopRamp_PushButton">
+         <property name="text">
+          <string>Stop ramp</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </item>
     </layout>
    </widget>
@@ -2419,7 +2474,7 @@
   <connection>
    <sender>actionScan_line_view</sender>
    <signal>triggered(bool)</signal>
-   <receiver>scanLineDockWidget</receiver>
+   <receiver>ramp</receiver>
    <slot>setVisible(bool)</slot>
    <hints>
     <hint type="sourcelabel">
