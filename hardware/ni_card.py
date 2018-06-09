@@ -378,10 +378,6 @@ class NICard(Base, SlowCounterInterface, ConfocalScannerInterface, ODMRCounterIn
 
         # Analog output is always needed and it does not interfere with the
         # rest, so start it always and leave it running
-        if len(self.cavity_channel) > 0:
-            if self._start_cavity_analog_output() < 0:
-                self.log.error('Failed to start analog output.')
-                raise Exception('Failed to start NI Card module due to analog output failure.')
 
         # Analog output is always needed and it does not interfere with the
         # rest, so start it always and leave it running
@@ -1397,7 +1393,8 @@ class NICard(Base, SlowCounterInterface, ConfocalScannerInterface, ODMRCounterIn
                 start=False)
 
             # start the timed analog output task
-            daq.DAQmxStartTask(self._scanner_ai_task)
+            if self.strain_gauge:
+                daq.DAQmxStartTask(self._scanner_ai_task)
             daq.DAQmxStartTask(self._scanner_ao_task)
 
             for i, task in enumerate(self._scanner_counter_daq_tasks):
@@ -2077,16 +2074,16 @@ class NICard(Base, SlowCounterInterface, ConfocalScannerInterface, ODMRCounterIn
 
         @return int: error code (0:OK, -1:error)
         """
-        if self._sweep_task is None:
+        if self._scanner_ao_task is None:
             self.log.error(
-                'Cannot start sweep since it is notconfigured!\n'
-                'Run the setup_sweep_output routine.')
+                'Cannot start ramp since it is notconfigured!\n'
+                'Run the setup_ramp_output routine.')
             return -1
 
         try:
-            daq.DAQmxStartTask(self._sweep_task)
+            daq.DAQmxStartTask(self._scanner_ao_task)
         except:
-            self.log.exception('Error while starting sweep.')
+            self.log.exception('Error while starting ramp.')
             return -1
         return 0
 
@@ -2095,16 +2092,19 @@ class NICard(Base, SlowCounterInterface, ConfocalScannerInterface, ODMRCounterIn
 
         @return int: error code (0:OK, -1:error)
         """
-        if self._sweep_task is None:
+        if self._scanner_ao_task is None:
             self.log.error(
-                'Cannot stop sweep since it is not running!\n'
-                'Start the sweep singal before you can actually stop it!')
+                'Cannot stop ramp since it is not running!\n'
+                'Start the ramp singal before you can actually stop it!')
             return -1
         try:
-            daq.DAQmxStopTask(self._sweep_task)
+            daq.DAQmxStopTask(self._scanner_ao_task)
         except:
-            self.log.exception('Error while stopping sweep.')
+            self.log.exception('Error while stopping ramp.')
             return -1
+
+        self._stop_analog_output()
+
         return 0
 
     def close_sweep(self):
@@ -2115,14 +2115,14 @@ class NICard(Base, SlowCounterInterface, ConfocalScannerInterface, ODMRCounterIn
         retval = 0
         try:
             # stop the task
-            daq.DAQmxStopTask(self._sweep_task)
+            daq.DAQmxStopTask(self._scanner_ao_task)
         except:
             self.log.exception('Error while closing sweep.')
             retval = -1
         try:
             # clear the task
-            daq.DAQmxClearTask(self._sweep_task)
-            self._sweep_task = None
+            daq.DAQmxClearTask(self._scanner_ao_task)
+            self._ramp_task = None
         except:
             self.log.exception('Error while clearing sweep.')
             retval = -1
@@ -2151,7 +2151,7 @@ class NICard(Base, SlowCounterInterface, ConfocalScannerInterface, ODMRCounterIn
                 f[i] = - slope * (tprime[i] % period) + 2 * stop - start
         return f
 
-    def set_up_sweep(self, start_voltage, stop_voltage, freq, RepOfSweep, SampNum = 10000):
+    def set_up_sweep(self, start_pos, stop_pos, freq, RepOfSweep, SampNum = 10000):
         """
         Create the sweep task for the NIcard 
         
@@ -2165,8 +2165,19 @@ class NICard(Base, SlowCounterInterface, ConfocalScannerInterface, ODMRCounterIn
         """
 
         t = np.linspace(0, 1/freq, SampNum)
-        voltage_sweep_data = self.sweep_function(t, start_voltage, stop_voltage, freq, t0=0)
 
+        x_pos = self._current_position[0]
+        y_pos = self._current_position[1]
+        z_pos = self._current_position[2]
+
+        # [ [1, 2, 3, 4, 5], [1, 1, 1, 1, 1], [-2, -2, -2, -2] ]
+        x_pos_data = np.ones(SampNum)*x_pos
+        y_pos_data = np.ones(SampNum)*y_pos
+        z_pos_data = self.sweep_function(t, start_pos, stop_pos, freq, t0=0)
+
+        data = self._scanner_position_to_volt([x_pos_data, y_pos_data, z_pos_data])
+
+        self.sweep_data = data
 
         if self._sweep_task is not None:
             # stop the analog output task
@@ -2189,215 +2200,27 @@ class NICard(Base, SlowCounterInterface, ConfocalScannerInterface, ODMRCounterIn
 
         SampRate = freq * SampNum
         # Use internal clock for generate the ramp
-        daq.DAQmxCfgSampClkTiming(self._sweep_task, "", SampRate, daq.DAQmx_Val_Rising, daq.DAQmx_Val_FiniteSamps,
+        daq.DAQmxCfgSampClkTiming(self._scanner_ao_task, "", SampRate, daq.DAQmx_Val_Rising, daq.DAQmx_Val_FiniteSamps,
                                   RepOfSweep * SampNum)
 
         # Write data to DAQ-card
-        daq.DAQmxWriteAnalogF64(self._sweep_task, SampNum, 0, 100.0, daq.DAQmx_Val_GroupByChannel, voltage_sweep_data, None, None)
+        daq.DAQmxWriteAnalogF64(self._scanner_ao_task, SampNum, 0, 100.0, daq.DAQmx_Val_GroupByChannel, self.sweep_data, None, None)
 
-        return 0
 
-    def _start_cavity_analog_output(self):
-        """ Starts or restarts the analog output.
-
-        @return int: error code (0:OK, -1:error)
-        """
-        try:
-            # If an analog task is already running, kill that one first
-            if self._cavity_ao_task is not None:
-                # stop the analog output task
-                daq.DAQmxStopTask(self._cavity_ao_task)
-
-                # delete the configuration of the analog output
-                daq.DAQmxClearTask(self._cavity_ao_task)
-
-                # set the task handle to None as a safety
-                self._cavity_ao_task = None
-
-            # initialize ao channels / task for scanner, should always be active.
-            # Define at first the type of the variable as a Task:
-            self._cavity_ao_task = daq.TaskHandle()
-
-            # create the actual analog output task on the hardware device. Via
-            # byref you pass the pointer of the object to the TaskCreation function:
-            daq.DAQmxCreateTask('CavityAO', daq.byref(self._cavity_ao_task))
-
-            # Assign and configure the created task to an analog output voltage channel.
-            daq.DAQmxCreateAOVoltageChan(
-                # The AO voltage operation function is assigned to this task.
-                self._cavity_ao_task,
-                # use (all) scanner ao_channels for the output
-                self.cavity_channel,
-                # assign a name for that channel
-                'Cavity AO Channel',
-                # minimum possible voltage
-                self._cavity_voltage_range[0],
-                # maximum possible voltage
-                self._cavity_voltage_range[1],
-                # units is Volt
-                daq.DAQmx_Val_Volts,
-                # empty for future use
-                '')
-        except:
-            self.log.exception('Error starting cavity analog output task.')
-            return -1
-        return 0
-
-    def _stop_cavity_analog_output(self):
-        """ Stops the analog output.
-
-        @return int: error code (0:OK, -1:error)
-        """
-        if self._cavity_ao_task is None:
-            return -1
-        retval = 0
-        try:
-            # stop the analog output task
-            daq.DAQmxStopTask(self._cavity_ao_task)
-        except:
-            self.log.exception('Error stopping analog output.')
-            retval = -1
-        try:
-            daq.DAQmxSetSampTimingType(self._cavity_ao_task, daq.DAQmx_Val_OnDemand)
-        except:
-            self.log.exception('Error changing analog output mode.')
-            retval = -1
-        return retval
-
-    def _cavity_position_to_volt(self, position=None):
-        """ Converts a set of position pixels to acutal voltages.
-
-        @param float[][n] positions: array of n-part tuples defining the pixels
-
-        @return float[][n]: array of n-part tuples of corresponing voltages
-
-        The positions is typically a matrix like
-            [[x_values], [y_values], [z_values], [a_values]]
-            but x, xy, xyz and xyza are allowed formats.
-        """
-
-        if not isinstance(position, (frozenset, list, set, tuple, np.ndarray, )):
-            self.log.error('Given position list is no array type.')
-            return np.array([np.NaN])
-        vlist = []
-        vlist.append(float((self._cavity_voltage_range[1] - self._cavity_voltage_range[0])
-            / (self._cavity_position_range[1] - self._cavity_position_range[0])
-            * (position - self._cavity_position_range[0])
-            + self._cavity_voltage_range[0]
-            ))
-        volts = np.asanyarray(vlist, dtype=float)
-
-        if volts.min() < self._cavity_voltage_range[0] or volts.max() > self._cavity_voltage_range[1]:
-            self.log.error(
-                'Voltages ({0}, {1}) exceed the limit, the positions have to '
-                'be adjusted to stay in the given range.'.format(volts.min(), volts.max()))
-            return np.array([np.NaN])
-        return volts
-
-    def _write_cavity_ao(self, voltages, length=1, start=False):
-        """Writes a set of voltages to the analog outputs.
-
-        @param float[][n] voltages: array of n-part tuples defining the voltage
-                                    points
-        @param int length: number of tuples to write
-        @param bool start: write imediately (True)
-                           or wait for start of task (False)
-
-        n depends on how many channels are configured for analog output
-        """
-        # Number of samples which were actually written, will be stored here.
-        # The error code of this variable can be asked with .value to check
-        # whether all channels have been written successfully.
-        self._AONwrittenC = daq.int32()
-        # write the voltage instructions for the analog output to the hardware
-        daq.DAQmxWriteAnalogF64(
-            # write to this task
-            self._cavity_ao_task,
-            # length of the command (points)
-            length,
-            # start task immediately (True), or wait for software start (False)
-            start,
-            # maximal timeout in seconds for# the write process
-            self._RWTimeout,
-            # Specify how the samples are arranged: each pixel is grouped by channel number
-            daq.DAQmx_Val_GroupByChannel,
-            # the voltages to be written
-            voltages,
-            # The actual number of samples per channel successfully written to the buffer
-            daq.byref(self._AONwrittenC),
-            # Reserved for future use. Pass NULL(here None) to this parameter
-            None)
-        return self._AONwrittenC.value
-
-    def cavity_set_position(self, pos=None):
-        """Move stage to pos.
-
-        #FIXME: No volts
-        @param float pos: postion in x-direction (volts)
-
-        @return int: error code (0:OK, -1:error)
-        """
-
-        # if self.getState() == 'locked':
-        #    self.log.error('Another scan_line is already running, close this one first.')
-        #    return -1
-
-        if pos is not None:
-            if not (self._cavity_position_range[0] <= pos <= self._cavity_position_range[1]):
-                self.log.error('You want to set x out of range: {0:f}.'.format(pos))
-                return -1
-            self._current_cavity_position[0] = np.float(pos)
-
-        # the position has to be a vstack
-        my_position = np.array(self._current_cavity_position)
-        # then directly write the position to the hardware
-
-        try:
-            self._write_cavity_ao(
-                voltages=self._cavity_position_to_volt(my_position),
-                start=True)
-        except:
-            return -1
-        return 0
-
-    def cavity_set_voltage(self, voltage=None):
-        """Move stage to pos.
-
-        #FIXME: No volts
-        @param float voltage: voltage in x-direction (volts)
-
-        @return int: error code (0:OK, -1:error)
-        """
-
-        # if self.getState() == 'locked':
-        #    self.log.error('Another scan_line is already running, close this one first.')
-        #    return -1
-
-        if voltage is not None:
-            if not (self._cavity_voltage_range[0] <= voltage <= self._cavity_voltage_range[1]):
-                self.log.error('You want to set x out of range: {0:f}.'.format(voltage))
-                return -1
-
-        try:
-            self._write_cavity_ao(
-                voltages=np.array(voltage),
-                start=True)
-        except:
-            return -1
         return 0
 
     def start_ramp(self):
         """Actually start the preconfigured counter task
         @return int: error code (0:OK, -1:error)
         """
-        if self._ramp_task is None:
+        if self._scanner_ao_task is None:
             self.log.error(
                 'Cannot start ramp since it is notconfigured!\n'
                 'Run the setup_ramp_output routine.')
             return -1
 
         try:
-            daq.DAQmxStartTask(self._ramp_task)
+            daq.DAQmxStartTask(self._scanner_ao_task)
         except:
             self.log.exception('Error while starting ramp.')
             return -1
@@ -2407,32 +2230,35 @@ class NICard(Base, SlowCounterInterface, ConfocalScannerInterface, ODMRCounterIn
         """Actually start the preconfigured counter task
         @return int: error code (0:OK, -1:error)
         """
-        if self._ramp_task is None:
+        if self._scanner_ao_task is None:
             self.log.error(
                 'Cannot stop ramp since it is not running!\n'
                 'Start the ramp singal before you can actually stop it!')
             return -1
         try:
-            daq.DAQmxStopTask(self._ramp_task)
+            daq.DAQmxStopTask(self._scanner_ao_task)
         except:
             self.log.exception('Error while stopping ramp.')
             return -1
+
+        self._stop_analog_output()
+        
         return 0
 
-    def close_ramp(self):
+    def _close_ramp(self):
         """ Clear tasks, so that counters are not in use any more.
         @return int: error code (0:OK, -1:error)
         """
         retval = 0
         try:
             # stop the task
-            daq.DAQmxStopTask(self._ramp_task)
+            daq.DAQmxStopTask(self._scanner_ao_task)
         except:
             self.log.exception('Error while closing ramp.')
             retval = -1
         try:
             # clear the task
-            daq.DAQmxClearTask(self._ramp_task)
+            daq.DAQmxClearTask(self._scanner_ao_task)
             self._ramp_task = None
         except:
             self.log.exception('Error while clearing ramp.')
@@ -2482,25 +2308,15 @@ class NICard(Base, SlowCounterInterface, ConfocalScannerInterface, ODMRCounterIn
 
         data = self._scanner_position_to_volt([x_pos_data, y_pos_data, z_pos_data])
 
-        self.ramp_data = data[2]
-
-        # Create task for ramp signal
-        self._ramp_task = daq.TaskHandle()
-        daq.DAQmxCreateTask('Ramp', daq.byref(self._ramp_task))
-
-        if self.cavity_channel is not None:
-            daq.DAQmxCreateAOVoltageChan(self._ramp_task,self.cavity_channel, "", self._cavity_voltage_range[0],
-                                         self._cavity_voltage_range[1], daq.DAQmx_Val_Volts,None)
-        else:
-            self.log.error('No cavity channel to generate ramp, set a cavity channel in config file')
+        self.ramp_data = data
 
         SampRate = freq * SampNum
         #Use internal clock for generate the ramp
-        daq.DAQmxCfgSampClkTiming(self._ramp_task,"",SampRate,daq.DAQmx_Val_Rising,
+        daq.DAQmxCfgSampClkTiming(self._scanner_ao_task,"",SampRate,daq.DAQmx_Val_Rising,
                                   daq.DAQmx_Val_ContSamps,SampNum)
 
         # Write data to DAQ-card
-        daq.DAQmxWriteAnalogF64(self._ramp_task, SampNum,0,10.0,daq.DAQmx_Val_GroupByChannel,self.ramp_data, None, None)
+        daq.DAQmxWriteAnalogF64(self._scanner_ao_task, SampNum,0,10.0,daq.DAQmx_Val_GroupByChannel,self.ramp_data, None, None)
 
         return 0
 

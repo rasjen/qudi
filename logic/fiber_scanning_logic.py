@@ -1353,7 +1353,6 @@ class ConfocalLogic(GenericLogic):
     def stop_ramp(self):
 
         self._scanning_device.stop_ramp()
-        self._scanning_device.close_ramp()
 
         self.set_position('ramp')
 

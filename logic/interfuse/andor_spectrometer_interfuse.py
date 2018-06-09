@@ -28,7 +28,6 @@ class AndorSpectrometerInterfuse(GenericLogic, SpectrometerInterface):
     single_track_minimum_vertical_pixels = 0
 
     sigMeasurementStarted = QtCore.Signal()
-    sigMeasurementStarted_0 = QtCore.Signal()
 
     def __init__(self, config, **kwargs):
         super().__init__(config=config, **kwargs)
@@ -154,9 +153,6 @@ class AndorSpectrometerInterfuse(GenericLogic, SpectrometerInterface):
         self.mode = 'Image'
 
     def acquisition_data(self, start_sweep=False):
-        if start_sweep is True:
-            self.sigMeasurementStarted_0.emit()
-            sleep(0.5)
         self.andor.start_acquisition()
         if start_sweep is True:
             sleep(0.8)

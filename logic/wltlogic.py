@@ -26,7 +26,7 @@ class WLTLogic(GenericLogic):
     nicard = Connector(interface='ConfocalScannerInterface')
     spectrometer = Connector(interface='spectrometerInterface')
     savelogic = Connector(interface='SaveLogic')
-    scopelogic = Connector(interface='ScopeLogic')
+    #scopelogic = Connector(interface='ScopeLogic')
 
     # signals for WLT
     sigNextLine = QtCore.Signal()
@@ -76,8 +76,6 @@ class WLTLogic(GenericLogic):
         self.initialize_image()
         self.initialize_spectrum_plot()
 
-
-        self._spectrometer.sigMeasurementStarted_0.connect(self._scanning_devices.start_read_position)
         self._spectrometer.sigMeasurementStarted.connect(self._scanning_devices.start_sweep)
         #self._spectrometer.sigMeasurementStarted.connect(self._scope.force_trigger)
 
@@ -99,7 +97,7 @@ class WLTLogic(GenericLogic):
         sample_rate = 500
         number_of_sample = int(sample_rate*1/self.scan_frequency)
         self.position_time = np.linspace(0, number_of_sample*1/sample_rate, number_of_sample, endpoint=False)
-        self._scanning_devices.setup_read_position(samples_rate=sample_rate, number_of_samples=number_of_sample)
+        self._scanning_devices.setup_read_position(samples_rate=sample_rate, number_of_samples=number_of_sample+1, source='scanner')
 
         return 0
 
@@ -116,15 +114,18 @@ class WLTLogic(GenericLogic):
         self.pos_stop = pos_stop
         self.scan_frequency = frequency
         self._sweep(frequency, pos_start, pos_stop)
+
         self.setup_read_position()
+        self._scanning_devices.start_read_position()
 
         self._start_spectrometer_measurements(sweep_start=True)
 
         sleep(1/frequency)
-        self.time_stop =  self.cycle_time*self.number_of_steps
+        self.time_stop = self.cycle_time*self.number_of_steps
         self._scanning_devices.stop_sweep()
         #self._scope.save_data()
-        self.position_data = self._scanning_devices.read_position(timeout=1/self.scan_frequency+0.1)
+        line_position_data = self._scanning_devices.read_position()
+        self.position_data = line_position_data[1:]
         self.sigPztimageUpdated.emit()
         self.save_xy_data()
         self.save_position_data()
@@ -307,13 +308,11 @@ class WLTLogic(GenericLogic):
         :return: 
         """
 
-        start_volt = self._scanning_devices._cavity_position_to_volt(np.array(pos_start))
-        stop_volt = self._scanning_devices._cavity_position_to_volt(np.array(pos_stop))
 
-        self._scanning_devices.cavity_set_voltage(start_volt)
+        self._scanning_devices.scanner_set_position(z=pos_start)
         RepOfSweep = 1
 
-        self._scanning_devices.set_up_sweep(start_volt, stop_volt, frequency, RepOfSweep)
+        self._scanning_devices.set_up_sweep(pos_start, pos_stop, frequency, RepOfSweep)
 
     def set_cavity_position(self, position):
         """
@@ -322,7 +321,7 @@ class WLTLogic(GenericLogic):
         :param position: 
         :return: 
         """
-        self._scanning_devices.cavity_set_position(position)
+        self._scanning_devices.scanner_set_position(z=position)
 
     def _start_spectrometer_measurements(self, sweep_start=False):
         """
@@ -565,5 +564,3 @@ class WLTLogic(GenericLogic):
         self._scanning_devices.stop_ramp()
         self._scanning_devices.close_ramp()
 
-    def set_cavity_position(self, position):
-        self._scanning_devices.cavity_set_position(position)
