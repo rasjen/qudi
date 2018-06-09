@@ -2081,7 +2081,25 @@ class NICard(Base, SlowCounterInterface, ConfocalScannerInterface, ODMRCounterIn
             return -1
 
         try:
+            if self.strain_gauge:
+                daq.DAQmxStartTask(self._scanner_ai_task)
             daq.DAQmxStartTask(self._scanner_ao_task)
+
+            daq.DAQmxStartTask(self._scanner_clock_daq_task)
+
+            daq.DAQmxWaitUntilTaskDone(
+                # define task
+                self._scanner_clock_daq_task,
+                # maximal timeout for the counter times the positions
+                self._RWTimeout * 2 * self.self.sweep_length)
+
+            # stop the clock task
+            daq.DAQmxStopTask(self._scanner_clock_daq_task)
+
+            daq.DAQmxStopTask(self._scanner_ai_task)
+            # stop the analog output task
+            self._stop_analog_output()
+
         except:
             self.log.exception('Error while starting ramp.')
             return -1
@@ -2151,7 +2169,7 @@ class NICard(Base, SlowCounterInterface, ConfocalScannerInterface, ODMRCounterIn
                 f[i] = - slope * (tprime[i] % period) + 2 * stop - start
         return f
 
-    def set_up_sweep(self, start_pos, stop_pos, freq, RepOfSweep, SampNum = 10000):
+    def set_up_sweep(self, start_pos, stop_pos, freq, RepOfSweep, line_length):
         """
         Create the sweep task for the NIcard 
         
@@ -2164,47 +2182,59 @@ class NICard(Base, SlowCounterInterface, ConfocalScannerInterface, ODMRCounterIn
         :return: 
         """
 
-        t = np.linspace(0, 1/freq, SampNum)
+        if self._scanner_clock_daq_task is None:
+            self.log.error('No clock running, call set_up_clock before starting the counter.')
+            return -1
+
+        self.sweep_length = line_length
+
+        # Set the scanner clock to be finite sample
+        daq.DAQmxCfgImplicitTiming(
+            # define task
+            self._scanner_clock_daq_task,
+            # only a limited number of# counts
+            daq.DAQmx_Val_FiniteSamps,
+            # count twice for each voltage +1 for safety
+            self._sweep_length + 1)
+
+        # Set the sampling timing type to be
+        daq.DAQmxSetSampTimingType(self._scanner_ao_task, daq.DAQmx_Val_SampClk)
+
+        daq.DAQmxCfgSampClkTiming(
+            # add to this task
+            self._scanner_ao_task,
+            # use this channel as clock
+            self._my_scanner_clock_channel + 'InternalOutput',
+            # Maximum expected clock frequency
+            self._scanner_clock_frequency,
+            # Generate sample on falling edge
+            daq.DAQmx_Val_Rising,
+            # generate finite number of samples
+            daq.DAQmx_Val_FiniteSamps,
+            # number of samples to generate
+            self.sweep_length)
+
+        t = np.linspace(0, 1 / freq, line_length)
 
         x_pos = self._current_position[0]
         y_pos = self._current_position[1]
         z_pos = self._current_position[2]
 
         # [ [1, 2, 3, 4, 5], [1, 1, 1, 1, 1], [-2, -2, -2, -2] ]
-        x_pos_data = np.ones(SampNum)*x_pos
-        y_pos_data = np.ones(SampNum)*y_pos
+        x_pos_data = np.ones(line_length) * x_pos
+        y_pos_data = np.ones(line_length) * y_pos
         z_pos_data = self.sweep_function(t, start_pos, stop_pos, freq, t0=0)
 
         data = self._scanner_position_to_volt([x_pos_data, y_pos_data, z_pos_data])
 
         self.sweep_data = data
 
-        if self._sweep_task is not None:
-            # stop the analog output task
-            daq.DAQmxStopTask(self._sweep_task)
-
-            # delete the configuration of the analog output
-            daq.DAQmxClearTask(self._sweep_task)
-
-            # set the task handle to None as a safety
-            self._sweep_task = None
-
-        self._sweep_task = daq.TaskHandle()
-        daq.DAQmxCreateTask('sweep_task', daq.byref(self._sweep_task))
-
-        if self.cavity_channel is not None:
-            daq.DAQmxCreateAOVoltageChan(self._sweep_task, self.cavity_channel, "", self._cavity_voltage_range[0],
-                                     self._cavity_voltage_range[1], daq.DAQmx_Val_Volts, None)
-        else:
-            self.log.error('No cavity channel to generate ramp, set a cavity channel in config file')
-
-        SampRate = freq * SampNum
-        # Use internal clock for generate the ramp
-        daq.DAQmxCfgSampClkTiming(self._scanner_ao_task, "", SampRate, daq.DAQmx_Val_Rising, daq.DAQmx_Val_FiniteSamps,
-                                  RepOfSweep * SampNum)
-
         # Write data to DAQ-card
-        daq.DAQmxWriteAnalogF64(self._scanner_ao_task, SampNum, 0, 100.0, daq.DAQmx_Val_GroupByChannel, self.sweep_data, None, None)
+        self._write_scanner_ao(voltages=self.sweep_data,length=self.sweep_length,start=False)
+
+        if self.strain_gauge:
+            self.setup_read_position(samples_rate=5*self._scanner_clock_frequency,
+                                     number_of_samples=5*self.sweep_length+1, source='scanner')
 
 
         return 0
@@ -2420,6 +2450,7 @@ class NICard(Base, SlowCounterInterface, ConfocalScannerInterface, ODMRCounterIn
                                   # Number of sample
                                   number_of_samples)
 
+        # Waits for the Analog output to count
         if source == 'Scanner':
             source_trigger = "ao/SampleClock "
             daq.DAQmxCfgDigEdgeStartTrig(self._scanner_ai_task, source_trigger, daq.DAQmx_Val_Falling)

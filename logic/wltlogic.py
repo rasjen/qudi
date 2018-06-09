@@ -56,6 +56,8 @@ class WLTLogic(GenericLogic):
         self._spectrometer = self.get_connector('spectrometer')
         #self._scope = self.get_connector('scopelogic')
 
+
+        self.clock_frequency = 100 # Hz
         self.target_temperature = -999
         self.current_temperature = -999
         self.number_accumulations = 1
@@ -108,27 +110,53 @@ class WLTLogic(GenericLogic):
         :return: 
         '''
 
+        # Initialize measurement
         self.log.info('Measurement started')
 
+        # set parameters
         self.pos_start = pos_start
         self.pos_stop = pos_stop
         self.scan_frequency = frequency
-        self._sweep(frequency, pos_start, pos_stop)
 
-        self.setup_read_position()
-        self._scanning_devices.start_read_position()
+        self.lock()
+
+        self._scanning_device.lock()
+        if self.initialize_image() < 0:
+            self._scanning_device.unlock()
+            self.unlock()
+            return -1
+
+        # Set up master clock
+        clock_status = self._scanning_devices.set_up_scanner_clock(
+            clock_frequency=self._clock_frequency)
+
+
+        # Set start position
+        self._scanning_devices.scanner_set_position(z=pos_start)
+
+        # Set_up_sweep
+        self._scanning_devices.set_up_sweep(pos_start, pos_stop, frequency, line_length=int(self.number_of_steps),
+                                            RepOfSweep=1)
 
         self._start_spectrometer_measurements(sweep_start=True)
 
-        sleep(1/frequency)
+
         self.time_stop = self.cycle_time*self.number_of_steps
         self._scanning_devices.stop_sweep()
         #self._scope.save_data()
+
+        # Get the strain gauge data from the NI card
         line_position_data = self._scanning_devices.read_position()
         self.position_data = line_position_data[1:]
+
+        # Update image
         self.sigPztimageUpdated.emit()
+
+        # Save data
         self.save_xy_data()
         self.save_position_data()
+
+        # Show that the measurement is finished
         self.log.info('Measurement finished')
 
         pass
@@ -298,21 +326,6 @@ class WLTLogic(GenericLogic):
         self.counts = self._spectrometer.take_single_spectrum()
         self.wl = self._spectrometer.get_wavelengths()
         self.sigSpectrumPlotUpdated.emit(self.wl, self.counts)
-
-    def _sweep(self, frequency, pos_start, pos_stop):
-        """
-        
-        :param frequency: 
-        :param pos_start: 
-        :param pos_stop: 
-        :return: 
-        """
-
-
-        self._scanning_devices.scanner_set_position(z=pos_start)
-        RepOfSweep = 1
-
-        self._scanning_devices.set_up_sweep(pos_start, pos_stop, frequency, RepOfSweep)
 
     def set_cavity_position(self, position):
         """
