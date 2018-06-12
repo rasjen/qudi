@@ -120,15 +120,10 @@ class WLTLogic(GenericLogic):
 
         self.lock()
 
-        self._scanning_device.lock()
-        if self.initialize_image() < 0:
-            self._scanning_device.unlock()
-            self.unlock()
-            return -1
 
         # Set up master clock
         clock_status = self._scanning_devices.set_up_scanner_clock(
-            clock_frequency=self._clock_frequency)
+            clock_frequency=self.scan_frequency)
 
 
         # Set start position
@@ -142,13 +137,12 @@ class WLTLogic(GenericLogic):
 
 
         self.time_stop = self.cycle_time*self.number_of_steps
-        self._scanning_devices.stop_sweep()
         #self._scope.save_data()
 
         # Get the strain gauge data from the NI card
         line_position_data = self._scanning_devices.read_position()
         self.position_data = line_position_data[1:]
-
+        self.position_time = np.linspace(0,1/frequency,len(self.position_data))
         # Update image
         self.sigPztimageUpdated.emit()
 
@@ -156,9 +150,11 @@ class WLTLogic(GenericLogic):
         self.save_xy_data()
         self.save_position_data()
 
+        self._scanning_devices.close_clock(scanner=True)
         # Show that the measurement is finished
         self.log.info('Measurement finished')
 
+        self.unlock()
         pass
 
     def set_positions_parameters(self, pos_start, pos_stop, number_of_steps, frequency):
@@ -195,7 +191,7 @@ class WLTLogic(GenericLogic):
             self.wl = np.arange(0,100,11)
 
         self.WLT_image = np.zeros([self.number_of_steps, self.wl.size])
-        pass
+        return 0
 
     def initialize_spectrum_plot(self):
         """

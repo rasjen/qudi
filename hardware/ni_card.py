@@ -2091,7 +2091,7 @@ class NICard(Base, SlowCounterInterface, ConfocalScannerInterface, ODMRCounterIn
                 # define task
                 self._scanner_clock_daq_task,
                 # maximal timeout for the counter times the positions
-                self._RWTimeout * 2 * self.self.sweep_length)
+                self._RWTimeout * 2 * self.sweep_length)
 
             # stop the clock task
             daq.DAQmxStopTask(self._scanner_clock_daq_task)
@@ -2169,7 +2169,7 @@ class NICard(Base, SlowCounterInterface, ConfocalScannerInterface, ODMRCounterIn
                 f[i] = - slope * (tprime[i] % period) + 2 * stop - start
         return f
 
-    def set_up_sweep(self, start_pos, stop_pos, freq, RepOfSweep, line_length):
+    def set_up_sweep(self, start_pos, stop_pos, freq, RepOfSweep, line_length = 10):
         """
         Create the sweep task for the NIcard 
         
@@ -2186,7 +2186,7 @@ class NICard(Base, SlowCounterInterface, ConfocalScannerInterface, ODMRCounterIn
             self.log.error('No clock running, call set_up_clock before starting the counter.')
             return -1
 
-        self.sweep_length = line_length
+        self.sweep_length = int(line_length)
 
         # Set the scanner clock to be finite sample
         daq.DAQmxCfgImplicitTiming(
@@ -2195,7 +2195,7 @@ class NICard(Base, SlowCounterInterface, ConfocalScannerInterface, ODMRCounterIn
             # only a limited number of# counts
             daq.DAQmx_Val_FiniteSamps,
             # count twice for each voltage +1 for safety
-            self._sweep_length + 1)
+            self.sweep_length + 1)
 
         # Set the sampling timing type to be
         daq.DAQmxSetSampTimingType(self._scanner_ao_task, daq.DAQmx_Val_SampClk)
@@ -2204,7 +2204,7 @@ class NICard(Base, SlowCounterInterface, ConfocalScannerInterface, ODMRCounterIn
             # add to this task
             self._scanner_ao_task,
             # use this channel as clock
-            self._my_scanner_clock_channel + 'InternalOutput',
+            self._scanner_clock_channel + 'InternalOutput',
             # Maximum expected clock frequency
             self._scanner_clock_frequency,
             # Generate sample on falling edge
@@ -2213,6 +2213,11 @@ class NICard(Base, SlowCounterInterface, ConfocalScannerInterface, ODMRCounterIn
             daq.DAQmx_Val_FiniteSamps,
             # number of samples to generate
             self.sweep_length)
+
+        daq.DAQmxConnectTerms(
+                self._scanner_clock_channel + 'InternalOutput',
+                self._odmr_trigger_channel,
+                daq.DAQmx_Val_DoNotInvertPolarity)
 
         t = np.linspace(0, 1 / freq, line_length)
 
@@ -2233,8 +2238,8 @@ class NICard(Base, SlowCounterInterface, ConfocalScannerInterface, ODMRCounterIn
         self._write_scanner_ao(voltages=self.sweep_data,length=self.sweep_length,start=False)
 
         if self.strain_gauge:
-            self.setup_read_position(samples_rate=5*self._scanner_clock_frequency,
-                                     number_of_samples=5*self.sweep_length+1, source='scanner')
+            self.setup_read_position(samples_rate=self._scanner_clock_frequency,
+                                     number_of_samples=self.sweep_length+1, source='scanner')
 
 
         return 0
@@ -2459,13 +2464,13 @@ class NICard(Base, SlowCounterInterface, ConfocalScannerInterface, ODMRCounterIn
         #DoneCallback = daq.DAQmxDoneEventCallbackPtr(self.DoneCallback_py)
         #daq.DAQmxRegisterDoneEvent(self._scanner_ai_task, 0, DoneCallback, None)
 
-    def read_position(self, timeout=100):
+    def read_position(self):
         read = daq.int32()
         daq.DAQmxReadAnalogF64(self._scanner_ai_task,
                            # The number of samples, per channel, to read
                            len(self.rawdata),
                            # The amount of time, in seconds, to wait for the function to read the sample
-                           timeout,
+                           self._RWTimeout * 2 * self.sweep_length,
                            daq.DAQmx_Val_GroupByChannel,
                            self.rawdata,
                            # The actual number of samples read from each channel
