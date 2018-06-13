@@ -2445,7 +2445,7 @@ class NICard(Base, SlowCounterInterface, ConfocalScannerInterface, ODMRCounterIn
     def setup_read_position(self, samples_rate=20, number_of_samples=20, source=""):
         self._start_analog_input()
 
-
+        self.read_samples = number_of_samples
         daq.DAQmxCfgSampClkTiming(self._scanner_ai_task,
                                   # The source terminal of the Sample Clock. To use the internal clock of the device,
                                   #  use NULL or use OnboardClock
@@ -2470,7 +2470,7 @@ class NICard(Base, SlowCounterInterface, ConfocalScannerInterface, ODMRCounterIn
                            # The number of samples, per channel, to read
                            len(self.rawdata),
                            # The amount of time, in seconds, to wait for the function to read the sample
-                           self._RWTimeout * 2 * self.sweep_length,
+                           self._RWTimeout * 2 * self.read_samples,
                            daq.DAQmx_Val_GroupByChannel,
                            self.rawdata,
                            # The actual number of samples read from each channel
