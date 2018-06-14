@@ -348,7 +348,7 @@ class WLTLogic(GenericLogic):
             cycle_time = exposure_time
 
         data = self._spectrometer.kinetic_scan(exposure_time=exposure_time, cycle_time=cycle_time,
-                                               number_of_cycles=number_of_cycles, sweep_start=sweep_start)
+                                               number_of_cycles=number_of_cycles, sweep_start=sweep_start, trigger=None)
 
         self.WLT_image = data.transpose()
         self.sigWLTimageUpdated.emit()

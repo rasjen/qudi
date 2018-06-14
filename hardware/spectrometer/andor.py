@@ -413,3 +413,5 @@ class Andor(Base, SpectrometerInterface):
         error = self.dll.SetImageFlip(chorizontal,cvertical)
         self.verbose(ERROR_CODE[error], "SetImageFlip")
         return ERROR_CODE[error]
+
+

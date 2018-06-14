@@ -251,7 +251,7 @@ class AndorSpectrometerInterfuse(GenericLogic, SpectrometerInterface):
     def get_number_accumulations(self):
         return self.andor.get_number_accumulations()
 
-    def kinetic_scan(self, exposure_time=None, cycle_time=None, number_of_cycles=None, sweep_start=False):
+    def kinetic_scan(self, exposure_time=None, cycle_time=None, number_of_cycles=None, sweep_start=False, trigger=None):
         """
         Takes a kinetic scan
 
@@ -282,6 +282,12 @@ class AndorSpectrometerInterfuse(GenericLogic, SpectrometerInterface):
             self.andor.set_number_kinetics(number_of_cycles)
         else:
             self.log.warning('No number given for then number cycles in kinetic scan')
+
+        if trigger is not None:
+            try:
+                self.andor.set_trigger_mode(trigger)
+            except:
+                self.log.warning('Trigger mode setup did not work')
 
         #Take the data
         data = self.acquisition_data(start_sweep=sweep_start)
