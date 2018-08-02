@@ -146,3 +146,5 @@ horizontal_scan_2.txt
 logic/test.py
 screenshot.png
 snake_scan.txt
+hardware/nicard_test.py
+hardware/nicard_test_2.py

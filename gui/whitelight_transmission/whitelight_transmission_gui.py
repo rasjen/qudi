@@ -181,7 +181,7 @@ class WLTGui(GUIBase):
         self._mw.take_spectrum_pushButton.clicked.connect(self._wlt_logic.take_single_spectrum)
 
         # Update signals coming from logic:
-        self._wlt_logic.sigParameterUpdated.connect(self.update_parameter )
+        self._wlt_logic.sigParameterUpdated.connect(self.update_parameter)
         self._wlt_logic.sigSpectrumPlotUpdated.connect(self.refresh_spectrum_graph)
         self._wlt_logic.sigWLTimageUpdated.connect(self.refresh_WLT_image)
         self._wlt_logic.sigPztimageUpdated.connect(self.refresh_pzt_plot)
@@ -190,8 +190,6 @@ class WLTGui(GUIBase):
         self._mw.ramp_frequency_DoubleSpinBox.setMaximum(50)
         self._mw.ramp_frequency_DoubleSpinBox.setMinimum(0)
         #self._mw.ramp_frequency_DoubleSpinBox.setOpts(minStep=0.5)  # set the minimal step to 0.5Hz
-        self._mw.ramp_offset_DoubleSpinBox.setMaximum(5)
-        self._mw.ramp_offset_DoubleSpinBox.setMinimum(0)
         self._mw.ramp_amplitude_DoubleSpinBox.setMinimum(0)
         self._mw.ramp_amplitude_DoubleSpinBox.setMaximum(5)
 
