@@ -1155,14 +1155,6 @@ class FiberScanGui(GUIBase):
             roi_v_view = y_pos - self.roi_xy.size()[1] * 0.5
             self.roi_xy.setPos([roi_h_view, roi_v_view])
 
-            # # depth image
-            # if self._scanning_logic.depth_img_is_xz:
-            #     roi_h_view = x_pos - self.roi_depth.size()[0] * 0.5
-            # else:
-            #     roi_h_view = y_pos - self.roi_depth.size()[1] * 0.5
-            # roi_v_view = z_pos - self.roi_depth.size()[1] * 0.5
-            # self.roi_depth.setPos([roi_h_view, roi_v_view])
-
             self.update_slider_x(x_pos)
             self.update_slider_y(y_pos)
             self.update_slider_z(z_pos)
@@ -1239,49 +1231,6 @@ class FiberScanGui(GUIBase):
         self.roi_xy.setSize([newsize, newsize])
         self.roi_xy.setPos([hcenter - newsize / 2, vcenter - newsize / 2])
 
-    # def update_roi_depth_size(self):
-    #     """ Update the cursor size showing the optimizer scan area for the X-depth image.
-    #     """
-    #     hpos = self.roi_depth.pos()[0]
-    #     vpos = self.roi_depth.pos()[1]
-    #     hsize = self.roi_depth.size()[0]
-    #     vsize = self.roi_depth.size()[1]
-    #     hcenter = hpos + 0.5 * hsize
-    #     vcenter = vpos + 0.5 * vsize
-    #
-    #     if self.adjust_cursor_roi:
-    #         newsize_h = self._optimizer_logic.refocus_XY_size
-    #         newsize_v = self._optimizer_logic.refocus_Z_size
-    #     else:
-    #         viewrange = self.depth_image.getViewBox().viewRange()
-    #         newsize = np.sqrt(np.sum(np.ptp(viewrange, axis=1)**2)) / 20
-    #         newsize_h = newsize
-    #         newsize_v = newsize
-    #
-    #     self.roi_depth.setSize([newsize_h, newsize_v])
-    #     self.roi_depth.setPos([hcenter - newsize_h / 2, vcenter - newsize_v / 2])
-    #
-    # def update_roi_depth(self, h=None, v=None):
-    #     """ Adjust the depth ROI position if the value has changed.
-    #
-    #     @param float h: real value of the current horizontal position
-    #     @param float v: real value of the current vertical position
-    #
-    #     Since the origin of the region of interest (ROI) is not the crosshair
-    #     point but the lowest left point of the square, you have to shift the
-    #     origin according to that. Therefore the position of the ROI is not
-    #     the actual position!
-    #     """
-    #     roi_h_view = self.roi_depth.pos()[0]
-    #     roi_v_view = self.roi_depth.pos()[1]
-    #
-    #     if h is not None:
-    #         roi_h_view = h - self.roi_depth.size()[0] * 0.5
-    #     if v is not None:
-    #         roi_v_view = v - self.roi_depth.size()[1] * 0.5
-    #
-    #     self.roi_depth.setPos([roi_h_view, roi_v_view])
-
     def update_from_roi_xy(self, roi):
         """The user manually moved the XY ROI, adjust all other GUI elements accordingly
 
@@ -1306,38 +1255,6 @@ class FiberScanGui(GUIBase):
 
         self._scanning_logic.set_position('roixy', x=h_pos, y=v_pos)
         self._optimizer_logic.set_position('roixy', x=h_pos, y=v_pos)
-
-    # def update_from_roi_depth(self, roi):
-    #     """The user manually moved the Z ROI, adjust all other GUI elements accordingly
-    #
-    #     @params object roi: PyQtGraph ROI object
-    #     """
-    #     if self._scanning_logic.depth_img_is_xz:
-    #         h_range = self._scanning_logic.x_range
-    #     else:
-    #         h_range = self._scanning_logic.y_range
-    #
-    #     h_pos = roi.pos()[0] + 0.5 * roi.size()[0]
-    #     v_pos = roi.pos()[1] + 0.5 * roi.size()[1]
-    #
-    #     h_pos = np.clip(h_pos, *h_range)
-    #     v_pos = np.clip(v_pos, *self._scanning_logic.z_range)
-    #
-    #     self.update_slider_z(v_pos)
-    #     self.update_input_z(v_pos)
-    #
-    #     if self._scanning_logic.depth_img_is_xz:
-    #         self.update_roi_xy(h=h_pos)
-    #         self.update_slider_x(h_pos)
-    #         self.update_input_x(h_pos)
-    #         self._scanning_logic.set_position('roidepth', x=h_pos, z=v_pos)
-    #         self._optimizer_logic.set_position('roidepth', x=h_pos, z=-v_pos)
-    #     else:
-    #         self.update_roi_xy(v=h_pos)
-    #         self.update_slider_y(h_pos)
-    #         self.update_input_y(h_pos)
-    #         self._scanning_logic.set_position('roidepth', y=h_pos, z=v_pos)
-    #         self._optimizer_logic.set_position('roidepth', y=h_pos, z=-v_pos)
 
     def update_from_key(self, x=None, y=None, z=None):
         """The user pressed a key to move the crosshair, adjust all GUI elements.
@@ -1530,14 +1447,6 @@ class FiberScanGui(GUIBase):
         self.xy_channel = int(self._mw.xy_channel_ComboBox.itemData(index, QtCore.Qt.UserRole))
         self.refresh_xy_image()
 
-    # def update_depth_channel(self, index):
-    #     """ The displayed channel for the X-depth image was changed, refresh the displayed image.
-    #
-    #         @param index int: index of selected channel item in combo box
-    #     """
-    #     self.depth_channel = int(self._mw.depth_channel_ComboBox.itemData(index, QtCore.Qt.UserRole))
-    #     self.refresh_depth_image()
-
     def shortcut_to_xy_cb_manual(self):
         """Someone edited the absolute counts range for the xy colour bar, better update."""
         self._mw.xy_cb_manual_RadioButton.setChecked(True)
@@ -1548,27 +1457,10 @@ class FiberScanGui(GUIBase):
         self._mw.xy_cb_centiles_RadioButton.setChecked(True)
         self.update_xy_cb_range()
 
-    # def shortcut_to_depth_cb_manual(self):
-    #     """Someone edited the absolute counts range for the z colour bar, better update."""
-    #     # Change cb mode
-    #     self._mw.depth_cb_manual_RadioButton.setChecked(True)
-    #     self.update_depth_cb_range()
-
-    # def shortcut_to_depth_cb_centiles(self):
-    #     """Someone edited the centiles range for the z colour bar, better update."""
-    #     # Change cb mode
-    #     self._mw.depth_cb_centiles_RadioButton.setChecked(True)
-    #     self.update_depth_cb_range()
-
     def update_xy_cb_range(self):
         """Redraw xy colour bar and scan image."""
         self.refresh_xy_colorbar()
         self.refresh_xy_image()
-
-    # def update_depth_cb_range(self):
-    #     """Redraw z colour bar and scan image."""
-    #     self.refresh_depth_colorbar()
-    #     self.refresh_depth_image()
 
     def refresh_xy_image(self):
         """ Update the current XY image from the logic.
@@ -1598,27 +1490,6 @@ class FiberScanGui(GUIBase):
         self.log.info('updating plot')
 
         return 0
-
-
-    # def refresh_depth_image(self):
-    #     """ Update the current Depth image from the logic.
-    #
-    #     Everytime the scanner is scanning a line in depth the
-    #     image is rebuild and updated in the GUI.
-    #     """
-    #
-    #     self.depth_image.getViewBox().enableAutoRange()
-    #
-    #     depth_image_data = self._scanning_logic.depth_image[:, :, 3 + self.depth_channel]
-    #     cb_range = self.get_depth_cb_range()
-    #
-    #     # Now update image with new color scale, and update colorbar
-    #     self.depth_image.setImage(image=depth_image_data, levels=(cb_range[0], cb_range[1]))
-    #     self.refresh_depth_colorbar()
-    #
-    #     # Unlock state widget if scan is finished
-    #     if self._scanning_logic.getState() != 'locked':
-    #         self.enable_scan_actions()
 
     def refresh_refocus_image(self):
         """Refreshes the xy image, the crosshair and the colorbar. """
@@ -1725,60 +1596,6 @@ class FiberScanGui(GUIBase):
         xy_viewbox.updateViewRange()
         self.update_roi_xy()
 
-    # def adjust_depth_window(self):
-    #     """ Fit the visible window in the depth scan to full view.
-    #
-    #     Be careful in using that method, since it uses the input values for
-    #     the ranges to adjust x and z. Make sure that in the process of the depth scan
-    #     no method is calling adjust_xy_window, otherwise it will adjust for you
-    #     a window which does not correspond to the scan!
-    #     """
-    #     # It is extremly crutial that before adjusting the window view and
-    #     # limits, to make an update of the current image. Otherwise the
-    #     # adjustment will just be made for the previous image.
-    #     self.refresh_depth_image()
-    #
-    #     depth_viewbox = self.depth_image.getViewBox()
-    #
-    #     if self._scanning_logic.depth_img_is_xz:
-    #         self._mw.depth_ViewWidget.setLabel('bottom', 'X position', units='m')
-    #         xMin = self._scanning_logic.image_x_range[0]
-    #         xMax = self._scanning_logic.image_x_range[1]
-    #     else:
-    #         self._mw.depth_ViewWidget.setLabel('bottom', 'Y position', units='m')
-    #         xMin = self._scanning_logic.image_y_range[0]
-    #         xMax = self._scanning_logic.image_y_range[1]
-    #
-    #     zMin = self._scanning_logic.image_z_range[0]
-    #     zMax = self._scanning_logic.image_z_range[1]
-    #
-    #     if self.fixed_aspect_ratio_depth:
-    #         # Reset the limit settings so that the method 'setAspectLocked'
-    #         # works properly. It has to be done in a manual way since no method
-    #         # exists yet to reset the set limits:
-    #         depth_viewbox.state['limits']['xLimits'] = [None, None]
-    #         depth_viewbox.state['limits']['yLimits'] = [None, None]
-    #         depth_viewbox.state['limits']['xRange'] = [None, None]
-    #         depth_viewbox.state['limits']['yRange'] = [None, None]
-    #
-    #         depth_viewbox.setAspectLocked(lock=True, ratio=1.0)
-    #         depth_viewbox.updateViewRange()
-    #     else:
-    #         depth_viewbox.setLimits(
-    #             xMin=xMin - xMin * self.image_x_padding,
-    #             xMax=xMax + xMax * self.image_x_padding,
-    #             yMin=zMin - zMin * self.image_z_padding,
-    #             yMax=zMax + zMax * self.image_z_padding
-    #         )
-    #
-    #     self.depth_image.setRect(QtCore.QRectF(xMin, zMin, xMax - xMin, zMax - zMin))
-    #
-    #     self.put_cursor_in_depth_scan()
-    #
-    #     depth_viewbox.updateAutoRange()
-    #     depth_viewbox.updateViewRange()
-    #     self.update_roi_depth()
-
     def put_cursor_in_xy_scan(self):
         """Put the xy crosshair back if it is outside of the visible range. """
         view_x_min = self._scanning_logic.image_x_range[0]
@@ -1803,31 +1620,6 @@ class FiberScanGui(GUIBase):
             y_value = view_y_max - self.roi_xy.size()[1]
 
         self.roi_xy.setPos([x_value, y_value], update=True)
-
-    # def put_cursor_in_depth_scan(self):
-    #     """Put the depth crosshair back if it is outside of the visible range. """
-    #     view_x_min = self._scanning_logic.image_x_range[0]
-    #     view_x_max = self._scanning_logic.image_x_range[1]
-    #     view_z_min = self._scanning_logic.image_z_range[0]
-    #     view_z_max = self._scanning_logic.image_z_range[1]
-    #
-    #     x_value = self.roi_depth.pos()[0]
-    #     z_value = self.roi_depth.pos()[1]
-    #     cross_pos = self.roi_depth.pos() + self.roi_depth.size()*0.5
-    #
-    #     if (view_x_min > cross_pos[0]):
-    #         x_value = view_x_min + self.roi_depth.size()[0]
-    #
-    #     if (view_x_max < cross_pos[0]):
-    #         x_value = view_x_max - self.roi_depth.size()[0]
-    #
-    #     if (view_z_min > cross_pos[1]):
-    #         z_value = view_z_min + self.roi_depth.size()[1]
-    #
-    #     if (view_z_max < cross_pos[1]):
-    #         z_value = view_z_max - self.roi_depth.size()[1]
-    #
-    #     self.roi_depth.setPos([x_value, z_value], update=True)
 
     def save_xy_scan_data(self):
         """ Run the save routine from the logic to save the xy FiberScan data."""
@@ -1860,34 +1652,6 @@ class FiberScanGui(GUIBase):
     def save_depth_line_scan_data(self):
 
         self._scanning_logic.save_depth_line_data()
-
-    # def save_depth_scan_data(self):
-    #     """ Run the save routine from the logic to save the xy FiberScan pic."""
-    #     cb_range = self.get_depth_cb_range()
-    #
-    #     # Percentile range is None, unless the percentile scaling is selected in GUI.
-    #     pcile_range = None
-    #     if not self._mw.depth_cb_manual_RadioButton.isChecked():
-    #         low_centile = self._mw.depth_cb_low_percentile_DoubleSpinBox.value()
-    #         high_centile = self._mw.depth_cb_high_percentile_DoubleSpinBox.value()
-    #         pcile_range = [low_centile, high_centile]
-    #
-    #     self._scanning_logic.save_depth_data(colorscale_range=cb_range, percentile_range=pcile_range)
-    #
-    #     # TODO: find a way to produce raw image in savelogic.  For now it is saved here.
-    #     filepath = self._save_logic.get_path_for_module(module_name='FiberScan')
-    #     filename = filepath + os.sep + time.strftime('%Y%m%d-%H%M-%S_FiberScan_depth_scan_raw_pixel_image')
-    #     if self._sd.save_purePNG_checkBox.isChecked():
-    #         self.depth_image.save(filename + '_raw.png')
-
-    # def save_depth_scan_image(self):
-    #     """ Save the image and according to that the data.
-    #
-    #     Here only the path to the module is taken from the save logic, but the
-    #     picture save algorithm is situated here in FiberScan, since it is a very
-    #     specific task to save the used PlotObject.
-    #     """
-    #     self.log.warning('Deprecated, use normal save method instead!')
 
     def switch_hardware(self):
         """ Switches the hardware state. """
@@ -2102,105 +1866,6 @@ class FiberScanGui(GUIBase):
             self._mw.action_zoom.setChecked(False)
         else:
             self._mw.action_zoom.setChecked(True)
-    #
-    # def depth_scan_start_zoom_point(self, event):
-    #     """ Get the mouse coordinates if the mouse button was pressed.
-    #
-    #     @param QMouseEvent event: Mouse Event object which contains all the
-    #                               information at the time the event was emitted
-    #     """
-    #     if self._mw._doubleclicked:
-    #         event.ignore()
-    #         return
-    #     # catch the event if the zoom mode is activated and if the event is
-    #     # coming from a left mouse button.
-    #     if not (self._mw.action_zoom.isChecked() and (event.button() == QtCore.Qt.LeftButton)):
-    #         event.ignore()
-    #         return
-    #
-    #     pos = self.depth_image.getViewBox().mapSceneToView(event.localPos())
-    #     self._current_depth_zoom_start = [pos.x(), pos.y()]
-    #
-    #     # store the initial mouse position in a class variable
-    #     event.accept()
-    #
-    # def depth_scan_end_zoom_point(self, event):
-    #     """ Get the mouse coordinates if the mouse button was released.
-    #
-    #     @param QEvent event:
-    #     """
-    #     if self._mw._doubleclicked:
-    #         self._mw._doubleclicked = False
-    #         event.ignore()
-    #         return
-    #
-    #     # catch the event if the zoom mode is activated and if the event is
-    #     # coming from a left mouse button.
-    #     if not (self._mw.action_zoom.isChecked() and (event.button() == QtCore.Qt.LeftButton)):
-    #         event.ignore()
-    #         return
-    #
-    #     # get the ViewBox which is also responsible for the depth_image
-    #     viewbox = self.depth_image.getViewBox()
-    #
-    #     # Map the mouse position in the whole ViewWidget to the coordinate
-    #     # system of the ViewBox, which also includes the 2D graph:
-    #     pos = viewbox.mapSceneToView(event.localPos())
-    #     endpos = [pos.x(), pos.y()]
-    #     initpos = self._current_depth_zoom_start
-    #
-    #     # get the right corners from the zoom window:
-    #     if initpos[0] > endpos[0]:
-    #         xMin = endpos[0]
-    #         xMax = initpos[0]
-    #     else:
-    #         xMin = initpos[0]
-    #         xMax = endpos[0]
-    #
-    #     if initpos[1] > endpos[1]:
-    #         zMin = endpos[1]
-    #         zMax = initpos[1]
-    #     else:
-    #         zMin = initpos[1]
-    #         zMax = endpos[1]
-    #
-    #     # set the values to the InputWidgets and update them
-    #     self._mw.x_min_InputWidget.setValue(xMin)
-    #     self._mw.x_max_InputWidget.setValue(xMax)
-    #     self.change_x_image_range()
-    #
-    #     self._mw.z_min_InputWidget.setValue(zMin)
-    #     self._mw.z_max_InputWidget.setValue(zMax)
-    #     self.change_z_image_range()
-    #
-    #     event.accept()
-    #     # Finally change the visible area of the ViewBox:
-    #     viewbox.setRange(xRange=(xMin, xMax), yRange=(zMin, zMax))
-    #     # second time is really needed, otherwisa zooming will not work for the first time
-    #     viewbox.setRange(xRange=(xMin, xMax), yRange=(zMin, zMax))
-    #     self.update_roi_depth()
-    #
-    #     self._mw.action_zoom.setChecked(False)
-    #
-    # def reset_depth_imagerange(self):
-    #     """ Reset the imagerange if autorange was pressed.
-    #
-    #     Take the image range values directly from the scanned image and set
-    #     them as the current image ranges.
-    #     """
-    #     # extract the range directly from the image:
-    #     xMin = self._scanning_logic.depth_image[0, 0, 0]
-    #     zMin = self._scanning_logic.depth_image[0, 0, 2]
-    #     xMax = self._scanning_logic.depth_image[-1, -1, 0]
-    #     zMax = self._scanning_logic.depth_image[-1, -1, 2]
-    #
-    #     self._mw.x_min_InputWidget.setValue(xMin)
-    #     self._mw.x_max_InputWidget.setValue(xMax)
-    #     self.change_x_image_range()
-    #
-    #     self._mw.z_min_InputWidget.setValue(zMin)
-    #     self._mw.z_max_InputWidget.setValue(zMax)
-    #     self.change_z_image_range()
 
     def set_full_scan_range_z(self):
 

@@ -117,6 +117,7 @@ class ConfocalHistoryEntry(QtCore.QObject):
         confocal.depth_img_is_xz = self.depth_img_is_xz
         confocal.depth_scan_dir_is_xz = self.depth_scan_dir_is_xz
         confocal._xy_line_pos = self.xy_line_position
+        confocal._fiber_xy_line_pos = self.fiber_xy_line_pos
         confocal._depth_line_pos = self.depth_line_position
         confocal._xyscan_continuable = self.xy_scan_continuable
         confocal._zscan_continuable = self.depth_scan_continuable
@@ -160,6 +161,7 @@ class ConfocalHistoryEntry(QtCore.QObject):
         self.depth_scan_dir_is_xz = confocal.depth_scan_dir_is_xz
         self.depth_img_is_xz = confocal.depth_img_is_xz
         self.xy_line_position = confocal._xy_line_pos
+        self.fiber_xy_line_pos = confocal._fiber_xy_line_pos
         self.depth_line_position = confocal._depth_line_pos
         self.xy_scan_continuable = confocal._xyscan_continuable
         self.depth_scan_continuable = confocal._zscan_continuable
