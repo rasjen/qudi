@@ -54,50 +54,13 @@
          </widget>
         </item>
         <item row="1" column="0">
-         <widget class="QLabel" name="label_9">
-          <property name="text">
-           <string>Offset (V)</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="1">
-         <widget class="QDoubleSpinBox" name="ramp_offset_DoubleSpinBox">
-          <property name="minimum">
-           <double>-3.750000000000000</double>
-          </property>
-          <property name="maximum">
-           <double>0.000000000000000</double>
-          </property>
-          <property name="singleStep">
-           <double>0.010000000000000</double>
-          </property>
-          <property name="value">
-           <double>0.000000000000000</double>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="0">
          <widget class="QLabel" name="label_10">
           <property name="text">
            <string>Amplitude (V)</string>
           </property>
          </widget>
         </item>
-        <item row="3" column="0">
-         <widget class="QPushButton" name="StartRamp_PushButton">
-          <property name="text">
-           <string>Start ramp</string>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="1">
-         <widget class="QPushButton" name="StopRamp_PushButton">
-          <property name="text">
-           <string>Stop ramp</string>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="1">
+        <item row="1" column="1">
          <widget class="QDoubleSpinBox" name="ramp_amplitude_DoubleSpinBox">
           <property name="decimals">
            <number>3</number>
@@ -110,6 +73,20 @@
           </property>
           <property name="singleStep">
            <double>0.010000000000000</double>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="0">
+         <widget class="QPushButton" name="StartRamp_PushButton">
+          <property name="text">
+           <string>Start ramp</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="QPushButton" name="StopRamp_PushButton">
+          <property name="text">
+           <string>Stop ramp</string>
           </property>
          </widget>
         </item>
@@ -387,7 +364,7 @@
    </attribute>
    <widget class="QWidget" name="dockWidgetContents_3">
     <layout class="QGridLayout" name="gridLayout_3">
-     <item row="5" column="0">
+     <item row="6" column="0">
       <widget class="QPushButton" name="continue_pushButton">
        <property name="text">
         <string>continue</string>
@@ -411,7 +388,7 @@
      <item row="0" column="1">
       <widget class="QDoubleSpinBox" name="start_position_doubleSpinBox"/>
      </item>
-     <item row="4" column="0">
+     <item row="5" column="0">
       <widget class="QPushButton" name="start_pushButton">
        <property name="text">
         <string>start</string>
@@ -435,7 +412,7 @@
        </property>
       </widget>
      </item>
-     <item row="4" column="1">
+     <item row="5" column="1">
       <widget class="QPushButton" name="stop_pushButton">
        <property name="text">
         <string>stop</string>
@@ -446,6 +423,29 @@
       <widget class="QLabel" name="label_3">
        <property name="text">
         <string>Scan frequency (Hz)</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="1">
+      <widget class="QDoubleSpinBox" name="number_of_steps_doubleSpinBox">
+       <property name="decimals">
+        <number>0</number>
+       </property>
+       <property name="minimum">
+        <double>1.000000000000000</double>
+       </property>
+       <property name="maximum">
+        <double>1000.000000000000000</double>
+       </property>
+       <property name="value">
+        <double>10.000000000000000</double>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="0">
+      <widget class="QLabel" name="label_6">
+       <property name="text">
+        <string>Number of steps</string>
        </property>
       </widget>
      </item>
@@ -485,6 +485,9 @@
       <widget class="QDoubleSpinBox" name="exposure_time_doubleSpinBox">
        <property name="decimals">
         <number>3</number>
+       </property>
+       <property name="maximum">
+        <double>5000.000000000000000</double>
        </property>
        <property name="value">
         <double>1.000000000000000</double>
@@ -544,6 +547,9 @@
        <property name="decimals">
         <number>3</number>
        </property>
+       <property name="maximum">
+        <double>5000.000000000000000</double>
+       </property>
        <property name="value">
         <double>1.000000000000000</double>
        </property>
@@ -556,26 +562,23 @@
        </property>
       </widget>
      </item>
-     <item row="6" column="1">
-      <widget class="QDoubleSpinBox" name="number_of_steps_doubleSpinBox">
-       <property name="decimals">
-        <number>0</number>
+     <item row="0" column="0">
+      <widget class="QPushButton" name="pushButton_cooler_on">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
        </property>
-       <property name="minimum">
-        <double>1.000000000000000</double>
-       </property>
-       <property name="maximum">
-        <double>1000.000000000000000</double>
-       </property>
-       <property name="value">
-        <double>10.000000000000000</double>
+       <property name="text">
+        <string>Cooler on</string>
        </property>
       </widget>
      </item>
-     <item row="6" column="0">
-      <widget class="QLabel" name="label_6">
+     <item row="0" column="1">
+      <widget class="QPushButton" name="pushButton_cooler_off">
        <property name="text">
-        <string>Number of steps</string>
+        <string>Cooler off</string>
        </property>
       </widget>
      </item>

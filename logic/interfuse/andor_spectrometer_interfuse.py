@@ -27,8 +27,6 @@ class AndorSpectrometerInterfuse(GenericLogic, SpectrometerInterface):
     mode = None
     single_track_minimum_vertical_pixels = 0
 
-    sigMeasurementStarted = QtCore.Signal()
-
     def __init__(self, config, **kwargs):
         super().__init__(config=config, **kwargs)
 
@@ -42,10 +40,10 @@ class AndorSpectrometerInterfuse(GenericLogic, SpectrometerInterface):
         self.andor = self.get_connector('andor')
         self.shamrock = self.get_connector('shamrock')
 
-        start_cooler = False
+        start_cooler = True
         init_shutter = False
 
-        self.andor.set_temperature(-15)
+        self.andor.set_temperature(-75)
         if start_cooler:
             self.andor.cooler_on()
 
@@ -152,11 +150,7 @@ class AndorSpectrometerInterfuse(GenericLogic, SpectrometerInterface):
         self.andor.set_image(1, 1, 1, self._width, 1, self._height)
         self.mode = 'Image'
 
-    def acquisition_data(self, start_sweep=False):
-        self.andor.start_acquisition()
-        if start_sweep is True:
-            sleep(0.8)
-            self.sigMeasurementStarted.emit()
+    def acquisition_data(self):
         acquiring = True
         while acquiring:
             sleep(1.0)
@@ -242,6 +236,7 @@ class AndorSpectrometerInterfuse(GenericLogic, SpectrometerInterface):
     def take_single_spectrum(self):
         self.andor.set_read_mode(0)
         self.andor.set_acquisition_mode(1)
+        self.andor.start_acquisition()
         data = self.acquisition_data()
         return data
 
@@ -290,7 +285,12 @@ class AndorSpectrometerInterfuse(GenericLogic, SpectrometerInterface):
                 self.log.warning('Trigger mode setup did not work')
 
         #Take the data
-        data = self.acquisition_data(start_sweep=sweep_start)
+        self.andor.start_acquisition()
+
+        return 0
+
+    def get_acquired_data(self, number_of_cycles):
+        data = self.acquisition_data()
 
         # Reshape data
         data = data.reshape(number_of_cycles, int(data.size/number_of_cycles)).transpose()

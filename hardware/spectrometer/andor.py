@@ -3,7 +3,7 @@ from interface.spectrometer_interface2 import SpectrometerInterface
 import platform
 from ctypes import *
 import sys
-from time import time
+from time import sleep
 
 
 ERROR_CODE = {
@@ -172,21 +172,28 @@ class Andor(Base, SpectrometerInterface):
         self.verbose(ERROR_CODE[error], sys._getframe().f_code.co_name)
         return error
 
-    def shutdown(self):
-        self.dll.AbortAcquisition()
-        self.set_temperature(-20)
-        if self.get_temperature() <= -20:
-            self.log.info("Detector warming up, please wait.")
-            warm = False
-            while not warm:
-                time.sleep(1)
-                if self.get_temperature() > -20:
-                    warm = True
-            self.log.info("Warmup finished.")
+    def shutdown(self, force=False):
+        if force:
+            self.dll.AbortAcquisition()
+            self.cooler_off()
+            error = self.dll.ShutDown()
+        else:
+            self.dll.AbortAcquisition()
+            self.set_temperature(0)
+            self.cooler_on()
+            if self.get_temperature() <= -20:
+                self.log.info("Detector warming up, please wait.")
+                warm = False
+                while not warm:
+                    sleep(1)
+                    self.log.info(self.get_temperature())
+                    if self.get_temperature() > -20:
+                        warm = True
+                self.log.info("Warmup finished.")
 
-        self.cooler_off()
-        error = self.dll.ShutDown()
-        #verbose(error, sys._getframe().f_code.co_name)
+            self.cooler_off()
+            error = self.dll.ShutDown()
+            #verbose(error, sys._getframe().f_code.co_name)
 
     def get_camera_serial_number(self):
         serial = c_int()

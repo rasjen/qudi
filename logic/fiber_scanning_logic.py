@@ -298,7 +298,7 @@ class ConfocalLogic(GenericLogic):
         # counter for scan_image
         self._scan_counter = 0
         self._zscan = False
-        self._fiber_scan = False
+        self._fiber_scan = True
         self.stopRequested = False
         self.depth_scan_dir_is_xz = True
         self.depth_img_is_xz = True
@@ -381,11 +381,11 @@ class ConfocalLogic(GenericLogic):
     def set_clock_frequency(self, clock_frequency):
         """Sets the frequency of the clock
 
-        @param int clock_frequency: desired frequency of the clock
+        @param float clock_frequency: desired frequency of the clock
 
         @return int: error code (0:OK, -1:error)
         """
-        self._clock_frequency = int(clock_frequency)
+        self._clock_frequency = float(clock_frequency)
         #checks if scanner is still running
         if self.getState() == 'locked':
             return -1
@@ -453,7 +453,7 @@ class ConfocalLogic(GenericLogic):
 
         self._Z = np.linspace(z1, z2, max(self.z_resolution, 2))
         self.depth_line = np.zeros((len(self._Z), 3 + len(self.get_scanner_count_channels())))
-
+        self.depth_line_storage = np.zeros((len(self._Z), 3 + len(self.get_scanner_count_channels())))
 
         self.depth_line[:,2] = self._Z
         self.depth_line[:,3] = np.random.rand(len(self._Z))
@@ -955,15 +955,16 @@ class ConfocalLogic(GenericLogic):
 
             # update image
             self.depth_line[:, 3:3 + s_ch] = line_counts
-            if self._fiber_scan:
-                self.xy_image[self._scan_counter, self._scan_counter_2, 3:3 + s_ch] = np.max(line_counts)
             self.line_counts = line_counts
             self.line_position_data = 2*line_position_data[1:]*1e-6
             self.signal_line_counts_updated.emit()
-            if self._fiber_scan:
-                self.signal_xy_image_updated.emit()
             self.signal_depth_line_updated.emit()
-
+            if self._fiber_scan:
+                self.xy_image[self._scan_counter, self._scan_counter_2, 3:3 + s_ch] = np.max(line_counts)
+                self.signal_xy_image_updated.emit()
+                x = self.xy_image[self._scan_counter, self._scan_counter_2, 0]
+                y = self.xy_image[self._scan_counter, self._scan_counter_2, 1]
+                self.save_depth_line_data(x,y)
             # scan next pixel
             self._scan_counter_2 += 1
 
@@ -1307,7 +1308,7 @@ class ConfocalLogic(GenericLogic):
         self.signal_draw_figure_completed.emit()
         return fig
 
-    def save_depth_line_data(self):
+    def save_depth_line_data(self, x=False ,y=False):
 
         filepath = self._save_logic.get_path_for_module('FiberScan')
         timestamp = datetime.datetime.now()
@@ -1316,10 +1317,20 @@ class ConfocalLogic(GenericLogic):
         parameters = OrderedDict()
 
         # TODO: This needs to check whether the scan was XZ or YZ direction
+        if x is False:
+            xval = self._current_x
+        else:
+            xval = x
+
+        if y is False:
+            yval = self._current_y
+        else:
+            yval = y
+
 
         parameters['Z resolution (samples per range)'] = self.z_resolution
-        parameters['Depth line at x position (m)'] = self._current_x
-        parameters['Depth line at y position (m)'] = self._current_y
+        parameters['Depth line at x position (m)'] = xval
+        parameters['Depth line at y position (m)'] = yval
 
         parameters['Clock frequency of scanner (Hz)'] = self._clock_frequency
         parameters['Return Slowness (Steps during retrace line)'] = self.return_slowness

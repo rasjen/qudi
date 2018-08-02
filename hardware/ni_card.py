@@ -1312,7 +1312,7 @@ class NICard(Base, SlowCounterInterface, ConfocalScannerInterface, ODMRCounterIn
 
             if self.strain_gauge:
                 self.setup_read_position(samples_rate=self._scanner_clock_frequency,
-                                         number_of_samples= self._line_length+1,
+                                         number_of_samples=self._line_length+1,
                                          source='Scanner')
 
             for i, task in enumerate(self._scanner_counter_daq_tasks):
@@ -2080,6 +2080,7 @@ class NICard(Base, SlowCounterInterface, ConfocalScannerInterface, ODMRCounterIn
                 'Run the setup_ramp_output routine.')
             return -1
 
+        step_periode = 1/self._scanner_clock_frequency
         try:
             if self.strain_gauge:
                 daq.DAQmxStartTask(self._scanner_ai_task)
@@ -2091,12 +2092,11 @@ class NICard(Base, SlowCounterInterface, ConfocalScannerInterface, ODMRCounterIn
                 # define task
                 self._scanner_clock_daq_task,
                 # maximal timeout for the counter times the positions
-                self._RWTimeout * 2 * self.sweep_length)
+                step_periode * (self.sweep_length+2))
 
             # stop the clock task
             daq.DAQmxStopTask(self._scanner_clock_daq_task)
 
-            daq.DAQmxStopTask(self._scanner_ai_task)
             # stop the analog output task
             self._stop_analog_output()
 
@@ -2110,20 +2110,22 @@ class NICard(Base, SlowCounterInterface, ConfocalScannerInterface, ODMRCounterIn
 
         @return int: error code (0:OK, -1:error)
         """
-        if self._scanner_ao_task is None:
-            self.log.error(
-                'Cannot stop ramp since it is not running!\n'
-                'Start the ramp singal before you can actually stop it!')
-            return -1
         try:
-            daq.DAQmxStopTask(self._scanner_ao_task)
+            daq.DAQmxStopTask(self._scanner_ai_task)
         except:
             self.log.exception('Error while stopping ramp.')
             return -1
 
-        self._stop_analog_output()
+        self.close_scanner_clock()
+        self.disconnect_trigger_channel()
 
         return 0
+
+    def disconnect_trigger_channel(self):
+
+        daq.DAQmxDisconnectTerms(
+                 self._scanner_clock_channel + 'InternalOutput',
+                 self._odmr_trigger_channel)
 
     def close_sweep(self):
         """ Clear tasks, so that counters are not in use any more.
@@ -2169,7 +2171,7 @@ class NICard(Base, SlowCounterInterface, ConfocalScannerInterface, ODMRCounterIn
                 f[i] = - slope * (tprime[i] % period) + 2 * stop - start
         return f
 
-    def set_up_sweep(self, start_pos, stop_pos, freq, RepOfSweep, line_length = 10):
+    def set_up_sweep(self, start_pos, stop_pos, freq, line_length = 10, linear=False):
         """
         Create the sweep task for the NIcard 
         
@@ -2228,18 +2230,21 @@ class NICard(Base, SlowCounterInterface, ConfocalScannerInterface, ODMRCounterIn
         # [ [1, 2, 3, 4, 5], [1, 1, 1, 1, 1], [-2, -2, -2, -2] ]
         x_pos_data = np.ones(line_length) * x_pos
         y_pos_data = np.ones(line_length) * y_pos
-        z_pos_data = self.sweep_function(t, start_pos, stop_pos, freq, t0=0)
+        if linear:
+            z_pos_data = np.linspace(start_pos, stop_pos, line_length)
+        else:
+            z_pos_data = self.sweep_function(t, start_pos, stop_pos, freq, t0=0)
 
         data = self._scanner_position_to_volt([x_pos_data, y_pos_data, z_pos_data])
 
         self.sweep_data = data
 
         # Write data to DAQ-card
-        self._write_scanner_ao(voltages=self.sweep_data,length=self.sweep_length,start=False)
+        self._write_scanner_ao(voltages=self.sweep_data,length=self.sweep_length, start=False)
 
         if self.strain_gauge:
-            self.setup_read_position(samples_rate=self._scanner_clock_frequency,
-                                     number_of_samples=self.sweep_length+1, source='scanner')
+            self.setup_read_position(samples_rate=20*self._scanner_clock_frequency,
+                                     number_of_samples=20*self.sweep_length + 1, source='Scanner', edge='Rising')
 
 
         return 0
@@ -2442,23 +2447,36 @@ class NICard(Base, SlowCounterInterface, ConfocalScannerInterface, ODMRCounterIn
         daq.DAQmxStartTask(self._scanner_ai_task)
         return
 
-    def setup_read_position(self, samples_rate=20, number_of_samples=20, source=""):
+    def setup_read_position(self, samples_rate=20, number_of_samples=20, source="", edge='falling'):
+
+        if edge == 'falling':
+            edge_val = daq.DAQmx_Val_Falling
+        else:
+            edge_val = daq.DAQmx_Val_Rising
+
         self._start_analog_input()
 
         self.read_samples = number_of_samples
+        self.read_rate = samples_rate
         daq.DAQmxCfgSampClkTiming(self._scanner_ai_task,
                                   # The source terminal of the Sample Clock. To use the internal clock of the device,
                                   #  use NULL or use OnboardClock
                                   "",
                                   # The sampling rate (S/sec
-                                  samples_rate, daq.DAQmx_Val_Falling, daq.DAQmx_Val_FiniteSamps,
+                                  samples_rate, edge_val, daq.DAQmx_Val_FiniteSamps,
                                   # Number of sample
                                   number_of_samples)
 
         # Waits for the Analog output to count
         if source == 'Scanner':
             source_trigger = "ao/SampleClock "
-            daq.DAQmxCfgDigEdgeStartTrig(self._scanner_ai_task, source_trigger, daq.DAQmx_Val_Falling)
+            daq.DAQmxCfgDigEdgeStartTrig(self._scanner_ai_task, source_trigger, edge_val)
+
+        daq.DAQmxSetReadRelativeTo(self._scanner_ai_task, daq.DAQmx_Val_CurrReadPos)
+        #
+        # # Do not read first sample:
+        daq.DAQmxSetReadOffset(self._scanner_ai_task, 0)
+
 
         self.rawdata = np.zeros(number_of_samples, dtype=np.float64)
         #DoneCallback = daq.DAQmxDoneEventCallbackPtr(self.DoneCallback_py)
@@ -2470,7 +2488,7 @@ class NICard(Base, SlowCounterInterface, ConfocalScannerInterface, ODMRCounterIn
                            # The number of samples, per channel, to read
                            len(self.rawdata),
                            # The amount of time, in seconds, to wait for the function to read the sample
-                           self._RWTimeout * 2 * self.read_samples,
+                           self._RWTimeout*len(self.rawdata),
                            daq.DAQmx_Val_GroupByChannel,
                            self.rawdata,
                            # The actual number of samples read from each channel

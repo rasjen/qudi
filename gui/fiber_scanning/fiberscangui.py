@@ -2280,6 +2280,9 @@ class FiberScanGui(GUIBase):
         self._mw.ramp_frequency_DoubleSpinBox.setEnabled(False)
         self._mw.action_scan_xy_start.setEnabled(False)
         self._mw.action_scan_depth_start.setEnabled(False)
+        self._mw.action_scan_xy_resume.setEnabled(False)
+        self._mw.action_scan_depth_resume.setEnabled(False)
+
 
     def stop_ramp(self):
         self._scanning_logic.stop_ramp()
@@ -2289,3 +2292,5 @@ class FiberScanGui(GUIBase):
         self._mw.ramp_frequency_DoubleSpinBox.setEnabled(True)
         self._mw.action_scan_xy_start.setEnabled(True)
         self._mw.action_scan_depth_start.setEnabled(True)
+        self._mw.action_scan_xy_resume.setEnabled(True)
+        self._mw.action_scan_depth_resume.setEnabled(True)

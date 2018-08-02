@@ -4,7 +4,6 @@ import datetime
 import numpy as np
 import os
 from itertools import product
-from time import sleep
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 
@@ -38,6 +37,7 @@ class WLTLogic(GenericLogic):
     sigWLTimageUpdated = QtCore.Signal()
     sigPztimageUpdated = QtCore.Signal()
     signal_xy_data_saved = QtCore.Signal()
+    sigMeasurementStarted = QtCore.Signal()
 
     def __init__(self, config, **kwargs):
         super().__init__(config=config, **kwargs)
@@ -78,17 +78,15 @@ class WLTLogic(GenericLogic):
         self.initialize_image()
         self.initialize_spectrum_plot()
 
-        self._spectrometer.sigMeasurementStarted.connect(self._scanning_devices.start_sweep)
-        #self._spectrometer.sigMeasurementStarted.connect(self._scope.force_trigger)
-
+        self.sigMeasurementStarted.connect(self._scanning_devices.start_sweep)
 
     def on_deactivate(self):
         """ Reverse steps of activation
 
         @return int: error code (0:OK, -1:error)
         """
-        self._spectrometer.on_deactivate()
-        self._scanning_devices.on_deactivate()
+        #self._spectrometer.on_deactivate()
+        #self._scanning_devices.on_deactivate()
 
     def setup_read_position(self):
         """
@@ -110,18 +108,14 @@ class WLTLogic(GenericLogic):
         :return: 
         '''
 
-        # Initialize measurement
-        self.log.info('Measurement started')
-
         # set parameters
         self.pos_start = pos_start
         self.pos_stop = pos_stop
         self.scan_frequency = frequency
 
-        self.lock()
-
 
         # Set up master clock
+        self.log.info('Measurement started')
         clock_status = self._scanning_devices.set_up_scanner_clock(
             clock_frequency=self.scan_frequency)
 
@@ -130,32 +124,44 @@ class WLTLogic(GenericLogic):
         self._scanning_devices.scanner_set_position(z=pos_start)
 
         # Set_up_sweep
-        self._scanning_devices.set_up_sweep(pos_start, pos_stop, frequency, line_length=int(self.number_of_steps),
-                                            RepOfSweep=1)
+        self._scanning_devices.set_up_sweep(pos_start, pos_stop, frequency, line_length=int(self.number_of_steps), linear=True)
 
-        self._start_spectrometer_measurements(sweep_start=True)
+        # Starts triggered measurement for spectrometer
+        self.log.info('Starting spectrometer')
+        self._start_spectrometer_measurements()
 
+        # Starts the Nicard
+        self.log.info('Starting scanning')
+        self.sigMeasurementStarted.emit()
 
-        self.time_stop = self.cycle_time*self.number_of_steps
-        #self._scope.save_data()
+        # Gets data from spectrometer
+        data = self._spectrometer.get_acquired_data(int(self.number_of_steps))
 
         # Get the strain gauge data from the NI card
         line_position_data = self._scanning_devices.read_position()
+        self.log.info('Measurement finished')
+
+        # Used for making the plot
+        self.time_stop = 1/frequency*self.number_of_steps
         self.position_data = line_position_data[1:]
-        self.position_time = np.linspace(0,1/frequency,len(self.position_data))
+        self.position_time = np.linspace(0,self.time_stop,len(self.position_data))
+        self.WLT_image = data.transpose()
+
+
         # Update image
         self.sigPztimageUpdated.emit()
+        self.sigWLTimageUpdated.emit()
+        self.log.info('Images updates')
 
         # Save data
         self.save_xy_data()
         self.save_position_data()
+        self.log.info('Data saved')
 
-        self._scanning_devices.close_clock(scanner=True)
-        # Show that the measurement is finished
-        self.log.info('Measurement finished')
-
-        self.unlock()
-        pass
+        self._scanning_devices.stop_sweep()
+        self._scanning_devices.scanner_set_position(z=pos_start)
+        self.log.info('Stopped the ni sweep')
+        return 0
 
     def set_positions_parameters(self, pos_start, pos_stop, number_of_steps, frequency):
         self.pos_start = pos_start
@@ -314,7 +320,7 @@ class WLTLogic(GenericLogic):
         # FIXME: Should be from hardware
         constraints_dict = {'min_position': 0, 'max_position': 20e-6, 'min_speed': 0, 'max_speed':  100,
                             'min_temperature': -100, 'max_temperature': 30, 'min_number_accumulations': 1,
-                            'max_number_accumulations': 0000, 'min_exposure': 0, 'max_exposure': 100}
+                            'max_number_accumulations': 10000, 'min_exposure': 0, 'max_exposure': 10000}
 
         return constraints_dict
 
@@ -332,7 +338,7 @@ class WLTLogic(GenericLogic):
         """
         self._scanning_devices.scanner_set_position(z=position)
 
-    def _start_spectrometer_measurements(self, sweep_start=False):
+    def _start_spectrometer_measurements(self):
         """
         Takes data while the cavity is besing scanned
         
@@ -347,12 +353,11 @@ class WLTLogic(GenericLogic):
             self.log.warning('Exposure is larger than the cycle time. Setting cycle time equal to exposure time')
             cycle_time = exposure_time
 
-        data = self._spectrometer.kinetic_scan(exposure_time=exposure_time, cycle_time=cycle_time,
-                                               number_of_cycles=number_of_cycles, sweep_start=sweep_start, trigger=None)
+        self._spectrometer.kinetic_scan(exposure_time=exposure_time, cycle_time=cycle_time,
+                                               number_of_cycles=number_of_cycles, trigger=None)
 
-        self.WLT_image = data.transpose()
-        self.sigWLTimageUpdated.emit()
-        pass
+
+        return 0
 
     def save_xy_data(self, colorscale_range=None, percentile_range=None):
         """ Save the current confocal xy data to file.
@@ -420,7 +425,7 @@ class WLTLogic(GenericLogic):
 
 
         self.signal_xy_data_saved.emit()
-        return
+        return 0
 
 
     def draw_figure(self, data, image_extent, scan_axis=None, cbar_range=None, percentile_range=None):
@@ -561,7 +566,7 @@ class WLTLogic(GenericLogic):
                                    delimiter='\t')
 
 
-        return
+        return 0
 
     def start_ramp(self, amplitude, freq):
 
