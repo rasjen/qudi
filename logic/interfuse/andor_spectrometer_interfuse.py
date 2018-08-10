@@ -246,7 +246,7 @@ class AndorSpectrometerInterfuse(GenericLogic, SpectrometerInterface):
     def get_number_accumulations(self):
         return self.andor.get_number_accumulations()
 
-    def kinetic_scan(self, exposure_time=None, cycle_time=None, number_of_cycles=None, sweep_start=False, trigger=None):
+    def kinetic_scan(self, exposure_time=None, cycle_time=None, number_of_cycles=None, trigger=None):
         """
         Takes a kinetic scan
 
@@ -303,6 +303,9 @@ class AndorSpectrometerInterfuse(GenericLogic, SpectrometerInterface):
 
     def get_cycle_time(self):
         return self.andor.get_cycle_time()
+
+    def set_trigger_mode(self, mode):
+        self.andor.set_trigger_mode(mode)
 
 
 

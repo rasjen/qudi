@@ -267,7 +267,6 @@ class Andor(Base, SpectrometerInterface):
 
     def start_acquisition(self):
         error = self.dll.StartAcquisition()
-        self.dll.WaitForAcquisition()
         self.verbose(ERROR_CODE[error], sys._getframe().f_code.co_name)
         return ERROR_CODE[error]
 
@@ -327,7 +326,7 @@ class Andor(Base, SpectrometerInterface):
         return ERROR_CODE[error]
 
     def set_single_scan(self):
-        self.set_read_mode(ReadModes['Image'])
+        self.set_read_mode(ReadModes['FVB'])
         self.set_acquisition_mode(AcquisitionModes['Single Scan'])
         self.set_image(1, 1, 1, self.width, 1, self.height)
 
@@ -389,6 +388,23 @@ class Andor(Base, SpectrometerInterface):
         return self.status
 
     def set_trigger_mode(self, mode):
+        """
+        This function will set the trigger mode that the camera will operate in.
+
+        @param mode: trigger mode
+            Valid values:
+            0. Internal
+            1. External
+            6. External Start
+            7. External Exposure (Bulb)
+            9. External FVB EM (only valid for EM Newton models in FVB mode)
+            10. Software Trigger
+            12. External Charge Shifting
+
+        @return:
+
+        """
+        mode = c_int(mode)
         error = self.dll.SetTriggerMode(mode)
         self.verbose(ERROR_CODE[error], sys._getframe().f_code.co_name)
         return ERROR_CODE[error]
@@ -419,6 +435,38 @@ class Andor(Base, SpectrometerInterface):
         cvertical = c_int(vertical)
         error = self.dll.SetImageFlip(chorizontal,cvertical)
         self.verbose(ERROR_CODE[error], "SetImageFlip")
+        return ERROR_CODE[error]
+
+    def get_baseline_clamp(self):
+        '''
+        This function returns the status of the baseline clamp functionality.
+        With this feature enabled the baseline level of each scan in a kinetic series will be
+        more consistent across the sequence.
+
+        int * state: Baseline clamp functionality Enabled/Disabled
+        1 – Baseline Clamp Enabled
+        0 – Baseline Clamp Disabled
+
+        @return: state
+        '''
+        state = c_int(2)
+        error = self.dll.GetBaselineClamp(byref(state))
+        self.verbose(ERROR_CODE[error], 'GetBaselineClamp')
+        return state
+
+    def set_baseline_clamp(self, state):
+        """
+        This function turns on and off the baseline clamp functionality. With this feature enabled the baseline level of
+        each scan in a kinetic series will be more consistent across the sequence.
+
+        @param state: Enables/Disables Baseline clamp functionality
+                      1 – Enable Baseline Clamp
+                      0 – Disable Baseline Clamp
+        @return: Error code
+        """
+        state = c_int(state)
+        error = self.dll.SetBaselineClamp(state)
+        self.verbose(ERROR_CODE[error], 'SetBaselineClamp')
         return ERROR_CODE[error]
 
 

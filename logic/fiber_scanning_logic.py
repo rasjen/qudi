@@ -79,6 +79,7 @@ class ConfocalHistoryEntry(QtCore.QObject):
         # Initialization of internal counter for scanning
         self.xy_line_position = 0
         self.depth_line_position = 0
+        self.fiber_xy_line_pos = 0
 
         # Variable to check if a scan is continuable
         self.scan_counter = 0

@@ -108,59 +108,64 @@ class WLTLogic(GenericLogic):
         :return: 
         '''
 
-        # set parameters
-        self.pos_start = pos_start
-        self.pos_stop = pos_stop
-        self.scan_frequency = frequency
+        with self.threadlock:
+            # set parameters
+            self.pos_start = pos_start
+            self.pos_stop = pos_stop
+            self.scan_frequency = frequency
 
 
-        # Set up master clock
-        self.log.info('Measurement started')
-        clock_status = self._scanning_devices.set_up_scanner_clock(
-            clock_frequency=self.scan_frequency)
+            # Set up master clock
+            self.log.info('Measurement started')
+            clock_status = self._scanning_devices.set_up_scanner_clock(
+                clock_frequency=self.scan_frequency)
 
 
-        # Set start position
-        self._scanning_devices.scanner_set_position(z=pos_start)
+            # Set start position
+            self._scanning_devices.scanner_set_position(z=pos_start)
 
-        # Set_up_sweep
-        self._scanning_devices.set_up_sweep(pos_start, pos_stop, frequency, line_length=int(self.number_of_steps), linear=True)
+            # Set_up_sweep
+            self._scanning_devices.set_up_sweep(pos_start, pos_stop, frequency, line_length=int(self.number_of_steps),
+                                                linear=True)
 
-        # Starts triggered measurement for spectrometer
-        self.log.info('Starting spectrometer')
-        self._start_spectrometer_measurements()
+            # Starts triggered measurement for spectrometer
+            self.log.info('Starting spectrometer')
+            self._start_spectrometer_measurements()
 
-        # Starts the Nicard
-        self.log.info('Starting scanning')
-        self.sigMeasurementStarted.emit()
+            # Starts the Nicard
+            self.log.info('Starting scanning')
+            self.sigMeasurementStarted.emit()
 
-        # Gets data from spectrometer
-        data = self._spectrometer.get_acquired_data(int(self.number_of_steps))
+            # Gets data from spectrometer
+            data = self._spectrometer.get_acquired_data(int(self.number_of_steps))
 
-        # Get the strain gauge data from the NI card
-        line_position_data = self._scanning_devices.read_position()
-        self.log.info('Measurement finished')
+            # Get the strain gauge data from the NI card
+            line_position_data = self._scanning_devices.read_position()
+            self.log.info('Measurement finished')
 
-        # Used for making the plot
-        self.time_stop = 1/frequency*self.number_of_steps
-        self.position_data = line_position_data[1:]
-        self.position_time = np.linspace(0,self.time_stop,len(self.position_data))
-        self.WLT_image = data.transpose()
+            # Used for making the plot
+            self.time_stop = 1/frequency * self.number_of_steps
+            self.position_data = line_position_data[1:]
+            self.position_time = np.linspace(0, self.time_stop, len(self.position_data))
+            self.WLT_image = data.transpose()
 
 
-        # Update image
-        self.sigPztimageUpdated.emit()
-        self.sigWLTimageUpdated.emit()
-        self.log.info('Images updates')
+            # Update image
+            self.sigPztimageUpdated.emit()
+            self.sigWLTimageUpdated.emit()
+            self.log.info('Images updates')
 
-        # Save data
-        self.save_xy_data()
-        self.save_position_data()
-        self.log.info('Data saved')
+            # Save data
+            self.save_xy_data()
+            self.save_position_data()
+            self.log.info('Data saved')
 
-        self._scanning_devices.stop_sweep()
-        self._scanning_devices.scanner_set_position(z=pos_start)
-        self.log.info('Stopped the ni sweep')
+            self._scanning_devices.stop_sweep()
+            self._scanning_devices.scanner_set_position(z=pos_start)
+            self.log.info('Stopped the ni sweep')
+
+            # Set back internal trigger
+            self._spectrometer.set_trigger_mode(0)
         return 0
 
     def set_positions_parameters(self, pos_start, pos_stop, number_of_steps, frequency):
@@ -354,7 +359,7 @@ class WLTLogic(GenericLogic):
             cycle_time = exposure_time
 
         self._spectrometer.kinetic_scan(exposure_time=exposure_time, cycle_time=cycle_time,
-                                               number_of_cycles=number_of_cycles, trigger=None)
+                                               number_of_cycles=number_of_cycles, trigger=1)
 
 
         return 0
