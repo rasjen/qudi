@@ -1361,13 +1361,12 @@ class ConfocalLogic(GenericLogic):
         position = self._scanning_device.get_scanner_position()
         z_pos = position[2]
 
-        self._scanning_device.set_up_ramp_output(amplitude,z_pos, freq)
+        self._scanning_device.set_up_ramp_output(amplitude, z_pos, freq)
         self._scanning_device.start_ramp()
 
     def stop_ramp(self):
 
         self._scanning_device.stop_ramp()
-
         self.set_position('ramp')
 
 

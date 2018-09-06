@@ -38,6 +38,7 @@ class WLTLogic(GenericLogic):
     sigPztimageUpdated = QtCore.Signal()
     signal_xy_data_saved = QtCore.Signal()
     sigMeasurementStarted = QtCore.Signal()
+    sigMeasurementFinished = QtCore.Signal()
 
     def __init__(self, config, **kwargs):
         super().__init__(config=config, **kwargs)
@@ -45,8 +46,8 @@ class WLTLogic(GenericLogic):
         # locking for thread safet
         self.threadlock = Mutex()
 
-        self.number_of_steps = 10
-        self.spectrometer_resolution = 100
+        self.number_of_steps = int(10)
+        self.spectrometer_resolution = int(100)
 
     def on_activate(self):
         """ Initialisation performed during activation of the module.
@@ -55,7 +56,6 @@ class WLTLogic(GenericLogic):
         self._save_logic = self.get_connector('savelogic')
         self._spectrometer = self.get_connector('spectrometer')
         #self._scope = self.get_connector('scopelogic')
-
 
         self.clock_frequency = 100 # Hz
         self.target_temperature = -999
@@ -79,6 +79,9 @@ class WLTLogic(GenericLogic):
         self.initialize_spectrum_plot()
 
         self.sigMeasurementStarted.connect(self._scanning_devices.start_sweep)
+        self.sigMeasurementFinished.connect(self.stop_wlt_measurement)
+        self._spectrometer.sigSpectrumDataAcquired.connect(self.update_spectrum_data)
+        self._spectrometer.sigImageDataAcquired.connect(self.update_image_data)
 
     def on_deactivate(self):
         """ Reverse steps of activation
@@ -108,64 +111,35 @@ class WLTLogic(GenericLogic):
         :return: 
         '''
 
-        with self.threadlock:
-            # set parameters
-            self.pos_start = pos_start
-            self.pos_stop = pos_stop
-            self.scan_frequency = frequency
+
+        # set parameters
+        self.pos_start = pos_start
+        self.pos_stop = pos_stop
+        self.scan_frequency = frequency
 
 
-            # Set up master clock
-            self.log.info('Measurement started')
-            clock_status = self._scanning_devices.set_up_scanner_clock(
-                clock_frequency=self.scan_frequency)
+        # Set up master clock
+        self.log.info('Measurement started')
+        clock_status = self._scanning_devices.set_up_scanner_clock(
+            clock_frequency=self.scan_frequency)
+
+        # Set start position
+        self._scanning_devices.scanner_set_position(z=pos_start)
+
+        # Set_up_sweep
+        self._scanning_devices.set_up_sweep(pos_start, pos_stop, frequency, line_length=int(self.number_of_steps),
+                                            linear=True)
+
+        # Starts triggered measurement for spectrometer
+        self.log.info('Starting spectrometer')
+        self._set_up_kinetic_scan()
 
 
-            # Set start position
-            self._scanning_devices.scanner_set_position(z=pos_start)
+        # Starts the Nicard
+        self.log.info('Starting scanning')
+        self._spectrometer.sigStartAcquiring.emit()
+        self.sigMeasurementStarted.emit()
 
-            # Set_up_sweep
-            self._scanning_devices.set_up_sweep(pos_start, pos_stop, frequency, line_length=int(self.number_of_steps),
-                                                linear=True)
-
-            # Starts triggered measurement for spectrometer
-            self.log.info('Starting spectrometer')
-            self._start_spectrometer_measurements()
-
-            # Starts the Nicard
-            self.log.info('Starting scanning')
-            self.sigMeasurementStarted.emit()
-
-            # Gets data from spectrometer
-            data = self._spectrometer.get_acquired_data(int(self.number_of_steps))
-
-            # Get the strain gauge data from the NI card
-            line_position_data = self._scanning_devices.read_position()
-            self.log.info('Measurement finished')
-
-            # Used for making the plot
-            self.time_stop = 1/frequency * self.number_of_steps
-            self.position_data = line_position_data[1:]
-            self.position_time = np.linspace(0, self.time_stop, len(self.position_data))
-            self.WLT_image = data.transpose()
-
-
-            # Update image
-            self.sigPztimageUpdated.emit()
-            self.sigWLTimageUpdated.emit()
-            self.log.info('Images updates')
-
-            # Save data
-            self.save_xy_data()
-            self.save_position_data()
-            self.log.info('Data saved')
-
-            self._scanning_devices.stop_sweep()
-            self._scanning_devices.scanner_set_position(z=pos_start)
-            self.log.info('Stopped the ni sweep')
-
-            # Set back internal trigger
-            self._spectrometer.set_trigger_mode(0)
         return 0
 
     def set_positions_parameters(self, pos_start, pos_stop, number_of_steps, frequency):
@@ -179,7 +153,20 @@ class WLTLogic(GenericLogic):
         Stops the white light transmission measurement
         :return:
         '''
-        pass
+
+        # Save data
+        self.save_xy_data()
+        self.save_position_data()
+        self.log.info('Data saved')
+
+        self._scanning_devices.stop_sweep()
+        self._scanning_devices.scanner_set_position(z=self.pos_start)
+        self.log.info('Stopped the ni sweep')
+
+        # Set back internal trigger
+        self._spectrometer.set_trigger_mode(0)
+        print('done')
+
 
     def continue_wlt_measurement(self):
         '''
@@ -198,7 +185,7 @@ class WLTLogic(GenericLogic):
 
         self.wl = self._spectrometer.get_wavelengths()
         if len(self.wl) == 0:
-            # did not lead wl from spectrometer
+            # did not load wl from spectrometer
             self.wl = np.arange(0,100,11)
 
         self.WLT_image = np.zeros([self.number_of_steps, self.wl.size])
@@ -330,9 +317,37 @@ class WLTLogic(GenericLogic):
         return constraints_dict
 
     def take_single_spectrum(self):
-        self.counts = self._spectrometer.take_single_spectrum()
-        self.wl = self._spectrometer.get_wavelengths()
+        self._spectrometer.take_single_spectrum()
+
+    def update_spectrum_data(self):
+        self.counts = np.array(self._spectrometer.data)
+        self.wl = self._spectrometer.wl
         self.sigSpectrumPlotUpdated.emit(self.wl, self.counts)
+
+    def update_image_data(self):
+
+        # Gets data from spectrometer
+        data = np.array(self._spectrometer.data)
+        self.data = data.reshape(int(self.number_of_steps), int(data.size/self.number_of_steps)).transpose()
+
+        # Get the strain gauge data from the NI card
+        line_position_data = self._scanning_devices.read_position()
+        self.log.info('Measurement finished')
+
+        # Used for making the plot
+        self.time_stop = 1/self.scan_frequency * self.number_of_steps
+        self.position_data = line_position_data[1:]
+        self.position_time = np.linspace(0, self.time_stop, len(self.position_data))
+        self.WLT_image = self.data.transpose()
+
+
+        # Update image
+        self.sigPztimageUpdated.emit()
+        self.sigWLTimageUpdated.emit()
+        self.log.info('Images updates')
+
+        self.sigMeasurementFinished.emit()
+
 
     def set_cavity_position(self, position):
         """
@@ -343,7 +358,7 @@ class WLTLogic(GenericLogic):
         """
         self._scanning_devices.scanner_set_position(z=position)
 
-    def _start_spectrometer_measurements(self):
+    def _set_up_kinetic_scan(self):
         """
         Takes data while the cavity is besing scanned
         
@@ -357,6 +372,7 @@ class WLTLogic(GenericLogic):
         if exposure_time > cycle_time:
             self.log.warning('Exposure is larger than the cycle time. Setting cycle time equal to exposure time')
             cycle_time = exposure_time
+
 
         self._spectrometer.kinetic_scan(exposure_time=exposure_time, cycle_time=cycle_time,
                                                number_of_cycles=number_of_cycles, trigger=1)
@@ -575,11 +591,21 @@ class WLTLogic(GenericLogic):
 
     def start_ramp(self, amplitude, freq):
 
-        self._scanning_devices.set_up_ramp_output(amplitude, freq)
+        position = self._scanning_devices.get_scanner_position()
+        self.z_pos = position[2]
+
+        self._scanning_devices.set_up_ramp_output(amplitude, self.z_pos, freq)
         self._scanning_devices.start_ramp()
 
     def stop_ramp(self):
 
         self._scanning_devices.stop_ramp()
-        self._scanning_devices.close_ramp()
+        self._scanning_devices.scanner_set_position(z=self.z_pos)
+        return 0
 
+
+    def cooler_on(self):
+        self._spectrometer.cooler_on()
+
+    def cooler_off(self):
+        self._spectrometer.cooler_off()

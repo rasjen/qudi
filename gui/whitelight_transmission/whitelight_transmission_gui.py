@@ -179,6 +179,8 @@ class WLTGui(GUIBase):
                                          )
         self._mw.get_temperature_pushButton.clicked.connect(self._wlt_logic.get_temperature)
         self._mw.take_spectrum_pushButton.clicked.connect(self._wlt_logic.take_single_spectrum)
+        self._mw.pushButton_cooler_on.clicked.connect(self._wlt_logic.cooler_on)
+        self._mw.pushButton_cooler_off.clicked.connect(self._wlt_logic.cooler_off)
 
         # Update signals coming from logic:
         self._wlt_logic.sigParameterUpdated.connect(self.update_parameter)
@@ -388,7 +390,7 @@ class WLTGui(GUIBase):
         @return:
         """
 
-        amplitude = self._mw.ramp_amplitude_DoubleSpinBox.value()
+        amplitude = self._mw.ramp_amplitude_DoubleSpinBox.value()*1e-6
         freq = self._mw.ramp_frequency_DoubleSpinBox.value()
 
         self._wlt_logic.start_ramp(amplitude, freq)

@@ -2080,7 +2080,7 @@ class NICard(Base, SlowCounterInterface, ConfocalScannerInterface, ODMRCounterIn
                 'Run the setup_ramp_output routine.')
             return -1
 
-        step_periode = 1/self._scanner_clock_frequency
+
         try:
             if self.strain_gauge:
                 daq.DAQmxStartTask(self._scanner_ai_task)
@@ -2088,6 +2088,18 @@ class NICard(Base, SlowCounterInterface, ConfocalScannerInterface, ODMRCounterIn
 
             daq.DAQmxStartTask(self._scanner_clock_daq_task)
 
+        except:
+            self.log.exception('Error while starting ramp.')
+            return -1
+        return 0
+
+    def stop_sweep(self):
+        """Actually start the preconfigured counter task
+
+        @return int: error code (0:OK, -1:error)
+        """
+        step_periode = 1/self._scanner_clock_frequency
+        try:
             daq.DAQmxWaitUntilTaskDone(
                 # define task
                 self._scanner_clock_daq_task,
@@ -2100,17 +2112,6 @@ class NICard(Base, SlowCounterInterface, ConfocalScannerInterface, ODMRCounterIn
             # stop the analog output task
             self._stop_analog_output()
 
-        except:
-            self.log.exception('Error while starting ramp.')
-            return -1
-        return 0
-
-    def stop_sweep(self):
-        """Actually start the preconfigured counter task
-
-        @return int: error code (0:OK, -1:error)
-        """
-        try:
             daq.DAQmxStopTask(self._scanner_ai_task)
         except:
             self.log.exception('Error while stopping ramp.')

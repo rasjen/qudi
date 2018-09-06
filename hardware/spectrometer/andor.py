@@ -99,7 +99,7 @@ class Andor(Base, SpectrometerInterface):
                 self.dll = windll.LoadLibrary(r"C:\Program Files\Andor SDK\atmcd64d.dll")
         else:
             self.log.error("Cannot detect operating system, wil now stop")
-        self.verbosity = True
+        self.verbosity = False
 
         error = self.initialize()
 
