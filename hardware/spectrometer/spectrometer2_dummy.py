@@ -1,10 +1,12 @@
 from core.module import Base, Connector
 from interface.spectrometer_interface2 import SpectrometerInterface
 
-from time import strftime, localtime
+from time import strftime, localtime, sleep
 
 import time
 import numpy as np
+from qtpy import QtCore
+
 
 
 class SpectrometerInterfaceDummy(Base,SpectrometerInterface):
@@ -18,6 +20,7 @@ class SpectrometerInterfaceDummy(Base,SpectrometerInterface):
 
     fitlogic = Connector(interface='FitLogic')
 
+    sigMeasurementStarted = QtCore.Signal()
 
     def __init__(self, config, **kwargs):
         super().__init__(config=config, **kwargs)
@@ -115,7 +118,7 @@ class SpectrometerInterfaceDummy(Base,SpectrometerInterface):
         
         :return: retruns an array with the wavelengths in nm
         '''
-        self.wl = np.linspace(500,900,4001)
+        self.wl = np.linspace(500,900,1600)
         return self.wl
 
     def set_number_accumulations(self, averages):
@@ -129,6 +132,27 @@ class SpectrometerInterfaceDummy(Base,SpectrometerInterface):
     def take_single_spectrum(self):
         data = np.random.rand(self.wl.size)
         return data
+
+
+    def kinetic_scan(self, exposure_time=None, cycle_time=None, number_of_cycles=None, sweep_start=False, trigger=None):
+        """
+        Takes a kinetic scan
+
+        @param exposure_time: This is the time in seconds during which the CCD collects light prior to readout
+        @param cycle_time: This is the period in seconds between the start of individual scans
+        @param number_of_cycles: This is the number of scans (or ‘accumulated scans’) you specify to be in your series
+        @return:
+        """
+        print(1/cycle_time* number_of_cycles)
+        sleep(1/cycle_time* number_of_cycles)
+
+        data = np.random.rand(number_of_cycles,1600)
+
+        return data
+
+    def set_cycle_time(self, time):
+        self.cycle_time = time
+
 
 
 

@@ -429,4 +429,17 @@ class ConfocalScannerDummy(Base, ConfocalScannerInterface):
         gaussian = amplitude*np.exp(-(x_data-x_zero)**2/(2*sigma**2))+offset
         return gaussian
 
+    def set_up_sweep(self, start_pos, stop_pos, freq, line_length = 10, linear=True):
+
+        pass
+
+    def start_sweep(self):
+        pass
+
+    def read_position(self):
+        return np.linspace(0,100,101)
+
+    def close_clock(self, scanner):
+        pass
+
 
