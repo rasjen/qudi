@@ -1,7 +1,6 @@
 from core.module import Base
 from logic.generic_logic import GenericLogic
 from interface.spectrometer_interface2 import SpectrometerInterface
-import platform
 from ctypes import *
 import sys
 import numpy as np
@@ -27,13 +26,23 @@ class AndorSpectrometerInterfuse(GenericLogic, SpectrometerInterface):
     mode = None
     single_track_minimum_vertical_pixels = 0
 
+    sigStartKineticScan = QtCore.Signal(float, float, int, bool)
+    sigStartAcquiring = QtCore.Signal()
+    sigAcquiring = QtCore.Signal()
+    sigAcquiringDone = QtCore.Signal()
+    sigSpectrumDataAcquired = QtCore.Signal()
+    sigImageDataAcquired = QtCore.Signal()
+
     def __init__(self, config, **kwargs):
         super().__init__(config=config, **kwargs)
 
-        self._wl = None
+
         self._hstart = 128 - 5
         self._hstop = 128 + 5
         self.offset = 40
+
+        # Boolean for knwoning
+        self.spectrum = True
 
 
     def on_activate(self):
@@ -83,6 +92,11 @@ class AndorSpectrometerInterfuse(GenericLogic, SpectrometerInterface):
 
         # Change orientation of image
         self.andor.set_image_flip(horizontal=1, vertical=0)
+        self._wl = self.get_wavelengths()
+        self.sigStartKineticScan.connect(self.kinetic_scan)
+        self.sigStartAcquiring.connect(self.start_acquisition)
+        self.sigAcquiring.connect(self.acquisition_data)
+        self.sigAcquiringDone.connect(self.get_acquired_data)
 
     def __del__(self):
         pass
@@ -93,12 +107,6 @@ class AndorSpectrometerInterfuse(GenericLogic, SpectrometerInterface):
         self.log.info('Spectrometer deactivatecd')
         #self.andor.on_deactivate()
         #self.shamrock.on_deactivate()
-
-    def set_temperature(self, temp):
-        self.andor.set_temperature(temp)
-
-    def get_temperature(self):
-        return self.andor.get_temperature()
 
     def get_slit_width(self):
         return self.shamrock.get_auto_slit_width(1)
@@ -137,18 +145,23 @@ class AndorSpectrometerInterfuse(GenericLogic, SpectrometerInterface):
             self.calc_single_track_slit_pixels()
             self.andor.set_image(1, 1, 1, self._width, self._hstart, self._hstop)
 
+    def set_full_image(self):
+        self.andor.set_image(1, 1, 1, self._width, 1, self._height)
+        self.mode = 'Image'
+
     def get_wavelengths(self):
         """
         Get the wavelenghts and converts them to nanometer
 
         @return:
         """
-        self._wl = np.asarray(self.shamrock.get_calibration())*1.0e-9
-        return self._wl
+        _wl = np.array(self.shamrock.get_calibration())*1.0e-9
+        return _wl
 
-    def set_full_image(self):
-        self.andor.set_image(1, 1, 1, self._width, 1, self._height)
-        self.mode = 'Image'
+
+    def start_acquisition(self):
+        self.andor.start_acquisition()
+        self.sigAcquiring.emit()
 
     def acquisition_data(self):
         acquiring = True
@@ -164,8 +177,91 @@ class AndorSpectrometerInterfuse(GenericLogic, SpectrometerInterface):
             else: #not status == 'DRV_ACQUIRING':
                 return None
 
-        data = self.andor.get_acquired_data()
-        return np.asarray(data)
+        self.sigAcquiringDone.emit()
+
+        return 0
+
+    def get_acquired_data(self):
+        self.data = self.andor.get_acquired_data()
+        self.wl = self.get_wavelengths()
+        # Reshape data
+
+        if self.spectrum is True:
+            self.sigSpectrumDataAcquired.emit()
+        else:
+            self.sigImageDataAcquired.emit()
+
+        return 0
+
+    def take_single_spectrum(self):
+        self.andor.set_read_mode(0)
+        self.andor.set_acquisition_mode(1)
+        self.spectrum = True
+
+        self.sigStartAcquiring.emit()
+        return 0
+
+    def kinetic_scan(self, exposure_time=None, cycle_time=None, number_of_cycles=None, trigger=None):
+        """
+        Takes a kinetic scan
+
+        @param exposure_time: This is the time in seconds during which the CCD collects light prior to readout
+        @param cycle_time: This is the period in seconds between the start of individual scans
+        @param number_of_cycles: This is the number of scans (or ‘accumulated scans’) you specify to be in your series
+        @return:
+        """
+        self.spectrum = False
+        # Full vertical binning
+        self.andor.set_read_mode(0)
+        # Set Kinetic scan
+        self.andor.set_acquisition_mode(3)
+        # Sets exposure time
+        if exposure_time is not None:
+            self.andor.set_exposure_time(exposure_time)
+        else:
+            self.log.warning('No exposure time given for kinetic scan')
+        # Sets number of accumulations to 1
+        self.andor.set_number_accumulations(1)
+
+        if cycle_time is not None:
+            self.andor.set_kinetic_cycle_time(cycle_time)
+        else:
+            self.log.warning('No cycle time givin for the kinetic scan')
+
+        if number_of_cycles is not None:
+            self.andor.set_number_kinetics(number_of_cycles)
+        else:
+            self.log.warning('No number given for then number cycles in kinetic scan')
+
+        if trigger is not None:
+            try:
+                self.andor.set_trigger_mode(trigger)
+            except:
+                self.log.warning('Trigger mode setup did not work')
+
+        return 0
+
+    def set_temperature(self, temp):
+        self.andor.set_temperature(temp)
+
+    def get_temperature(self):
+        return self.andor.get_temperature()
+
+    def set_cycle_time(self, cycle_time):
+        self.andor.set_acquisition_mode(3)
+        self.andor.set_kinetic_cycle_time(cycle_time)
+
+    def get_cycle_time(self):
+        return self.andor.get_cycle_time()
+
+    def set_trigger_mode(self, mode):
+        self.andor.set_trigger_mode(mode)
+
+    def get_exposure_time(self):
+        return self.andor.get_exposure_time()
+
+    def get_number_accumulations(self):
+        return self.andor.get_number_accumulations()
 
     def set_centre_wavelength(self, wavelength):
         minwl, maxwl = self.shamrock.get_wavelength_limits(self.shamrock.get_grating())
@@ -233,79 +329,10 @@ class AndorSpectrometerInterfuse(GenericLogic, SpectrometerInterface):
         self.andor.set_image(1, 1, 1, self._width, self._hstart, self._hstop)
         self.mode = 'SingleTrack'
 
-    def take_single_spectrum(self):
-        self.andor.set_read_mode(0)
-        self.andor.set_acquisition_mode(1)
-        self.andor.start_acquisition()
-        data = self.acquisition_data()
-        return data
+    def cooler_on(self):
+        self.andor.cooler_on()
 
-    def get_exposure_time(self):
-        return self.andor.get_exposure_time()
-
-    def get_number_accumulations(self):
-        return self.andor.get_number_accumulations()
-
-    def kinetic_scan(self, exposure_time=None, cycle_time=None, number_of_cycles=None, trigger=None):
-        """
-        Takes a kinetic scan
-
-        @param exposure_time: This is the time in seconds during which the CCD collects light prior to readout
-        @param cycle_time: This is the period in seconds between the start of individual scans
-        @param number_of_cycles: This is the number of scans (or ‘accumulated scans’) you specify to be in your series
-        @return:
-        """
-
-        # Full vertical binning
-        self.andor.set_read_mode(0)
-        # Set Kinetic scan
-        self.andor.set_acquisition_mode(3)
-        # Sets exposure time
-        if exposure_time is not None:
-            self.andor.set_exposure_time(exposure_time)
-        else:
-            self.log.warning('No exposure time given for kinetic scan')
-        # Sets number of accumulations to 1
-        self.andor.set_number_accumulations(1)
-
-        if cycle_time is not None:
-            self.andor.set_kinetic_cycle_time(cycle_time)
-        else:
-            self.log.warning('No cycle time givin for the kinetic scan')
-
-        if number_of_cycles is not None:
-            self.andor.set_number_kinetics(number_of_cycles)
-        else:
-            self.log.warning('No number given for then number cycles in kinetic scan')
-
-        if trigger is not None:
-            try:
-                self.andor.set_trigger_mode(trigger)
-            except:
-                self.log.warning('Trigger mode setup did not work')
-
-        #Take the data
-        self.andor.start_acquisition()
-
-        return 0
-
-    def get_acquired_data(self, number_of_cycles):
-        data = self.acquisition_data()
-
-        # Reshape data
-        data = data.reshape(number_of_cycles, int(data.size/number_of_cycles)).transpose()
-
-        return data
-
-    def set_cycle_time(self, cycle_time):
-        self.andor.set_acquisition_mode(3)
-        self.andor.set_kinetic_cycle_time(cycle_time)
-
-    def get_cycle_time(self):
-        return self.andor.get_cycle_time()
-
-    def set_trigger_mode(self, mode):
-        self.andor.set_trigger_mode(mode)
-
+    def cooler_off(self):
+        self.andor.cooler_off()
 
 
