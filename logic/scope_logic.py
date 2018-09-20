@@ -49,7 +49,7 @@ class ScopeLogic(GenericLogic):
         self.scopetime = np.arange(0,1,0.1)
         self.scopedata = [np.zeros([10]) for i in range(4)]
         self.active_channels = []
-        self.acquisition_mode = self.get_acquire_mode()
+        #self.acquisition_mode = self.get_acquire_mode()
 
     def on_deactivate(self):
         """ Perform required deactivation. """

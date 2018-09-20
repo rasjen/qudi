@@ -64,8 +64,8 @@ class WLTLogic(GenericLogic):
         self.exposure_time = 0.02 # sec
         self.scan_frequency = 1.0 # Hz
         self.cycle_time = 0.02
-        self.pos_start = self._scanning_devices._cavity_position_range[0]
-        self.pos_stop = self._scanning_devices._cavity_position_range[1]
+        self.pos_start = self._scanning_devices._voltage_range[2][0]
+        self.pos_stop = self._scanning_devices._voltage_range[2][1]
         self.time_start = self.number_accumulations * self.cycle_time
         self.time_stop = self.number_accumulations
         self.position_time = np.linspace(0, 1/self.scan_frequency, 100)
@@ -165,7 +165,6 @@ class WLTLogic(GenericLogic):
 
         # Set back internal trigger
         self._spectrometer.set_trigger_mode(0)
-        print('done')
 
 
     def continue_wlt_measurement(self):
@@ -186,9 +185,9 @@ class WLTLogic(GenericLogic):
         self.wl = self._spectrometer.get_wavelengths()
         if len(self.wl) == 0:
             # did not load wl from spectrometer
-            self.wl = np.arange(0,100,11)
+            self.wl = np.arange(0,100, 11)
 
-        self.WLT_image = np.zeros([self.number_of_steps, self.wl.size])
+        self.WLT_image = np.random.random([self.number_of_steps, self.wl.size])
         return 0
 
     def initialize_spectrum_plot(self):

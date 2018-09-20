@@ -161,7 +161,6 @@ class NICard(Base, SlowCounterInterface, ConfocalScannerInterface, ODMRCounterIn
         self._clock_daq_task = None
         self._scanner_clock_daq_task = None
         self._scanner_ao_task = None
-        self._cavity_ao_task = None
         self._scanner_counter_daq_tasks = []
         self._line_length = None
         self._odmr_length = None
@@ -180,32 +179,10 @@ class NICard(Base, SlowCounterInterface, ConfocalScannerInterface, ODMRCounterIn
         self._counter_channels = []
         self._scanner_counter_channels = []
         self._photon_sources = []
-        self._cavity_voltage_range = []
-        self._cavity_position_range = []
-        self._current_cavity_position = []
-        self.cavity_channel = []
         self._scanner_ai_channels = []
 
         if 'strain_gauge' in config.keys():
             self._scanner_ai_channels.append(config['strain_gauge'])
-
-        if 'cavity_ao' in config.keys():
-            self.cavity_channel = config['cavity_ao']
-            self._cavity_voltage_range = [-10,10]
-            self._current_cavity_position.append(0)
-            plow = float(config['cavity_position_range'][0])
-            phigh = float(config['cavity_position_range'][1])
-            self._cavity_position_range = [plow, phigh]
-
-        if 'cavity_voltage_range' in config.keys():
-            if float(config['cavity_voltage_range'][0]) < float(config['cavity_voltage_range'][1]):
-                vlow = float(config['cavity_voltage_range'][0])
-                vhigh = float(config['cavity_voltage_range'][1])
-                self._cavity_voltage_range = [vlow, vhigh]
-            else:
-                self.log.warning(
-                    'Configuration ({0}) of cavity_voltage range incorrect, taking [-10, 10] instead.'
-                    ''.format(config['cavity_voltage range']))
 
         # handle all the parameters given by the config
         if 'scanner_x_ao' in config.keys():
@@ -229,7 +206,7 @@ class NICard(Base, SlowCounterInterface, ConfocalScannerInterface, ODMRCounterIn
                         self._position_range.append([0, 100e-6])
                         self._voltage_range.append([-10, 10])
 
-        if len(self._scanner_ao_channels) + len(self.cavity_channel) < 1:
+        if len(self._scanner_ao_channels) < 1:
             self.log.error(
                 'Not enough scanner channels found in the configuration!\n'
                 'Be sure to start with scanner_x_ao\n'
@@ -2104,7 +2081,7 @@ class NICard(Base, SlowCounterInterface, ConfocalScannerInterface, ODMRCounterIn
                 # define task
                 self._scanner_clock_daq_task,
                 # maximal timeout for the counter times the positions
-                step_periode * (self.sweep_length+2))
+                step_periode * (self.sweep_length+1))
 
             # stop the clock task
             daq.DAQmxStopTask(self._scanner_clock_daq_task)

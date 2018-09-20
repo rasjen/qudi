@@ -61,6 +61,7 @@ class AndorSpectrometerInterfuse(GenericLogic, SpectrometerInterface):
 
         # //Set Acquisition mode to --Single scan--
         self.andor.set_acquisition_mode(1)
+        self.andor.set_baseline_clamp(1)
 
         # //Get Detector dimensions
         self._width, self._height = self.andor.get_detector()
