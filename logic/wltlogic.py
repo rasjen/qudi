@@ -64,8 +64,8 @@ class WLTLogic(GenericLogic):
         self.exposure_time = 0.02 # sec
         self.scan_frequency = 1.0 # Hz
         self.cycle_time = 0.02
-        self.pos_start = self._scanning_devices._voltage_range[2][0]
-        self.pos_stop = self._scanning_devices._voltage_range[2][1]
+        self.pos_start = self._scanning_devices._scanner_voltage_ranges[2][0]
+        self.pos_stop = self._scanning_devices._scanner_voltage_ranges[2][1]
         self.time_start = self.number_accumulations * self.cycle_time
         self.time_stop = self.number_accumulations
         self.position_time = np.linspace(0, 1/self.scan_frequency, 100)

@@ -688,7 +688,7 @@ class ConfocalLogic(GenericLogic):
             self._current_a = a
 
         # Checks if the scanner is still running
-        if self.getState() == 'locked' or self._scanning_device.getState() == 'locked':
+        if self.module_state() == 'locked' or self._scanning_device.module_state() == 'locked':
             return -1
         else:
             self._change_position(tag)

@@ -56,7 +56,7 @@ class ConfocalScannerDummy(Base, ConfocalScannerInterface):
         """ Initialisation performed during activation of the module.
         """
 
-        self._fit_logic = self.get_connector('fitlogic')
+        self._fit_logic = self.fitlogic()
 
         # put randomly distributed NVs in the scanner, first the x,y scan
         self._points = np.empty([self._num_points, 7])
@@ -197,7 +197,7 @@ class ConfocalScannerDummy(Base, ConfocalScannerInterface):
                     'order.'.format(myrange))
             return -1
 
-        if self.getState() == 'locked':
+        if self.module_state() == 'locked':
             self.log.error('A Scanner is already running, close this one '
                     'first.')
             return -1
@@ -266,7 +266,7 @@ class ConfocalScannerDummy(Base, ConfocalScannerInterface):
         @return int: error code (0:OK, -1:error)
         """
 
-        if self.getState() == 'locked':
+        if self.module_state() == 'locked':
             self.log.error('A Scanner is already running, close this one first.')
             return -1
 
