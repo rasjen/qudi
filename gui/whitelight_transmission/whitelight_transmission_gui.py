@@ -38,7 +38,6 @@ class WLTGui(GUIBase):
 
     # declare connectors
     cavitylogic = Connector(interface='CavityLogic')
-    savelogic = Connector(interface='SaveLogic')
 
     sigStartWLTScan = QtCore.Signal(float, float, float)
     sigStopWLTScan = QtCore.Signal()
@@ -61,7 +60,7 @@ class WLTGui(GUIBase):
         self._mw = WLTMainWindow()
 
         # connect to cavity logic
-        self._wlt_logic = self.get_connector('cavitylogic')
+        self._wlt_logic = self.cavitylogic()
 
         constraints_dict = self._wlt_logic.get_hw_constraints()
 

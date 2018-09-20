@@ -52,9 +52,9 @@ class WLTLogic(GenericLogic):
     def on_activate(self):
         """ Initialisation performed during activation of the module.
         """
-        self._scanning_devices = self.get_connector('nicard')
-        self._save_logic = self.get_connector('savelogic')
-        self._spectrometer = self.get_connector('spectrometer')
+        self._scanning_devices = self.nicard()
+        self._save_logic = self.savelogic()
+        self._spectrometer = self.spectrometer()
         #self._scope = self.get_connector('scopelogic')
 
         self.clock_frequency = 100 # Hz
