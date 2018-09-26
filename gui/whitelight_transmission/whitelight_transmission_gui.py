@@ -174,8 +174,7 @@ class WLTGui(GUIBase):
         # Control/values-changed signals to logic
         self.sigStartWLTScan.connect(self._wlt_logic.start_wlt_measurement)
         self.sigStopWLTScan.connect(self._wlt_logic.stop_wlt_measurement)
-        self.sigContinueWLTScan.connect(self._wlt_logic.continue_wlt_measurement,
-                                         )
+        self.sigContinueWLTScan.connect(self._wlt_logic.continue_wlt_measurement)
         self._mw.get_temperature_pushButton.clicked.connect(self._wlt_logic.get_temperature)
         self._mw.take_spectrum_pushButton.clicked.connect(self._wlt_logic.take_single_spectrum)
         self._mw.pushButton_cooler_on.clicked.connect(self._wlt_logic.cooler_on)

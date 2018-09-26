@@ -2110,6 +2110,7 @@ class NationalInstrumentsXSeries(Base, SlowCounterInterface, ConfocalScannerInte
         :return: 
         """
 
+
         if self._scanner_clock_daq_task is None:
             self.log.error('No clock running, call set_up_clock before starting the counter.')
             return -1

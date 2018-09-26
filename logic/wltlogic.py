@@ -6,7 +6,7 @@ import os
 from itertools import product
 import matplotlib.pyplot as plt
 import matplotlib as mpl
-
+from time import sleep
 from scipy.optimize import curve_fit
 from logic.generic_logic import GenericLogic
 from core.util.mutex import Mutex
@@ -18,11 +18,11 @@ class WLTLogic(GenericLogic):
     """
     This is the Logic class for cavity white light transmission measurement.
     """
-    _modclass = 'WLTlogoc'
+    _modclass = 'WLTlogic'
     _modtype = 'logic'
 
     # declare connectors
-    nicard = Connector(interface='ConfocalScannerInterface')
+    scanner = Connector(interface='confocallogic')
     spectrometer = Connector(interface='spectrometerInterface')
     savelogic = Connector(interface='SaveLogic')
     #scopelogic = Connector(interface='ScopeLogic')
@@ -52,7 +52,7 @@ class WLTLogic(GenericLogic):
     def on_activate(self):
         """ Initialisation performed during activation of the module.
         """
-        self._scanning_devices = self.nicard()
+        self._scanner_device = self.scanner()
         self._save_logic = self.savelogic()
         self._spectrometer = self.spectrometer()
         #self._scope = self.get_connector('scopelogic')
@@ -64,8 +64,8 @@ class WLTLogic(GenericLogic):
         self.exposure_time = 0.02 # sec
         self.scan_frequency = 1.0 # Hz
         self.cycle_time = 0.02
-        self.pos_start = self._scanning_devices._scanner_voltage_ranges[2][0]
-        self.pos_stop = self._scanning_devices._scanner_voltage_ranges[2][1]
+        self.pos_start = self._scanner_device.z_range[0]
+        self.pos_stop = self._scanner_device.z_range[1]
         self.time_start = self.number_accumulations * self.cycle_time
         self.time_stop = self.number_accumulations
         self.position_time = np.linspace(0, 1/self.scan_frequency, 100)
@@ -78,7 +78,7 @@ class WLTLogic(GenericLogic):
         self.initialize_image()
         self.initialize_spectrum_plot()
 
-        self.sigMeasurementStarted.connect(self._scanning_devices.start_sweep)
+        self.sigMeasurementStarted.connect(self._scanner_device.start_sweep)
         self.sigMeasurementFinished.connect(self.stop_wlt_measurement)
         self._spectrometer.sigSpectrumDataAcquired.connect(self.update_spectrum_data)
         self._spectrometer.sigImageDataAcquired.connect(self.update_image_data)
@@ -89,20 +89,7 @@ class WLTLogic(GenericLogic):
         @return int: error code (0:OK, -1:error)
         """
         #self._spectrometer.on_deactivate()
-        #self._scanning_devices.on_deactivate()
-
-    def setup_read_position(self):
-        """
-        Readouts
-
-        @return:
-        """
-        sample_rate = 500
-        number_of_sample = int(sample_rate*1/self.scan_frequency)
-        self.position_time = np.linspace(0, number_of_sample*1/sample_rate, number_of_sample, endpoint=False)
-        self._scanning_devices.setup_read_position(samples_rate=sample_rate, number_of_samples=number_of_sample+1, source='scanner')
-
-        return 0
+        #self._scanner_device.on_deactivate()
 
     def start_wlt_measurement(self, frequency, pos_start, pos_stop):
         '''
@@ -111,35 +98,28 @@ class WLTLogic(GenericLogic):
         :return: 
         '''
 
+        with self.threadlock:
+            # set parameters
+            self.pos_start = pos_start
+            self.pos_stop = pos_stop
+            self.scan_frequency = frequency
 
-        # set parameters
-        self.pos_start = pos_start
-        self.pos_stop = pos_stop
-        self.scan_frequency = frequency
+            self.set_cavity_position(pos_start)
 
+            # Set up master clock
+            self.log.info('Measurement started')
+            self._scanner_device.set_up_sweep(pos_start, pos_stop, frequency, self.number_of_steps)
 
-        # Set up master clock
-        self.log.info('Measurement started')
-        clock_status = self._scanning_devices.set_up_scanner_clock(
-            clock_frequency=self.scan_frequency)
-
-        # Set start position
-        self._scanning_devices.scanner_set_position(z=pos_start)
-
-        # Set_up_sweep
-        self._scanning_devices.set_up_sweep(pos_start, pos_stop, frequency, line_length=int(self.number_of_steps),
-                                            linear=True)
-
-        # Starts triggered measurement for spectrometer
-        self.log.info('Starting spectrometer')
-        self._set_up_kinetic_scan()
+            # Starts triggered measurement for spectrometer
+            self.log.info('Starting spectrometer')
+            self._set_up_kinetic_scan()
 
 
-        # Starts the Nicard
-        self.log.info('Starting scanning')
-        self._spectrometer.sigStartAcquiring.emit()
-        self.sigMeasurementStarted.emit()
-
+            # Starts the Nicard
+            self.log.info('Starting scanning')
+            self._spectrometer.sigStartAcquiring.emit()
+            sleep(1)
+            self.sigMeasurementStarted.emit()
         return 0
 
     def set_positions_parameters(self, pos_start, pos_stop, number_of_steps, frequency):
@@ -153,18 +133,17 @@ class WLTLogic(GenericLogic):
         Stops the white light transmission measurement
         :return:
         '''
+        # Set back internal trigger
+        self._spectrometer.set_trigger_mode(0)
 
         # Save data
         self.save_xy_data()
         self.save_position_data()
         self.log.info('Data saved')
 
-        self._scanning_devices.stop_sweep()
-        self._scanning_devices.scanner_set_position(z=self.pos_start)
+        self._scanner_device.stop_sweep()
+        self.set_cavity_position(self.pos_start)
         self.log.info('Stopped the ni sweep')
-
-        # Set back internal trigger
-        self._spectrometer.set_trigger_mode(0)
 
 
     def continue_wlt_measurement(self):
@@ -326,26 +305,27 @@ class WLTLogic(GenericLogic):
     def update_image_data(self):
 
         # Gets data from spectrometer
-        data = np.array(self._spectrometer.data)
-        self.data = data.reshape(int(self.number_of_steps), int(data.size/self.number_of_steps)).transpose()
+        with self.threadlock:
+            data = np.array(self._spectrometer.data)
+            self.data = data.reshape(int(self.number_of_steps), int(data.size/self.number_of_steps)).transpose()
 
-        # Get the strain gauge data from the NI card
-        line_position_data = self._scanning_devices.read_position()
-        self.log.info('Measurement finished')
+            # Get the strain gauge data from the NI card
+            line_position_data = self._scanner_device.read_position()
+            self.log.info('Measurement finished')
 
-        # Used for making the plot
-        self.time_stop = 1/self.scan_frequency * self.number_of_steps
-        self.position_data = line_position_data[1:]
-        self.position_time = np.linspace(0, self.time_stop, len(self.position_data))
-        self.WLT_image = self.data.transpose()
+            # Used for making the plot
+            self.time_stop = 1/self.scan_frequency * self.number_of_steps
+            self.position_data = line_position_data[1:]
+            self.position_time = np.linspace(0, self.time_stop, len(self.position_data))
+            self.WLT_image = self.data.transpose()
 
 
-        # Update image
-        self.sigPztimageUpdated.emit()
-        self.sigWLTimageUpdated.emit()
-        self.log.info('Images updates')
+            # Update image
+            self.sigPztimageUpdated.emit()
+            self.sigWLTimageUpdated.emit()
+            self.log.info('Images updates')
 
-        self.sigMeasurementFinished.emit()
+            self.sigMeasurementFinished.emit()
 
 
     def set_cavity_position(self, position):
@@ -355,7 +335,7 @@ class WLTLogic(GenericLogic):
         :param position: 
         :return: 
         """
-        self._scanning_devices.scanner_set_position(z=position)
+        self._scanner_device.set_position(tag='wltlogic', z=position)
 
     def _set_up_kinetic_scan(self):
         """
@@ -372,7 +352,7 @@ class WLTLogic(GenericLogic):
             self.log.warning('Exposure is larger than the cycle time. Setting cycle time equal to exposure time')
             cycle_time = exposure_time
 
-
+        self.log.info('set up spectrometer')
         self._spectrometer.kinetic_scan(exposure_time=exposure_time, cycle_time=cycle_time,
                                                number_of_cycles=number_of_cycles, trigger=1)
 
@@ -589,19 +569,10 @@ class WLTLogic(GenericLogic):
         return 0
 
     def start_ramp(self, amplitude, freq):
-
-        position = self._scanning_devices.get_scanner_position()
-        self.z_pos = position[2]
-
-        self._scanning_devices.set_up_ramp_output(amplitude, self.z_pos, freq)
-        self._scanning_devices.start_ramp()
+        self._scanner_device.start_ramp(amplitude, freq)
 
     def stop_ramp(self):
-
-        self._scanning_devices.stop_ramp()
-        self._scanning_devices.scanner_set_position(z=self.z_pos)
-        return 0
-
+        self._scanner_device.stop_ramp()
 
     def cooler_on(self):
         self._spectrometer.cooler_on()

@@ -78,7 +78,7 @@ class CavityGui(GUIBase):
         *.ui file and configures the event handling between the modules.
         """
 
-        self._cavity_logic = self.get_connector('cavitylogic1')
+        self._cavity_logic = self.cavitylogic1()
 
         # Use the inherited class 'Ui_CavityGuiUI' to create now the GUI element:
         self._mw = CavityMainWindow()

@@ -115,7 +115,6 @@ class Andor(Base, SpectrometerInterface):
         self.gain = None
         self.gainRange = None
         self.status = ERROR_CODE[error]
-        self.verbosity = True
         self.preampgain = None
         self.channel = None
         self.outamp = None

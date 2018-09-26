@@ -13,8 +13,8 @@ class AndorSpectrometerInterfuse(GenericLogic, SpectrometerInterface):
     _modclass = 'spectrometerinterfuce'
     _modtype = 'interfuse'
 
-    andor = Connector(interface='SpectrometerInterface')
-    shamrock = Connector(interface='SpectrometerInterface')
+    andor_cam = Connector(interface='SpectrometerInterface')
+    shamrock_spectrometer = Connector(interface='SpectrometerInterface')
 
     verbosity = 2
     _max_slit_width = 2500  # maximal width of slit in um
@@ -46,8 +46,8 @@ class AndorSpectrometerInterfuse(GenericLogic, SpectrometerInterface):
 
 
     def on_activate(self):
-        self.andor = self.get_connector('andor')
-        self.shamrock = self.get_connector('shamrock')
+        self.andor = self.andor_cam()
+        self.shamrock = self.shamrock_spectrometer()
 
         start_cooler = True
         init_shutter = False
@@ -169,7 +169,7 @@ class AndorSpectrometerInterfuse(GenericLogic, SpectrometerInterface):
         while acquiring:
             sleep(1.0)
             status = self.andor.get_status()
-            self.log.info(status)
+            #self.log.info(status)
             if status == 'DRV_IDLE':
                 acquiring = False
                 continue
